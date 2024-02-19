@@ -8,43 +8,40 @@ import { settingStore } from '../models/SettingStore'
 
 import { IncomingMessage, Message } from './Message'
 import { OllmaApi } from '../utils/OllamaApi'
+import Paperclip from '../icons/Paperclip'
 
 const ChatBoxInputRow = observer(
   ({ onSend, children }: PropsWithChildren<{ onSend: (message: string) => void }>) => {
-    const [userMessage, setUserMessage] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const handleSend = () => {
+    const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+
+      const userMessage = inputRef.current?.value || ''
+
+      if (!userMessage || !inputRef.current) return
+
       onSend(userMessage)
-      setUserMessage('')
 
-      inputRef.current?.focus()
-    }
-
-    const handleKeyPress = (keyEvent: React.KeyboardEvent<HTMLInputElement>) => {
-      if (keyEvent.key === 'Enter') {
-        handleSend()
-      }
+      inputRef.current.value = ''
+      inputRef.current.focus()
     }
 
     const noServer = !settingStore.selectedModel
 
     return (
       <div className={'' + (noServer && 'tooltip')} data-tip="Server is not connected">
-        <form className="flex flex-row min-h-fit mt-2 gap-2 ">
+        <form className="flex flex-row min-h-fit mt-2 gap-2 " onSubmit={onFormSubmit}>
           <input
             placeholder="Enter Prompt"
             className="input grow input-bordered focus:outline-none w-full"
-            onChange={e => setUserMessage(e.target.value)}
-            onKeyDown={handleKeyPress}
-            value={userMessage}
             ref={inputRef}
             type="text"
             disabled={chatStore.isGettingData || noServer}
           />
 
           {children || (
-            <button className="btn btn-neutral" onClick={handleSend} disabled={noServer}>
+            <button className="btn btn-neutral" disabled={noServer}>
               Send
             </button>
           )}
@@ -97,6 +94,7 @@ const ChatBox = observer(() => {
 
   const handleMessageToSend = (userMessage: string) => {
     if (!userMessage) return
+    console.timeLog('handling message')
     chat.addUserMessage(userMessage)
 
     sendMessage()

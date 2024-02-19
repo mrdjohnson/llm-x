@@ -12,16 +12,12 @@ import Check from '../icons/Check'
 const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const changeName = () => {
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
     const name = inputRef.current?.value
 
     chat.setName(name)
-  }
-
-  const handleKeyPress = (keyEvent: React.KeyboardEvent<HTMLInputElement>) => {
-    if (keyEvent.key === 'Enter') {
-      changeName()
-    }
   }
 
   return (
@@ -45,18 +41,18 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
           tabIndex={0}
           className="dropdown-content z-10 menu p-2 shadow bg-base-300 rounded-box ml-3 mt-2 w-72 flex gap-2"
         >
-          <div className="flex flex-row gap-2">
+          <form className="flex flex-row gap-2" onSubmit={handleFormSubmit}>
             <input
               type="text"
               className="input grow flex-1 input-bordered focus:outline-none w-full min-w-24"
               defaultValue={chat.name}
-              onKeyDown={handleKeyPress}
               ref={inputRef}
             />
-            <button className="btn btn-neutral" onClick={changeName}>
+
+            <button className="btn btn-neutral">
               <Check />
             </button>
-          </div>
+          </form>
 
           <button onClick={() => chatStore.deleteChat(chat)} className="btn btn-ghost text-error">
             <Delete />
