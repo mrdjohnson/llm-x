@@ -23,7 +23,7 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
   return (
     <div
       className={
-        ' cursor-pointer group rounded-md w-full p-1 flex flex-row justify-between dropdown dropdown-right text-left p-2 ' +
+        ' cursor-pointer group rounded-md w-full flex flex-row justify-between dropdown dropdown-left lg:dropdown-right text-left p-2 ' +
         (chat.id === chatStore.selectedChat?.id
           ? ' btn-active btn-neutral cursor-default'
           : ' btn-ghost')
@@ -39,7 +39,7 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
 
         <div
           tabIndex={0}
-          className="dropdown-content z-10 menu p-2 shadow bg-base-300 rounded-box ml-3 mt-2 w-72 flex gap-2"
+          className="dropdown-content z-10 menu p-2 shadow bg-base-300 rounded-box mr-3 lg:ml-3 mt-2 w-72 flex gap-2"
         >
           <form className="flex flex-row gap-2" onSubmit={handleFormSubmit}>
             <input
