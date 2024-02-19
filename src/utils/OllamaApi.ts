@@ -30,7 +30,9 @@ export class OllmaApi {
         return { role: 'assistant', content: message.content }
       }
 
-      return { role: 'user', content: message.content }
+      const images = message.image?.includes(',') && [message.image.split(',')[1]]
+
+      return { role: 'user', content: message.content, images }
     })
 
     const response = await fetch(host + '/api/chat', {

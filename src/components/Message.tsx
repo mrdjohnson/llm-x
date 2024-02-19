@@ -79,7 +79,7 @@ type MessageProps = PropsWithChildren<{
 }>
 
 export const Message = ({ message, onDestroy, children, customDeleteIcon }: MessageProps) => {
-  const { content, fromBot, uniqId } = message
+  const { content, fromBot, uniqId, image } = message
 
   const [copied, setCopied] = useState(false)
 
@@ -96,6 +96,8 @@ export const Message = ({ message, onDestroy, children, customDeleteIcon }: Mess
       }
       key={uniqId}
     >
+      {image && <img className="w-56 h-56 rounded-md place-self-center object-contain" src={image} />}
+
       <div className=" border border-base-content/20 p-2 rounded-md w-full">
         <Markdown
           remarkPlugins={[[remarkGfm, { singleTilde: false }]]}

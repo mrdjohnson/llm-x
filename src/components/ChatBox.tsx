@@ -9,36 +9,101 @@ import { settingStore } from '../models/SettingStore'
 import { IncomingMessage, Message } from './Message'
 import { OllmaApi } from '../utils/OllamaApi'
 import Paperclip from '../icons/Paperclip'
+import base64EncodeImage from '../utils/base64EncodeImage'
 
 const ChatBoxInputRow = observer(
-  ({ onSend, children }: PropsWithChildren<{ onSend: (message: string) => void }>) => {
+  ({
+    onSend,
+    children,
+  }: PropsWithChildren<{ onSend: (message: string, image?: string) => void }>) => {
     const inputRef = useRef<HTMLInputElement>(null)
+    const fileInputRef = useRef<HTMLInputElement>(null)
+
+    const [previewImage, setPreviewImage] = useState<string | undefined>(undefined)
+    const [toastMessage, setToastMessage] = useState<string | undefined>(undefined)
 
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
 
-      const userMessage = inputRef.current?.value || ''
+      if (!inputRef.current) return
 
-      if (!userMessage || !inputRef.current) return
+      const userMessage = inputRef.current.value || ''
 
-      onSend(userMessage)
+      onSend(userMessage, previewImage)
 
       inputRef.current.value = ''
       inputRef.current.focus()
+
+      setPreviewImage(undefined)
+    }
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const fileObj = event.target.files?.[0]
+      if (!fileObj) {
+        return
+      }
+
+      // reset file input
+      event.target.value = ''
+
+      try {
+        const imageData = await base64EncodeImage(fileObj)
+
+        setPreviewImage(imageData)
+      } catch (e) {
+        setToastMessage('Unable to read image')
+
+        setTimeout(() => {
+          setToastMessage(undefined)
+        }, 3000)
+      }
     }
 
     const noServer = !settingStore.selectedModel
 
     return (
-      <div className={'' + (noServer && 'tooltip')} data-tip="Server is not connected">
-        <form className="flex flex-row min-h-fit mt-2 gap-2 " onSubmit={onFormSubmit}>
-          <input
-            placeholder="Enter Prompt"
-            className="input grow input-bordered focus:outline-none w-full"
-            ref={inputRef}
-            type="text"
-            disabled={chatStore.isGettingData || noServer}
-          />
+      <div className={'w-full mt-2 ' + (noServer && 'tooltip')} data-tip="Server is not connected">
+        <form className="flex flex-row min-h-fit gap-2 w-full" onSubmit={onFormSubmit}>
+          <div className="join w-full flex-1 relative">
+            <input
+              className="input input-bordered join-item grow focus:outline-none"
+              placeholder="Enter Prompt"
+              ref={inputRef}
+              type="text"
+              disabled={chatStore.isGettingData || noServer}
+            />
+
+            {/* hidden file input */}
+            <input
+              style={{ display: 'none' }}
+              ref={fileInputRef}
+              type="file"
+              onChange={handleFileChange}
+            />
+
+            <button
+              className="btn join-item !rounded-r-md border input-bordered hover:input-bordered"
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Paperclip />
+            </button>
+
+            {previewImage && (
+              <div className="h-24 w-24 absolute --top-full end-0 bottom-full mb-2">
+                <div className="relative h-full w-full">
+                  <div
+                    className="absolute top-1 right-1 opacity-70 btn btn-xs"
+                    onClick={() => setPreviewImage(undefined)}
+                  >
+                    x
+                  </div>
+
+                  <img src={previewImage} className="object-fit h-24 w-24 rounded-md" />
+                </div>
+              </div>
+            )}
+          </div>
 
           {children || (
             <button className="btn btn-neutral" disabled={noServer}>
@@ -46,6 +111,14 @@ const ChatBoxInputRow = observer(
             </button>
           )}
         </form>
+
+        {toastMessage && (
+          <div className="toast toast-center">
+            <div className="alert alert-error text-xl font-bold rounded-md">
+              <span>{toastMessage}</span>
+            </div>
+          </div>
+        )}
       </div>
     )
   },
@@ -92,10 +165,9 @@ const ChatBox = observer(() => {
 
   if (!chat) return null
 
-  const handleMessageToSend = (userMessage: string) => {
-    if (!userMessage) return
+  const handleMessageToSend = (userMessage: string, image?: string) => {
     console.timeLog('handling message')
-    chat.addUserMessage(userMessage)
+    chat.addUserMessage(userMessage, image)
 
     sendMessage()
   }

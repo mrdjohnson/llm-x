@@ -19,7 +19,7 @@ clone the project, and run `npm install` in the root directory
  - [x] Ability to manage multiple chats
  - [x] Code highlighting with Highlight.js
  - [x] Ability to copy responses from Ollama
- - [ ] Image to text using Ollama's multi modal abilities   
+ - [x] Image to text using Ollama's multi modal abilities   
  - [ ] LangChain.js integration, allowing for open ai conversations as well
 
 ## MISC

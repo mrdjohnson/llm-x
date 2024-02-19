@@ -5,6 +5,7 @@ export const MessageModel = types.model({
   fromBot: types.boolean,
   botName: types.maybe(types.string),
   content: types.optional(types.string, ''),
+  image: types.maybe(types.string),
   uniqId: types.identifier,
 })
 
@@ -57,7 +58,9 @@ export const ChatModel = types
       self.incomingMessage!.content += content
     },
 
-    addUserMessage(content: string) {
+    addUserMessage(content: string = '', image?: string) {
+      if (!content && !image) return
+
       if (_.isEmpty(self.messages)) {
         this.setName(content.substring(0, 20))
       }
@@ -66,6 +69,7 @@ export const ChatModel = types
         fromBot: false,
         content,
         uniqId: 'user_' + Date.now(),
+        image,
       })
 
       self.messages.push(message)
