@@ -22,11 +22,6 @@ export const SettingStore = types
     theme: types.optional(types.string, 'dark'),
   })
   .actions(self => ({
-    afterCreate() {
-      console.log('settingStore created, host:', self.host)
-      this.updateModels()
-    },
-
     selectModel(name: string) {
       self._selectedModelName = name
     },
