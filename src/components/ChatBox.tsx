@@ -56,6 +56,7 @@ const ChatBoxInputRow = observer(
     }
 
     const noServer = !settingStore.selectedModel
+    const inputDisabled = chatStore.isGettingData || noServer
 
     return (
       <div className={'w-full mt-2 ' + (noServer && 'tooltip')} data-tip="Server is not connected">
@@ -66,7 +67,7 @@ const ChatBoxInputRow = observer(
               placeholder="Enter Prompt"
               ref={inputRef}
               type="text"
-              disabled={chatStore.isGettingData || noServer}
+              disabled={inputDisabled}
             />
 
             {/* hidden file input */}
@@ -78,9 +79,13 @@ const ChatBoxInputRow = observer(
             />
 
             <button
-              className="btn join-item !rounded-r-md border input-bordered hover:input-bordered"
+              className={
+                'btn join-item !rounded-r-md border ' +
+                (inputDisabled ? '':  'input-bordered hover:input-bordered')
+              }
               type="button"
               onClick={() => fileInputRef.current?.click()}
+              disabled={inputDisabled}
             >
               <Paperclip />
             </button>
