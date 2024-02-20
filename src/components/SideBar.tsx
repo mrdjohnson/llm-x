@@ -69,7 +69,7 @@ export const SideBar = observer(() => {
   return (
     <div className="flex-1 flex flex-col flex-nowrap gap-2 bg-base-300 h-full rounded-md p-2 min-w-[260px] w-[260px] ">
       <button
-        className="btn w-full p-2 flex flex-row gap-2 items-center justify-center btn-neutral"
+        className="btn w-full p-2 flex flex-row gap-2 items-center justify-center btn-neutral mb-2"
         onClick={chatStore.createChat}
       >
         New Chat
