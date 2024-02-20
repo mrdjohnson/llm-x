@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/llm-explorer/static/css/main.c0cd4af8.css",
-    "main.js": "/llm-explorer/static/js/main.0a619f04.js",
+    "main.css": "/llm-explorer/static/css/main.8a709922.css",
+    "main.js": "/llm-explorer/static/js/main.83fa042a.js",
     "static/js/453.a852a576.chunk.js": "/llm-explorer/static/js/453.a852a576.chunk.js",
     "index.html": "/llm-explorer/index.html",
-    "main.c0cd4af8.css.map": "/llm-explorer/static/css/main.c0cd4af8.css.map",
-    "main.0a619f04.js.map": "/llm-explorer/static/js/main.0a619f04.js.map",
+    "main.8a709922.css.map": "/llm-explorer/static/css/main.8a709922.css.map",
+    "main.83fa042a.js.map": "/llm-explorer/static/js/main.83fa042a.js.map",
     "453.a852a576.chunk.js.map": "/llm-explorer/static/js/453.a852a576.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c0cd4af8.css",
-    "static/js/main.0a619f04.js"
+    "static/css/main.8a709922.css",
+    "static/js/main.83fa042a.js"
   ]
 }
