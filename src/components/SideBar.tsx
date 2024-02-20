@@ -23,10 +23,10 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
   return (
     <div
       className={
-        ' cursor-pointer group rounded-md w-full flex flex-row justify-between dropdown dropdown-left lg:dropdown-right text-left p-2 ' +
+        ' group rounded-md w-full flex flex-row justify-between dropdown dropdown-left lg:dropdown-right text-left p-2 ' +
         (chat.id === chatStore.selectedChat?.id
           ? ' btn-active btn-neutral cursor-default'
-          : ' btn-ghost')
+          : ' btn-ghost cursor-pointer')
       }
       onClick={() => chatStore.selectChat(chat)}
     >
@@ -45,7 +45,7 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
             <input
               type="text"
               className="input grow flex-1 input-bordered focus:outline-none w-full min-w-24"
-              defaultValue={chat.name}
+              defaultValue={chat.name || 'new chat'}
               ref={inputRef}
             />
 
