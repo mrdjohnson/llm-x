@@ -5,6 +5,7 @@ import ScrollableFeed from 'react-scrollable-feed'
 
 import { chatStore } from '../models/ChatStore'
 import { settingStore } from '../models/SettingStore'
+import { toastStore } from '../models/ToastStore'
 
 import { IncomingMessage, Message } from './Message'
 import { OllmaApi } from '../utils/OllamaApi'
@@ -20,7 +21,6 @@ const ChatBoxInputRow = observer(
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const [previewImage, setPreviewImage] = useState<string | undefined>(undefined)
-    const [toastMessage, setToastMessage] = useState<string | undefined>(undefined)
 
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
@@ -51,11 +51,7 @@ const ChatBoxInputRow = observer(
 
         setPreviewImage(imageData)
       } catch (e) {
-        setToastMessage('Unable to read image')
-
-        setTimeout(() => {
-          setToastMessage(undefined)
-        }, 3000)
+        toastStore.addToast('Unable to read image', 'error')
       }
     }
 
@@ -111,14 +107,6 @@ const ChatBoxInputRow = observer(
             </button>
           )}
         </form>
-
-        {toastMessage && (
-          <div className="toast toast-center">
-            <div className="alert alert-error text-xl font-bold rounded-md">
-              <span>{toastMessage}</span>
-            </div>
-          </div>
-        )}
       </div>
     )
   },
@@ -140,6 +128,8 @@ const ChatBox = observer(() => {
     } catch (e) {
       // TODO: do not add this to the text but instead make it a boolean failed
       chat.updateIncomingMessage('\n -- Communication stopped with server --')
+
+      toastStore.addToast('Communication stopped with server', 'error')
     } finally {
       chat.commitIncomingMessage()
 

@@ -2,6 +2,8 @@ import { types, Instance, cast, flow } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
 import _ from 'lodash'
 
+import { toastStore } from './ToastStore'
+
 const Model = types.model({
   name: types.identifier,
   model: types.string,
@@ -48,7 +50,9 @@ export const SettingStore = types
         const json = yield response.json()
 
         data = json?.models as IModel[]
-      } catch (e) {}
+      } catch (e) {
+        toastStore.addToast('Failed to fetch models for host: ' + host, 'error')
+      }
 
       self.models = cast(data)
 
