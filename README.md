@@ -1,30 +1,57 @@
-# React + TypeScript + Vite
+# LLM eXplorer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+  ![LLM eXplorer logo](https://raw.githubusercontent.com/mrdjohnson/llm-explorer/main/public/LLMX.png)
 
-Currently, two official plugins are available:
+This project allows users to run Ollama locally from their machine directly in the browser.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+I have been interested in **LLM UI** for a while now and this seemed like a good intro application
 
-## Expanding the ESLint configuration
+  
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Getting started
 
-- Configure the top-level `parserOptions` property like this:
+  
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+clone the project, and run `npm install` in the root directory
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+  
+`npm run dev` starts a local instance and opens up a browser tab
+
+  
+
+## Goals
+
+  
+
+- [x] Text Entry and Response to Ollama
+
+- [x] Conversation history provided to model
+
+- [x] Ability to manage multiple chats
+
+- [x] Code highlighting with Highlight.js
+
+- [x] Ability to copy responses from Ollama
+
+- [x] Image to text using Ollama's multi modal abilities
+
+- [ ] LangChain.js integration, allowing for Open AI conversations as well
+
+  
+
+## MISC
+
+  
+
+- This app was written primarily using React, Typescript, Tailwind, DaisyUI, and Highlight.js
+
+- This project was originally inspired by `ollama-ui`: https://github.com/ollama-ui/ollama-ui
+
+
+- LangChain.js was attempted while spiking on this app but unfortunately it was not set up correctly for stopping incoming streams, I hope this gets fixed later in the future OR if possible a custom LLM Agent can be utilized in order to use LangChain
+
+  - Originally I used create-react-app 👴 while making this project without knowing it is no longer maintained, I am now using Vite. 🤞 This already allows me to use libs like `ollama-js` that I could not use before. Will be testing more with langchain very soon
+
+- This readme was written with [https://stackedit.io/app](https://stackedit.io/app)
+
+- Changes to the main branch trigger an immediate deploy to https://mrdjohnson.github.io/llm-explorer/
