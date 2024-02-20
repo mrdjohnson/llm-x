@@ -135,6 +135,9 @@ const ChatBox = observer(() => {
       chat.updateIncomingMessage('\n -- Communication stopped with server --')
 
       toastStore.addToast('Communication stopped with server', 'error')
+
+      // make sure the server is still connected
+      settingStore.updateModels()
     } finally {
       chat.commitIncomingMessage()
 
