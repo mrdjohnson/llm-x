@@ -1,31 +1,30 @@
+# React + TypeScript + Vite
 
-  
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-# LLM Explorer
+Currently, two official plugins are available:
 
-This project allows users to run Ollama locally from their machine directly in the browser.
-I have been interested in LLM UI for a while now and this seemed like a good intro application
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Getting started
+## Expanding the ESLint configuration
 
-clone the project, and run `npm install` in the root directory
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-`npm run start` starts a local instance and opens up a browser tab  
+- Configure the top-level `parserOptions` property like this:
 
-## Goals
+```js
+export default {
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
+}
+```
 
- - [x] Text Entry and Response to Ollama
- - [x] Conversation history provided to model
- - [x] Ability to manage multiple chats
- - [x] Code highlighting with Highlight.js
- - [x] Ability to copy responses from Ollama
- - [x] Image to text using Ollama's multi modal abilities   
- - [ ] LangChain.js integration, allowing for open ai conversations as well
-
-## MISC
-
-- This app was written primarily using React, Typescript, Tailwind, DaisyUI, and Highlight.js
-- This project was originally inspired by `ollama-ui`: https://github.com/ollama-ui/ollama-ui
-
-- LangChain.js was attempted while spiking on this app but unfortunately it was not set up correctly for stopping incoming streams, I hope this gets fixed later in the future OR if possible a custom LLM Agent can be utilized in order to use LangChain
-- This readme was written with [https://stackedit.io/app](https://stackedit.io/app)
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
