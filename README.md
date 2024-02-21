@@ -1,6 +1,6 @@
-# LLM eXplorer
+# LLM X
 
-  ![LLM eXplorer logo](https://raw.githubusercontent.com/mrdjohnson/llm-explorer/main/public/LLMX.png)
+  ![LLM X logo](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/public/LLMX.png)
 
 This project allows users to run Ollama locally from their machine directly in the browser.
 
@@ -54,4 +54,4 @@ clone the project, and run `npm install` in the root directory
 
 - This readme was written with [https://stackedit.io/app](https://stackedit.io/app)
 
-- Changes to the main branch trigger an immediate deploy to https://mrdjohnson.github.io/llm-explorer/
+- Changes to the main branch trigger an immediate deploy to https://mrdjohnson.github.io/llm-x/
