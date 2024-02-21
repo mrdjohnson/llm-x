@@ -39,7 +39,11 @@ const Modal = observer(() => {
         <div className="flex flex-col gap-2">
           <p>By default, Ollama allows cross origin requests from 127.0.0.1 and 0.0.0.0.</p>{' '}
           <p>
-            To use custom origins (like this one), you can set OLLAMA_ORIGINS when starting ollama:
+            To use custom origins (like this one), you can set
+            <span className="prose mx-1">
+              <code>OLLAMA_ORIGINS</code>
+            </span>
+            when starting ollama:
           </p>
         </div>
 
