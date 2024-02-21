@@ -19,7 +19,7 @@ export const SettingStore = types
     host: types.maybe(types.string),
     models: types.optional(types.array(Model), []),
     _selectedModelName: types.maybeNull(types.string),
-    theme: types.optional(types.string, 'dark'),
+    theme: types.optional(types.string, '_system'),
   })
   .actions(self => ({
     selectModel(name: string) {
