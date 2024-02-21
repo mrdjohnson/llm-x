@@ -13,7 +13,7 @@ const ToastCenter = observer(() => {
             <span>{toast.message}</span>
 
             <div
-              className="absolute top-1 right-1 opacity-50 btn btn-xs"
+              className="absolute top-1 right-1 opacity-50 btn btn-xs font-bold text-sm"
               onClick={() => toastStore.removeToast(toast)}
             >
               x
