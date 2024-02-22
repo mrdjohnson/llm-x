@@ -71,6 +71,7 @@ export const SideBar = observer(() => {
       <button
         className="btn w-full p-2 flex flex-row gap-2 items-center justify-center btn-neutral mb-2"
         onClick={chatStore.createChat}
+        disabled={chatStore.hasEmptyChat}
       >
         New Chat
         <Edit />

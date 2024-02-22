@@ -45,6 +45,10 @@ export const ChatStore = types
     get isGettingData() {
       return !!self.selectedChat?.isGettingData
     },
+
+    get hasEmptyChat() {
+      return _.some(self.chats, chat => chat.messages.length === 0)
+    },
   }))
 
 export const chatStore = ChatStore.create()
