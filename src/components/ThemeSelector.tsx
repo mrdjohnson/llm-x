@@ -30,7 +30,7 @@ const ThemeSelector = observer(() => {
       </div>
 
       <div className="dropdown ">
-        <div tabIndex={0} role="button" className="btn btn-active">
+        <div tabIndex={0} role="button" className="btn btn-active w-full">
           {themes[selectedTheme]}
           <ChevronDown />
         </div>

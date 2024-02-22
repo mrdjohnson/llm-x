@@ -10,7 +10,7 @@ const ModalSelector = observer(() => {
 
   return (
     <div className="dropdown">
-      <button tabIndex={0} role="button" className="btn btn-active" disabled={!selectedModel}>
+      <button tabIndex={0} role="button" className="btn btn-active w-full" disabled={!selectedModel}>
         {selectedModel?.name || 'No models available'}
         <ChevronDown />
       </button>
