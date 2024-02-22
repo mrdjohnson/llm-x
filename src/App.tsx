@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite'
 import { SideBar } from './components/SideBar'
 import Drawer from './components/Drawer'
 import ChatBox from './components/ChatBox'
-import Modal from './components/Modal'
+import HelpModal from './components/HelpModal'
 import ToastCenter from './components/ToastCenter'
 import PwaReloadPrompt from './components/PwaReloadPrompt'
 import ModalSelector from './components/ModalSelector'
@@ -58,7 +58,7 @@ function App() {
 
         <Drawer />
 
-        <Modal />
+        <HelpModal />
 
         <ToastCenter />
 

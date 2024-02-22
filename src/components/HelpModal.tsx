@@ -8,7 +8,7 @@ import CopySuccess from '../icons/CopySuccess'
 
 const OLLAMA_CODE = 'OLLAMA_ORIGINS=*.github.io ollama serve'
 
-const Modal = observer(() => {
+const HelpModal = observer(() => {
   const modalRef = useRef<HTMLDialogElement>(null)
 
   const selectedModel = settingStore.selectedModel
@@ -32,7 +32,7 @@ const Modal = observer(() => {
   }, [selectedModel])
 
   return (
-    <dialog ref={modalRef} id="no-server-modal" className="modal modal-top">
+    <dialog ref={modalRef} id="help-modal" className="modal modal-top">
       <div className="modal-box w-9/12 rounded place-self-center max-w-[1000px]">
         <h3 className="font-bold text-xl pb-3">How to connect to Ollama Server:</h3>
 
@@ -78,4 +78,4 @@ const Modal = observer(() => {
   )
 })
 
-export default Modal
+export default HelpModal

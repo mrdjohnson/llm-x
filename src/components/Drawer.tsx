@@ -12,7 +12,7 @@ import { SideBar } from './SideBar'
 
 const openNoServerDialog = () => {
   const noServerDialog: HTMLDialogElement | undefined = document.getElementById(
-    'no-server-modal',
+    'help-modal',
   ) as HTMLDialogElement
 
   noServerDialog?.showModal()
