@@ -6,6 +6,7 @@ import Drawer from './components/Drawer'
 import ChatBox from './components/ChatBox'
 import Modal from './components/Modal'
 import ToastCenter from './components/ToastCenter'
+import ReloadPrompt from './components/ReloadPrompt'
 
 import { settingStore } from './models/SettingStore'
 
@@ -52,6 +53,8 @@ function App() {
         <Modal />
 
         <ToastCenter />
+
+        <ReloadPrompt />
 
         <section className="flex flex-row gap-4 text-xl flex-grow max-h-full overflow-hidden h-screen drawer-content w-full">
           <aside className="h-full hidden lg:block">
