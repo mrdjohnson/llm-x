@@ -1,16 +1,17 @@
 import { useRegisterSW } from 'virtual:pwa-register/react'
-
-import { toastStore } from '../models/ToastStore'
+import useMedia from 'use-media'
 import { useEffect } from 'react'
 
+const hour_1 = 60 * 60 * 1000
+
 function ReloadPrompt() {
-  // return null
-  // automagically replaced through vite.config.ts
-  const buildDate = '__DATE__'
   // automagically replaced through vite.config.ts
   const reloadSW = '__RELOAD_SW__'
 
-  console.log('build date: ', buildDate)
+  //   this means we're in app mode
+  const isStandalone = useMedia('(display-mode: standalone)')
+
+  console.log('isStandalone', isStandalone)
 
   const {
     needRefresh: [needRefresh, setNeedRefresh],
@@ -18,21 +19,24 @@ function ReloadPrompt() {
   } = useRegisterSW({
     onRegisteredSW(swScriptUrl, registration) {
       console.log(`Service Worker at: ${swScriptUrl}`)
+
       // @ts-expect-error automagically replaced through vite.config.ts
       if (reloadSW === 'true') {
-        registration &&
+        if (registration) {
+          // update registration every hour
           setInterval(() => {
-            console.log('Checking for sw update')
+            console.log('updating registration')
+
             registration.update()
-          }, 20000 /* 20s for testing purposes */)
+          }, hour_1)
+        }
       } else {
         console.log('SW Registered: ' + registration)
       }
     },
+
     onRegisterError(error) {
       console.log('SW registration error', error)
-
-      toastStore.addToast('Unable to create PWA', 'info')
     },
   })
 
@@ -46,6 +50,8 @@ function ReloadPrompt() {
     }
   }, [needRefresh])
 
+  if (!isStandalone) return null
+
   return (
     <dialog id="pwa_refresh_modal" className="modal modal-top">
       <div className="modal-box justify-self-center">
@@ -57,7 +63,7 @@ function ReloadPrompt() {
       </div>
 
       <form method="dialog" className="modal-backdrop">
-        <button onClick={() => setNeedRefresh(false)}/>
+        <button onClick={() => setNeedRefresh(false)} />
       </form>
     </dialog>
   )
