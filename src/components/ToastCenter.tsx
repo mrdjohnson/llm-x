@@ -27,12 +27,12 @@ const ToastCenter = observer(() => {
     >
       {toasts.map(toast => (
         <div
-          className={`alert alert-${toast.type} text-xl font-bold rounded-md relative px-4 max-w-10/12 border border-base-content/30`}
+          className={`alert alert-${toast.type} max-w-10/12 relative rounded-md border border-base-content/30 px-4 text-xl font-bold`}
         >
           <span className="cursor-default">{toast.message}</span>
 
           <div
-            className="absolute top-1 right-1 opacity-50 btn btn-xs font-bold text-sm"
+            className="btn btn-xs absolute right-1 top-1 text-sm font-bold opacity-50"
             onClick={() => toastStore.removeToast(toast)}
           >
             x

@@ -22,7 +22,7 @@ const Input = observer(() => {
   return (
     <div className="form-control">
       <div className="label pb-1 pt-0">
-        <span className="label-text text-sm flex flex-row items-center gap-2">
+        <span className="label-text flex flex-row items-center gap-2 text-sm">
           Host:
           <div className="cursor-pointer" onClick={openNoServerDialog}>
             <Question />
@@ -30,7 +30,7 @@ const Input = observer(() => {
         </span>
       </div>
 
-      <div className="flex flex-row gap-2 items-center">
+      <div className="flex flex-row items-center gap-2">
         <input
           type="text"
           id="host"
@@ -66,9 +66,9 @@ const Drawer = () => {
       <section className="drawer-side z-20">
         <label htmlFor="app-drawer" aria-label="close sidebar" className="drawer-overlay" />
 
-        <div className="p-3 w-80 min-h-full bg-base-200 flex flex-col">
+        <div className="flex min-h-full w-80 flex-col bg-base-200 p-3">
           <div className="navbar" />
-          <div className="flex flex-col gap-3 flex-1 h-full">
+          <div className="flex h-full flex-1 flex-col gap-3">
             <Input />
 
             <Suspense fallback={<div> Loading models ... </div>}>
@@ -77,7 +77,7 @@ const Drawer = () => {
 
             <ThemeSelector />
 
-            <div className="lg:hidden h-full flex-1 flex bg-base-300 rounded-md flex">
+            <div className="flex h-full flex-1 rounded-md bg-base-300 lg:hidden">
               <SideBar />
             </div>
           </div>

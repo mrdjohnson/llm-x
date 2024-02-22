@@ -10,20 +10,25 @@ const ModalSelector = observer(() => {
 
   return (
     <div className="dropdown">
-      <button tabIndex={0} role="button" className="btn btn-active w-full" disabled={!selectedModel}>
+      <button
+        tabIndex={0}
+        role="button"
+        className="btn btn-active w-full"
+        disabled={!selectedModel}
+      >
         {selectedModel?.name || 'No models available'}
         <ChevronDown />
       </button>
 
       <ul
         tabIndex={0}
-        className="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box mt-2 border border-base-content/30 max-h-52 flex flex-col"
+        className="dropdown-content z-[1] mt-2 flex max-h-52 flex-col rounded-box border border-base-content/30 bg-base-300 p-2 shadow-2xl"
       >
         {models?.map(model => (
           <li key={model.name}>
             <input
               type="radio"
-              className="btn btn-sm btn-ghost w-full place-items-center"
+              className="btn btn-ghost btn-sm w-full place-items-center"
               aria-label={model.name}
               value={model.name}
               checked={selectedModel === model}
@@ -33,8 +38,11 @@ const ModalSelector = observer(() => {
         ))}
 
         <li>
-          <a href="https://ollama.com/library" className="btn btn-outline btn-sm btn-neutral place-items-center flex flex-row flex-nowrap gap-2 w-full mt-2">
-            <span className=" text-sm whitespace-nowrap ">Ollama Library</span>
+          <a
+            href="https://ollama.com/library"
+            className="btn btn-outline btn-neutral btn-sm mt-2 flex w-full flex-row flex-nowrap place-items-center gap-2"
+          >
+            <span className=" whitespace-nowrap text-sm ">Ollama Library</span>
             <Globe />
           </a>
         </li>

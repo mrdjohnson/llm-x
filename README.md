@@ -2,40 +2,41 @@
 
 ![LLM X logo](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/public/LLMX.png)
 
-***What is this?***
+**_What is this?_**
 Chat GPT style UI for the niche group of folks who run [Ollama](https://ollama.com/) (think of this like an offline chat gpt) locally. Supports sending images and text!
 **WORKS OFFLINE** through PWA ([Progressive Web App](https://web.dev/explore/progressive-web-apps)) standards (its not dead!)
 
-***Why do this?***
+**_Why do this?_**
 I have been interested in **LLM UI** for a while now and this seemed like a good intro application.
-I've been introduced to a lot of modern technologies thanks to this project as well, its been fun! 
+I've been introduced to a lot of modern technologies thanks to this project as well, its been fun!
 
-***Why so many buzz words?***
-I couldn't help but bee cool 😎 
+**_Why so many buzz words?_**
+I couldn't help but bee cool 😎
 
-  
-  ## Tech Stack (thank you's):
-***Logic helpers:***
+## Tech Stack (thank you's):
+
+**_Logic helpers:_**
+
 - [React](https://react.dev/)
 - [Typescript](https://www.typescriptlang.org/)
 - [Mobx State Tree](https://mobx-state-tree.js.org/intro/welcome)
 
-***UI Helpers:***
+**_UI Helpers:_**
+
 - [Tailwind css](https://tailwindcss.com/)
 - [DaisyUI](https://daisyui.com/)
 - [Highlight.js](https://www.npmjs.com/package/highlight.js)
 - [React Markdown](https://www.npmjs.com/package/react-markdown)
 
-***Project setup helpers:***
+**_Project setup helpers:_**
+
 - [Vite](https://vitejs.dev/)
 - [Vite PWA plugin](https://vite-pwa-org.netlify.app/)
 
-
-***Inspiration:***
- [ollama-ui's](https://github.com/ollama-ui/ollama-ui) project. Which allows users to connect to ollama via a [web app](https://ollama-ui.github.io/ollama-ui/)
+**_Inspiration:_**
+[ollama-ui's](https://github.com/ollama-ui/ollama-ui) project. Which allows users to connect to ollama via a [web app](https://ollama-ui.github.io/ollama-ui/)
 
 [Perplexity.ai](https://www.perplexity.ai/) Perpexlity has sone some amazing UI advancements in the LLM UI space and I have been very interested in getting to that point. Hopefully this starter project lets me get closer to doing something similar!
-
 
 ## Getting started
 

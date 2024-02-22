@@ -6,7 +6,7 @@ export default function Copy({ className = '' }: { className?: string }) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={className + ' w-4 h-4 text-current/60 hover:text-current'}
+      className={className + ' text-current/60 h-4 w-4 hover:text-current'}
     >
       <path
         strokeLinecap="round"

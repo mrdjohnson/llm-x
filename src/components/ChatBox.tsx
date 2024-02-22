@@ -59,11 +59,11 @@ const ChatBoxInputRow = observer(
     const inputDisabled = chatStore.isGettingData || noServer
 
     return (
-      <div className={'w-full mt-2 ' + (noServer && 'tooltip')} data-tip="Server is not connected">
-        <form className="flex flex-row min-h-fit gap-2 w-full" onSubmit={onFormSubmit}>
-          <div className="join w-full flex-1 relative">
+      <div className={'mt-2 w-full ' + (noServer && 'tooltip')} data-tip="Server is not connected">
+        <form className="flex min-h-fit w-full flex-row gap-2" onSubmit={onFormSubmit}>
+          <div className="join relative w-full flex-1">
             <input
-              className="input input-bordered join-item grow focus:outline-none"
+              className="input join-item input-bordered grow focus:outline-none"
               placeholder="Enter Prompt"
               ref={inputRef}
               type="text"
@@ -81,7 +81,7 @@ const ChatBoxInputRow = observer(
             <button
               className={
                 'btn join-item !rounded-r-md border ' +
-                (inputDisabled ? '':  'input-bordered hover:input-bordered')
+                (inputDisabled ? '' : 'input-bordered hover:input-bordered')
               }
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -91,10 +91,10 @@ const ChatBoxInputRow = observer(
             </button>
 
             {previewImage && (
-              <div className="h-24 w-24 absolute --top-full end-0 bottom-full mb-2">
+              <div className="--top-full absolute bottom-full end-0 mb-2 h-24 w-24">
                 <div className="relative h-full w-full">
                   <div
-                    className="absolute top-1 right-1 opacity-70 btn btn-xs"
+                    className="btn btn-xs absolute right-1 top-1 opacity-70"
                     onClick={() => setPreviewImage(undefined)}
                   >
                     x
@@ -171,10 +171,10 @@ const ChatBox = observer(() => {
   }
 
   return (
-    <div className="rounded-md flex flex-col min-h-full max-h-full w-full max-w-full overflow-x-auto overflow-y-scroll min-w-full">
+    <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-scroll rounded-md">
       <ScrollableFeed
         ref={scrollableFeedRef}
-        className="flex flex-col gap-2 flex-1 no-scrollbar overflow-x-hidden overflow-y-scroll"
+        className="no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-scroll"
         animateScroll={(element, offset) => element.scrollBy({ top: offset, behavior: 'smooth' })}
       >
         {chat.messages.map(message => (

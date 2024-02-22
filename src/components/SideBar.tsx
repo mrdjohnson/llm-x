@@ -23,28 +23,28 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
   return (
     <div
       className={
-        ' group rounded-md w-full flex flex-row justify-between dropdown dropdown-left lg:dropdown-right text-left p-2 ' +
+        ' group dropdown dropdown-left flex w-full flex-row justify-between rounded-md p-2 text-left lg:dropdown-right ' +
         (chat.id === chatStore.selectedChat?.id
-          ? ' btn-active btn-neutral cursor-default'
+          ? ' btn-neutral btn-active cursor-default'
           : ' btn-ghost cursor-pointer')
       }
       onClick={() => chatStore.selectChat(chat)}
     >
-      <span className="flex-1 line-clamp-1">{chat.name || 'new chat'}</span>
+      <span className="line-clamp-1 flex-1">{chat.name || 'new chat'}</span>
 
       <div onClick={e => e.stopPropagation()}>
-        <div tabIndex={0} role="button" className="hover:text-base-content/40 px-1 h-full">
+        <div tabIndex={0} role="button" className="h-full px-1 hover:text-base-content/40">
           <Options />
         </div>
 
         <div
           tabIndex={0}
-          className="dropdown-content z-10 menu p-2 shadow bg-base-300 rounded-box mr-3 lg:ml-3 mt-2 w-72 flex gap-2"
+          className="menu dropdown-content z-10 mr-3 mt-2 flex w-72 gap-2 rounded-box bg-base-300 p-2 shadow lg:ml-3"
         >
           <form className="flex flex-row gap-2" onSubmit={handleFormSubmit}>
             <input
               type="text"
-              className="input grow flex-1 input-bordered focus:outline-none w-full min-w-24"
+              className="input input-bordered w-full min-w-24 flex-1 grow focus:outline-none"
               defaultValue={chat.name || 'new chat'}
               ref={inputRef}
             />
@@ -67,9 +67,9 @@ export const SideBar = observer(() => {
   const chats = chatStore.chats
 
   return (
-    <div className="flex-1 flex flex-col flex-nowrap gap-2 bg-base-300 h-full rounded-md p-2 min-w-[260px] w-[260px] ">
+    <div className="flex h-full w-[260px] min-w-[260px] flex-1 flex-col flex-nowrap gap-2 rounded-md bg-base-300 p-2 ">
       <button
-        className="btn w-full p-2 flex flex-row gap-2 items-center justify-center btn-neutral mb-2"
+        className="btn btn-neutral mb-2 flex w-full flex-row items-center justify-center gap-2 p-2"
         onClick={chatStore.createChat}
         disabled={chatStore.hasEmptyChat}
       >

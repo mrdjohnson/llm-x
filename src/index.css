@@ -8,7 +8,7 @@
   }
 
   pre {
-    @apply inline-table my-2 w-full max-w-full;
+    @apply my-2 inline-table w-full max-w-full;
   }
 
   li {
@@ -16,7 +16,7 @@
   }
 
   ol {
-    @apply list-decimal list-inside !px-2;
+    @apply list-inside list-decimal !px-2;
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */

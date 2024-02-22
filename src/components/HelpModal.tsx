@@ -33,8 +33,8 @@ const HelpModal = observer(() => {
 
   return (
     <dialog ref={modalRef} id="help-modal" className="modal modal-top">
-      <div className="modal-box w-9/12 rounded place-self-center max-w-[1000px]">
-        <h3 className="font-bold text-xl pb-3">How to connect to Ollama Server:</h3>
+      <div className="modal-box w-9/12 max-w-[1000px] place-self-center rounded">
+        <h3 className="pb-3 text-xl font-bold">How to connect to Ollama Server:</h3>
 
         <div className="flex flex-col gap-2">
           <p>By default, Ollama allows cross origin requests from 127.0.0.1 and 0.0.0.0.</p>{' '}
@@ -47,13 +47,13 @@ const HelpModal = observer(() => {
           </p>
         </div>
 
-        <div className="flex flex-row place-content-center gap-2 my-4">
+        <div className="my-4 flex flex-row place-content-center gap-2">
           <div className="prose">
             <code>{OLLAMA_CODE}</code>
           </div>
 
           <label
-            className={'swap btn btn-neutral btn-sm ' + (copied && 'swap-active')}
+            className={'btn swap btn-neutral btn-sm ' + (copied && 'swap-active')}
             onClick={handleCopy}
           >
             <Copy className="swap-off" />
@@ -70,7 +70,7 @@ const HelpModal = observer(() => {
 
         <div className="modal-action">
           <form method="dialog">
-            <button className="btn btn-sm btn-ghost focus:outline-0 absolute right-2 top-2">
+            <button className="btn btn-ghost btn-sm absolute right-2 top-2 focus:outline-0">
               ✕
             </button>
           </form>

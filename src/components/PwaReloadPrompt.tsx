@@ -54,19 +54,19 @@ const PwaReloadPrompt = () => {
 
   return (
     <dialog id="pwa_refresh_modal" className="modal modal-top">
-      <div className="modal-box justify-self-center m-8 rounded-md max-w-[600px] flex flex-row items-center w-fit relative">
-        <h3 className="font-bold text-lg">Updates Found, Please refresh the page</h3>
+      <div className="modal-box relative m-8 flex w-fit max-w-[600px] flex-row items-center justify-self-center rounded-md">
+        <h3 className="text-lg font-bold">Updates Found, Please refresh the page</h3>
 
-        <div className="btn btn-neutral mx-4 btn-sm" onClick={() => updateServiceWorker(true)}>
+        <div className="btn btn-neutral btn-sm mx-4" onClick={() => updateServiceWorker(true)}>
           Refresh
         </div>
 
         <div
-            className="absolute top-1 right-1 opacity-50 btn btn-xs font-bold text-sm"
-            onClick={() => setNeedRefresh(false)}
-          >
-            x
-          </div>
+          className="btn btn-xs absolute right-1 top-1 text-sm font-bold opacity-50"
+          onClick={() => setNeedRefresh(false)}
+        >
+          x
+        </div>
       </div>
 
       <form method="dialog" className="modal-backdrop">

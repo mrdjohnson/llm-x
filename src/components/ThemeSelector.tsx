@@ -37,14 +37,14 @@ const ThemeSelector = observer(() => {
 
         <ul
           tabIndex={0}
-          className="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box w-52 mt-2"
+          className="dropdown-content z-[1] mt-2 w-52 rounded-box bg-base-300 p-2 shadow-2xl"
         >
           {_.map(themes, (label, value) => (
             <li key={value}>
               <input
                 type="radio"
                 name="theme-dropdown"
-                className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+                className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
                 aria-label={label}
                 value={theme}
                 checked={selectedTheme === value}

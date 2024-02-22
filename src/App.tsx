@@ -22,7 +22,7 @@ const Navbar = observer(() => {
   const noServer = !settingStore.selectedModel
 
   return (
-    <nav className="navbar bg-base-300 rounded-md mb-2">
+    <nav className="navbar mb-2 rounded-md bg-base-300">
       <div className="navbar-start text-xl">
         <label className="ml-2 text-xl">LLM X</label>
       </div>
@@ -31,7 +31,6 @@ const Navbar = observer(() => {
         <ModalSelector />
         <ModelRefreshButton />
       </div>
-
 
       <div className="navbar-end">
         <label htmlFor="app-drawer" className="btn btn-square btn-ghost drawer-button ">
@@ -53,7 +52,7 @@ const Navbar = observer(() => {
 function App() {
   return (
     <div className="App grid">
-      <div className="flex flex-col max-h-screen p-3 drawer drawer-end place-self-center container">
+      <div className="container drawer drawer-end flex max-h-screen flex-col place-self-center p-3">
         <Navbar />
 
         <Drawer />
@@ -64,12 +63,12 @@ function App() {
 
         <PwaReloadPrompt />
 
-        <section className="flex flex-row gap-4 text-xl flex-grow max-h-full overflow-hidden h-screen drawer-content w-full">
-          <aside className="h-full hidden lg:block">
+        <section className="drawer-content flex h-screen max-h-full w-full flex-grow flex-row gap-4 overflow-hidden text-xl">
+          <aside className="hidden h-full lg:block">
             <SideBar />
           </aside>
 
-          <main className=" h-full flex-1 w-full overflow-x-auto overflow-y-scroll">
+          <main className=" h-full w-full flex-1 overflow-x-auto overflow-y-scroll">
             <ChatBox />
           </main>
         </section>

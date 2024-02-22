@@ -6,7 +6,7 @@ export default function Check() {
       viewBox="0 0 24 24"
       strokeWidth={3}
       stroke="currentColor"
-      className="w-4 h-4"
+      className="h-4 w-4"
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
     </svg>

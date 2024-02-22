@@ -31,7 +31,7 @@ const customCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
     return (
       <div className="indicator w-full ">
         <button
-          className="text-neutral-content/30 indicator-item hover:text-neutral-content z-10 "
+          className="indicator-item z-10 text-neutral-content/30 hover:text-neutral-content "
           onClick={copy}
         >
           <Copy />
@@ -40,7 +40,7 @@ const customCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
         <code
           {...rest}
           dangerouslySetInnerHTML={{ __html: highlightedText }}
-          className="w-full overflow-x-scroll max-w-lg xl:max-w-[700px] 2xl:max-w-[1000px]"
+          className="w-full max-w-lg overflow-x-scroll xl:max-w-[700px] 2xl:max-w-[1000px]"
         />
       </div>
     )
@@ -50,7 +50,7 @@ const customCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
 }
 
 const Loading = () => (
-  <span className="indicator-item indicator-start loading loading-dots loading-sm ml-8" />
+  <span className="indicator-item loading loading-dots loading-sm indicator-start ml-8" />
 )
 
 // this one is observed for incoming text changes, the rest do not need to be observed
@@ -92,13 +92,15 @@ export const Message = ({ message, onDestroy, children, customDeleteIcon }: Mess
   return (
     <div
       className={
-        'group w-fit max-w-full flex flex-col indicator ' + (fromBot ? 'pr-6 ' : ' ml-2 self-end ')
+        'group indicator flex w-fit max-w-full flex-col ' + (fromBot ? 'pr-6 ' : ' ml-2 self-end ')
       }
       key={uniqId}
     >
-      {image && <img className="w-56 h-56 rounded-md place-self-center object-contain" src={image} />}
+      {image && (
+        <img className="h-56 w-56 place-self-center rounded-md object-contain" src={image} />
+      )}
 
-      <div className=" border border-base-content/20 p-2 rounded-md w-full">
+      <div className=" w-full rounded-md border border-base-content/20 p-2">
         <Markdown
           remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
           className="prose inline-table w-full"
@@ -112,13 +114,13 @@ export const Message = ({ message, onDestroy, children, customDeleteIcon }: Mess
 
       {children}
 
-      <div className={'group-hover:opacity-90 opacity-0 w-fit mt-1 ' + (!fromBot && 'self-end')}>
-        <button className="mr-2 hover:text-error text-error/30 rounded-md" onClick={onDestroy}>
+      <div className={'mt-1 w-fit opacity-0 group-hover:opacity-90 ' + (!fromBot && 'self-end')}>
+        <button className="mr-2 rounded-md text-error/30 hover:text-error" onClick={onDestroy}>
           {customDeleteIcon || <Delete />}
         </button>
 
         <button
-          className="hover:text-base-content text-base-content/30 rounded-md"
+          className="rounded-md text-base-content/30 hover:text-base-content"
           onClick={handleCopy}
         >
           <label className={'swap ' + (copied && 'swap-active')}>
