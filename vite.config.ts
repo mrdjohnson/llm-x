@@ -71,5 +71,9 @@ if (selfDestroying) pwaOptions.selfDestroying = selfDestroying
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), makeCert, VitePWA(pwaOptions), replace(replaceOptions)],
+  esbuild: {
+    // https://github.com/vitejs/vite/discussions/7920#discussioncomment-2709119
+    drop: ['console', 'debugger'],
+  },
   base: '/llm-x/',
 })
