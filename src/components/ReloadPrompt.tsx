@@ -54,12 +54,19 @@ function ReloadPrompt() {
 
   return (
     <dialog id="pwa_refresh_modal" className="modal modal-top">
-      <div className="modal-box justify-self-center">
+      <div className="modal-box justify-self-center m-8 rounded-md max-w-[600px] flex flex-row items-center w-fit relative">
         <h3 className="font-bold text-lg">Updates Found, Please refresh the page</h3>
 
-        <button className="btn btn-active mx-4" onClick={() => updateServiceWorker(true)}>
-          Reload
-        </button>
+        <div className="btn btn-neutral mx-4 btn-sm" onClick={() => updateServiceWorker(true)}>
+          Refresh
+        </div>
+
+        <div
+            className="absolute top-1 right-1 opacity-50 btn btn-xs font-bold text-sm"
+            onClick={() => setNeedRefresh(false)}
+          >
+            x
+          </div>
       </div>
 
       <form method="dialog" className="modal-backdrop">
