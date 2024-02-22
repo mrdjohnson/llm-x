@@ -47,18 +47,25 @@ const HelpModal = observer(() => {
           </p>
         </div>
 
-        <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-row place-content-center gap-2 my-4">
           <div className="prose">
             <code>{OLLAMA_CODE}</code>
           </div>
 
           <label
-            className={'swap btn btn-ghost btn-sm ' + (copied && 'swap-active')}
+            className={'swap btn btn-neutral btn-sm ' + (copied && 'swap-active')}
             onClick={handleCopy}
           >
             <Copy className="swap-off" />
             <CopySuccess className="swap-on" />
           </label>
+        </div>
+
+        <div>
+          Find out more about <u>Ollama</u> on their website:{' '}
+          <a href="https://ollama.com/" className=" link">
+            https://ollama.com/
+          </a>
         </div>
 
         <div className="modal-action">
