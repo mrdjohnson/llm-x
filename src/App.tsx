@@ -23,7 +23,7 @@ const Navbar = observer(() => {
   return (
     <nav className="navbar bg-base-300 rounded-md mb-2">
       <div className="navbar-start text-xl">
-        <label className="ml-2 text-xl">LLM Explorer</label>
+        <label className="ml-2 text-xl">LLM X</label>
       </div>
 
       <div className="navbar-center">
