@@ -6,7 +6,7 @@
   "scripts": {
     "remove-dev-dist": "rm -rf dev-dist",
     "dev": "npm run remove-dev-dist && DEBUG=vite-plugin-pwa SW_DEV=true vite --force",
-    "build": "tsc && vite build",
+    "build": "tsc && SW=true vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal-2023 public/logo.svg"
