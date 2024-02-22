@@ -1,10 +1,10 @@
 import { observer } from 'mobx-react-lite'
-import { Suspense, } from 'react'
+import { Suspense } from 'react'
 
 import Question from '../icons/Question'
-import Refresh from '../icons/Refresh'
 
 import { DefaultHost, settingStore } from '../models/SettingStore'
+import ModelRefreshButton from './ModelRefreshButton'
 
 import ModalSelector from './ModalSelector'
 import ThemeSelector from './ThemeSelector'
@@ -19,8 +19,6 @@ const openNoServerDialog = () => {
 }
 
 const Input = observer(() => {
-  const noServer = !settingStore.selectedModel
-
   return (
     <div className="form-control">
       <div className="label pb-1 pt-0">
@@ -42,21 +40,13 @@ const Input = observer(() => {
           onChange={e => settingStore.setHost(e.target.value)}
         />
 
-        {noServer && (
-          <button
-            className="btn btn-ghost align-middle px-2"
-            onClick={() => settingStore.updateModels()}
-          >
-            <Refresh />
-          </button>
-        )}
+        <ModelRefreshButton small />
       </div>
     </div>
   )
 })
 
-const Models = observer(() => {
-
+const Models = () => {
   return (
     <div className="form-control">
       <div className="label pb-1 pt-0">
@@ -66,7 +56,7 @@ const Models = observer(() => {
       <ModalSelector />
     </div>
   )
-})
+}
 
 const Drawer = () => {
   return (

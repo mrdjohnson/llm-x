@@ -16,6 +16,7 @@ import Bars3 from './icons/Bars3'
 
 // import './App.css'
 import 'highlight.js/styles/github.css'
+import ModelRefreshButton from './components/ModelRefreshButton'
 
 const Navbar = observer(() => {
   const noServer = !settingStore.selectedModel
@@ -26,9 +27,11 @@ const Navbar = observer(() => {
         <label className="ml-2 text-xl">LLM X</label>
       </div>
 
-      <div className="navbar-center">
+      <div className="navbar-center flex flex-row gap-2">
         <ModalSelector />
+        <ModelRefreshButton />
       </div>
+
 
       <div className="navbar-end">
         <label htmlFor="app-drawer" className="btn btn-square btn-ghost drawer-button ">
