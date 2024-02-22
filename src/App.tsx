@@ -7,6 +7,7 @@ import ChatBox from './components/ChatBox'
 import Modal from './components/Modal'
 import ToastCenter from './components/ToastCenter'
 import PwaReloadPrompt from './components/PwaReloadPrompt'
+import ModalSelector from './components/ModalSelector'
 
 import { settingStore } from './models/SettingStore'
 
@@ -21,11 +22,15 @@ const Navbar = observer(() => {
 
   return (
     <nav className="navbar bg-base-300 rounded-md mb-2">
-      <div className="flex-1 text-xl">
+      <div className="navbar-start text-xl">
         <label className="ml-2 text-xl">LLM Explorer</label>
       </div>
 
-      <div className="flex-none">
+      <div className="navbar-center">
+        <ModalSelector />
+      </div>
+
+      <div className="navbar-end">
         <label htmlFor="app-drawer" className="btn btn-square btn-ghost drawer-button ">
           <div className="indicator p-1">
             <Bars3 />
