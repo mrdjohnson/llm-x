@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 const hour_1 = 60 * 60 * 1000
 
-function ReloadPrompt() {
+const PwaReloadPrompt = () => {
   // automagically replaced through vite.config.ts
   const reloadSW = '__RELOAD_SW__'
 
@@ -76,4 +76,4 @@ function ReloadPrompt() {
   )
 }
 
-export default ReloadPrompt
+export default PwaReloadPrompt
