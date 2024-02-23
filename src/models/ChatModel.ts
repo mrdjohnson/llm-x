@@ -40,7 +40,7 @@ export const ChatModel = types
       }
     },
 
-    deleteMessage(uniqId: string) {
+    async deleteMessage(uniqId: string) {
       const messagesWithoutMessage = _.reject(self.messages, { uniqId })
 
       self.messages = cast(messagesWithoutMessage)
