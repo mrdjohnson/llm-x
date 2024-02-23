@@ -67,7 +67,7 @@ function App() {
             <SideBar />
           </aside>
 
-          <main className=" h-full w-full flex-1 overflow-x-auto overflow-y-scroll">
+          <main className="h-full w-full flex-1 overflow-x-auto overflow-y-hidden">
             <ChatBox />
           </main>
         </section>

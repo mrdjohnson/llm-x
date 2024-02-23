@@ -154,10 +154,10 @@ const ChatBox = observer(() => {
   console.log('disableRefresh', disableRegeneration)
 
   return (
-    <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-scroll rounded-md">
+    <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-hidden rounded-md">
       <ScrollableFeed
         ref={scrollableFeedRef}
-        className="no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-scroll"
+        className="no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-hidden"
         animateScroll={(element, offset) => element.scrollBy({ top: offset, behavior: 'smooth' })}
       >
         {chat.messages.map(message =>
