@@ -1,6 +1,6 @@
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { PropsWithChildren, useMemo, useState } from 'react'
+import { PropsWithChildren, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import Delete from '../icons/Delete'
@@ -13,42 +13,7 @@ import { IMessageModel } from '../models/ChatModel'
 import { chatStore } from '../models/ChatStore'
 import { OllmaApi } from '../utils/OllamaApi'
 
-import hljs from 'highlight.js/lib/common'
-
-const customCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
-  const { children, className = '', ...rest } = props
-
-  const text = children?.toString() || ''
-
-  const multiLine = text.includes('\n')
-
-  const copy = () => navigator.clipboard.writeText(text)
-
-  const highlightedText = useMemo(() => {
-    return hljs.highlightAuto(text).value
-  }, [text])
-
-  if (multiLine) {
-    return (
-      <div className="indicator w-full ">
-        <button
-          className="indicator-item z-10 text-neutral-content/30 hover:text-neutral-content "
-          onClick={copy}
-        >
-          <Copy />
-        </button>
-
-        <code
-          {...rest}
-          dangerouslySetInnerHTML={{ __html: highlightedText }}
-          className="w-full max-w-lg overflow-x-scroll xl:max-w-[700px] 2xl:max-w-[1000px]"
-        />
-      </div>
-    )
-  }
-
-  return <code {...props}>{children}</code>
-}
+import CustomCodeBlock from './CustomCodeBlock'
 
 const Loading = () => (
   <span className="indicator-item loading loading-dots loading-sm indicator-start ml-8" />
@@ -106,7 +71,8 @@ export const Message = ({
   return (
     <div
       className={
-        'group indicator flex w-fit max-w-full flex-col min-w-6 ' + (fromBot ? 'pr-6 ' : ' ml-2 self-end ')
+        'group indicator flex w-fit min-w-6 max-w-full flex-col ' +
+        (fromBot ? 'pr-6 ' : ' ml-2 self-end ')
       }
       key={uniqId}
     >
@@ -119,7 +85,7 @@ export const Message = ({
           remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
           className="prose inline-table w-full"
           components={{
-            code: customCodeBlock,
+            code: CustomCodeBlock,
           }}
         >
           {content}
