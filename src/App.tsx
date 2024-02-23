@@ -8,15 +8,14 @@ import HelpModal from './components/HelpModal'
 import ToastCenter from './components/ToastCenter'
 import PwaReloadPrompt from './components/PwaReloadPrompt'
 import ModalSelector from './components/ModalSelector'
+import ModelRefreshButton from './components/ModelRefreshButton'
 
 import { settingStore } from './models/SettingStore'
 
 import Warning from './icons/Warning'
 import Bars3 from './icons/Bars3'
 
-// import './App.css'
 import 'highlight.js/styles/github.css'
-import ModelRefreshButton from './components/ModelRefreshButton'
 
 const Navbar = observer(() => {
   const noServer = !settingStore.selectedModel
