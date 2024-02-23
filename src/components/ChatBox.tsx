@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback, PropsWithChildren } from 'react'
+import { useEffect, useRef, useState, PropsWithChildren } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
@@ -125,34 +125,12 @@ const ChatBox = observer(() => {
   const sendMessage = async () => {
     if (!chat) return
 
-    try {
-      for await (const message of OllmaApi.streamChat()) {
-        chat.updateIncomingMessage(message)
-        scrollToBottom()
-      }
-    } catch (e) {
-      // TODO: do not add this to the text but instead make it a boolean failed
-      chat.updateIncomingMessage('\n -- Communication stopped with server --')
+    const incomingMessage = chat.createIncomingMessage()
 
-      toastStore.addToast('Communication stopped with server', 'error')
-
-      // make sure the server is still connected
-      settingStore.updateModels()
-    } finally {
-      chat.commitIncomingMessage()
-
+    chat.generateMessage(incomingMessage).finally(() => {
       scrollableFeedRef.current?.scrollToBottom()
-    }
+    })
   }
-
-  //  only scroll every 1.5 seconds max
-  const scrollToBottom = useCallback(
-    _.throttle(() => {
-      console.log('scrolling to bottom')
-      scrollableFeedRef.current?.scrollToBottom()
-    }, 1500),
-    [scrollableFeedRef?.current],
-  )
 
   useEffect(() => {
     //no op
@@ -170,6 +148,11 @@ const ChatBox = observer(() => {
     sendMessage()
   }
 
+  const disableRegeneration = !!chat.incomingMessage
+  const incomingUniqId = chat.incomingMessage?.uniqId
+
+  console.log('disableRefresh', disableRegeneration)
+
   return (
     <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-scroll rounded-md">
       <ScrollableFeed
@@ -177,15 +160,18 @@ const ChatBox = observer(() => {
         className="no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-scroll"
         animateScroll={(element, offset) => element.scrollBy({ top: offset, behavior: 'smooth' })}
       >
-        {chat.messages.map(message => (
-          <Message
-            message={message}
-            key={message.uniqId}
-            onDestroy={() => chat.deleteMessage(message.uniqId)}
-          />
-        ))}
-
-        {chat.isGettingData && <IncomingMessage />}
+        {chat.messages.map(message =>
+          message.uniqId === incomingUniqId ? (
+            <IncomingMessage key={message.uniqId} />
+          ) : (
+            <Message
+              message={message}
+              key={message.uniqId}
+              onDestroy={() => chat.deleteMessage(message.uniqId)}
+              disableRegeneration={disableRegeneration}
+            />
+          ),
+        )}
       </ScrollableFeed>
 
       <ChatBoxInputRow onSend={handleMessageToSend}>

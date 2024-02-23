@@ -1,39 +1,44 @@
-import { chatStore } from '../models/ChatStore'
+import { IMessageModel } from '../models/ChatModel'
 import { DefaultHost, settingStore } from '../models/SettingStore'
+
+type OllamaMessage = {
+  role: 'assistant' | 'user'
+  content: string
+  images?: string[]
+}
 
 type OllamaResponse = {
   model: string
   created_at: string
-  message: {
-    role: 'assistant'
-    content: string
-    // images: null
-  }
+  message: OllamaMessage
   done: boolean
 }
 
 export class OllmaApi {
   private static abortController?: AbortController
 
-  static async *streamChat() {
+  static async *streamChat(chatMessages: IMessageModel[], incomingMessage: IMessageModel) {
     const model = settingStore.selectedModel?.name
     if (!model) return
 
     const host = settingStore.host || DefaultHost
-    const chat = chatStore.selectedChat!
+
     OllmaApi.abortController = new AbortController()
 
-    chat.createIncomingMessage(model)
+    const messages: OllamaMessage[] = []
 
-    const messages = chat.messages.map(message => {
+    for (const message of chatMessages) {
+      if (message.uniqId === incomingMessage.uniqId) break
+
       if (message.fromBot) {
-        return { role: 'assistant', content: message.content }
+        messages.push({ role: 'assistant', content: message.content })
+        continue
       }
 
-      const images = message.image?.includes(',') && [message.image.split(',')[1]]
+      const images = message.image?.includes(',') ? [message.image.split(',')[1]] : undefined
 
-      return { role: 'user', content: message.content, images }
-    })
+      messages.push({ role: 'user', content: message.content, images })
+    }
 
     const response = await fetch(host + '/api/chat', {
       method: 'POST',

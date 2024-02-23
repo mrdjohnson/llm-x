@@ -1,6 +1,11 @@
 import _ from 'lodash'
 import { types, Instance, cast } from 'mobx-state-tree'
 
+import { settingStore } from './SettingStore'
+
+import { OllmaApi } from '../utils/OllamaApi'
+import { toastStore } from './ToastStore'
+
 export const MessageModel = types.model({
   fromBot: types.boolean,
   botName: types.maybe(types.string),
@@ -16,13 +21,17 @@ export const ChatModel = types
     id: types.optional(types.identifierNumber, Date.now),
     name: types.optional(types.string, ''),
     messages: types.array(MessageModel),
-    incomingMessage: types.maybe(MessageModel),
+    incomingMessage: types.safeReference(MessageModel),
   })
   .actions(self => ({
     afterCreate() {
       if (self.incomingMessage) {
         this.commitIncomingMessage()
       }
+    },
+
+    beforeDestroy() {
+      OllmaApi.cancelStream()
     },
 
     setName(name?: string) {
@@ -37,25 +46,49 @@ export const ChatModel = types
       self.messages = cast(messagesWithoutMessage)
     },
 
-    createIncomingMessage(botName: string) {
+    createIncomingMessage() {
       const uniqId = 'bot_' + Date.now()
 
-      self.incomingMessage = MessageModel.create({ fromBot: true, botName, uniqId })
+      const incomingMessage = MessageModel.create({
+        fromBot: true,
+        botName: settingStore.selectedModel?.name,
+        uniqId,
+      })
+
+      self.messages.push(incomingMessage)
+
+      self.incomingMessage = incomingMessage
 
       return self.incomingMessage
     },
 
     commitIncomingMessage() {
-      if (self.incomingMessage) {
-        const message = self.incomingMessage
-
-        self.incomingMessage = undefined
-        self.messages.push(message)
-      }
+      self.incomingMessage = undefined
     },
 
     updateIncomingMessage(content: string) {
       self.incomingMessage!.content += content
+    },
+
+    async generateMessage(incomingMessage: IMessageModel) {
+      self.incomingMessage = incomingMessage
+      incomingMessage.content = ''
+
+      try {
+        for await (const message of OllmaApi.streamChat(self.messages, incomingMessage)) {
+          this.updateIncomingMessage(message)
+        }
+      } catch (e) {
+        // TODO: do not add this to the text but instead make it a boolean failed
+        this.updateIncomingMessage('\n -- Communication stopped with server --')
+
+        toastStore.addToast('Communication stopped with server', 'error')
+
+        // make sure the server is still connected
+        settingStore.updateModels()
+      } finally {
+        this.commitIncomingMessage()
+      }
     },
 
     addUserMessage(content: string = '', image?: string) {
