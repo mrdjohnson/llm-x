@@ -54,7 +54,7 @@ Clone the project, and run `npm install` in the root directory
 - [x] **Image to text** using Ollama's multi modal abilities
 - [x] **Offline Support** via PWA technology
 - [ ] Add Screenshots because no one is going to read these
-- [ ] Refresh LLM response button
+- [x] Refresh LLM response button
 - [ ] Re-write user message (triggering LLM refresh)
 - [ ] LangChain.js integration?
 - [ ] OpenAI Integration
