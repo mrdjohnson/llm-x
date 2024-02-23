@@ -32,48 +32,50 @@ const HelpModal = observer(() => {
   }, [selectedModel])
 
   return (
-    <dialog ref={modalRef} id="help-modal" className="modal modal-top">
-      <div className="modal-box w-9/12 max-w-[1000px] place-self-center rounded">
-        <h3 className="pb-3 text-xl font-bold">How to connect to Ollama Server:</h3>
+    <dialog ref={modalRef} id="help-modal" className="modal">
+      <div className="modal-box-container">
+        <div className="modal-box-content">
+          <h3 className="pb-3 text-xl font-bold">How to connect to Ollama Server:</h3>
 
-        <div className="flex flex-col gap-2">
-          <p>By default, Ollama allows cross origin requests from 127.0.0.1 and 0.0.0.0.</p>{' '}
-          <p>
-            To use custom origins (like this one), you can set
-            <span className="prose mx-1">
-              <code>OLLAMA_ORIGINS</code>
-            </span>
-            when starting ollama:
-          </p>
-        </div>
-
-        <div className="my-4 flex flex-row place-content-center gap-2">
-          <div className="prose">
-            <code>{OLLAMA_CODE}</code>
+          <div className="flex flex-col gap-2">
+            <p>By default, Ollama allows cross origin requests from 127.0.0.1 and 0.0.0.0.</p>{' '}
+            <p>
+              To use custom origins (like this one), you can set
+              <span className="prose mx-1">
+                <code>OLLAMA_ORIGINS</code>
+              </span>
+              when starting ollama:
+            </p>
           </div>
 
-          <label
-            className={'btn swap btn-neutral btn-sm ' + (copied && 'swap-active')}
-            onClick={handleCopy}
-          >
-            <Copy className="swap-off" />
-            <CopySuccess className="swap-on" />
-          </label>
-        </div>
+          <div className="my-4 flex flex-row place-content-center gap-2">
+            <div className="prose">
+              <code>{OLLAMA_CODE}</code>
+            </div>
 
-        <div>
-          Find out more about <u>Ollama</u> on their website:{' '}
-          <a href="https://ollama.com/" className=" link">
-            https://ollama.com/
-          </a>
-        </div>
+            <label
+              className={'btn swap btn-neutral btn-sm ' + (copied && 'swap-active')}
+              onClick={handleCopy}
+            >
+              <Copy className="swap-off" />
+              <CopySuccess className="swap-on" />
+            </label>
+          </div>
 
-        <div className="modal-action">
-          <form method="dialog">
-            <button className="btn btn-ghost btn-sm absolute right-2 top-2 focus:outline-0">
-              ✕
-            </button>
-          </form>
+          <div>
+            Find out more about <u>Ollama</u> on their website:{' '}
+            <a href="https://ollama.com/" className=" link">
+              https://ollama.com/
+            </a>
+          </div>
+
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn btn-ghost btn-sm absolute right-2 top-2 focus:outline-0">
+                ✕
+              </button>
+            </form>
+          </div>
         </div>
       </div>
 

@@ -19,6 +19,18 @@
     @apply list-inside list-decimal !px-2;
   }
 
+  .modal {
+    @apply modal-bottom !p-2 lg:modal-top lg:!p-3;
+  }
+
+  .modal-box-container {
+    @apply !container modal-box mx-auto mt-16 w-full !bg-transparent px-1 pb-0 pt-2 shadow-none lg:w-9/12 lg:px-3;
+  }
+
+  .modal-box-content {
+    @apply relative rounded-md bg-base-100 p-6;
+  }
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
