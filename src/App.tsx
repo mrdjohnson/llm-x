@@ -50,7 +50,7 @@ const Navbar = observer(() => {
 
 function App() {
   return (
-    <div className="App grid">
+    <div className="h-dvh grid">
       <div className="container drawer drawer-end flex max-h-screen flex-col place-self-center p-3">
         <Navbar />
 
