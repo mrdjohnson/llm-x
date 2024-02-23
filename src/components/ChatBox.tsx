@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, PropsWithChildren } from 'react'
+import { useEffect, useRef, useState, PropsWithChildren, MouseEvent } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
@@ -151,8 +151,6 @@ const ChatBox = observer(() => {
   const disableRegeneration = !!chat.incomingMessage
   const incomingUniqId = chat.incomingMessage?.uniqId
 
-  console.log('disableRefresh', disableRegeneration)
-
   return (
     <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-hidden rounded-md">
       <ScrollableFeed
@@ -176,7 +174,11 @@ const ChatBox = observer(() => {
 
       <ChatBoxInputRow onSend={handleMessageToSend}>
         {chat.isGettingData && (
-          <button className="btn btn-outline btn-error opacity-40" onClick={OllmaApi.cancelStream}>
+          <button
+            type="button"
+            className="btn btn-outline btn-error opacity-40"
+            onClick={OllmaApi.cancelStream}
+          >
             Stop
           </button>
         )}
