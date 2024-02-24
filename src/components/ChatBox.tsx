@@ -50,7 +50,8 @@ const ChatBoxInputRow = observer(
 
         setPreviewImage(imageData)
       } catch (e) {
-        toastStore.addToast('Unable to read image', 'error')
+        toastStore.addToast('Unable to read image, check the console for error information', 'error')
+        console.error(e)
       }
     }
 
@@ -74,6 +75,7 @@ const ChatBoxInputRow = observer(
               style={{ display: 'none' }}
               ref={fileInputRef}
               type="file"
+              accept="image/*"
               onChange={handleFileChange}
             />
 
