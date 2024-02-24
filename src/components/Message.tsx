@@ -8,6 +8,7 @@ import Copy from '../icons/Copy'
 import CopySuccess from '../icons/CopySuccess'
 import Stop from '../icons/Stop'
 import Refresh from '../icons/Refresh'
+import ChevronDown from '../icons/ChevronDown'
 
 import { IMessageModel } from '../models/ChatModel'
 import { chatStore } from '../models/ChatStore'
@@ -54,7 +55,8 @@ export const Message = ({
   customDeleteIcon,
   disableRegeneration,
 }: MessageProps) => {
-  const { content, fromBot, uniqId, image } = message
+  const { content, fromBot, uniqId, image, extras } = message
+  const error = extras?.error
 
   const [copied, setCopied] = useState(false)
 
@@ -76,27 +78,52 @@ export const Message = ({
       }
       key={uniqId}
     >
+      {children}
+
       {image && (
         <img className="h-56 w-56 place-self-center rounded-md object-contain" src={image} />
       )}
 
-      <div
-        className={
-          'w-full rounded-md border border-base-content/20 p-2 ' + (children ? 'min-w-16' : '')
-        }
-      >
-        <Markdown
-          remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
-          className="prose inline-table w-full"
-          components={{
-            code: CustomCodeBlock,
-          }}
+      <div className="join join-vertical border border-base-content/20">
+        <div
+          className={
+            'w-full p-2 ' +
+            (children ? 'min-w-16 ' : '') +
+            (error ? 'join-item border-b-0' : 'rounded-md')
+          }
         >
-          {content}
-        </Markdown>
-      </div>
+          <Markdown
+            remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
+            className="prose inline-table w-full"
+            components={{
+              code: CustomCodeBlock,
+            }}
+          >
+            {content}
+          </Markdown>
+        </div>
 
-      {children}
+        {error && (
+          <div
+            className="group/error collapse join-item transition-all duration-300 ease-in-out"
+            tabIndex={0}
+          >
+            <div className="collapse-title line-clamp-1 flex max-h-8 min-h-0 flex-row flex-nowrap bg-error/30 p-2 text-xs font-medium">
+              {error.message}
+
+              <span className="ml-2 scale-90 transition-all duration-300 ease-in-out group-focus/error:rotate-180">
+                <ChevronDown />
+              </span>
+            </div>
+
+            {error.stack && (
+              <div className="collapse-content">
+                <p className="whitespace-pre-line pt-2 text-xs">{error.stack}</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       <div
         className={

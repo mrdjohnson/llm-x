@@ -4,15 +4,34 @@ import { types, Instance, cast } from 'mobx-state-tree'
 import { settingStore } from './SettingStore'
 
 import { OllmaApi } from '../utils/OllamaApi'
-import { toastStore } from './ToastStore'
 
-export const MessageModel = types.model({
-  fromBot: types.boolean,
-  botName: types.maybe(types.string),
-  content: types.optional(types.string, ''),
-  image: types.maybe(types.string),
-  uniqId: types.identifier,
+const MessageErrorModel = types.model({
+  message: types.string,
+  stack: types.maybe(types.string),
 })
+
+const MessageExtrasModel = types.model({
+  error: types.maybe(MessageErrorModel),
+})
+
+export const MessageModel = types
+  .model({
+    fromBot: types.boolean,
+    botName: types.maybe(types.string),
+    content: types.optional(types.string, ''),
+    image: types.maybe(types.string),
+    uniqId: types.identifier,
+    extras: types.maybe(MessageExtrasModel),
+  })
+  .actions(self => ({
+    setError(error: Error) {
+      self.extras ||= MessageExtrasModel.create()
+
+      const { message, stack } = error
+
+      self.extras.error = MessageErrorModel.create({ message, stack })
+    },
+  }))
 
 export interface IMessageModel extends Instance<typeof MessageModel> {}
 
@@ -22,6 +41,7 @@ export const ChatModel = types
     name: types.optional(types.string, ''),
     messages: types.array(MessageModel),
     incomingMessage: types.safeReference(MessageModel),
+    _incomingMessageAbortedByUser: types.maybe(types.boolean),
   })
   .actions(self => ({
     afterCreate() {
@@ -64,6 +84,7 @@ export const ChatModel = types
 
     commitIncomingMessage() {
       self.incomingMessage = undefined
+      self._incomingMessageAbortedByUser = false
     },
 
     updateIncomingMessage(content: string) {
@@ -71,6 +92,8 @@ export const ChatModel = types
     },
 
     abortGeneration() {
+      self._incomingMessageAbortedByUser = true
+
       OllmaApi.cancelStream()
     },
 
@@ -78,18 +101,23 @@ export const ChatModel = types
       self.incomingMessage = incomingMessage
       incomingMessage.content = ''
 
+      if (incomingMessage.extras) {
+        incomingMessage.extras.error = undefined
+      }
+
       try {
         for await (const message of OllmaApi.streamChat(self.messages, incomingMessage)) {
           this.updateIncomingMessage(message)
         }
-      } catch (e) {
-        // TODO: do not add this to the text but instead make it a boolean failed
-        this.updateIncomingMessage('\n -- Communication stopped with server --')
+      } catch (error: unknown) {
+        if (self._incomingMessageAbortedByUser) {
+          incomingMessage.setError(new Error('Stream stopped by user'))
+        } else if (error instanceof Error) {
+          incomingMessage.setError(error)
 
-        toastStore.addToast('Communication stopped with server', 'error')
-
-        // make sure the server is still connected
-        settingStore.updateModels()
+          // make sure the server is still connected
+          settingStore.updateModels()
+        }
       } finally {
         this.commitIncomingMessage()
       }
