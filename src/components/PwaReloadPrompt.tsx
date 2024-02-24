@@ -50,8 +50,6 @@ const PwaReloadPrompt = () => {
     }
   }, [needRefresh])
 
-  if (!isStandalone) return null
-
   return (
     <dialog id="pwa_refresh_modal" className="modal">
       <div className="modal-box-container">
