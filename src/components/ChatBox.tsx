@@ -148,6 +148,12 @@ const ChatBox = observer(() => {
     sendMessage()
   }
 
+  const handleMessageStopped = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    OllmaApi.cancelStream()
+  }
+
   const disableRegeneration = !!chat.incomingMessage
   const incomingUniqId = chat.incomingMessage?.uniqId
 
@@ -177,7 +183,7 @@ const ChatBox = observer(() => {
           <button
             type="button"
             className="btn btn-outline btn-error opacity-40"
-            onClick={OllmaApi.cancelStream}
+            onClick={handleMessageStopped}
           >
             Stop
           </button>
