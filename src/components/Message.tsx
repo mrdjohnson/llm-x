@@ -11,7 +11,6 @@ import Refresh from '../icons/Refresh'
 
 import { IMessageModel } from '../models/ChatModel'
 import { chatStore } from '../models/ChatStore'
-import { OllmaApi } from '../utils/OllamaApi'
 
 import CustomCodeBlock from './CustomCodeBlock'
 
@@ -21,7 +20,8 @@ const Loading = () => (
 
 // this one is observed for incoming text changes, the rest do not need to be observed
 export const IncomingMessage = observer(() => {
-  const incomingMessage = chatStore.selectedChat!.incomingMessage
+  const chat = chatStore.selectedChat!
+  const incomingMessage = chat.incomingMessage
 
   // show an empty loading box when we are getting a message from the server
   // checking for content also tells the observer to re-render
@@ -30,7 +30,7 @@ export const IncomingMessage = observer(() => {
   return (
     <Message
       message={incomingMessage}
-      onDestroy={OllmaApi.cancelStream}
+      onDestroy={chat.abortGeneration}
       customDeleteIcon={<Stop />}
       disableRegeneration
     >

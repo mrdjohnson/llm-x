@@ -70,6 +70,10 @@ export const ChatModel = types
       self.incomingMessage!.content += content
     },
 
+    abortGeneration() {
+      OllmaApi.cancelStream()
+    },
+
     async generateMessage(incomingMessage: IMessageModel) {
       self.incomingMessage = incomingMessage
       incomingMessage.content = ''

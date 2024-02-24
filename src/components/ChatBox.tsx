@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, PropsWithChildren, MouseEvent } from 'react'
+import { useRef, useState, PropsWithChildren, MouseEvent } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
@@ -8,7 +8,6 @@ import { settingStore } from '../models/SettingStore'
 import { toastStore } from '../models/ToastStore'
 
 import { IncomingMessage, Message } from './Message'
-import { OllmaApi } from '../utils/OllamaApi'
 import Paperclip from '../icons/Paperclip'
 import base64EncodeImage from '../utils/base64EncodeImage'
 
@@ -132,13 +131,6 @@ const ChatBox = observer(() => {
     })
   }
 
-  useEffect(() => {
-    //no op
-
-    //cleanup
-    return OllmaApi.cancelStream
-  }, [])
-
   if (!chat) return null
 
   const handleMessageToSend = (userMessage: string, image?: string) => {
@@ -151,7 +143,7 @@ const ChatBox = observer(() => {
   const handleMessageStopped = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
-    OllmaApi.cancelStream()
+    chat.abortGeneration()
   }
 
   const disableRegeneration = !!chat.incomingMessage
