@@ -14,11 +14,18 @@ import { settingStore } from './models/SettingStore'
 
 import Warning from './icons/Warning'
 import Bars3 from './icons/Bars3'
+import CloudDown from './icons/CloudDown'
 
 import 'highlight.js/styles/github.css'
 
 const Navbar = observer(() => {
   const noServer = !settingStore.selectedModel
+
+  const handlePwaUpdate = () => {
+    settingStore.getUpdateServiceWorker()?.()
+
+    settingStore.setPwaNeedsUpdate(false)
+  }
 
   return (
     <nav className="navbar mb-2 rounded-md bg-base-300">
@@ -26,12 +33,22 @@ const Navbar = observer(() => {
         <label className="ml-2 text-xl">LLM X</label>
       </div>
 
-      <div className="navbar-center flex flex-row gap-2">
+      <div className="navbar-center hidden flex-row gap-2 md:flex">
         <ModalSelector />
         <ModelRefreshButton />
       </div>
 
-      <div className="navbar-end">
+      <div className="navbar-end flex flex-row gap-2">
+        {settingStore.pwaNeedsUpdate && (
+          <button
+            className="btn btn-square btn-ghost"
+            onClick={handlePwaUpdate}
+            title="Update from cloud"
+          >
+            <CloudDown />
+          </button>
+        )}
+
         <label htmlFor="app-drawer" className="btn btn-square btn-ghost drawer-button ">
           <div className="indicator p-1">
             <Bars3 />

@@ -1,10 +1,13 @@
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import useMedia from 'use-media'
 import { useEffect } from 'react'
+import { observer } from 'mobx-react-lite'
+
+import { settingStore } from '../models/SettingStore'
 
 const hour_1 = 60 * 60 * 1000
 
-const PwaReloadPrompt = () => {
+const PwaReloadPrompt = observer(() => {
   // automagically replaced through vite.config.ts
   const reloadSW = '__RELOAD_SW__'
 
@@ -14,7 +17,7 @@ const PwaReloadPrompt = () => {
   console.log('isStandalone', isStandalone)
 
   const {
-    needRefresh: [needRefresh, setNeedRefresh],
+    needRefresh: [needRefresh],
     updateServiceWorker,
   } = useRegisterSW({
     onRegisteredSW(swScriptUrl, registration) {
@@ -41,39 +44,10 @@ const PwaReloadPrompt = () => {
   })
 
   useEffect(() => {
-    if (needRefresh) {
-      const refreshDialog: HTMLDialogElement | null = document.getElementById(
-        'pwa_refresh_modal',
-      ) as HTMLDialogElement
-
-      refreshDialog?.showModal()
-    }
+    settingStore.setPwaNeedsUpdate(needRefresh, updateServiceWorker)
   }, [needRefresh])
 
-  return (
-    <dialog id="pwa_refresh_modal" className="modal">
-      <div className="modal-box-container">
-        <div className="modal-box-content flex flex-row justify-center">
-          <h3 className="text-lg font-bold">Updates Found, Please refresh the page</h3>
-
-          <div className="btn btn-neutral btn-sm mx-4" onClick={() => updateServiceWorker(true)}>
-            Refresh
-          </div>
-
-          <div
-            className="btn btn-xs absolute right-1 top-1 text-sm font-bold opacity-50"
-            onClick={() => setNeedRefresh(false)}
-          >
-            x
-          </div>
-        </div>
-      </div>
-
-      <form method="dialog" className="modal-backdrop">
-        <button onClick={() => setNeedRefresh(false)} />
-      </form>
-    </dialog>
-  )
-}
+  return null
+})
 
 export default PwaReloadPrompt

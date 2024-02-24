@@ -20,40 +20,54 @@ export const SettingStore = types
     models: types.optional(types.array(Model), []),
     _selectedModelName: types.maybeNull(types.string),
     theme: types.optional(types.string, '_system'),
+    pwaNeedsUpdate: types.optional(types.boolean, true),
   })
-  .actions(self => ({
-    selectModel(name: string) {
-      self._selectedModelName = name
-    },
+  .actions(self => {
+    let updateServiceWorker: undefined | (() => void)
 
-    setHost(host: string) {
-      self.host = host
-    },
+    return {
+      selectModel(name: string) {
+        self._selectedModelName = name
+      },
 
-    setTheme(theme: string) {
-      self.theme = theme
-    },
+      setHost(host: string) {
+        self.host = host
+      },
 
-    updateModels: flow(function* updateModels() {
-      const host = self.host || DefaultHost
+      setTheme(theme: string) {
+        self.theme = theme
+      },
 
-      let data: Array<IModel> = []
+      setPwaNeedsUpdate(pwaNeedsUpdate: boolean, nextUpdateServiceWorker?: () => void) {
+        self.pwaNeedsUpdate = pwaNeedsUpdate
+        updateServiceWorker = nextUpdateServiceWorker
+      },
 
-      try {
-        const response = yield fetch(`${host}/api/tags`)
+      getUpdateServiceWorker() {
+        return updateServiceWorker
+      },
 
-        const json = yield response.json()
+      updateModels: flow(function* updateModels() {
+        const host = self.host || DefaultHost
 
-        data = json?.models as IModel[]
-      } catch (e) {
-        toastStore.addToast('Failed to fetch models for host: ' + host, 'error')
-      }
+        let data: Array<IModel> = []
 
-      self.models = cast(data)
+        try {
+          const response = yield fetch(`${host}/api/tags`)
 
-      self._selectedModelName ||= self.models[0]?.name
-    }),
-  }))
+          const json = yield response.json()
+
+          data = json?.models as IModel[]
+        } catch (e) {
+          toastStore.addToast('Failed to fetch models for host: ' + host, 'error')
+        }
+
+        self.models = cast(data)
+
+        self._selectedModelName ||= self.models[0]?.name
+      }),
+    }
+  })
   .views(self => ({
     get selectedModel(): IModel | undefined {
       return self.models.find(model => model.name === self._selectedModelName) || self.models[0]
@@ -62,7 +76,7 @@ export const SettingStore = types
 
 export const settingStore = SettingStore.create()
 
-persist('settings', settingStore, { blacklist: ['models'] }).then(() => {
+persist('settings', settingStore, { blacklist: ['models', 'pwaNeedsUpdate'] }).then(() => {
   console.log('updated store')
   settingStore.updateModels()
 })
