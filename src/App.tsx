@@ -16,8 +16,6 @@ import Warning from './icons/Warning'
 import Bars3 from './icons/Bars3'
 import CloudDown from './icons/CloudDown'
 
-import 'highlight.js/styles/github.css'
-
 const Navbar = observer(() => {
   const noServer = !settingStore.selectedModel
 

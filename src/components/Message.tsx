@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { PropsWithChildren, useState } from 'react'
@@ -13,7 +14,15 @@ import ChevronDown from '../icons/ChevronDown'
 import { IMessageModel } from '../models/ChatModel'
 import { chatStore } from '../models/ChatStore'
 
-import CustomCodeBlock from './CustomCodeBlock'
+const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
+
+const DelayedCustomCodeBlock = (props: PropsWithChildren) => {
+  return (
+    <Suspense fallback={<code {...props} className="not-prose bg-transparent" />}>
+      <CustomCodeBlock {...props} />
+    </Suspense>
+  )
+}
 
 const Loading = () => (
   <span className="indicator-item loading loading-dots loading-sm indicator-start ml-8" />
@@ -96,7 +105,7 @@ export const Message = ({
             remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
             className="prose inline-table w-full"
             components={{
-              code: CustomCodeBlock,
+              code: DelayedCustomCodeBlock,
             }}
           >
             {content}

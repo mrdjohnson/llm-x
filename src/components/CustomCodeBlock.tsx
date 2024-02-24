@@ -4,6 +4,8 @@ import Copy from '../icons/Copy'
 
 import hljs from 'highlight.js/lib/common'
 
+import 'highlight.js/styles/base16/woodland.min.css'
+
 const CustomCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
   const { children, className = '', ...rest } = props
 
