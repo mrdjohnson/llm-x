@@ -80,7 +80,11 @@ export const Message = ({
         <img className="h-56 w-56 place-self-center rounded-md object-contain" src={image} />
       )}
 
-      <div className=" w-full rounded-md border border-base-content/20 p-2">
+      <div
+        className={
+          'w-full rounded-md border border-base-content/20 p-2 ' + (children ? 'min-w-16' : '')
+        }
+      >
         <Markdown
           remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
           className="prose inline-table w-full"
