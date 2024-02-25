@@ -1,4 +1,4 @@
-import { types, cast } from 'mobx-state-tree'
+import { types, cast, Instance } from 'mobx-state-tree'
 import _ from 'lodash'
 
 const ToastModel = types.model({
@@ -7,13 +7,22 @@ const ToastModel = types.model({
   type: types.string,
 })
 
+export interface IToastModel extends Instance<typeof ToastModel> {}
+
 const ToastStore = types
   .model({
     toasts: types.array(ToastModel),
   })
   .actions(self => ({
     addToast(message: string, type: 'error' | 'success' | 'info') {
-      self.toasts.push({ id: _.uniqueId('toast_'), message, type })
+      let toasts: IToastModel[] = self.toasts
+
+      if (toasts.length === 10) {
+        // remove last toast
+        toasts = _.drop(toasts)
+      }
+
+      self.toasts = cast([...toasts, { id: _.uniqueId('toast_'), message: message, type }])
     },
 
     removeToast(toast: { id: string }) {
