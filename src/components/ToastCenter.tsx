@@ -10,14 +10,27 @@ const ToastCenter = observer(() => {
   const { toasts } = toastStore
 
   useEffect(() => {
-    if (_.isEmpty(toasts) || hovering) return
+    if (hovering) return
 
     const timeout = setTimeout(() => {
       toastStore.clearToasts()
     }, 3000)
 
     return () => clearTimeout(timeout)
-  }, [toastStore.toasts, hovering])
+  }, [hovering])
+
+
+  // this effect will run every render, yes
+  // but it will also auto update whenever there is a change to toasts
+  useEffect(() => {
+    if (_.isEmpty(toasts)) return
+
+    const timeout = setTimeout(() => {
+      toastStore.clearToasts()
+    }, 3000)
+
+    return () => clearTimeout(timeout)
+  })
 
   return (
     <dialog
@@ -28,6 +41,7 @@ const ToastCenter = observer(() => {
       {toasts.map(toast => (
         <div
           className={`alert alert-${toast.type} max-w-10/12 relative rounded-md border border-base-content/30 px-4 text-xl font-bold`}
+          key={toast.id}
         >
           <span className="cursor-default">{toast.message}</span>
 
