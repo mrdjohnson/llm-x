@@ -10,21 +10,14 @@ import ModalSelector from './ModalSelector'
 import ThemeSelector from './ThemeSelector'
 import { SideBar } from './SideBar'
 
-const openNoServerDialog = () => {
-  const noServerDialog: HTMLDialogElement | undefined = document.getElementById(
-    'help-modal',
-  ) as HTMLDialogElement
-
-  noServerDialog?.showModal()
-}
-
 const Input = observer(() => {
   return (
     <div className="form-control">
       <div className="label pb-1 pt-0">
         <span className="label-text flex flex-row items-center gap-2 text-sm">
           Host:
-          <div className="cursor-pointer" onClick={openNoServerDialog}>
+
+          <div className="cursor-pointer" onClick={() => settingStore.openUpdateModal({fromUser: true})}>
             <Question />
           </div>
         </span>

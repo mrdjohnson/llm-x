@@ -25,11 +25,15 @@ const HelpModal = observer(() => {
     if (selectedModel) return
 
     let timeout = setTimeout(() => {
-      modalRef.current?.showModal()
+      settingStore.openUpdateModal({ fromUser: false })
     }, 1500)
 
     return () => clearTimeout(timeout)
   }, [selectedModel])
+
+  useEffect(() => {
+    settingStore.setHelpModalRef(modalRef)
+  }, [modalRef])
 
   return (
     <dialog ref={modalRef} id="help-modal" className="modal">
