@@ -1,14 +1,22 @@
 import { types, Instance, cast, flow } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
 import _ from 'lodash'
+import camelcaseKeys from 'camelcase-keys'
 
 import { toastStore } from './ToastStore'
 import { RefObject } from 'react'
+
+const ModelDetails = types.model({
+  parameterSize: types.string,
+})
 
 const Model = types.model({
   name: types.identifier,
   model: types.string,
   digest: types.string,
+  modifiedAt: types.string,
+  size: types.number,
+  details: ModelDetails,
 })
 
 export interface IModel extends Instance<typeof Model> {}
@@ -75,7 +83,7 @@ export const SettingStore = types
 
           const json = yield response.json()
 
-          data = json?.models as IModel[]
+          data = camelcaseKeys(json?.models, { deep: true }) as IModel[]
         } catch (e) {
           toastStore.addToast('Failed to fetch models for host: ' + host, 'error')
         }
