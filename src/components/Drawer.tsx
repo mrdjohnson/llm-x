@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { Suspense } from 'react'
 
 import Question from '../icons/Question'
+import Github from '../icons/Github'
 
 import { DefaultHost, settingStore } from '../models/SettingStore'
 import ModelRefreshButton from './ModelRefreshButton'
@@ -16,8 +17,10 @@ const Input = observer(() => {
       <div className="label pb-1 pt-0">
         <span className="label-text flex flex-row items-center gap-2 text-sm">
           Host:
-
-          <div className="cursor-pointer" onClick={() => settingStore.openUpdateModal({fromUser: true})}>
+          <div
+            className="cursor-pointer"
+            onClick={() => settingStore.openUpdateModal({ fromUser: true })}
+          >
             <Question />
           </div>
         </span>
@@ -74,6 +77,14 @@ const Drawer = () => {
               <SideBar />
             </div>
           </div>
+
+          <a
+            href="https://github.com/mrdjohnson/llm-x"
+            className="btn btn-outline btn-neutral mt-3 fill-base-content stroke-base-content hover:fill-primary-content"
+            aria-label="LLM-X's Github"
+          >
+            <Github />
+          </a>
         </div>
       </section>
     </>
