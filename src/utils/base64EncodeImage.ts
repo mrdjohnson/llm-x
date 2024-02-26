@@ -1,5 +1,5 @@
 export default async function base64EncodeImage(file: File): Promise<string> {
-  if (!file.type.startsWith('image/')) throw new Error('images only')
+  if (!file.type.startsWith('image/')) throw new Error('Not an image')
 
   const reader = new FileReader()
 
@@ -10,8 +10,8 @@ export default async function base64EncodeImage(file: File): Promise<string> {
       resolve(base64Data)
     }
 
-    reader.onerror = function () {
-      reject('unable to read blob')
+    reader.onerror = function (e) {
+      reject(e)
     }
   })
 
