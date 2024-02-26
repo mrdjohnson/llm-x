@@ -6,7 +6,7 @@ import Question from '../icons/Question'
 import { DefaultHost, settingStore } from '../models/SettingStore'
 import ModelRefreshButton from './ModelRefreshButton'
 
-import ModalSelector from './ModalSelector'
+import ModelSelector from './ModelSelector'
 import ThemeSelector from './ThemeSelector'
 import { SideBar } from './SideBar'
 
@@ -46,7 +46,7 @@ const Models = () => {
         <span className="label-text text-sm">Model:</span>
       </div>
 
-      <ModalSelector />
+      <ModelSelector />
     </div>
   )
 }

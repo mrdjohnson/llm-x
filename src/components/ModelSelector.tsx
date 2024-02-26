@@ -5,7 +5,7 @@ import Globe from '../icons/Globe'
 
 import { settingStore } from '../models/SettingStore'
 
-const ModalSelector = observer(() => {
+const ModelSelector = observer(() => {
   const { selectedModel, models } = settingStore
 
   return (
@@ -51,4 +51,4 @@ const ModalSelector = observer(() => {
   )
 })
 
-export default ModalSelector
+export default ModelSelector

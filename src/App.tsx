@@ -7,7 +7,7 @@ import ChatBox from './components/ChatBox'
 import HelpModal from './components/HelpModal'
 import ToastCenter from './components/ToastCenter'
 import PwaReloadPrompt from './components/PwaReloadPrompt'
-import ModalSelector from './components/ModalSelector'
+import ModelSelector from './components/ModelSelector'
 import ModelRefreshButton from './components/ModelRefreshButton'
 import Dropzone from './components/Dropzone'
 
@@ -33,7 +33,7 @@ const Navbar = observer(() => {
       </div>
 
       <div className="navbar-center hidden flex-row gap-2 md:flex">
-        <ModalSelector />
+        <ModelSelector />
         <ModelRefreshButton />
       </div>
 
