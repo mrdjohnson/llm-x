@@ -1,23 +1,47 @@
+import { RefObject } from 'react'
 import { types, Instance, cast, flow } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
 import _ from 'lodash'
 import camelcaseKeys from 'camelcase-keys'
 
 import { toastStore } from './ToastStore'
-import { RefObject } from 'react'
 
 const ModelDetails = types.model({
   parameterSize: types.string,
 })
 
-const Model = types.model({
-  name: types.identifier,
-  model: types.string,
-  digest: types.string,
-  modifiedAt: types.string,
-  size: types.number,
-  details: ModelDetails,
-})
+const Model = types
+  .model({
+    name: types.identifier,
+    model: types.string,
+    digest: types.string,
+    modifiedAt: types.string,
+    size: types.number,
+    details: ModelDetails,
+  })
+  .views(self => ({
+    // inspiration for gbSize and timeAgo are from chat-ollama!
+
+    get gbSize() {
+      return (self.size / 1e9).toFixed(2) + ' GB'
+    },
+
+    get timeAgo() {
+      const modifiedAtDate = new Date(self.modifiedAt)
+      const diffInSeconds = Math.floor((Date.now() - modifiedAtDate.getTime()) / 1000)
+      const minutes = Math.floor(diffInSeconds / 60)
+      const hours = Math.floor(minutes / 60)
+      const days = Math.floor(hours / 24)
+
+      const pluralTimeAgo = (units:number) => (units !== 1 ? 's' : '') + ' ago'
+
+      if (days > 0) return `${days} day${pluralTimeAgo(days)}`
+
+      if (hours > 0) return `${hours} hour${pluralTimeAgo(hours)}`
+      
+      return `${minutes} minute${pluralTimeAgo(minutes)}`
+    },
+  }))
 
 export interface IModel extends Instance<typeof Model> {}
 
@@ -37,8 +61,17 @@ export const SettingStore = types
   .actions(self => {
     let updateServiceWorker: undefined | (() => void)
     let helpModalRef: RefObject<HTMLDialogElement>
+    let modelSelectionModalRef: RefObject<HTMLDialogElement>
 
     return {
+      setModelSelectionModalRef(nextModelSelectionModalRef: RefObject<HTMLDialogElement>) {
+        modelSelectionModalRef = nextModelSelectionModalRef
+      },
+
+      openModelSelectionModal() {
+        modelSelectionModalRef.current?.showModal()
+      },
+
       setHelpModalRef(nextHelpModalRef: RefObject<HTMLDialogElement>) {
         helpModalRef = nextHelpModalRef
       },

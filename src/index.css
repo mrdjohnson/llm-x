@@ -23,8 +23,16 @@
     @apply modal-bottom !p-2 lg:modal-top lg:!p-3;
   }
 
+  table {
+    @apply max-h-96;
+  }
+
+  td {
+    @apply first-of-type:rounded-l-md last-of-type:rounded-r-md whitespace-nowrap p-2 font-medium;
+  }
+
   .modal-box-container {
-    @apply !container modal-box mx-auto mt-16 w-full !bg-transparent px-1 pb-0 pt-2 shadow-none lg:w-9/12 lg:px-3;
+    @apply !container modal-box mx-auto mt-16 w-full px-1 pb-0 pt-2 shadow-none lg:w-9/12 lg:px-3;
   }
 
   .modal-box-content {

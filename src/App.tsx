@@ -10,6 +10,7 @@ import PwaReloadPrompt from './components/PwaReloadPrompt'
 import ModelSelector from './components/ModelSelector'
 import ModelRefreshButton from './components/ModelRefreshButton'
 import Dropzone from './components/Dropzone'
+import ModelSelectionModal from './components/ModelSelectionModal'
 
 import { settingStore } from './models/SettingStore'
 
@@ -73,6 +74,8 @@ function App() {
         <Drawer />
 
         <HelpModal />
+
+        <ModelSelectionModal />
 
         <ToastCenter />
 
