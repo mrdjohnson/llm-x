@@ -22,7 +22,7 @@ const ModalSelector = observer(() => {
 
       <ul
         tabIndex={0}
-        className="dropdown-content z-[1] mt-2 flex max-h-52 flex-col rounded-box border border-base-content/30 bg-base-300 p-2 shadow-2xl"
+        className="no-scrollbar dropdown-content z-[1] mt-2 flex max-h-80 flex-col overflow-y-scroll rounded-box border border-base-content/30 bg-base-300 p-2 shadow-2xl"
       >
         {models?.map(model => (
           <li key={model.name}>
