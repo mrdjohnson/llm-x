@@ -2,6 +2,32 @@
 
 ![LLM X logo](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/public/LLMX.png)
 
+
+## How to use:
+- Download and install [Ollama](https://ollama.com/)
+- Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava`
+- Run this in your terminal `OLLAMA_ORIGINS=*.github.io ollama serve`
+- Use your browser to go to [LLM-X](https://mrdjohnson.github.io/llm-x/)
+- Start chatting!
+
+## Screenshots:
+  
+| Conversation about logo | 
+|--|
+|![Logo convo screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-logo-convo.png)| 
+
+| Showing off code and light theme |
+|--|
+|![Code and light theme screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-code-light.png) |
+
+| Responding about a cat | 
+|--|
+|![Cat screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-cat.png) |
+
+|Another logo response |
+|--|
+| ![Logo 2 screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-logo-1.png) |
+
 **_What is this?_**
 Chat GPT style UI for the niche group of folks who run [Ollama](https://ollama.com/) (think of this like an offline chat gpt) locally. Supports sending images and text!
 **WORKS OFFLINE** through PWA ([Progressive Web App](https://web.dev/explore/progressive-web-apps)) standards (its not dead!)
@@ -53,7 +79,7 @@ Clone the project, and run `npm install` in the root directory
 - [x] Ability to copy responses from Ollama
 - [x] **Image to text** using Ollama's multi modal abilities
 - [x] **Offline Support** via PWA technology
-- [ ] Add Screenshots because no one is going to read these
+- [x] Add Screenshots because no one is going to read these
 - [x] Refresh LLM response button
 - [ ] Re-write user message (triggering LLM refresh)
 - [ ] LangChain.js integration?
