@@ -9,6 +9,7 @@ import ToastCenter from './components/ToastCenter'
 import PwaReloadPrompt from './components/PwaReloadPrompt'
 import ModalSelector from './components/ModalSelector'
 import ModelRefreshButton from './components/ModelRefreshButton'
+import Dropzone from './components/Dropzone'
 
 import { settingStore } from './models/SettingStore'
 
@@ -65,8 +66,8 @@ const Navbar = observer(() => {
 
 function App() {
   return (
-    <div className="grid max-h-dvh min-h-dvh">
-      <div className="container drawer drawer-end flex max-h-screen flex-col place-self-center p-3">
+    <Dropzone>
+      <div className="container drawer drawer-end mx-auto flex max-h-screen flex-col place-self-center p-3">
         <Navbar />
 
         <Drawer />
@@ -87,7 +88,7 @@ function App() {
           </main>
         </section>
       </div>
-    </div>
+    </Dropzone>
   )
 }
 
