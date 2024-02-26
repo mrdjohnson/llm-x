@@ -1,15 +1,13 @@
-import { useRef, useState, PropsWithChildren, MouseEvent } from 'react'
+import { useRef,  PropsWithChildren, MouseEvent } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
 
 import { chatStore } from '../models/ChatStore'
 import { settingStore } from '../models/SettingStore'
-import { toastStore } from '../models/ToastStore'
 
 import { IncomingMessage, Message } from './Message'
 import Paperclip from '../icons/Paperclip'
-import base64EncodeImage from '../utils/base64EncodeImage'
 
 const ChatBoxInputRow = observer(
   ({
@@ -19,7 +17,8 @@ const ChatBoxInputRow = observer(
     const inputRef = useRef<HTMLInputElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
-    const [previewImage, setPreviewImage] = useState<string | undefined>(undefined)
+    const chat = chatStore.selectedChat!
+    const previewImage = chat.previewImage
 
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
@@ -33,26 +32,20 @@ const ChatBoxInputRow = observer(
       inputRef.current.value = ''
       inputRef.current.focus()
 
-      setPreviewImage(undefined)
+      chat.setPreviewImage(undefined)
     }
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const fileObj = event.target.files?.[0]
-      if (!fileObj) {
+      const file = event.target.files?.[0]
+
+      if (!file) {
         return
       }
 
       // reset file input
       event.target.value = ''
 
-      try {
-        const imageData = await base64EncodeImage(fileObj)
-
-        setPreviewImage(imageData)
-      } catch (e) {
-        toastStore.addToast('Unable to read image, check the console for error information', 'error')
-        console.error(e)
-      }
+      chat.setPreviewImage(file)
     }
 
     const noServer = !settingStore.selectedModel
@@ -96,7 +89,7 @@ const ChatBoxInputRow = observer(
                 <div className="relative h-full w-full">
                   <div
                     className="btn btn-xs absolute right-1 top-1 opacity-70"
-                    onClick={() => setPreviewImage(undefined)}
+                    onClick={() => chat.setPreviewImage(undefined)}
                   >
                     x
                   </div>

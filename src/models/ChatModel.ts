@@ -1,8 +1,10 @@
 import _ from 'lodash'
-import { types, Instance, cast } from 'mobx-state-tree'
+import { types, Instance, cast, flow } from 'mobx-state-tree'
 
 import { settingStore } from './SettingStore'
+import { toastStore } from './ToastStore'
 
+import base64EncodeImage from '../utils/base64EncodeImage'
 import { OllmaApi } from '../utils/OllamaApi'
 
 const MessageErrorModel = types.model({
@@ -42,6 +44,7 @@ export const ChatModel = types
     messages: types.array(MessageModel),
     incomingMessage: types.safeReference(MessageModel),
     _incomingMessageAbortedByUser: types.maybe(types.boolean),
+    previewImage: types.maybe(types.string),
   })
   .actions(self => ({
     afterCreate() {
@@ -52,7 +55,28 @@ export const ChatModel = types
 
     beforeDestroy() {
       OllmaApi.cancelStream()
+      
+      // we do not persist the message, get rid of the image too
+      self.previewImage = undefined
     },
+
+    setPreviewImage: flow(function* setFile(file?: File) {
+      if (!file) {
+        self.previewImage = undefined
+        return
+      }
+
+      try {
+        self.previewImage = yield base64EncodeImage(file)
+      } catch (e) {
+        toastStore.addToast(
+          'Unable to read image, check the console for error information',
+          'error',
+        )
+        
+        console.error(e)
+      }
+    }),
 
     setName(name?: string) {
       if (name) {
