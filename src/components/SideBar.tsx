@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import { chatStore } from '../models/ChatStore'
@@ -19,6 +19,12 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
 
     chat.setName(name)
   }
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.value = chat.name
+    }
+  }, [chat.name])
 
   return (
     <div
