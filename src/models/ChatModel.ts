@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { types, Instance, cast, flow } from 'mobx-state-tree'
+import { types, Instance, detach, flow } from 'mobx-state-tree'
 
 import { settingStore } from './SettingStore'
 import { toastStore } from './ToastStore'
@@ -55,7 +55,7 @@ export const ChatModel = types
 
     beforeDestroy() {
       OllmaApi.cancelStream()
-      
+
       // we do not persist the message, get rid of the image too
       self.previewImage = undefined
     },
@@ -73,7 +73,7 @@ export const ChatModel = types
           'Unable to read image, check the console for error information',
           'error',
         )
-        
+
         console.error(e)
       }
     }),
@@ -84,10 +84,10 @@ export const ChatModel = types
       }
     },
 
-    async deleteMessage(uniqId: string) {
-      const messagesWithoutMessage = _.reject(self.messages, { uniqId })
+    deleteMessage(message: IMessageModel) {
+      detach(message)
 
-      self.messages = cast(messagesWithoutMessage)
+      _.remove(self.messages, message)
     },
 
     createIncomingMessage() {

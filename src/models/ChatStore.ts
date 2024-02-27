@@ -1,4 +1,4 @@
-import { types } from 'mobx-state-tree'
+import { detach, types } from 'mobx-state-tree'
 import persist from 'mst-persist'
 import _ from 'lodash'
 
@@ -24,6 +24,8 @@ export const ChatStore = types
     },
 
     deleteChat(chat: IChatModel) {
+      detach(chat)
+
       _.remove(self.chats, { id: chat.id })
 
       if (self.selectedChat?.id === chat.id) {

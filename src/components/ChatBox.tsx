@@ -158,7 +158,7 @@ const ChatBox = observer(() => {
             <Message
               message={message}
               key={message.uniqId}
-              onDestroy={() => chat.deleteMessage(message.uniqId)}
+              onDestroy={() => chat.deleteMessage(message)}
               disableRegeneration={disableRegeneration}
             />
           ),

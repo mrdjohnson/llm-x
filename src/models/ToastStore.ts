@@ -1,4 +1,4 @@
-import { types, cast, Instance } from 'mobx-state-tree'
+import { types, cast, Instance, detach } from 'mobx-state-tree'
 import _ from 'lodash'
 
 const ToastModel = types.model({
@@ -26,9 +26,9 @@ const ToastStore = types
     },
 
     removeToast(toast: { id: string }) {
-      const withoutToast = _.reject(self.toasts, { id: toast.id })
+      detach(toast)
 
-      self.toasts = cast(withoutToast)
+      _.remove(self.toasts, toast)
     },
 
     clearToasts() {
