@@ -1,15 +1,16 @@
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
-import { SideBar } from './components/SideBar'
-import Drawer from './components/Drawer'
-import ChatBox from './components/ChatBox'
+import Dropzone from './containers/Dropzone'
+import { SideBar } from './containers/SideBar'
+import Drawer from './containers/Drawer'
+import ChatBox from './containers/ChatBox'
+
 import HelpModal from './components/HelpModal'
 import ToastCenter from './components/ToastCenter'
 import PwaReloadPrompt from './components/PwaReloadPrompt'
 import ModelSelector from './components/ModelSelector'
 import ModelRefreshButton from './components/ModelRefreshButton'
-import Dropzone from './components/Dropzone'
 import ModelSelectionModal from './components/ModelSelectionModal'
 
 import { settingStore } from './models/SettingStore'

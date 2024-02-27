@@ -6,7 +6,7 @@ import ScrollableFeed from 'react-scrollable-feed'
 import { chatStore } from '../models/ChatStore'
 import { settingStore } from '../models/SettingStore'
 
-import { IncomingMessage, Message } from './Message'
+import { IncomingMessage, Message } from '../components/Message'
 import Paperclip from '../icons/Paperclip'
 
 const ChatBoxInputRow = observer(

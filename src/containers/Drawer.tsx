@@ -5,10 +5,10 @@ import Question from '../icons/Question'
 import Github from '../icons/Github'
 
 import { DefaultHost, settingStore } from '../models/SettingStore'
-import ModelRefreshButton from './ModelRefreshButton'
+import ModelRefreshButton from '../components/ModelRefreshButton'
 
-import ModelSelector from './ModelSelector'
-import ThemeSelector from './ThemeSelector'
+import ModelSelector from '../components/ModelSelector'
+import ThemeSelector from '../components/ThemeSelector'
 import { SideBar } from './SideBar'
 
 const Input = observer(() => {
