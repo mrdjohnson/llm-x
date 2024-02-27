@@ -46,6 +46,7 @@ const ModelSelectionModal = observer(() => {
                   }
                   onClick={() => settingStore.selectModel(model.name)}
                   style={{ borderTopLeftRadius: 8 }}
+                  key={model.name}
                 >
                   <td>{model.name}</td>
                   <td>{model.gbSize}</td>
