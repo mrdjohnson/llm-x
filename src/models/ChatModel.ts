@@ -1,41 +1,12 @@
 import _ from 'lodash'
 import { types, Instance, detach, flow } from 'mobx-state-tree'
 
+import { IMessageModel, MessageModel } from './MessageModel'
 import { settingStore } from './SettingStore'
 import { toastStore } from './ToastStore'
 
 import base64EncodeImage from '../utils/base64EncodeImage'
 import { OllmaApi } from '../utils/OllamaApi'
-
-const MessageErrorModel = types.model({
-  message: types.string,
-  stack: types.maybe(types.string),
-})
-
-const MessageExtrasModel = types.model({
-  error: types.maybe(MessageErrorModel),
-})
-
-export const MessageModel = types
-  .model({
-    fromBot: types.boolean,
-    botName: types.maybe(types.string),
-    content: types.optional(types.string, ''),
-    image: types.maybe(types.string),
-    uniqId: types.identifier,
-    extras: types.maybe(MessageExtrasModel),
-  })
-  .actions(self => ({
-    setError(error: Error) {
-      self.extras ||= MessageExtrasModel.create()
-
-      const { message, stack } = error
-
-      self.extras.error = MessageErrorModel.create({ message, stack })
-    },
-  }))
-
-export interface IMessageModel extends Instance<typeof MessageModel> {}
 
 export const ChatModel = types
   .model({

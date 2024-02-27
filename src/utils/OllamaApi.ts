@@ -1,4 +1,4 @@
-import { IMessageModel } from '../models/ChatModel'
+import { IMessageModel } from '../models/MessageModel'
 import { DefaultHost, settingStore } from '../models/SettingStore'
 
 type OllamaMessage = {

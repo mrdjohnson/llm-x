@@ -11,7 +11,7 @@ import Stop from '../icons/Stop'
 import Refresh from '../icons/Refresh'
 import ChevronDown from '../icons/ChevronDown'
 
-import { IMessageModel } from '../models/ChatModel'
+import { IMessageModel } from '../models/MessageModel'
 import { chatStore } from '../models/ChatStore'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
