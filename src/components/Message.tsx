@@ -137,7 +137,7 @@ export const Message = ({
   return (
     <div
       className={
-        'group indicator flex w-fit min-w-6 max-w-full flex-col ' +
+        'group indicator relative flex w-fit min-w-6 max-w-full flex-col ' +
         (fromBot ? 'pr-6 ' : ' ml-2 self-end ') +
         (shouldDimMessage ? ' opacity-55 ' : '')
       }
@@ -192,8 +192,8 @@ export const Message = ({
 
       <div
         className={
-          'mt-1 flex w-fit gap-2 rounded-md bg-base-100 opacity-0 group-hover:opacity-90 ' +
-          (fromBot ? 'flex-row' : 'self-end flex-row-reverse')
+          'sticky bottom-0 mx-2 mt-1 flex w-fit gap-2 rounded-md opacity-0 group-hover:opacity-90 ' +
+          (fromBot ? 'flex-row' : 'flex-row-reverse self-end')
         }
       >
         <button
