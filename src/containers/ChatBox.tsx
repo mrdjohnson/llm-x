@@ -1,4 +1,12 @@
-import { useRef, PropsWithChildren, MouseEvent, useEffect, useState } from 'react'
+import {
+  useRef,
+  PropsWithChildren,
+  MouseEvent,
+  useEffect,
+  useState,
+  KeyboardEvent,
+  ChangeEvent,
+} from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
@@ -15,8 +23,9 @@ const ChatBoxInputRow = observer(
     onSend,
     children,
   }: PropsWithChildren<{ onSend: (message: string, image?: string) => void }>) => {
-    const inputRef = useRef<HTMLInputElement>(null)
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
+
     const [messageContent, setMessageContent] = useState('')
 
     const chat = chatStore.selectedChat!
@@ -25,19 +34,23 @@ const ChatBoxInputRow = observer(
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
 
-      if (!inputRef.current) return
+      sendMessage()
+    }
 
-      const userMessage = inputRef.current.value || ''
+    const sendMessage = () => {
+      if (!textareaRef.current) return
+
+      const userMessage = textareaRef.current.value || ''
 
       onSend(userMessage, previewImage)
 
-      inputRef.current.value = ''
-      inputRef.current.focus()
+      setMessageContent('')
+      textareaRef.current.focus()
 
       chat.setPreviewImage(undefined)
     }
 
-    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0]
 
       if (!file) {
@@ -50,29 +63,70 @@ const ChatBoxInputRow = observer(
       chat.setPreviewImage(file)
     }
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.shiftKey) return
+
+      if (e.key === 'Enter') {
+        sendMessage()
+      }
+    }
+
     const noServer = !settingStore.selectedModel
     const inputDisabled = chatStore.isGettingData || noServer
 
     useEffect(() => {
-      if (!inputRef.current) return
+      if (!textareaRef.current) return
 
       setMessageContent(messageToEdit?.content || '')
     }, [messageToEdit])
 
+    // can revisit if this slows things down but its been fine so far
+    const lineCount = messageContent.split('\n').length
+
     return (
-      <div className={'mt-2 w-full ' + (noServer && 'tooltip')} data-tip="Server is not connected">
-        <form className="flex min-h-fit w-full flex-row gap-2" onSubmit={onFormSubmit}>
-          <div className="join relative w-full flex-1">
-            <input
-              className="input join-item input-bordered grow focus:outline-none"
+      <div
+        className={'no-scrollbar mt-2 h-fit w-full shrink-0 ' + (noServer && 'tooltip')}
+        data-tip="Server is not connected"
+      >
+        <form
+          className="join join-vertical h-full min-h-fit w-full rounded-md border border-base-content/20"
+          onSubmit={onFormSubmit}
+        >
+          <div className="join-item relative p-2">
+            <textarea
+              className="no-scrollbar textarea textarea-ghost ml-2 h-full max-h-[400px] w-full resize-none overflow-scroll border-0 p-0 text-base placeholder:text-base-content/30 focus:outline-none"
               placeholder="Enter Prompt"
-              ref={inputRef}
-              type="text"
+              ref={textareaRef}
               disabled={inputDisabled}
               value={messageContent}
+              rows={lineCount}
+              onKeyDown={handleKeyDown}
               onChange={e => setMessageContent(e.target.value)}
+              autoFocus
             />
 
+            {/* TODO: add persona information here */}
+
+            {previewImage && (
+              <div className="absolute bottom-full end-0 mb-2 w-fit">
+                <div className="relative h-full w-fit">
+                  <div
+                    className="btn btn-xs absolute right-1 top-1 opacity-70"
+                    onClick={() => chat.setPreviewImage(undefined)}
+                  >
+                    x
+                  </div>
+
+                  <img
+                    src={previewImage}
+                    className="m-auto max-h-24 max-w-24 place-self-end rounded-md object-scale-down object-right"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="join-item flex w-full flex-row justify-end gap-2 bg-base-200 align-middle">
             {/* hidden file input */}
             <input
               style={{ display: 'none' }}
@@ -83,10 +137,7 @@ const ChatBoxInputRow = observer(
             />
 
             <button
-              className={
-                'btn join-item !rounded-r-md border ' +
-                (inputDisabled ? '' : 'input-bordered hover:input-bordered')
-              }
+              className={'btn btn-ghost'}
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={inputDisabled}
@@ -94,38 +145,26 @@ const ChatBoxInputRow = observer(
               <Paperclip />
             </button>
 
-            {previewImage && (
-              <div className="--top-full absolute bottom-full end-0 mb-2 h-24 w-24">
-                <div className="relative h-full w-full">
-                  <div
-                    className="btn btn-xs absolute right-1 top-1 opacity-70"
-                    onClick={() => chat.setPreviewImage(undefined)}
-                  >
-                    x
-                  </div>
+            {chat.isEditingMessage && (
+              <button
+                className="btn btn-ghost text-error/50 hover:text-error"
+                type="button"
+                disabled={noServer}
+                onClick={() => chat.setMessageToEdit(undefined)}
+              >
+                Cancel
+              </button>
+            )}
 
-                  <img src={previewImage} className="object-fit h-24 w-24 rounded-md" />
-                </div>
-              </div>
+            {children || (
+              <button
+                className="btn btn-ghost rounded-none bg-base-100"
+                disabled={noServer || _.isEmpty(messageContent)}
+              >
+                Send
+              </button>
             )}
           </div>
-
-          {chat.isEditingMessage && (
-            <button
-              className="btn btn-outline btn-error opacity-40"
-              type="button"
-              disabled={noServer}
-              onClick={() => chat.setMessageToEdit(undefined)}
-            >
-              Cancel
-            </button>
-          )}
-
-          {children || (
-            <button className="btn btn-neutral" disabled={noServer || _.isEmpty(messageContent)}>
-              Send
-            </button>
-          )}
         </form>
       </div>
     )
@@ -205,7 +244,7 @@ const ChatBox = observer(() => {
         {chat.isGettingData && (
           <button
             type="button"
-            className="btn btn-outline btn-error opacity-40"
+            className="btn btn-ghost text-error/50 hover:text-error"
             onClick={handleMessageStopped}
           >
             Stop
