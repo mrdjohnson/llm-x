@@ -1,12 +1,13 @@
-import { useRef,  PropsWithChildren, MouseEvent } from 'react'
+import { useRef, PropsWithChildren, MouseEvent, useEffect } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
 
 import { chatStore } from '../models/ChatStore'
 import { settingStore } from '../models/SettingStore'
+import { IMessageModel } from '../models/MessageModel'
 
-import { IncomingMessage, Message } from '../components/Message'
+import { IncomingMessage, Message, MessageToEdit } from '../components/Message'
 import Paperclip from '../icons/Paperclip'
 
 const ChatBoxInputRow = observer(
@@ -18,7 +19,7 @@ const ChatBoxInputRow = observer(
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const chat = chatStore.selectedChat!
-    const previewImage = chat.previewImage
+    const { previewImage, messageToEdit } = chat
 
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
@@ -50,6 +51,12 @@ const ChatBoxInputRow = observer(
 
     const noServer = !settingStore.selectedModel
     const inputDisabled = chatStore.isGettingData || noServer
+
+    useEffect(() => {
+      if (!inputRef.current) return
+
+      inputRef.current.value = messageToEdit?.content || ''
+    }, [messageToEdit])
 
     return (
       <div className={'mt-2 w-full ' + (noServer && 'tooltip')} data-tip="Server is not connected">
@@ -100,6 +107,17 @@ const ChatBoxInputRow = observer(
             )}
           </div>
 
+          {chat.isEditingMessage && (
+            <button
+              className="btn btn-outline btn-error opacity-40"
+              type="button"
+              disabled={noServer}
+              onClick={() => chat.setMessageToEdit(undefined)}
+            >
+              Cancel
+            </button>
+          )}
+
           {children || (
             <button className="btn btn-neutral" disabled={noServer}>
               Send
@@ -116,10 +134,8 @@ const ChatBox = observer(() => {
 
   const scrollableFeedRef = useRef<ScrollableFeed>(null)
 
-  const sendMessage = async () => {
+  const sendMessage = async (incomingMessage: IMessageModel) => {
     if (!chat) return
-
-    const incomingMessage = chat.createIncomingMessage()
 
     chat.generateMessage(incomingMessage).finally(() => {
       scrollableFeedRef.current?.scrollToBottom()
@@ -128,11 +144,19 @@ const ChatBox = observer(() => {
 
   if (!chat) return null
 
-  const handleMessageToSend = (userMessage: string, image?: string) => {
+  const handleMessageToSend = (userMessageContent: string, image?: string) => {
     console.timeLog('handling message')
-    chat.addUserMessage(userMessage, image)
 
-    sendMessage()
+    if (chat.messageToEdit) {
+      chat.commitMessageToEdit(userMessageContent, image)
+
+      chat.findAndRegenerateResponse()
+    } else {
+      chat.addUserMessage(userMessageContent, image)
+
+      const incomingMessage = chat.createAndPushIncomingMessage()
+      sendMessage(incomingMessage)
+    }
   }
 
   const handleMessageStopped = (e: MouseEvent<HTMLButtonElement>) => {
@@ -142,7 +166,27 @@ const ChatBox = observer(() => {
   }
 
   const disableRegeneration = !!chat.incomingMessage
+  const isEditingMessage = chat.isEditingMessage
   const incomingUniqId = chat.incomingMessage?.uniqId
+  const outgoingUniqId = chat.messageToEdit?.uniqId
+
+  const renderMessage = (message: IMessageModel) => {
+    if (message.uniqId === incomingUniqId) return <IncomingMessage key={message.uniqId} />
+
+    if (message.uniqId === outgoingUniqId)
+      return <MessageToEdit key={message.uniqId} message={message} />
+
+    return (
+      <Message
+        message={message}
+        key={message.uniqId}
+        onDestroy={() => chat.deleteMessage(message)}
+        disableRegeneration={disableRegeneration}
+        disableEditing={isEditingMessage}
+        shouldDimMessage={isEditingMessage}
+      />
+    )
+  }
 
   return (
     <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-hidden rounded-md">
@@ -151,18 +195,7 @@ const ChatBox = observer(() => {
         className="no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-hidden"
         animateScroll={(element, offset) => element.scrollBy({ top: offset, behavior: 'smooth' })}
       >
-        {chat.messages.map(message =>
-          message.uniqId === incomingUniqId ? (
-            <IncomingMessage key={message.uniqId} />
-          ) : (
-            <Message
-              message={message}
-              key={message.uniqId}
-              onDestroy={() => chat.deleteMessage(message)}
-              disableRegeneration={disableRegeneration}
-            />
-          ),
-        )}
+        {chat.messages.map(renderMessage)}
       </ScrollableFeed>
 
       <ChatBoxInputRow onSend={handleMessageToSend}>

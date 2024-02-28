@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useMemo } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { PropsWithChildren, useState } from 'react'
@@ -10,6 +10,7 @@ import CopySuccess from '../icons/CopySuccess'
 import Stop from '../icons/Stop'
 import Refresh from '../icons/Refresh'
 import ChevronDown from '../icons/ChevronDown'
+import Edit from '../icons/Edit'
 
 import { IMessageModel } from '../models/MessageModel'
 import { chatStore } from '../models/ChatStore'
@@ -49,12 +50,29 @@ export const IncomingMessage = observer(() => {
   )
 })
 
+export const MessageToEdit = observer(({ message }: { message: IMessageModel }) => {
+  const chat = chatStore.selectedChat!
+
+  return (
+    <Message
+      message={message}
+      onDestroy={() => chat.setMessageToEdit(undefined)}
+      customDeleteIcon={<Stop />}
+      shouldDimMessage={false}
+    >
+      <Loading />
+    </Message>
+  )
+})
+
 type MessageProps = PropsWithChildren<{
   message: IMessageModel
   loading?: boolean
   onDestroy: () => void
   customDeleteIcon?: React.ReactNode
   disableRegeneration?: boolean
+  disableEditing?: boolean
+  shouldDimMessage?: boolean
 }>
 
 export const Message = ({
@@ -63,9 +81,12 @@ export const Message = ({
   children,
   customDeleteIcon,
   disableRegeneration,
+  disableEditing,
+  shouldDimMessage,
 }: MessageProps) => {
   const { content, fromBot, uniqId, image, extras } = message
   const error = extras?.error
+  const chat = chatStore.selectedChat!
 
   const [copied, setCopied] = useState(false)
 
@@ -79,11 +100,46 @@ export const Message = ({
     chatStore.selectedChat!.generateMessage(message)
   }
 
+  const handleEdit = async () => {
+    chatStore.selectedChat!.setMessageToEdit(message)
+  }
+
+  const extraButton = useMemo(() => {
+    if (chat.isEditingMessage || chat.isGettingData) return null
+
+    if (fromBot) {
+      return (
+        <button
+          className="rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
+          onClick={handleRegeneration}
+          disabled={disableRegeneration}
+          title={customDeleteIcon ? 'Stop' : 'Regenerate message'}
+        >
+          {customDeleteIcon || <Refresh />}
+        </button>
+      )
+    }
+
+    return (
+      <button
+        className="rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
+        onClick={handleEdit}
+        disabled={disableEditing}
+        title="Edit message"
+      >
+        <Edit className="h-4 w-4" />
+      </button>
+    )
+  }, [chat, fromBot, disableRegeneration, disableEditing])
+
+  if (!message.content) return null
+
   return (
     <div
       className={
         'group indicator flex w-fit min-w-6 max-w-full flex-col ' +
-        (fromBot ? 'pr-6 ' : ' ml-2 self-end ')
+        (fromBot ? 'pr-6 ' : ' ml-2 self-end ') +
+        (shouldDimMessage ? ' opacity-55 ' : '')
       }
       key={uniqId}
     >
@@ -136,33 +192,30 @@ export const Message = ({
 
       <div
         className={
-          'mt-1 flex w-fit flex-row gap-2 opacity-0 group-hover:opacity-90 ' +
-          (!fromBot && 'self-end')
+          'mt-1 flex w-fit gap-2 rounded-md bg-base-100 opacity-0 group-hover:opacity-90 ' +
+          (fromBot ? 'flex-row' : 'self-end flex-row-reverse')
         }
       >
-        <button className="rounded-md text-error/30 hover:text-error" onClick={onDestroy}>
+        <button
+          className="rounded-md text-error/30 hover:scale-125 hover:text-error"
+          onClick={onDestroy}
+          title={customDeleteIcon ? 'Stop' : 'Delete'}
+        >
           {customDeleteIcon || <Delete />}
         </button>
 
         <button
-          className="rounded-md text-base-content/30 hover:text-base-content"
+          className="place-items-center rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
           onClick={handleCopy}
+          title="Copy contents to clipboard"
         >
-          <label className={'swap ' + (copied && 'swap-active')}>
+          <label className={'swap h-full ' + (copied && 'swap-active')}>
             <Copy className="swap-off" />
             <CopySuccess className="swap-on" />
           </label>
         </button>
 
-        {!children && fromBot && (
-          <button
-            className="rounded-md text-base-content/30 hover:text-base-content"
-            onClick={handleRegeneration}
-            disabled={disableRegeneration}
-          >
-            {customDeleteIcon || <Refresh />}
-          </button>
-        )}
+        {extraButton}
       </div>
     </div>
   )

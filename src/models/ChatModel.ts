@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { types, Instance, detach, flow } from 'mobx-state-tree'
+import { types, Instance, detach, flow, cast } from 'mobx-state-tree'
 
 import { IMessageModel, MessageModel } from './MessageModel'
 import { settingStore } from './SettingStore'
@@ -13,22 +13,36 @@ export const ChatModel = types
     id: types.optional(types.identifierNumber, Date.now),
     name: types.optional(types.string, ''),
     messages: types.array(MessageModel),
-    incomingMessage: types.safeReference(MessageModel),
+    incomingMessage: types.safeReference(MessageModel), // bot message
     _incomingMessageAbortedByUser: types.maybe(types.boolean),
     previewImage: types.maybe(types.string),
+    messageToEdit: types.safeReference(MessageModel), // user message to edit
   })
   .actions(self => ({
     afterCreate() {
       if (self.incomingMessage) {
         this.commitIncomingMessage()
       }
+
+      // do not persist the draft information
+      self.previewImage = undefined
+      self.messageToEdit = undefined
     },
 
     beforeDestroy() {
       OllmaApi.cancelStream()
+    },
 
-      // we do not persist the message, get rid of the image too
-      self.previewImage = undefined
+    setMessageToEdit(message?: IMessageModel) {
+      self.messageToEdit = message
+      self.previewImage = message?.image
+    },
+
+    commitMessageToEdit(content: string, image?: string) {
+      const messageToEdit = self.messageToEdit!
+
+      messageToEdit.content = content
+      messageToEdit.image = image
     },
 
     setPreviewImage: flow(function* setFile(file?: File) {
@@ -61,6 +75,31 @@ export const ChatModel = types
       _.remove(self.messages, message)
     },
 
+    findAndRegenerateResponse() {
+      const messageToEditIndex = _.indexOf(self.messages, self.messageToEdit)
+      const messageAfterEditedMessage = self.messages[messageToEditIndex + 1]
+
+      let botMessageToEdit
+
+      // edited message was the last message
+      if (!messageAfterEditedMessage) {
+        botMessageToEdit = this.createAndPushIncomingMessage()
+        // if the previous bot message was deleted
+      } else if (!messageAfterEditedMessage.fromBot) {
+        botMessageToEdit = this.createIncomingMessage()
+
+        const preMessages = self.messages.slice(0, messageToEditIndex + 1)
+        const postMessages = self.messages.slice(messageToEditIndex + 1)
+
+        self.messages = cast([...preMessages, botMessageToEdit, ...postMessages])
+      } else {
+        botMessageToEdit = messageAfterEditedMessage
+      }
+
+      self.messageToEdit = undefined
+      this.generateMessage(botMessageToEdit)
+    },
+
     createIncomingMessage() {
       const uniqId = 'bot_' + Date.now()
 
@@ -68,7 +107,14 @@ export const ChatModel = types
         fromBot: true,
         botName: settingStore.selectedModel?.name,
         uniqId,
+        content: '',
       })
+
+      return incomingMessage
+    },
+
+    createAndPushIncomingMessage() {
+      const incomingMessage = this.createIncomingMessage()
 
       self.messages.push(incomingMessage)
 
@@ -121,7 +167,7 @@ export const ChatModel = types
     addUserMessage(content: string = '', image?: string) {
       if (!content && !image) return
 
-      if (_.isEmpty(self.messages)) {
+      if (!self.name) {
         this.setName(content.substring(0, 20))
       }
 
@@ -138,6 +184,10 @@ export const ChatModel = types
   .views(self => ({
     get isGettingData() {
       return !!self.incomingMessage
+    },
+
+    get isEditingMessage() {
+      return !!self.messageToEdit
     },
   }))
 
