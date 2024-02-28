@@ -1,4 +1,4 @@
-export default function Edit() {
+export default function Edit({className = 'h-4 w-4'}: {className?: string}) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,7 +6,7 @@ export default function Edit() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="h-5 w-5"
+      className={className}
     >
       <path
         strokeLinecap="round"
