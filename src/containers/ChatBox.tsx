@@ -1,4 +1,4 @@
-import { useRef, PropsWithChildren, MouseEvent, useEffect } from 'react'
+import { useRef, PropsWithChildren, MouseEvent, useEffect, useState } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
@@ -17,6 +17,7 @@ const ChatBoxInputRow = observer(
   }: PropsWithChildren<{ onSend: (message: string, image?: string) => void }>) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const [messageContent, setMessageContent] = useState('')
 
     const chat = chatStore.selectedChat!
     const { previewImage, messageToEdit } = chat
@@ -55,7 +56,7 @@ const ChatBoxInputRow = observer(
     useEffect(() => {
       if (!inputRef.current) return
 
-      inputRef.current.value = messageToEdit?.content || ''
+      setMessageContent(messageToEdit?.content || '')
     }, [messageToEdit])
 
     return (
@@ -68,6 +69,8 @@ const ChatBoxInputRow = observer(
               ref={inputRef}
               type="text"
               disabled={inputDisabled}
+              value={messageContent}
+              onChange={e => setMessageContent(e.target.value)}
             />
 
             {/* hidden file input */}
@@ -119,7 +122,7 @@ const ChatBoxInputRow = observer(
           )}
 
           {children || (
-            <button className="btn btn-neutral" disabled={noServer}>
+            <button className="btn btn-neutral" disabled={noServer || _.isEmpty(messageContent)}>
               Send
             </button>
           )}
