@@ -85,11 +85,14 @@ const ChatBoxInputRow = observer(
 
     return (
       <div
-        className={'no-scrollbar mt-2 h-fit w-full shrink-0 ' + (noServer && 'tooltip')}
+        className={'no-scrollbar mt-2 h-fit w-full shrink-0 ' + (noServer && 'tooltip cursor-not-allowed')}
         data-tip="Server is not connected"
       >
         <form
-          className="join join-vertical h-full min-h-fit w-full rounded-md border border-base-content/20"
+          className={
+            'join join-vertical h-full min-h-fit w-full rounded-md border border-base-content/20 ' +
+            (inputDisabled ? 'bg-base-200' : '')
+          }
           onSubmit={onFormSubmit}
         >
           <div className="join-item relative p-2">
@@ -126,7 +129,7 @@ const ChatBoxInputRow = observer(
             )}
           </div>
 
-          <div className="join-item flex w-full flex-row justify-end gap-2 bg-base-200 align-middle">
+          <div className="join-item flex w-full flex-row justify-end gap-2 bg-base-200 align-middle tooltip">
             {/* hidden file input */}
             <input
               style={{ display: 'none' }}
@@ -244,7 +247,7 @@ const ChatBox = observer(() => {
         {chat.isGettingData && (
           <button
             type="button"
-            className="btn btn-ghost text-error/50 hover:text-error"
+            className="btn btn-ghost text-error/50 hover:text-error rounded-r-none"
             onClick={handleMessageStopped}
           >
             Stop
