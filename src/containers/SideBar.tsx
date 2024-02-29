@@ -1,13 +1,18 @@
-import { useEffect, useRef } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { observer } from 'mobx-react-lite'
+import { applySnapshot, getSnapshot } from 'mobx-state-tree'
 
 import { chatStore } from '../models/ChatStore'
 import { IChatModel } from '../models/ChatModel'
+import { settingStore } from '../models/SettingStore'
+import { personaStore } from '../models/PersonaStore'
 
 import Delete from '../icons/Delete'
 import Options from '../icons/Options'
 import Edit from '../icons/Edit'
 import Check from '../icons/Check'
+import DocumentArrowUp from '../icons/DocumentArrowUp'
+import DocumentArrowDown from '../icons/DocumentArrowDown'
 
 const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -70,22 +75,83 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
 })
 
 export const SideBar = observer(() => {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const chats = chatStore.chats
 
-  return (
-    <div className="flex h-full w-[260px] min-w-[260px] flex-1 flex-col flex-nowrap gap-2 rounded-md bg-base-300 p-2 ">
-      <button
-        className="btn btn-neutral mb-2 flex w-full flex-row items-center justify-center gap-2 p-2"
-        onClick={chatStore.createChat}
-        disabled={chatStore.hasEmptyChat}
-      >
-        New Chat
-        <Edit className='h-5 w-5' />
-      </button>
+  const exportAll = () => {
+    const data = JSON.stringify({
+      chatStore: getSnapshot(chatStore),
+      personaStore: getSnapshot(personaStore),
+      settingStore: getSnapshot(settingStore),
+    })
 
-      {chats.map(chat => (
-        <ChatItem chat={chat} key={chat.id} />
-      ))}
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
+    link.download = 'llm-x-data.json'
+    link.click()
+  }
+
+  const importAll = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    // reset file input
+    event.target.value = ''
+
+    const data = JSON.parse(await file.text())
+
+    applySnapshot(chatStore, data.chatStore)
+    applySnapshot(personaStore, data.personaStore)
+    applySnapshot(settingStore, data.settingStore)
+  }
+
+  return (
+    <div className="flex h-auto w-[260px] min-w-[260px] flex-1 flex-col flex-nowrap gap-2 rounded-md bg-base-300 p-2 lg:h-full ">
+      <div className="flex h-full flex-1 flex-col">
+        <button
+          className="btn btn-neutral mb-2 flex w-full flex-row items-center justify-center gap-2 p-2"
+          onClick={chatStore.createChat}
+          disabled={chatStore.hasEmptyChat}
+        >
+          New Chat
+          <Edit className="h-5 w-5" />
+        </button>
+
+        {chats.map(chat => (
+          <ChatItem chat={chat} key={chat.id} />
+        ))}
+      </div>
+
+      <div className="flex flex-col justify-center gap-2">
+        <label className=" text-center">Import / Export</label>
+
+        {/* hidden file input */}
+        <input
+          style={{ display: 'none' }}
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          onChange={importAll}
+        />
+
+        <div className="flex flex-row justify-center gap-2">
+          <button
+            className="btn btn-ghost btn-active"
+            title="Import All"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <DocumentArrowUp />
+          </button>
+
+          <button className="btn btn-ghost btn-active" title="Export All" onClick={exportAll}>
+            <DocumentArrowDown />
+          </button>
+        </div>
+      </div>
     </div>
   )
 })
