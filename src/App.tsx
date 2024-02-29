@@ -12,6 +12,7 @@ import PwaReloadPrompt from './components/PwaReloadPrompt'
 import ModelSelector from './components/ModelSelector'
 import ModelRefreshButton from './components/ModelRefreshButton'
 import ModelSelectionModal from './components/ModelSelectionModal'
+import PersonaSelectionModal from './components/PersonaSelectionModal'
 
 import { settingStore } from './models/SettingStore'
 
@@ -77,6 +78,8 @@ function App() {
         <HelpModal />
 
         <ModelSelectionModal />
+
+        <PersonaSelectionModal />
 
         <ToastCenter />
 

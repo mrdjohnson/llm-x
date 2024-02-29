@@ -14,9 +14,11 @@ import ScrollableFeed from 'react-scrollable-feed'
 import { chatStore } from '../models/ChatStore'
 import { settingStore } from '../models/SettingStore'
 import { IMessageModel } from '../models/MessageModel'
+import { personaStore } from '../models/PersonaStore'
 
 import { IncomingMessage, Message, MessageToEdit } from '../components/Message'
 import Paperclip from '../icons/Paperclip'
+import ChevronDown from '../icons/ChevronDown'
 
 const ChatBoxInputRow = observer(
   ({
@@ -85,7 +87,9 @@ const ChatBoxInputRow = observer(
 
     return (
       <div
-        className={'no-scrollbar mt-2 h-fit w-full shrink-0 ' + (noServer && 'tooltip cursor-not-allowed')}
+        className={
+          'no-scrollbar mt-2 h-fit w-full shrink-0 ' + (noServer && 'tooltip cursor-not-allowed')
+        }
         data-tip="Server is not connected"
       >
         <form
@@ -129,44 +133,57 @@ const ChatBoxInputRow = observer(
             )}
           </div>
 
-          <div className="join-item flex w-full flex-row justify-end gap-2 bg-base-200 align-middle tooltip">
-            {/* hidden file input */}
-            <input
-              style={{ display: 'none' }}
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-
+          <div className="join-item flex w-full flex-row justify-between gap-2 bg-base-200 align-middle">
             <button
-              className={'btn btn-ghost'}
+              tabIndex={0}
               type="button"
-              onClick={() => fileInputRef.current?.click()}
+              className="btn btn-active rounded-none rounded-bl-md"
               disabled={inputDisabled}
+              onClick={() => personaStore.openSelectionModal()}
             >
-              <Paperclip />
+              {personaStore.selectedPersona?.name || 'No personas selected'}
+              <ChevronDown />
             </button>
 
-            {chat.isEditingMessage && (
-              <button
-                className="btn btn-ghost text-error/50 hover:text-error"
-                type="button"
-                disabled={noServer}
-                onClick={() => chat.setMessageToEdit(undefined)}
-              >
-                Cancel
-              </button>
-            )}
+            <div className="flex">
+              {/* hidden file input */}
+              <input
+                style={{ display: 'none' }}
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
 
-            {children || (
               <button
-                className="btn btn-ghost rounded-none bg-base-100"
-                disabled={noServer || _.isEmpty(messageContent)}
+                className={'btn btn-ghost'}
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={inputDisabled}
               >
-                Send
+                <Paperclip />
               </button>
-            )}
+
+              {chat.isEditingMessage && (
+                <button
+                  className="btn btn-ghost text-error/50 hover:text-error"
+                  type="button"
+                  disabled={noServer}
+                  onClick={() => chat.setMessageToEdit(undefined)}
+                >
+                  Cancel
+                </button>
+              )}
+
+              {children || (
+                <button
+                  className="btn btn-ghost rounded-none rounded-br-md bg-base-100"
+                  disabled={noServer || _.isEmpty(messageContent)}
+                >
+                  Send
+                </button>
+              )}
+            </div>
           </div>
         </form>
       </div>
@@ -216,7 +233,8 @@ const ChatBox = observer(() => {
   const outgoingUniqId = chat.messageToEdit?.uniqId
 
   const renderMessage = (message: IMessageModel) => {
-    if (message.uniqId === incomingUniqId) return <IncomingMessage key={message.uniqId + message.content} />
+    if (message.uniqId === incomingUniqId)
+      return <IncomingMessage key={message.uniqId + message.content} />
 
     if (message.uniqId === outgoingUniqId)
       return <MessageToEdit key={message.uniqId} message={message} />
@@ -247,7 +265,7 @@ const ChatBox = observer(() => {
         {chat.isGettingData && (
           <button
             type="button"
-            className="btn btn-ghost text-error/50 hover:text-error rounded-r-none"
+            className="btn btn-ghost rounded-r-none text-error/50 hover:text-error"
             onClick={handleMessageStopped}
           >
             Stop

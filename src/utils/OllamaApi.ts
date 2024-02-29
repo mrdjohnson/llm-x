@@ -1,8 +1,9 @@
 import { IMessageModel } from '../models/MessageModel'
 import { DefaultHost, settingStore } from '../models/SettingStore'
+import { personaStore } from '../models/PersonaStore'
 
 type OllamaMessage = {
-  role: 'assistant' | 'user'
+  role: 'assistant' | 'user' | 'system'
   content: string
   images?: string[]
 }
@@ -26,6 +27,15 @@ export class OllmaApi {
     OllmaApi.abortController = new AbortController()
 
     const messages: OllamaMessage[] = []
+
+    const selectedPersona = personaStore.selectedPersona
+
+    if (selectedPersona) {
+      messages.push({
+        role: 'system',
+        content: selectedPersona.description,
+      })
+    }
 
     for (const message of chatMessages) {
       if (message.uniqId === incomingMessage.uniqId) break
