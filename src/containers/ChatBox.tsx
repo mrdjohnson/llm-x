@@ -97,7 +97,7 @@ const ChatBoxInputRow = observer(
         >
           <div className="join-item relative p-2">
             <textarea
-              className="no-scrollbar textarea textarea-ghost ml-2 h-full max-h-[400px] w-full resize-none overflow-scroll border-0 p-0 text-base placeholder:text-base-content/30 focus:outline-none"
+              className="no-scrollbar textarea textarea-ghost ml-2 h-full max-h-[400px] w-full resize-none overflow-scroll border-0 p-0 text-base focus:outline-none"
               placeholder="Enter Prompt"
               ref={textareaRef}
               disabled={inputDisabled}

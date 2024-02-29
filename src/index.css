@@ -19,6 +19,10 @@
     @apply list-inside list-decimal !px-2;
   }
 
+  input, textarea {
+    @apply placeholder:opacity-30;
+  }
+
   .modal {
     @apply modal-bottom !p-2 lg:modal-top lg:!p-3;
   }

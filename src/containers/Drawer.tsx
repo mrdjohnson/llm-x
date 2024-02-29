@@ -30,7 +30,7 @@ const Input = observer(() => {
         <input
           type="text"
           id="host"
-          className="input input-bordered w-full placeholder:opacity-30"
+          className="input input-bordered w-full"
           placeholder={DefaultHost}
           defaultValue={settingStore.host}
           onChange={e => settingStore.setHost(e.target.value)}
