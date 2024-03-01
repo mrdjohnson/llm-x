@@ -60,6 +60,8 @@ const ModelSelectionModal = observer(() => {
           <a
             href="https://ollama.com/library"
             className="btn btn-outline btn-neutral btn-sm mx-auto mt-4 flex w-fit flex-row gap-2 px-4"
+            target='__blank'
+            title='Open Ollama Library in new tab'
           >
             <span className=" whitespace-nowrap text-sm ">Ollama Library</span>
             <Globe />
