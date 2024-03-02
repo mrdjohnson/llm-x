@@ -13,6 +13,7 @@ import Edit from '../icons/Edit'
 import Check from '../icons/Check'
 import DocumentArrowUp from '../icons/DocumentArrowUp'
 import DocumentArrowDown from '../icons/DocumentArrowDown'
+import _ from 'lodash'
 
 const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -23,6 +24,15 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
     const name = inputRef.current?.value
 
     chat.setName(name)
+  }
+
+  const exportChat = () => {
+    const data = JSON.stringify(getSnapshot(chat))
+
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
+    link.download = `llm-x-chat-${_.snakeCase(chat.name).replace('_', '-')}.json`
+    link.click()
   }
 
   useEffect(() => {
@@ -65,9 +75,15 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
             </button>
           </form>
 
-          <button onClick={() => chatStore.deleteChat(chat)} className="btn btn-ghost text-error">
-            <Delete />
-          </button>
+          <div className="flex flex-row gap-2">
+            <button onClick={exportChat} className="btn btn-ghost flex-1 tooltip tooltip-bottom flex" title="Export Chat" data-tip="Export Chat">
+              <DocumentArrowDown />
+            </button>
+
+            <button onClick={() => chatStore.deleteChat(chat)} className="btn btn-ghost text-error">
+              <Delete />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -76,6 +92,7 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
 
 export const SideBar = observer(() => {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const importTypeRef = useRef<'all' | 'chat'>('all')
 
   const chats = chatStore.chats
 
@@ -92,7 +109,7 @@ export const SideBar = observer(() => {
     link.click()
   }
 
-  const importAll = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleImport = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
 
     if (!file) {
@@ -102,6 +119,14 @@ export const SideBar = observer(() => {
     // reset file input
     event.target.value = ''
 
+    if (importTypeRef.current === 'all') {
+      importAll(file)
+    } else {
+      importChat(file)
+    }
+  }
+
+  const importAll = async (file: File) => {
     const data = JSON.parse(await file.text())
 
     applySnapshot(chatStore, data.chatStore)
@@ -109,17 +134,40 @@ export const SideBar = observer(() => {
     applySnapshot(settingStore, data.settingStore)
   }
 
+  const importChat = async (file: File) => {
+    const data = JSON.parse(await file.text())
+
+    chatStore.importChat(data)
+  }
+
+  const handleImportClicked = (importType: 'all' | 'chat') => {
+    importTypeRef.current = importType
+
+    fileInputRef.current?.click()
+  }
+
   return (
     <div className="flex h-auto w-[260px] min-w-[260px] flex-1 flex-col flex-nowrap gap-2 rounded-md bg-base-300 p-2 lg:h-full ">
       <div className="flex h-full flex-1 flex-col">
-        <button
-          className="btn btn-neutral mb-2 flex w-full flex-row items-center justify-center gap-2 p-2"
-          onClick={chatStore.createChat}
-          disabled={chatStore.hasEmptyChat}
-        >
-          New Chat
-          <Edit className="h-5 w-5" />
-        </button>
+        <div className="join join-horizontal">
+          <button
+            className="btn join-item btn-neutral mb-2 flex flex-1 flex-row items-center justify-center gap-2 p-2"
+            onClick={chatStore.createChat}
+            disabled={chatStore.hasEmptyChat}
+          >
+            New Chat
+            <Edit className="h-5 w-5" />
+          </button>
+
+          <button
+            className="btn join-item btn-neutral mb-2 gap-2 p-2 tooltip tooltip-bottom"
+            title="Import chat"
+            onClick={() => handleImportClicked('chat')}
+            data-tip="Import chat"
+          >
+            <DocumentArrowUp />
+          </button>
+        </div>
 
         {chats.map(chat => (
           <ChatItem chat={chat} key={chat.id} />
@@ -135,14 +183,14 @@ export const SideBar = observer(() => {
           ref={fileInputRef}
           type="file"
           accept=".json"
-          onChange={importAll}
+          onChange={handleImport}
         />
 
         <div className="flex flex-row justify-center gap-2">
           <button
             className="btn btn-ghost btn-active"
             title="Import All"
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => handleImportClicked('all')}
           >
             <DocumentArrowUp />
           </button>

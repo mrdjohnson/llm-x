@@ -1,4 +1,4 @@
-import { detach, types } from 'mobx-state-tree'
+import { detach, types, SnapshotIn } from 'mobx-state-tree'
 import persist from 'mst-persist'
 import _ from 'lodash'
 
@@ -38,6 +38,13 @@ export const ChatStore = types
     },
 
     selectChat(chat: IChatModel) {
+      self.selectedChat = chat
+    },
+
+    importChat(data: SnapshotIn<IChatModel>) {
+      const chat = ChatModel.create({ ...data, id: Date.now() })
+      
+      self.chats.push(chat)
       self.selectedChat = chat
     },
   }))
