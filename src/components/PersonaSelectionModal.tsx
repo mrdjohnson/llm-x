@@ -76,13 +76,11 @@ const PersonaItem = observer(
   },
 )
 
-const PersonaSelectionModal = observer(() => {
-  const { selectedPersona, personas, personaToEdit } = personaStore
+const PersonaForm = observer(() => {
+  const { personaToEdit } = personaStore
 
   const nameInputRef = useRef<HTMLInputElement>(null)
   const descriptionTextareaRef = useRef<HTMLTextAreaElement>(null)
-
-  const modalRef = useRef<HTMLDialogElement>(null)
 
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -99,10 +97,6 @@ const PersonaSelectionModal = observer(() => {
   }
 
   useEffect(() => {
-    personaStore.setPersonaSelectionModalRef(modalRef)
-  }, [])
-
-  useEffect(() => {
     if (!nameInputRef.current || !descriptionTextareaRef.current) return
 
     nameInputRef.current.value = personaToEdit?.name || ''
@@ -113,6 +107,60 @@ const PersonaSelectionModal = observer(() => {
       descriptionTextareaRef.current.scrollIntoView({ behavior: 'smooth' })
     }
   }, [personaToEdit])
+
+  return (
+    <form onSubmit={handleFormSubmit} className="mt-4 flex flex-col gap-2">
+      <div>
+        <label className="label-text">Name:</label>
+
+        <input
+          name="persona-name"
+          type="text"
+          ref={nameInputRef}
+          className="input input-sm input-bordered ml-2 max-w-full focus:outline-none"
+          maxLength={30}
+          placeholder="Store manager"
+        />
+      </div>
+
+      <div className=" flex flex-col">
+        <label className="label-text">Description:</label>
+
+        <textarea
+          name="persona-name"
+          ref={descriptionTextareaRef}
+          rows={3}
+          className="textarea textarea-bordered textarea-sm ml-2 mt-2 max-w-full resize-none focus:outline-none"
+          placeholder="You are a store manager that is eager to help many customers"
+        />
+      </div>
+
+      <div className="mt-2 flex justify-end gap-2">
+        {personaToEdit && (
+          <button
+            className="btn btn-ghost btn-sm text-error/50 hover:text-error"
+            onClick={() => personaStore.setPersonaToEdit(undefined)}
+          >
+            Cancel
+          </button>
+        )}
+
+        <button className="btn btn-primary btn-sm">
+          {personaToEdit ? 'Edit Persona' : 'Create Persona'}
+        </button>
+      </div>
+    </form>
+  )
+})
+
+const PersonaSelectionModal = observer(() => {
+  const { selectedPersona, personas, personaToEdit } = personaStore
+
+  const modalRef = useRef<HTMLDialogElement>(null)
+
+  useEffect(() => {
+    personaStore.setPersonaSelectionModalRef(modalRef)
+  }, [])
 
   return (
     <dialog ref={modalRef} id="persona-modal" className="modal modal-bottom">
@@ -143,47 +191,7 @@ const PersonaSelectionModal = observer(() => {
             />
           ))}
 
-          <form onSubmit={handleFormSubmit} className="mt-4 flex flex-col gap-2">
-            <div>
-              <label className="label-text">Name:</label>
-
-              <input
-                name="persona-name"
-                type="text"
-                ref={nameInputRef}
-                className="input input-sm input-bordered ml-2 max-w-full focus:outline-none"
-                maxLength={30}
-                placeholder="Store manager"
-              />
-            </div>
-
-            <div className=" flex flex-col">
-              <label className="label-text">Description:</label>
-
-              <textarea
-                name="persona-name"
-                ref={descriptionTextareaRef}
-                rows={3}
-                className="textarea textarea-bordered textarea-sm ml-2 mt-2 max-w-full resize-none focus:outline-none"
-                placeholder="You are a store manager that is eager to help many customers"
-              />
-            </div>
-
-            <div className="mt-2 flex justify-end gap-2">
-              {personaToEdit && (
-                <button
-                  className="btn btn-ghost btn-sm text-error/50 hover:text-error"
-                  onClick={() => personaStore.setPersonaToEdit(undefined)}
-                >
-                  Cancel
-                </button>
-              )}
-
-              <button className="btn btn-primary btn-sm">
-                {personaToEdit ? 'Edit Persona' : 'Create Persona'}
-              </button>
-            </div>
-          </form>
+          <PersonaForm />
         </div>
       </div>
 
