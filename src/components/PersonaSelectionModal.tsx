@@ -98,8 +98,11 @@ const PersonaForm = observer(() => {
   const handleFormSubmit = handleSubmit(formData => {
     const { name, description } = formData
 
-    personaStore.createPersona(name, description)
-    personaStore.setPersonaToEdit(undefined)
+    if (personaToEdit) {
+      personaStore.editPersona(name, description)
+    } else {
+      personaStore.createPersona(name, description)
+    }
 
     reset()
   })

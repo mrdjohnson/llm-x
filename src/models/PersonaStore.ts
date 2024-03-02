@@ -73,6 +73,16 @@ const PersonaStore = types
       setPersonaToEdit(persona?: IPersonaModel) {
         self.personaToEdit = persona
       },
+
+      editPersona(name: string, description: string) {
+        const personaToEdit = self.personaToEdit
+        if (!personaToEdit) return
+
+        personaToEdit.name = name
+        personaToEdit.description = description
+
+        self.personaToEdit = undefined
+      },
     }
   })
 
