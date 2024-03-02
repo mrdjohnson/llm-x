@@ -76,12 +76,7 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
           </form>
 
           <div className="flex flex-row gap-2">
-            <button
-              onClick={exportChat}
-              className="btn btn-ghost tooltip tooltip-bottom flex flex-1"
-              title="Export Chat"
-              data-tip="Export Chat"
-            >
+            <button onClick={exportChat} className="btn btn-ghost flex-1 tooltip tooltip-bottom flex" title="Export Chat" data-tip="Export Chat">
               <DocumentArrowDown />
             </button>
 
@@ -152,8 +147,8 @@ export const SideBar = observer(() => {
   }
 
   return (
-    <div className="relative flex h-auto w-[260px] min-w-[260px] flex-1 flex-col flex-nowrap gap-2 rounded-md bg-base-300 p-2 lg:h-full">
-      <div className="no-scrollbar flex h-full flex-1 flex-col overflow-y-scroll">
+    <div className="flex h-auto w-[260px] min-w-[260px] flex-1 flex-col flex-nowrap gap-2 rounded-md bg-base-300 p-2 lg:h-full ">
+      <div className="flex h-full flex-1 flex-col">
         <div className="join join-horizontal">
           <button
             className="btn join-item btn-neutral mb-2 flex flex-1 flex-row items-center justify-center gap-2 p-2"
@@ -165,7 +160,7 @@ export const SideBar = observer(() => {
           </button>
 
           <button
-            className="btn join-item btn-neutral tooltip tooltip-bottom mb-2 gap-2 p-2"
+            className="btn join-item btn-neutral mb-2 gap-2 p-2 tooltip tooltip-bottom"
             title="Import chat"
             onClick={() => handleImportClicked('chat')}
             data-tip="Import chat"
@@ -179,7 +174,7 @@ export const SideBar = observer(() => {
         ))}
       </div>
 
-      <div className="sticky bottom-0 flex w-full flex-col justify-center gap-2">
+      <div className="flex flex-col justify-center gap-2">
         <label className=" text-center">Import / Export</label>
 
         {/* hidden file input */}
