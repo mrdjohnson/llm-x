@@ -21,9 +21,9 @@ const Input = observer(() => {
   }
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
+    e.preventDefault()
 
-      settingStore.updateModels()
+    settingStore.updateModels()
   }
 
   useEffect(() => {
@@ -82,9 +82,9 @@ const Drawer = () => {
       <section className="drawer-side z-20">
         <label htmlFor="app-drawer" aria-label="close sidebar" className="drawer-overlay" />
 
-        <div className="flex min-h-full w-80 flex-col bg-base-200 p-3">
+        <div className="flex max-h-dvh min-h-full w-80 flex-col overflow-hidden bg-base-200 p-3">
           <div className="navbar" />
-          <div className="flex h-full flex-1 flex-col gap-3">
+          <div className="flex h-full max-h-full flex-shrink-0 flex-col gap-3 lg:flex-1">
             <Input />
 
             <Suspense fallback={<div> Loading models ... </div>}>
@@ -92,15 +92,15 @@ const Drawer = () => {
             </Suspense>
 
             <ThemeSelector />
+          </div>
 
-            <div className="flex h-full flex-1 rounded-md bg-base-300 lg:hidden">
-              <SideBar />
-            </div>
+          <div className="flex flex-1 rounded-md bg-base-300 lg:hidden mt-3 overflow-hidden">
+            <SideBar />
           </div>
 
           <a
             href="https://github.com/mrdjohnson/llm-x"
-            className="btn btn-outline btn-neutral mt-3 fill-base-content stroke-base-content hover:fill-primary-content"
+            className="btn btn-outline btn-neutral mt-3 flex-shrink-0 fill-base-content stroke-base-content hover:fill-primary-content"
             aria-label="LLM-X's Github"
           >
             <Github />
