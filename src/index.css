@@ -43,6 +43,10 @@
     @apply relative rounded-md bg-base-100 p-6;
   }
 
+  .link {
+    @apply underline-offset-2 mx-1;
+  }
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
