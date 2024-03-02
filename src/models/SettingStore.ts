@@ -55,7 +55,7 @@ export const SettingStore = types
     models: types.optional(types.array(Model), []),
     _selectedModelName: types.maybeNull(types.string),
     theme: types.optional(types.string, '_system'),
-    pwaNeedsUpdate: types.optional(types.boolean, true),
+    pwaNeedsUpdate: types.optional(types.boolean, false),
     lastHelpModalNotificationTime: types.optional(types.number, () => Date.now()),
   })
   .actions(self => {
