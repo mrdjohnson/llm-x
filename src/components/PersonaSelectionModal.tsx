@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite'
-import { FormEvent, useEffect, useRef, MouseEvent } from 'react'
+import { useEffect, useRef, MouseEvent } from 'react'
+import { useForm } from 'react-hook-form'
 
 import { IPersonaModel, personaStore } from '../models/PersonaStore'
 
@@ -76,50 +77,55 @@ const PersonaItem = observer(
   },
 )
 
+type PersonaFormDataType = {
+  name: string
+  description: string
+}
+
 const PersonaForm = observer(() => {
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    reset,
+    formState: { isValid },
+  } = useForm<PersonaFormDataType>({})
+
   const { personaToEdit } = personaStore
 
-  const nameInputRef = useRef<HTMLInputElement>(null)
-  const descriptionTextareaRef = useRef<HTMLTextAreaElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
 
-  const handleFormSubmit = (e: FormEvent) => {
-    e.preventDefault()
-
-    const name = nameInputRef.current?.value
-    const description = descriptionTextareaRef.current?.value
-
-    if (!name || !description) return
+  const handleFormSubmit = handleSubmit(formData => {
+    const { name, description } = formData
 
     personaStore.createPersona(name, description)
+    personaStore.setPersonaToEdit(undefined)
 
-    nameInputRef.current.value = ''
-    descriptionTextareaRef.current.value = ''
-  }
+    reset()
+  })
 
   useEffect(() => {
-    if (!nameInputRef.current || !descriptionTextareaRef.current) return
+    setValue('name', personaToEdit?.name || '')
+    setValue('description', personaToEdit?.description || '')
 
-    nameInputRef.current.value = personaToEdit?.name || ''
-    descriptionTextareaRef.current.value = personaToEdit?.description || ''
-
-    if (personaToEdit) {
-      descriptionTextareaRef.current.focus()
-      descriptionTextareaRef.current.scrollIntoView({ behavior: 'smooth' })
+    if (personaToEdit && formRef.current) {
+      formRef.current.focus()
+      formRef.current.scrollIntoView({ behavior: 'smooth' })
     }
   }, [personaToEdit])
 
   return (
-    <form onSubmit={handleFormSubmit} className="mt-4 flex flex-col gap-2">
+    <form onSubmit={handleFormSubmit} className="mt-4 flex flex-col gap-2" ref={formRef}>
       <div>
         <label className="label-text">Name:</label>
 
         <input
-          name="persona-name"
           type="text"
-          ref={nameInputRef}
           className="input input-sm input-bordered ml-2 max-w-full focus:outline-none"
           maxLength={30}
+          minLength={2}
           placeholder="Store manager"
+          {...register('name', { required: true, minLength: 2, maxLength: 30 })}
         />
       </div>
 
@@ -127,11 +133,10 @@ const PersonaForm = observer(() => {
         <label className="label-text">Description:</label>
 
         <textarea
-          name="persona-name"
-          ref={descriptionTextareaRef}
           rows={3}
           className="textarea textarea-bordered textarea-sm ml-2 mt-2 max-w-full resize-none focus:outline-none"
           placeholder="You are a store manager that is eager to help many customers"
+          {...register('description', { required: true })}
         />
       </div>
 
@@ -145,7 +150,7 @@ const PersonaForm = observer(() => {
           </button>
         )}
 
-        <button className="btn btn-primary btn-sm">
+        <button className="btn btn-primary btn-sm" type="submit" disabled={!isValid}>
           {personaToEdit ? 'Edit Persona' : 'Create Persona'}
         </button>
       </div>
