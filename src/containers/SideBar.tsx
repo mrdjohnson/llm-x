@@ -65,7 +65,7 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
           <form className="flex flex-row gap-2" onSubmit={handleFormSubmit}>
             <input
               type="text"
-              className="input input-bordered w-full min-w-24 flex-1 grow focus:outline-none"
+              className="input input-bordered w-full min-w-24 flex-1 grow text-base-content focus:outline-none"
               defaultValue={chat.name || 'new chat'}
               ref={inputRef}
             />
@@ -160,7 +160,7 @@ export const SideBar = observer(() => {
           </button>
 
           <button
-            className="btn join-item btn-neutral mb-2 gap-2 p-2 tooltip tooltip-bottom"
+            className="btn join-item btn-neutral tooltip tooltip-bottom mb-2 gap-2 p-2"
             title="Import chat"
             onClick={() => handleImportClicked('chat')}
             data-tip="Import chat"
