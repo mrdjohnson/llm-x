@@ -157,7 +157,7 @@ const ChatBoxInputRow = observer(
               />
 
               <button
-                className={'btn btn-ghost'}
+                className={'btn btn-ghost rounded-r-none'}
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={inputDisabled}
