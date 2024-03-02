@@ -67,7 +67,7 @@ const HelpModal = observer(() => {
           </div>
 
           <div>
-            Find out more about <u>Ollama</u> on their website:{' '}
+            Find out more about Ollama on their website:{' '}
             <a href="https://ollama.com/" className=" link">
               https://ollama.com/
             </a>
