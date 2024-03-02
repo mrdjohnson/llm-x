@@ -19,6 +19,7 @@ import { personaStore } from '../models/PersonaStore'
 import { IncomingMessage, Message, MessageToEdit } from '../components/Message'
 import Paperclip from '../icons/Paperclip'
 import ChevronDown from '../icons/ChevronDown'
+import ChatBoxPrompt from '../components/ChatBoxPrompt'
 
 const ChatBoxInputRow = observer(
   ({
@@ -258,7 +259,7 @@ const ChatBox = observer(() => {
         className="no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-hidden"
         animateScroll={(element, offset) => element.scrollBy({ top: offset, behavior: 'smooth' })}
       >
-        {chat.messages.map(renderMessage)}
+        {chat.messages.length > 0 ? chat.messages.map(renderMessage) : <ChatBoxPrompt />}
       </ScrollableFeed>
 
       <ChatBoxInputRow onSend={handleMessageToSend}>

@@ -11,8 +11,6 @@ const OLLAMA_CODE = 'OLLAMA_ORIGINS=*.github.io ollama serve'
 const HelpModal = observer(() => {
   const modalRef = useRef<HTMLDialogElement>(null)
 
-  const selectedModel = settingStore.selectedModel
-
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
@@ -20,16 +18,6 @@ const HelpModal = observer(() => {
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
   }
-
-  useEffect(() => {
-    if (selectedModel) return
-
-    let timeout = setTimeout(() => {
-      settingStore.openUpdateModal({ fromUser: false })
-    }, 1500)
-
-    return () => clearTimeout(timeout)
-  }, [selectedModel])
 
   useEffect(() => {
     settingStore.setHelpModalRef(modalRef)
