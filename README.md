@@ -81,9 +81,8 @@ Clone the project, and run `npm install` in the root directory
 - [x] **Offline Support** via PWA technology
 - [x] Add Screenshots because no one is going to read these
 - [x] Refresh LLM response button
-- [ ] Re-write user message (triggering LLM refresh)
-- [ ] LangChain.js integration?
-- [ ] OpenAI Integration
+- [x] Re-write user message (triggering LLM refresh)
+- [x] Bot "Personas" allow users to override the bot's system message
 
 ## MISC
 
