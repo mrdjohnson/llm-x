@@ -3,8 +3,6 @@ import useMedia from 'use-media'
 import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { settingStore } from '../models/SettingStore'
-
 const hour_1 = 60 * 60 * 1000
 
 const PwaReloadPrompt = observer(() => {
@@ -44,7 +42,12 @@ const PwaReloadPrompt = observer(() => {
   })
 
   useEffect(() => {
-    settingStore.setPwaNeedsUpdate(needRefresh, updateServiceWorker)
+    // settingStore.setPwaNeedsUpdate(needRefresh, updateServiceWorker)
+
+    // do not ask for prompt, immediately update for now
+    if(needRefresh) {
+      updateServiceWorker()
+    }
   }, [needRefresh])
 
   return null
