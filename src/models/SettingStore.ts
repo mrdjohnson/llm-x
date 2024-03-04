@@ -8,6 +8,7 @@ import { toastStore } from './ToastStore'
 
 const ModelDetails = types.model({
   parameterSize: types.string,
+  families: types.array(types.string),
 })
 
 const Model = types
@@ -40,6 +41,10 @@ const Model = types
       if (hours > 0) return `${hours} hour${pluralTimeAgo(hours)}`
       
       return `${minutes} minute${pluralTimeAgo(minutes)}`
+    },
+
+    get supportsImages() {
+      return self.details.families.includes('clip')
     },
   }))
 

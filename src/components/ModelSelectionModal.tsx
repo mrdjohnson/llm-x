@@ -3,10 +3,11 @@ import { useEffect, useRef } from 'react'
 
 import { settingStore } from '../models/SettingStore'
 import Globe from '../icons/Globe'
+import Image from '../icons/Image'
 
 const ModelSelectionModal = observer(() => {
   const { selectedModel, models } = settingStore
-  
+
   const modalRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -31,6 +32,9 @@ const ModelSelectionModal = observer(() => {
                 <th>Size</th>
                 <th>Updated</th>
                 <th>Params</th>
+                <th className="tooltip tooltip-bottom" data-tip="Supports Images?">
+                  <Image />
+                </th>
               </tr>
               <tr />
             </thead>
@@ -52,6 +56,16 @@ const ModelSelectionModal = observer(() => {
                   <td>{model.gbSize}</td>
                   <td>{model.timeAgo}</td>
                   <td>{model.details.parameterSize}</td>
+
+                  <td>
+                    <input
+                      type="checkbox"
+                      defaultChecked
+                      className="checkbox checkbox-xs tooltip tooltip-bottom"
+                      data-tip="Supports Images?"
+                      checked={model.supportsImages}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
