@@ -66,9 +66,9 @@ I couldn't help but bee cool 😎
 
 ## Getting started
 
-Clone the project, and run `npm install` in the root directory
+Clone the project, and run `yarn` in the root directory
 
-`npm run dev` starts a local instance and opens up a browser tab under https:// (for PWA reasons)
+`yarn dev` starts a local instance and opens up a browser tab under https:// (for PWA reasons)
 
 ## Goals
 
