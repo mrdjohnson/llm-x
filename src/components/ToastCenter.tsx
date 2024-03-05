@@ -19,7 +19,6 @@ const ToastCenter = observer(() => {
     return () => clearTimeout(timeout)
   }, [hovering])
 
-
   // this effect will run every render, yes
   // but it will also auto update whenever there is a change to toasts
   useEffect(() => {

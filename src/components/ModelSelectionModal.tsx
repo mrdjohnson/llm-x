@@ -26,7 +26,7 @@ const ModelSelectionModal = observer(() => {
 
         <div className="modal-box-content no-scrollbar relative mb-3 max-h-[500px] overflow-y-auto pt-0">
           <table className="table table-zebra mt-0 border-separate border-spacing-y-2 pt-0">
-            <thead className="sticky top-0 bg-base-200 z-20">
+            <thead className="sticky top-0 z-20 bg-base-200">
               <tr>
                 <th>Name</th>
                 <th>Size</th>
@@ -74,8 +74,8 @@ const ModelSelectionModal = observer(() => {
           <a
             href="https://ollama.com/library"
             className="btn btn-outline btn-neutral btn-sm mx-auto mt-4 flex w-fit flex-row gap-2 px-4"
-            target='__blank'
-            title='Open Ollama Library in new tab'
+            target="__blank"
+            title="Open Ollama Library in new tab"
           >
             <span className=" whitespace-nowrap text-sm ">Ollama Library</span>
             <Globe />

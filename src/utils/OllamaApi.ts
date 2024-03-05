@@ -74,18 +74,18 @@ export class OllmaApi {
       const textChunk = new TextDecoder().decode(value)
 
       // Split the text chunk by newline character in case it contains multiple JSON strings
-      const jsonStrings = textChunk.split(/(?<=})(?=\n{)/);
-      
+      const jsonStrings = textChunk.split(/(?<=})(?=\n{)/)
+
       for (const jsonString of jsonStrings) {
         // Skip empty strings
         if (!jsonString.trim()) continue
-        
-        let data: OllamaResponse;
+
+        let data: OllamaResponse
         try {
           data = JSON.parse(jsonString) as OllamaResponse
         } catch (error) {
-          console.error('Failed to parse JSON:', jsonString);
-          throw error;
+          console.error('Failed to parse JSON:', jsonString)
+          throw error
         }
         if (data.done) break
 

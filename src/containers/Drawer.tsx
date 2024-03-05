@@ -21,9 +21,9 @@ const Input = observer(() => {
   }
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
+    e.preventDefault()
 
-      settingStore.updateModels()
+    settingStore.updateModels()
   }
 
   useEffect(() => {

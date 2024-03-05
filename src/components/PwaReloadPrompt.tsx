@@ -45,7 +45,7 @@ const PwaReloadPrompt = observer(() => {
     // settingStore.setPwaNeedsUpdate(needRefresh, updateServiceWorker)
 
     // do not ask for prompt, immediately update for now
-    if(needRefresh) {
+    if (needRefresh) {
       updateServiceWorker()
     }
   }, [needRefresh])

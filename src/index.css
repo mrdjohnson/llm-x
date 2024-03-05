@@ -19,7 +19,8 @@
     @apply list-inside list-decimal !px-2;
   }
 
-  input, textarea {
+  input,
+  textarea {
     @apply placeholder:opacity-30;
   }
 
@@ -31,8 +32,9 @@
     @apply max-h-96;
   }
 
-  td, th {
-    @apply first-of-type:rounded-l-md last-of-type:rounded-r-md whitespace-nowrap p-2 font-medium;
+  td,
+  th {
+    @apply whitespace-nowrap p-2 font-medium first-of-type:rounded-l-md last-of-type:rounded-r-md;
   }
 
   .modal-box-container {
@@ -44,7 +46,7 @@
   }
 
   .link {
-    @apply underline-offset-2 mx-1;
+    @apply mx-1 underline-offset-2;
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */

@@ -34,12 +34,12 @@ const Model = types
       const hours = Math.floor(minutes / 60)
       const days = Math.floor(hours / 24)
 
-      const pluralTimeAgo = (units:number) => (units !== 1 ? 's' : '') + ' ago'
+      const pluralTimeAgo = (units: number) => (units !== 1 ? 's' : '') + ' ago'
 
       if (days > 0) return `${days} day${pluralTimeAgo(days)}`
 
       if (hours > 0) return `${hours} hour${pluralTimeAgo(hours)}`
-      
+
       return `${minutes} minute${pluralTimeAgo(minutes)}`
     },
 

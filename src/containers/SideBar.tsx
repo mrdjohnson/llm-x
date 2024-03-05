@@ -76,7 +76,12 @@ const ChatItem = observer(({ chat }: { chat: IChatModel }) => {
           </form>
 
           <div className="flex flex-row gap-2">
-            <button onClick={exportChat} className="btn btn-ghost flex-1 tooltip tooltip-bottom flex" title="Export Chat" data-tip="Export Chat">
+            <button
+              onClick={exportChat}
+              className="btn btn-ghost tooltip tooltip-bottom flex flex-1"
+              title="Export Chat"
+              data-tip="Export Chat"
+            >
               <DocumentArrowDown />
             </button>
 

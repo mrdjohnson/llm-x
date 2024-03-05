@@ -43,7 +43,7 @@ export const ChatStore = types
 
     importChat(data: SnapshotIn<IChatModel>) {
       const chat = ChatModel.create({ ...data, id: Date.now() })
-      
+
       self.chats.push(chat)
       self.selectedChat = chat
     },
