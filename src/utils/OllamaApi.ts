@@ -70,14 +70,49 @@ export class OllmaApi {
         break
       }
 
-      // Decode the received value and parse
+      // Decode the received value
       const textChunk = new TextDecoder().decode(value)
 
-      const data = JSON.parse(textChunk) as OllamaResponse
+      if (textChunk.includes('}\n{')) {
+        console.log('Splitting the text chunk as it looks like this:\n', textChunk)
+        // Split the text chunk by newline character
+        const jsonStrings = textChunk.split(/(?<=})(?=\n{)/);
 
-      if (data.done) break
+        let jointContent = '';
+        for (const jsonString of jsonStrings) {
+          // Skip empty strings
+          if (!jsonString.trim()) continue
 
-      yield data.message.content
+          let data: OllamaResponse;
+          try {
+            data = JSON.parse(jsonString) as OllamaResponse
+          } catch (error) {
+            console.error('Failed to parse JSON:', jsonString);
+            throw error;
+          }
+
+          if (data.done) break
+
+          // Append the content of each message to jointContent
+          jointContent += data.message.content
+        }
+        console.log('Joint content after splitting:\n', jointContent);
+
+        // Yield the joint content of both messages
+        yield jointContent
+      } else {
+        let data: OllamaResponse;
+        try {
+          data = JSON.parse(textChunk) as OllamaResponse
+        } catch (error) {
+          console.error('Failed to parse JSON:', textChunk);
+          throw error;
+        }
+
+        if (data.done) break
+
+        yield data.message.content
+      }
     }
 
     this.abortController = undefined
