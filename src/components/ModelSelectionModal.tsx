@@ -26,13 +26,13 @@ const ModelSelectionModal = observer(() => {
 
         <div className="modal-box-content no-scrollbar relative mb-3 max-h-[500px] overflow-y-auto pt-0">
           <table className="table table-zebra mt-0 border-separate border-spacing-y-2 pt-0">
-            <thead className="sticky top-0 bg-base-100">
+            <thead className="sticky top-0 bg-base-200 z-20">
               <tr>
                 <th>Name</th>
                 <th>Size</th>
                 <th>Updated</th>
                 <th>Params</th>
-                <th className="tooltip tooltip-bottom" data-tip="Supports Images?">
+                <th className="tooltip tooltip-bottom table-cell" data-tip="Supports Images?">
                   <Image />
                 </th>
               </tr>

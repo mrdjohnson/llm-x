@@ -31,7 +31,7 @@
     @apply max-h-96;
   }
 
-  td {
+  td, th {
     @apply first-of-type:rounded-l-md last-of-type:rounded-r-md whitespace-nowrap p-2 font-medium;
   }
 
