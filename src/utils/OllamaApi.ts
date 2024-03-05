@@ -1,3 +1,5 @@
+import { Ollama } from 'ollama/browser'
+
 import { IMessageModel } from '../models/MessageModel'
 import { DefaultHost, settingStore } from '../models/SettingStore'
 import { personaStore } from '../models/PersonaStore'
@@ -8,15 +10,8 @@ type OllamaMessage = {
   images?: string[]
 }
 
-type OllamaResponse = {
-  model: string
-  created_at: string
-  message: OllamaMessage
-  done: boolean
-}
-
 export class OllmaApi {
-  private static abortController?: AbortController
+  private static abort?: () => void
 
   static async *streamChat(chatMessages: IMessageModel[], incomingMessage: IMessageModel) {
     const model = settingStore.selectedModel?.name
@@ -24,7 +19,9 @@ export class OllmaApi {
 
     const host = settingStore.host || DefaultHost
 
-    OllmaApi.abortController = new AbortController()
+    const ollama = new Ollama({ host })
+
+    OllmaApi.abort = () => ollama.abort()
 
     const messages: OllamaMessage[] = []
 
@@ -50,57 +47,18 @@ export class OllmaApi {
       messages.push({ role: 'user', content: message.content, images })
     }
 
-    const response = await fetch(host + '/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ model, messages }),
-      signal: OllmaApi.abortController.signal,
-    })
+    const response = await ollama.chat({ model, messages, stream: true })
 
-    if (!response.body) return
-
-    const reader = response.body.getReader()
-
-    while (true) {
-      const { done, value } = await reader.read()
-
-      if (done) {
-        break
-      }
-
-      // Decode the received value
-      const textChunk = new TextDecoder().decode(value)
-
-      // Split the text chunk by newline character in case it contains multiple JSON strings
-      const jsonStrings = textChunk.split(/(?<=})(?=\n{)/);
-      
-      for (const jsonString of jsonStrings) {
-        // Skip empty strings
-        if (!jsonString.trim()) continue
-        
-        let data: OllamaResponse;
-        try {
-          data = JSON.parse(jsonString) as OllamaResponse
-        } catch (error) {
-          console.error('Failed to parse JSON:', jsonString);
-          throw error;
-        }
-        if (data.done) break
-
-        yield data.message.content
-      }
+    for await (const part of response) {
+      yield part.message.content
     }
 
-    this.abortController = undefined
+    this.abort = undefined
   }
 
   static cancelStream() {
-    if (!OllmaApi.abortController) return
+    OllmaApi.abort?.()
 
-    OllmaApi.abortController.abort('Stream ended manually')
-
-    OllmaApi.abortController = undefined
+    OllmaApi.abort = undefined
   }
 }
