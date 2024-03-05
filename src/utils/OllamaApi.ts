@@ -75,12 +75,11 @@ export class OllmaApi {
 
       // Split the text chunk by newline character in case it contains multiple JSON strings
       const jsonStrings = textChunk.split(/(?<=})(?=\n{)/);
-
-      let jointContent = '';
+      
       for (const jsonString of jsonStrings) {
         // Skip empty strings
         if (!jsonString.trim()) continue
-
+        
         let data: OllamaResponse;
         try {
           data = JSON.parse(jsonString) as OllamaResponse
@@ -88,18 +87,10 @@ export class OllmaApi {
           console.error('Failed to parse JSON:', jsonString);
           throw error;
         }
-
         if (data.done) break
 
-        // Append the content of each message to jointContent
-        jointContent += data.message.content
+        yield data.message.content
       }
-      if (jsonStrings.length > 1) {
-        console.log('Splitting the text chunk as it looks like this:\n', textChunk)
-        console.log('Joint content after splitting:\n', jointContent);
-      }
-      // Yield the joint content of all messages
-      yield jointContent
     }
 
     this.abortController = undefined
