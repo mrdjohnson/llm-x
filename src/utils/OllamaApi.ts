@@ -73,11 +73,22 @@ export class OllmaApi {
       // Decode the received value and parse
       const textChunk = new TextDecoder().decode(value)
 
-      const data = JSON.parse(textChunk) as OllamaResponse
+      try {
+        const data = JSON.parse(textChunk) as OllamaResponse
 
-      if (data.done) break
+        if (data.done) break
 
-      yield data.message.content
+        yield { content: data.message.content }
+      } catch (error) {
+        if (error instanceof Error) {
+          yield { error }
+        }
+
+        // if this is the final message then break, hopefully avoids endless loop
+        if (textChunk.includes('total_duration')) {
+          break
+        }
+      }
     }
 
     this.abortController = undefined

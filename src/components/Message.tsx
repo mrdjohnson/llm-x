@@ -14,6 +14,7 @@ import Edit from '../icons/Edit'
 
 import { IMessageModel } from '../models/MessageModel'
 import { chatStore } from '../models/ChatStore'
+import _ from 'lodash'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
 
@@ -85,7 +86,7 @@ export const Message = ({
   shouldDimMessage,
 }: MessageProps) => {
   const { content, fromBot, uniqId, image, extras } = message
-  const error = extras?.error
+  const errors = extras?.errors || []
   const chat = chatStore.selectedChat!
 
   const [copied, setCopied] = useState(false)
@@ -154,7 +155,7 @@ export const Message = ({
           className={
             'w-full p-2 ' +
             (children ? 'min-w-16 ' : '') +
-            (error ? 'join-item border-b-0' : 'rounded-md')
+            (errors ? 'join-item border-b-0' : 'rounded-md')
           }
         >
           <Markdown
@@ -168,24 +169,24 @@ export const Message = ({
           </Markdown>
         </div>
 
-        {error && (
+        {errors.length > 0 && (
           <div
             className="group/error collapse join-item transition-all duration-300 ease-in-out"
             tabIndex={0}
           >
             <div className="collapse-title line-clamp-1 flex max-h-8 min-h-0 flex-row flex-nowrap bg-error/30 p-2 text-xs font-medium">
-              {error.message}
+              {errors.length === 1 ? errors[0].message : `${errors.length} errors`}
 
               <span className="ml-2 scale-90 transition-all duration-300 ease-in-out group-focus/error:rotate-180">
                 <ChevronDown />
               </span>
             </div>
 
-            {error.stack && (
-              <div className="collapse-content">
+            <div className="collapse-content">
+              {errors.map(error => (
                 <p className="whitespace-pre-line pt-2 text-xs">{error.stack}</p>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
         )}
       </div>

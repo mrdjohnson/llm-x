@@ -147,14 +147,21 @@ export const ChatModel = types
       }
 
       try {
-        for await (const message of OllmaApi.streamChat(self.messages, incomingMessage)) {
-          this.updateIncomingMessage(message)
+        for await (const { content, error } of OllmaApi.streamChat(
+          self.messages,
+          incomingMessage,
+        )) {
+          if (content) {
+            this.updateIncomingMessage(content)
+          } else if (error) {
+            incomingMessage.addError(error)
+          }
         }
       } catch (error: unknown) {
         if (self._incomingMessageAbortedByUser) {
-          incomingMessage.setError(new Error('Stream stopped by user'))
+          incomingMessage.addError(new Error('Stream stopped by user'))
         } else if (error instanceof Error) {
-          incomingMessage.setError(error)
+          incomingMessage.addError(error)
 
           // make sure the server is still connected
           settingStore.updateModels()

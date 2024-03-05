@@ -1,14 +1,28 @@
 import _ from 'lodash'
-import { types, Instance } from 'mobx-state-tree'
+import { types, Instance, cast } from 'mobx-state-tree'
 
 const MessageErrorModel = types.model({
   message: types.string,
   stack: types.maybe(types.string),
 })
 
-const MessageExtrasModel = types.model({
-  error: types.maybe(MessageErrorModel),
-})
+const MessageExtrasModel = types
+  .model({
+    error: types.maybe(MessageErrorModel),
+    errors: types.array(MessageErrorModel),
+  })
+  .actions(self => ({
+    afterCreate() {
+      // transition from v1
+      if (self.error) {
+        const error = self.error
+
+        self.error = undefined
+
+        self.errors = cast([error])
+      }
+    },
+  }))
 
 export const MessageModel = types
   .model({
@@ -20,12 +34,12 @@ export const MessageModel = types
     extras: types.maybe(MessageExtrasModel),
   })
   .actions(self => ({
-    setError(error: Error) {
+    addError(error: Error) {
       self.extras ||= MessageExtrasModel.create()
 
       const { message, stack } = error
 
-      self.extras.error = MessageErrorModel.create({ message, stack })
+      self.extras.errors.push(MessageErrorModel.create({ message, stack }))
     },
   }))
 
