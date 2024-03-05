@@ -73,46 +73,33 @@ export class OllmaApi {
       // Decode the received value
       const textChunk = new TextDecoder().decode(value)
 
-      if (textChunk.includes('}\n{')) {
-        console.log('Splitting the text chunk as it looks like this:\n', textChunk)
-        // Split the text chunk by newline character
-        const jsonStrings = textChunk.split(/(?<=})(?=\n{)/);
+      // Split the text chunk by newline character in case it contains multiple JSON strings
+      const jsonStrings = textChunk.split(/(?<=})(?=\n{)/);
 
-        let jointContent = '';
-        for (const jsonString of jsonStrings) {
-          // Skip empty strings
-          if (!jsonString.trim()) continue
+      let jointContent = '';
+      for (const jsonString of jsonStrings) {
+        // Skip empty strings
+        if (!jsonString.trim()) continue
 
-          let data: OllamaResponse;
-          try {
-            data = JSON.parse(jsonString) as OllamaResponse
-          } catch (error) {
-            console.error('Failed to parse JSON:', jsonString);
-            throw error;
-          }
-
-          if (data.done) break
-
-          // Append the content of each message to jointContent
-          jointContent += data.message.content
-        }
-        console.log('Joint content after splitting:\n', jointContent);
-
-        // Yield the joint content of both messages
-        yield jointContent
-      } else {
         let data: OllamaResponse;
         try {
-          data = JSON.parse(textChunk) as OllamaResponse
+          data = JSON.parse(jsonString) as OllamaResponse
         } catch (error) {
-          console.error('Failed to parse JSON:', textChunk);
+          console.error('Failed to parse JSON:', jsonString);
           throw error;
         }
 
         if (data.done) break
 
-        yield data.message.content
+        // Append the content of each message to jointContent
+        jointContent += data.message.content
       }
+      if (jsonStrings.length > 1) {
+        console.log('Splitting the text chunk as it looks like this:\n', textChunk)
+        console.log('Joint content after splitting:\n', jointContent);
+      }
+      // Yield the joint content of all messages
+      yield jointContent
     }
 
     this.abortController = undefined
