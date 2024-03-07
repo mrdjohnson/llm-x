@@ -70,7 +70,7 @@ const Navbar = observer(() => {
 function App() {
   return (
     <Dropzone>
-      <div className="container drawer drawer-end mx-auto flex max-h-screen flex-col place-self-center p-3">
+      <div className="container drawer drawer-end mx-auto flex max-h-screen flex-col place-self-center p-3 text-base-content">
         <Navbar />
 
         <Drawer />

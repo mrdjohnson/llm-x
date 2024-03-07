@@ -14,7 +14,7 @@ const Dropzone = ({ children }: PropsWithChildren) => {
   const { onClick, ...rootProps } = getRootProps()
 
   return (
-    <div className="grid max-h-dvh min-h-dvh" {...rootProps}>
+    <div className="grid max-h-dvh min-h-dvh  bg-base-100" {...rootProps}>
       <input {...getInputProps()} />
 
       {isDragActive && (
