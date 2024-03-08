@@ -13,6 +13,7 @@ const ModelRefreshButton = observer(
           className={'btn btn-ghost align-middle' + (small && ' px-2')}
           type="button"
           onClick={() => settingStore.updateModels()}
+          title="Refresh models"
         >
           <Refresh />
         </button>
