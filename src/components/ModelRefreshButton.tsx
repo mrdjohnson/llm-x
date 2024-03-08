@@ -5,7 +5,7 @@ import Refresh from '../icons/Refresh'
 
 const ModelRefreshButton = observer(
   ({ small = false, shouldShow = false }: { small?: boolean; shouldShow?: boolean }) => {
-    const noServer = !settingStore.selectedModel
+    const noServer = !settingStore.isServerConnected
 
     return (
       (shouldShow || noServer) && (

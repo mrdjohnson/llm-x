@@ -13,7 +13,7 @@ import { SideBar } from './SideBar'
 
 const Input = observer(() => {
   const [hostChanged, setHostChanged] = useState(false)
-  const hasServer = !!settingStore.selectedModel
+  const hasServer = settingStore.isServerConnected
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     settingStore.setHost(e.target.value)

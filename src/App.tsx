@@ -21,7 +21,7 @@ import Bars3 from './icons/Bars3'
 import CloudDown from './icons/CloudDown'
 
 const Navbar = observer(() => {
-  const noServer = !settingStore.selectedModel
+  const noServer = !settingStore.isServerConnected
 
   const handlePwaUpdate = () => {
     settingStore.getUpdateServiceWorker()?.()

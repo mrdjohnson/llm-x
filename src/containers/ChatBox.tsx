@@ -91,7 +91,9 @@ const ChatBoxInputRow = observer(
         className={
           'no-scrollbar mt-2 h-fit w-full shrink-0 ' + (noServer && 'tooltip cursor-not-allowed')
         }
-        data-tip="Server is not connected"
+        data-tip={
+          settingStore.isServerConnected ? 'No Models Available' : 'Server is not connected'
+        }
       >
         <form
           className={

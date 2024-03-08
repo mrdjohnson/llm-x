@@ -62,6 +62,7 @@ export const SettingStore = types
     theme: types.optional(types.string, '_system'),
     pwaNeedsUpdate: types.optional(types.boolean, false),
     lastHelpModalNotificationTime: types.optional(types.number, () => Date.now()),
+    _isServerConnected: types.maybe(types.boolean),
   })
   .actions(self => {
     let updateServiceWorker: undefined | (() => void)
@@ -122,8 +123,12 @@ export const SettingStore = types
           const json = yield response.json()
 
           data = camelcaseKeys(json?.models, { deep: true }) as IModel[]
+
+          self._isServerConnected = true
         } catch (e) {
           toastStore.addToast('Failed to fetch models for host: ' + host, 'error')
+
+          self._isServerConnected = false
         }
 
         self.models = cast(data)
@@ -136,11 +141,17 @@ export const SettingStore = types
     get selectedModel(): IModel | undefined {
       return self.models.find(model => model.name === self._selectedModelName) || self.models[0]
     },
+
+    get isServerConnected() {
+      return self._isServerConnected
+    },
   }))
 
 export const settingStore = SettingStore.create()
 
-persist('settings', settingStore, { blacklist: ['models', 'pwaNeedsUpdate'] }).then(() => {
+persist('settings', settingStore, {
+  blacklist: ['models', 'pwaNeedsUpdate', '_isServerConnected', '_selectedModelName'],
+}).then(() => {
   console.log('updated store')
   settingStore.updateModels()
 })

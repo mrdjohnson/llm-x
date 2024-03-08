@@ -5,7 +5,7 @@ import { settingStore } from '../models/SettingStore'
 import { personaStore } from '../models/PersonaStore'
 
 const ChatBoxPrompt = observer(() => {
-  const noServer = !settingStore.selectedModel
+  const noServer = !settingStore.isServerConnected
 
   return (
     <div className="hero my-auto">
