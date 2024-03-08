@@ -180,7 +180,7 @@ const PersonaSelectionModal = observer(() => {
           x
         </div>
 
-        <div className="pb-3 text-xl">Select a model:</div>
+        <div className="pb-3 text-xl">Select a persona for the bot:</div>
 
         <button
           className={'btn w-full ' + (selectedPersona ? '' : ' btn-primary')}
