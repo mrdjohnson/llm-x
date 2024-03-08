@@ -7,8 +7,8 @@ import camelcaseKeys from 'camelcase-keys'
 import { toastStore } from './ToastStore'
 
 const ModelDetails = types.model({
-  parameterSize: types.string,
-  families: types.array(types.string),
+  parameterSize: types.maybe(types.string),
+  families: types.maybeNull(types.array(types.string)),
 })
 
 const Model = types
@@ -44,7 +44,7 @@ const Model = types
     },
 
     get supportsImages() {
-      return self.details.families.includes('clip')
+      return self.details.families?.includes('clip') || false
     },
   }))
 
