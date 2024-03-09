@@ -230,7 +230,7 @@ const ChatListSection = observer(({ isOpen, onSectionClicked }: AccordionSection
       <AccordionPanel flex={1} className=" flex flex-1 flex-col text-base-content">
         <div className="no-scrollbar flex h-full flex-1 flex-col overflow-y-scroll rounded-md">
           {chats.map(chat => (
-            <div
+            <button
               className={
                 ' group flex w-full flex-row justify-between rounded-md p-2 text-left lg:dropdown-right ' +
                 (chat.id === chatStore.selectedChat?.id
@@ -238,9 +238,10 @@ const ChatListSection = observer(({ isOpen, onSectionClicked }: AccordionSection
                   : ' btn-ghost cursor-pointer')
               }
               onClick={() => handleChatSelected(chat)}
+              key={chat.id}
             >
               <span className="line-clamp-1 flex-1">{chat.name || 'new chat'}</span>
-            </div>
+            </button>
           ))}
         </div>
 
