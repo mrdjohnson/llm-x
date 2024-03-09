@@ -63,6 +63,7 @@ export const SettingStore = types
     pwaNeedsUpdate: types.optional(types.boolean, false),
     lastHelpModalNotificationTime: types.optional(types.number, () => Date.now()),
     _isServerConnected: types.maybe(types.boolean),
+    _funTitle: types.maybe(types.string),
   })
   .actions(self => {
     let updateServiceWorker: undefined | (() => void)
@@ -108,6 +109,10 @@ export const SettingStore = types
         updateServiceWorker = nextUpdateServiceWorker
       },
 
+      setFunTitle(funTitle: string) {
+        self._funTitle = funTitle
+      },
+
       getUpdateServiceWorker() {
         return updateServiceWorker
       },
@@ -145,12 +150,16 @@ export const SettingStore = types
     get isServerConnected() {
       return self._isServerConnected
     },
+
+    get funTitle() {
+      return self._funTitle
+    },
   }))
 
 export const settingStore = SettingStore.create()
 
 persist('settings', settingStore, {
-  blacklist: ['models', 'pwaNeedsUpdate', '_isServerConnected', '_selectedModelName'],
+  blacklist: ['models', 'pwaNeedsUpdate', '_isServerConnected', '_selectedModelName', '_funTitle'],
 }).then(() => {
   console.log('updated store')
   settingStore.updateModels()

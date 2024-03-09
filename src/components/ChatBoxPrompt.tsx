@@ -7,6 +7,7 @@ import { settingStore } from '../models/SettingStore'
 import { personaStore } from '../models/PersonaStore'
 
 import AttachImageWrapper from './AttachImageWrapper'
+import FunTitle from './FunTitle'
 
 type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
 
@@ -32,7 +33,9 @@ const ChatBoxPrompt = observer(() => {
       <div className="hero-content w-fit text-center">
         <div>
           <h1 className="text-4xl font-bold">
-            Getting started with LLM <span className="text-4xl text-primary">X</span>
+            {'Getting started with '}
+
+            <FunTitle className="text-4xl font-bold" />
           </h1>
 
           <div className="text-2xl">

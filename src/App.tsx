@@ -13,6 +13,7 @@ import ModelSelector from './components/ModelSelector'
 import ModelRefreshButton from './components/ModelRefreshButton'
 import ModelSelectionModal from './components/ModelSelectionModal'
 import PersonaSelectionModal from './components/PersonaSelectionModal'
+import FunTitle from './components/FunTitle'
 
 import { settingStore } from './models/SettingStore'
 
@@ -30,17 +31,17 @@ const Navbar = observer(() => {
   }
 
   return (
-    <nav className="navbar mb-2 justify-between rounded-md bg-base-300">
-      <div className="text-xl">
-        <label className="ml-2 text-xl">LLM X</label>
+    <nav className="navbar mb-2 flex justify-between rounded-md bg-base-300">
+      <div className="ml-2 flex-1 text-xl">
+        <FunTitle className="text-xl" />
       </div>
 
-      <div className="hidden flex-row gap-2 md:flex">
+      <div className="hidden flex-1 flex-row gap-2 md:flex">
         <ModelSelector />
         <ModelRefreshButton />
       </div>
 
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-1 flex-row justify-end gap-2">
         {settingStore.pwaNeedsUpdate && (
           <button
             className="btn btn-square btn-ghost"
