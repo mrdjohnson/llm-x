@@ -8,6 +8,8 @@ import {
   AccordionPanel,
   AccordionIcon,
 } from '@chakra-ui/react'
+import _ from 'lodash'
+import { useForm } from 'react-hook-form'
 
 import { chatStore } from '../models/ChatStore'
 import { settingStore } from '../models/SettingStore'
@@ -18,7 +20,6 @@ import Edit from '../icons/Edit'
 import Check from '../icons/Check'
 import DocumentArrowUp from '../icons/DocumentArrowUp'
 import DocumentArrowDown from '../icons/DocumentArrowDown'
-import _ from 'lodash'
 
 type AccordionSectionProps = {
   isOpen: boolean
@@ -26,18 +27,24 @@ type AccordionSectionProps = {
 }
 
 const ChatSettingsSection = observer(({ isOpen, onSectionClicked }: AccordionSectionProps) => {
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    reset,
+    formState: { isValid, isDirty },
+  } = useForm<{ name: string }>({})
+
   const selectedChat = chatStore.selectedChat
   const chat = chatStore.selectedChat!
 
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    const name = inputRef.current?.value
+  const handleFormSubmit = handleSubmit(formData => {
+    const { name } = formData
 
     chat.setName(name)
-  }
+
+    reset()
+  })
 
   const exportChat = () => {
     const data = JSON.stringify(getSnapshot(chat))
@@ -49,9 +56,9 @@ const ChatSettingsSection = observer(({ isOpen, onSectionClicked }: AccordionSec
   }
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.value = chat.name
-    }
+    setValue('name', chat.name, { shouldDirty: false })
+
+    reset()
   }, [chat.name])
 
   if (!selectedChat) return null
@@ -76,17 +83,30 @@ const ChatSettingsSection = observer(({ isOpen, onSectionClicked }: AccordionSec
       <AccordionPanel flex={1} className=" mt-2 flex flex-1 flex-col text-base-content">
         <div className="no-scrollbar flex h-full flex-1 flex-col overflow-y-scroll rounded-md">
           <div className="flex flex-col gap-2 rounded-box bg-base-300 text-base-content">
-            <form className="flex flex-row gap-2" onSubmit={handleFormSubmit}>
-              <input
-                type="text"
-                className="input input-bordered w-full min-w-24 flex-1 grow text-base-content focus:outline-none"
-                defaultValue={chat.name || 'new chat'}
-                ref={inputRef}
-              />
+            <form className="flex w-full flex-row gap-2" onSubmit={handleFormSubmit}>
+              <div className="form-control w-full">
+                <div className="label pb-1 pt-0">
+                  <span className="label-text text-sm">Name:</span>
+                </div>
 
-              <button className="btn btn-neutral">
-                <Check />
-              </button>
+                <div className="flex flex-row items-center gap-2">
+                  <input
+                    type="text"
+                    id="name"
+                    className="input input-bordered w-full flex-1 focus:outline-none"
+                    defaultValue={chat.name || 'new chat'}
+                    minLength={2}
+                    maxLength={30}
+                    {...register('name', { required: true, minLength: 2, maxLength: 30 })}
+                  />
+
+                  {isDirty && (
+                    <button className="btn btn-neutral">
+                      <Check />
+                    </button>
+                  )}
+                </div>
+              </div>
             </form>
           </div>
         </div>
