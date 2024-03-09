@@ -24,7 +24,7 @@ const ModelSelector = observer(() => {
     <button
       tabIndex={0}
       role="button"
-      className="btn btn-active w-full"
+      className="btn btn-active flex-1"
       disabled={noServer}
       onClick={() => settingStore.openModelSelectionModal()}
     >

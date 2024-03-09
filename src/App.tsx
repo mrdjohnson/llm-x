@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
 import Dropzone from './containers/Dropzone'
