@@ -62,7 +62,9 @@ export const ChatSettingsSection = observer(
           <button
             className={'btn max-w-full flex-1 flex-nowrap px-2' + (isOpen ? ' btn-neutral' : '')}
           >
-            <span className="flex-shrink-1 line-clamp-1 max-w-[85%]">{selectedChat?.name}</span>
+            <span className="flex-shrink-1 line-clamp-1 max-w-[85%]">
+              {selectedChat?.name || 'new chat'}
+            </span>
             <AccordionIcon className="-flex-1" />
           </button>
         </AccordionButton>
