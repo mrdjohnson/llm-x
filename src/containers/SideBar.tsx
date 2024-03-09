@@ -223,7 +223,7 @@ const ChatListSection = observer(({ isOpen, onSectionClicked }: AccordionSection
         </div>
 
         <button className={'btn btn-neutral w-full' + (isOpen ? ' hidden' : ' inline-flex')}>
-          Chat List
+          Chat List <AccordionIcon />
         </button>
       </AccordionButton>
 
