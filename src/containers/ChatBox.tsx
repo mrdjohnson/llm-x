@@ -1,12 +1,4 @@
-import {
-  useRef,
-  PropsWithChildren,
-  MouseEvent,
-  useEffect,
-  useState,
-  KeyboardEvent,
-  ChangeEvent,
-} from 'react'
+import { useRef, PropsWithChildren, MouseEvent, useEffect, useState, KeyboardEvent } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
@@ -16,10 +8,12 @@ import { settingStore } from '../models/SettingStore'
 import { IMessageModel } from '../models/MessageModel'
 import { personaStore } from '../models/PersonaStore'
 
+import ChatBoxPrompt from '../components/ChatBoxPrompt'
+import AttachImageWrapper from '../components/AttachImageWrapper'
 import { IncomingMessage, Message, MessageToEdit } from '../components/Message'
+
 import Paperclip from '../icons/Paperclip'
 import ChevronDown from '../icons/ChevronDown'
-import ChatBoxPrompt from '../components/ChatBoxPrompt'
 
 const ChatBoxInputRow = observer(
   ({
@@ -27,7 +21,6 @@ const ChatBoxInputRow = observer(
     children,
   }: PropsWithChildren<{ onSend: (message: string, image?: string) => void }>) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
-    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const [messageContent, setMessageContent] = useState('')
 
@@ -51,19 +44,6 @@ const ChatBoxInputRow = observer(
       textareaRef.current.focus()
 
       chat.setPreviewImage(undefined)
-    }
-
-    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0]
-
-      if (!file) {
-        return
-      }
-
-      // reset file input
-      event.target.value = ''
-
-      chat.setPreviewImage(file)
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -149,23 +129,15 @@ const ChatBoxInputRow = observer(
             </button>
 
             <div className="flex">
-              {/* hidden file input */}
-              <input
-                style={{ display: 'none' }}
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-              />
-
-              <button
-                className={'btn btn-ghost rounded-r-none'}
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={inputDisabled}
-              >
-                <Paperclip />
-              </button>
+              <AttachImageWrapper>
+                <button
+                  className={'btn btn-ghost rounded-r-none'}
+                  type="button"
+                  disabled={inputDisabled}
+                >
+                  <Paperclip />
+                </button>
+              </AttachImageWrapper>
 
               {chat.isEditingMessage && (
                 <button
