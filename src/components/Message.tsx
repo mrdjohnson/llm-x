@@ -132,7 +132,7 @@ export const Message = ({
     )
   }, [chat, fromBot, disableRegeneration, disableEditing])
 
-  if (!message.content) return null
+  if (!message.content && !error) return null
 
   return (
     <div
