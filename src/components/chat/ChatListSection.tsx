@@ -1,4 +1,10 @@
-import { AccordionItem, AccordionButton, AccordionIcon, AccordionPanel } from '@chakra-ui/react'
+import {
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
+  Tooltip,
+} from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 import { getSnapshot, applySnapshot } from 'mobx-state-tree'
 import { useRef, ChangeEvent } from 'react'
@@ -95,14 +101,15 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
             <Edit className="h-5 w-5" />
           </button>
 
-          <button
-            className="btn join-item btn-neutral tooltip tooltip-bottom mb-2 gap-2 p-2"
-            title="Import chat"
-            onClick={() => handleImportClicked('chat')}
-            data-tip="Import chat"
-          >
-            <DocumentArrowUp />
-          </button>
+          <Tooltip label="Import chat" className="!bg-base-100 px-2 font-normal text-base-content">
+            <button
+              className="btn join-item btn-neutral mb-2 gap-2 p-2"
+              title="Import chat"
+              onClick={() => handleImportClicked('chat')}
+            >
+              <DocumentArrowUp />
+            </button>
+          </Tooltip>
         </div>
 
         <button className={'btn btn-neutral w-full' + (isOpen ? ' hidden' : ' inline-flex')}>
