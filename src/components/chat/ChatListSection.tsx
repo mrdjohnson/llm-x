@@ -111,7 +111,7 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
       </AccordionButton>
 
       <AccordionPanel flex={1} className=" flex flex-1 flex-col text-base-content">
-        <div className="no-scrollbar flex h-full flex-1 flex-col overflow-y-scroll rounded-md">
+        <div className="no-scrollbar flex h-full flex-1 flex-col gap-2 overflow-y-scroll rounded-md">
           {chats.map(chat => (
             <button
               className={
