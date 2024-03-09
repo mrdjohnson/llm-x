@@ -7,16 +7,24 @@ import Copy from '../icons/Copy'
 import CopySuccess from '../icons/CopySuccess'
 
 const OLLAMA_CODE = 'OLLAMA_ORIGINS=*.github.io ollama serve'
+const POWERSHELL_OLLAMA_CODE = '$env:OLLAMA_ORIGINS="https://%2A.github.io/"; ollama serve'
 
 const HelpModal = observer(() => {
   const modalRef = useRef<HTMLDialogElement>(null)
 
   const [copied, setCopied] = useState(false)
+  const [powershellCopied, setPowershellCopied] = useState(false)
 
   const handleCopy = () => {
     navigator.clipboard.writeText(OLLAMA_CODE)
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
+  }
+
+  const handlePowershellCopy = () => {
+    navigator.clipboard.writeText(POWERSHELL_OLLAMA_CODE)
+    setPowershellCopied(true)
+    setTimeout(() => setPowershellCopied(false), 1500)
   }
 
   useEffect(() => {
@@ -45,13 +53,27 @@ const HelpModal = observer(() => {
               <code>{OLLAMA_CODE}</code>
             </div>
 
-            <label
+            <button
               className={'btn swap btn-neutral btn-sm ' + (copied && 'swap-active')}
               onClick={handleCopy}
             >
               <Copy className="swap-off" />
               <CopySuccess className="swap-on" />
-            </label>
+            </button>
+          </div>
+
+          <div className="my-4 flex flex-row place-content-center gap-2">
+            <div className="prose">
+              Powershell version: <code>{POWERSHELL_OLLAMA_CODE}</code>
+            </div>
+
+            <button
+              className={'btn swap btn-neutral btn-sm ' + (powershellCopied && 'swap-active')}
+              onClick={handlePowershellCopy}
+            >
+              <Copy className="swap-off" />
+              <CopySuccess className="swap-on" />
+            </button>
           </div>
 
           <div>
