@@ -153,6 +153,10 @@ export const ChatModel = types
       } catch (error: unknown) {
         if (self._incomingMessageAbortedByUser) {
           incomingMessage.setError(new Error('Stream stopped by user'))
+
+          if (_.isEmpty(incomingMessage.content)) {
+            this.deleteMessage(incomingMessage)
+          }
         } else if (error instanceof Error) {
           incomingMessage.setError(error)
 
