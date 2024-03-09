@@ -2,8 +2,11 @@ import { PropsWithChildren } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
+import { chatStore } from '../models/ChatStore'
 import { settingStore } from '../models/SettingStore'
 import { personaStore } from '../models/PersonaStore'
+
+import AttachImageWrapper from './AttachImageWrapper'
 
 type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
 
@@ -64,14 +67,28 @@ const ChatBoxPrompt = observer(() => {
                 </span>
               </Step>
 
-              <Step type="secondary">
-                Drag and Drop (or attach) an <span className="text-secondary">image</span> for use
-                with multimodal models
+              <Step type="secondary" isCompleted={!!chatStore.selectedChat?.previewImage}>
+                {'Drag and Drop (or attach) an'}
+
+                <AttachImageWrapper>
+                  <span className="link decoration-secondary">image</span>
+                </AttachImageWrapper>
+
+                {'for use with multimodal models'}
               </Step>
 
-              <Step type="secondary">
-                {_.isEmpty(personaStore.personas) && 'Create and '} Select a
-                <span className="ml-1 text-secondary">persona</span> to give your bot some pizzaz
+              <Step type="secondary" isCompleted={!_.isEmpty(personaStore.personas)}>
+                {'Create and Select a'}
+
+                <button
+                  className="link tooltip ml-1 decoration-secondary"
+                  onClick={personaStore.openSelectionModal}
+                  data-tip="aka System prompt: How the bot should respond"
+                >
+                  Persona
+                </button>
+
+                {'to give your bot some pizzaz'}
               </Step>
 
               <Step inCompleteIcon="★">
