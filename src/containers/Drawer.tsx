@@ -50,7 +50,7 @@ const Input = observer(() => {
         <input
           type="text"
           id="host"
-          className="input input-bordered w-full"
+          className="input input-bordered w-full focus:outline-none"
           placeholder={DefaultHost}
           defaultValue={settingStore.host}
           onChange={handleInputChange}
