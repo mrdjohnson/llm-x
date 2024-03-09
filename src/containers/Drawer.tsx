@@ -79,12 +79,12 @@ const Drawer = () => {
     <>
       <input id="app-drawer" type="checkbox" className="drawer-toggle" />
 
-      <section className="drawer-side z-20">
+      <section className="drawer-side z-20 overflow-hidden">
         <label htmlFor="app-drawer" aria-label="close sidebar" className="drawer-overlay" />
 
-        <div className="flex min-h-full w-80 flex-col bg-base-200 p-3">
+        <div className="flex max-h-full min-h-full w-80 flex-col overflow-hidden bg-base-200 p-3">
           <div className="navbar" />
-          <div className="flex h-full flex-1 flex-col gap-3">
+          <div className="flex h-full flex-1 flex-col gap-3 overflow-hidden">
             <Input />
 
             <Suspense fallback={<div> Loading models ... </div>}>
@@ -93,7 +93,7 @@ const Drawer = () => {
 
             <ThemeSelector />
 
-            <div className="flex h-full flex-1 rounded-md bg-base-300 lg:hidden">
+            <div className="flex h-full flex-1 overflow-hidden rounded-md bg-base-300 lg:hidden">
               <SideBar />
             </div>
           </div>
