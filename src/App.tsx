@@ -32,6 +32,7 @@ const Navbar = observer(() => {
   return (
     <nav className="navbar mb-2 flex justify-between rounded-md bg-base-300">
       <div className="ml-2 flex-1 text-xl">
+        <h1 className="hidden">LLM-X</h1>
         <FunTitle className="text-xl" />
       </div>
 
