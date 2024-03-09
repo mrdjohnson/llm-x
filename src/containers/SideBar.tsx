@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form'
 import { chatStore } from '../models/ChatStore'
 import { settingStore } from '../models/SettingStore'
 import { personaStore } from '../models/PersonaStore'
+import { IChatModel } from '../models/ChatModel'
 
 import Delete from '../icons/Delete'
 import Edit from '../icons/Edit'
@@ -186,6 +187,12 @@ const ChatListSection = observer(({ isOpen, onSectionClicked }: AccordionSection
     fileInputRef.current?.click()
   }
 
+  const handleChatSelected = (chat: IChatModel) => {
+    chatStore.selectChat(chat)
+
+    onSectionClicked()
+  }
+
   return (
     <AccordionItem
       className={
@@ -230,7 +237,7 @@ const ChatListSection = observer(({ isOpen, onSectionClicked }: AccordionSection
                   ? ' btn-neutral btn-active cursor-default'
                   : ' btn-ghost cursor-pointer')
               }
-              onClick={() => chatStore.selectChat(chat)}
+              onClick={() => handleChatSelected(chat)}
             >
               <span className="line-clamp-1 flex-1">{chat.name || 'new chat'}</span>
             </div>
