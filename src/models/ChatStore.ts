@@ -28,11 +28,9 @@ export const ChatStore = types
 
       _.remove(self.chats, { id: chat.id })
 
-      if (self.selectedChat?.id === chat.id) {
+      if (!_.isEmpty(self.chats)) {
         self.selectedChat = self.chats[0]
-      }
-
-      if (self.chats.length === 0) {
+      } else {
         this.createChat()
       }
     },
@@ -60,4 +58,12 @@ export const ChatStore = types
 
 export const chatStore = ChatStore.create()
 
-persist('chat-store', chatStore)
+persist('chat-store', chatStore).then(() => {
+  if (!chatStore.selectedChat) {
+    if (chatStore.chats.length > 0) {
+      chatStore.selectChat(chatStore.chats[0])
+    } else {
+      chatStore.createChat()
+    }
+  }
+})
