@@ -1,12 +1,29 @@
+import { PropsWithChildren } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
 import { settingStore } from '../models/SettingStore'
 import { personaStore } from '../models/PersonaStore'
 
-const ChatBoxPrompt = observer(() => {
-  const noServer = !settingStore.isServerConnected
+type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
 
+const Step = ({
+  isCompleted,
+  type = 'primary',
+  children,
+  inCompleteIcon = '●',
+}: PropsWithChildren<StepProps>) => {
+  return (
+    <li
+      className={isCompleted ? `step step-${type}` : 'step'}
+      data-content={isCompleted ? '✓' : inCompleteIcon}
+    >
+      <span>{children}</span>
+    </li>
+  )
+}
+
+const ChatBoxPrompt = observer(() => {
   return (
     <div className="hero my-auto">
       <div className="hero-content w-fit text-center">
@@ -16,50 +33,52 @@ const ChatBoxPrompt = observer(() => {
           </h1>
 
           <div className="text-2xl">
-            <ul className="list-inside list-disc py-6 text-left *:text-lg [&_a]:text-lg [&_span]:text-lg">
-              {noServer && (
-                <li>
-                  Tell Ollama that <span className="text-primary">we're cool</span>: Learn more
-                  <span
-                    className="link  decoration-primary"
-                    onClick={() => settingStore.openUpdateModal({ fromUser: true })}
-                  >
-                    here
-                  </span>
-                </li>
-              )}
+            <ul className="steps steps-vertical list-inside list-disc py-6 text-left *:text-lg [&_a]:text-lg [&_span]:text-lg">
+              <Step isCompleted={settingStore.isServerConnected}>
+                {'Tell Ollama that '}
+                <span className="text-primary">we're cool</span>
+                {': Learn more'}
+                <button
+                  className="link decoration-primary"
+                  onClick={() => settingStore.openUpdateModal({ fromUser: true })}
+                >
+                  here
+                </button>
+              </Step>
 
-              {_.isEmpty(settingStore.models) && (
-                <li>
-                  Download a model from ollama:
-                  <a
-                    href="https://ollama.com/library"
-                    className="link decoration-primary"
-                    target="__blank"
-                    title="Open Ollama Library in new tab"
-                  >
-                    Ollama Library
-                  </a>
-                </li>
-              )}
+              <Step isCompleted={!_.isEmpty(settingStore.models)}>
+                {'Download a model from ollama:'}
+                <a
+                  href="https://ollama.com/library"
+                  className="link decoration-primary"
+                  target="__blank"
+                  title="Open Ollama Library in new tab"
+                >
+                  Ollama Library
+                </a>
+              </Step>
 
-              <li className="text-2xl">
-                <span className="text-primary">Import</span> a chat from a previous session
-              </li>
+              <Step type="secondary">
+                <span>
+                  <span className="text-secondary">Import</span> a chat from a previous session
+                </span>
+              </Step>
 
-              <li>
-                Drag and Drop (or attach) an <span className="text-primary">image</span> for use
+              <Step type="secondary">
+                Drag and Drop (or attach) an <span className="text-secondary">image</span> for use
                 with multimodal models
-              </li>
+              </Step>
 
-              <li>
+              <Step type="secondary">
                 {_.isEmpty(personaStore.personas) && 'Create and '} Select a
-                <span className="ml-1 text-primary">persona</span> to give your bot some pizzaz
-              </li>
+                <span className="ml-1 text-secondary">persona</span> to give your bot some pizzaz
+              </Step>
 
-              <li>
-                <span className="text-primary">Send</span> a prompt!
-              </li>
+              <Step inCompleteIcon="★">
+                <span>
+                  <span className="text-primary">Send</span> a prompt!
+                </span>
+              </Step>
             </ul>
           </div>
         </div>
