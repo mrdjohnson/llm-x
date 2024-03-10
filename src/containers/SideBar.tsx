@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Accordion } from '@chakra-ui/react'
 
 import { ChatSettingsSection } from '../components/chat/ChatSettingsSection'
 import { ChatListSection } from '../components/chat/ChatListSection'
+
+import { chatStore } from '../models/ChatStore'
 
 export type AccordionSectionProps = {
   isOpen: boolean
@@ -17,6 +19,10 @@ export const SideBar = observer(() => {
     // clicking on self or other will open other
     setOpenIndex((openIndex + 1) % 2)
   }
+
+  useEffect(() => {
+    setOpenIndex(0)
+  }, [chatStore.selectedChat])
 
   return (
     <Accordion

@@ -16,6 +16,7 @@ import _ from 'lodash'
 
 import { settingStore } from '../models/SettingStore'
 import { personaStore } from '../models/PersonaStore'
+import { chatStore } from '../models/ChatStore'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -211,10 +212,46 @@ const useRegisterPersonaActions = () => {
   useRegisterActions(personaActions, [personaActions])
 }
 
+const useRegisterChatActions = () => {
+  const [chatOptions, setChatOptions] = useState<Action[]>([])
+
+  useEffect(() => {
+    autorun(() => {
+      const nextChatActions: Action[] = [
+        {
+          id: 'chat',
+          name: 'Select Chat',
+          keywords: 'search chat select',
+          section: 'Chats',
+        },
+      ]
+
+      chatStore.chats.forEach(chat => {
+        const name = chat.name || 'new chat'
+
+        return nextChatActions.push(
+          createAction({
+            name: name,
+            keywords: `${name} chat`,
+            section: 'Chats',
+            parent: 'chat',
+            perform: () => chatStore.selectChat(chat),
+          }),
+        )
+      })
+
+      setChatOptions(nextChatActions)
+    })
+  }, [])
+
+  useRegisterActions(chatOptions, [chatOptions])
+}
+
 const OmniBar = () => {
   useRegisterThemeActions()
   useRegisterModelActions()
   useRegisterPersonaActions()
+  useRegisterChatActions()
 
   useRegisterActions([
     createAction({
