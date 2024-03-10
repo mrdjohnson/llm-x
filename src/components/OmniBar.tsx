@@ -9,6 +9,7 @@ import {
   Priority,
   useRegisterActions,
   createAction,
+  useKBar,
 } from 'kbar'
 import type { Action, ActionImpl } from 'kbar'
 import { autorun } from 'mobx'
@@ -17,6 +18,7 @@ import _ from 'lodash'
 import { settingStore } from '../models/SettingStore'
 import { personaStore } from '../models/PersonaStore'
 import { chatStore } from '../models/ChatStore'
+import type { IMessageModel } from '../models/MessageModel'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -48,6 +50,12 @@ function RenderResults() {
           return <div className="label-text p-2 font-semibold text-base-content/40">{item}</div>
         }
 
+        if (item.name === '') {
+          return (
+            <div className="label-text p-2 font-semibold text-base-content/40">{item.subtitle}</div>
+          )
+        }
+
         const selected = isSelected(item)
 
         return (
@@ -64,6 +72,13 @@ function RenderResults() {
             </span>
 
             <span className="font-semibold">{item.name}</span>
+
+            {item.subtitle && (
+              <>
+                <br />
+                <span className="text-sm text-base-content/70">{item.subtitle}</span>
+              </>
+            )}
           </button>
         )
       }}
@@ -247,11 +262,79 @@ const useRegisterChatActions = () => {
   useRegisterActions(chatOptions, [chatOptions])
 }
 
+const useRegisterMessageActions = () => {
+  const { searchQuery, options } = useKBar(state => ({
+    searchQuery: state.searchQuery,
+  }))
+
+  const [messageActions, setMessageActions] = useState<Action[]>([])
+
+  const countMessagesWithText = (messages: IMessageModel[], text: string) => {
+    // if any of the lowercased messages contain the text
+    return _.sumBy(messages, message => {
+      return message.content.toLowerCase().includes(text) ? 1 : 0
+    })
+  }
+
+  const searchMessages = (text: string) => {
+    if (text.length < 3) return
+
+    const nextMessageActions: Action[] = []
+
+    chatStore.chats.forEach(chat => {
+      const messageCount = countMessagesWithText(chat.messages, text)
+
+      if (messageCount > 0) {
+        nextMessageActions.push(
+          createAction({
+            name: chat.name,
+            // important, text is used to keyword to make sure item displays in list
+            keywords: text,
+            section: 'Chats by Message',
+            subtitle: messageCount === 1 ? '1 message' : `${messageCount} messages`,
+            perform: () => chatStore.selectChat(chat),
+          }),
+        )
+      }
+    })
+
+    if (_.isEmpty(nextMessageActions)) {
+      nextMessageActions.push(
+        createAction({
+          name: '',
+          subtitle: 'No Chats found',
+          keywords: text,
+        }),
+      )
+    }
+
+    setMessageActions(nextMessageActions)
+  }
+
+  useEffect(() => {
+    // dynamically lookup messages
+    options.callbacks = {
+      onQueryChange: _.throttle(searchQuery => {
+        searchMessages(searchQuery.toLowerCase())
+      }, 500),
+    }
+  }, [])
+
+  useEffect(() => {
+    if (searchQuery.length < 3) {
+      setMessageActions([])
+    }
+  }, [searchQuery])
+
+  useRegisterActions(messageActions, [messageActions])
+}
+
 const OmniBar = () => {
   useRegisterThemeActions()
   useRegisterModelActions()
   useRegisterPersonaActions()
   useRegisterChatActions()
+  useRegisterMessageActions()
 
   useRegisterActions([
     createAction({
