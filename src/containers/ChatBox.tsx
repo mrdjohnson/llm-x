@@ -131,7 +131,7 @@ const ChatBoxInputRow = observer(
             <div className="flex">
               <AttachImageWrapper>
                 <button
-                  className={'btn btn-ghost rounded-r-none'}
+                  className="btn btn-ghost rounded-none"
                   type="button"
                   disabled={inputDisabled}
                 >
@@ -141,7 +141,7 @@ const ChatBoxInputRow = observer(
 
               {chat.isEditingMessage && (
                 <button
-                  className="btn btn-ghost text-error/50 hover:text-error"
+                  className="btn btn-ghost rounded-none text-error/50 hover:text-error"
                   type="button"
                   disabled={noServer}
                   onClick={() => chat.setMessageToEdit(undefined)}
@@ -240,7 +240,7 @@ const ChatBox = observer(() => {
         {chat.isGettingData && (
           <button
             type="button"
-            className="btn btn-ghost rounded-r-none text-error/50 hover:text-error"
+            className="btn btn-ghost rounded-none rounded-br-md text-error/50 hover:text-error"
             onClick={handleMessageStopped}
           >
             Stop
