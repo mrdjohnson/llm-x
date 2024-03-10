@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite'
+import { useKBar } from 'kbar'
 
 import Dropzone from './containers/Dropzone'
 import { SideBar } from './containers/SideBar'
@@ -13,14 +14,18 @@ import ModelRefreshButton from './components/ModelRefreshButton'
 import ModelSelectionModal from './components/ModelSelectionModal'
 import PersonaSelectionModal from './components/PersonaSelectionModal'
 import FunTitle from './components/FunTitle'
+import OmniBar from './components/OmniBar'
 
 import { settingStore } from './models/SettingStore'
 
 import Warning from './icons/Warning'
 import Bars3 from './icons/Bars3'
 import CloudDown from './icons/CloudDown'
+import Search from './icons/Search'
 
 const Navbar = observer(() => {
+  const { query } = useKBar()
+
   const noServer = !settingStore.isServerConnected
 
   const handlePwaUpdate = () => {
@@ -51,6 +56,10 @@ const Navbar = observer(() => {
             <CloudDown />
           </button>
         )}
+
+        <button className="btn btn-square btn-ghost" onClick={query.toggle}>
+          <Search />
+        </button>
 
         <label htmlFor="app-drawer" className="btn btn-square btn-ghost drawer-button ">
           <div className="indicator p-1">
@@ -85,6 +94,8 @@ function App() {
         <ToastCenter />
 
         <PwaReloadPrompt />
+
+        <OmniBar />
 
         <section className="drawer-content flex h-screen max-h-full w-full flex-grow flex-row gap-4 overflow-hidden text-xl">
           <aside className="hidden h-full lg:block">
