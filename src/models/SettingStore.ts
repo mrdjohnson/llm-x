@@ -58,7 +58,7 @@ export const SettingStore = types
   .model({
     host: types.maybe(types.string),
     models: types.optional(types.array(Model), []),
-    _selectedModelName: types.maybeNull(types.string),
+    selectedModelName: types.maybeNull(types.string),
     theme: types.optional(types.string, '_system'),
     pwaNeedsUpdate: types.optional(types.boolean, false),
     lastHelpModalNotificationTime: types.optional(types.number, () => Date.now()),
@@ -93,7 +93,7 @@ export const SettingStore = types
       },
 
       selectModel(name: string) {
-        self._selectedModelName = name
+        self.selectedModelName = name
       },
 
       setHost(host: string) {
@@ -138,13 +138,13 @@ export const SettingStore = types
 
         self.models = cast(data)
 
-        self._selectedModelName ||= self.models[0]?.name
+        self.selectedModelName ||= self.models[0]?.name
       }),
     }
   })
   .views(self => ({
     get selectedModel(): IModel | undefined {
-      return self.models.find(model => model.name === self._selectedModelName) || self.models[0]
+      return self.models.find(model => model.name === self.selectedModelName) || self.models[0]
     },
 
     get isServerConnected() {
@@ -159,7 +159,7 @@ export const SettingStore = types
 export const settingStore = SettingStore.create()
 
 persist('settings', settingStore, {
-  blacklist: ['models', 'pwaNeedsUpdate', '_isServerConnected', '_selectedModelName', '_funTitle'],
+  blacklist: ['models', 'pwaNeedsUpdate', '_isServerConnected', '_funTitle'],
 }).then(() => {
   console.log('updated store')
   settingStore.updateModels()
