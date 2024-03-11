@@ -348,7 +348,7 @@ const OmniBar = () => {
 
   return (
     <KBarPortal>
-      <KBarPositioner>
+      <KBarPositioner className="z-50">
         <KBarAnimator className="inline-table w-[50%] transform-none overflow-hidden rounded-lg border-2 border-base-content/30 bg-base-100 p-2 shadow-xl">
           <KBarSearch className=" input w-full rounded-none border-0 border-b border-base-content/30 px-4 pb-2 text-base-content focus:outline-none" />
 
