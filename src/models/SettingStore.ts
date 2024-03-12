@@ -46,6 +46,14 @@ const Model = types
     get supportsImages() {
       return self.details.families?.includes('clip') || false
     },
+
+    get paramSize() {
+      if (self.details.parameterSize) {
+        return parseInt(self.details.parameterSize)
+      } else {
+        return NaN
+      }
+    },
   }))
 
 export interface IModel extends Instance<typeof Model> {}
