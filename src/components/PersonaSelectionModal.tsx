@@ -48,7 +48,7 @@ const PersonaItem = observer(
           <p className="pl-2">{persona.description}</p>
         </div>
 
-        <div>
+        <div className="flex flex-row flex-nowrap">
           <button
             onClick={editPersona}
             className="mr-2 opacity-30 hover:scale-125 hover:opacity-90"
