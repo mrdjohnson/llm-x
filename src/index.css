@@ -49,6 +49,10 @@
     @apply mx-1 underline-offset-2;
   }
 
+  .underline {
+    @apply underline-offset-2;
+  }
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
