@@ -35,6 +35,10 @@ const isSelected = ({ parent, id }: ActionImpl) => {
     return id === settingStore.selectedModel?.name
   }
 
+  if (parent === 'chat') {
+    return id === chatStore.selectedChat?.id.toString()
+  }
+
   return false
 }
 
@@ -245,15 +249,14 @@ const useRegisterChatActions = () => {
       chatStore.chats.forEach(chat => {
         const name = chat.name || 'new chat'
 
-        return nextChatActions.push(
-          createAction({
-            name: name,
-            keywords: `${name} chat`,
-            section: 'Chats',
-            parent: 'chat',
-            perform: () => chatStore.selectChat(chat),
-          }),
-        )
+        return nextChatActions.push({
+          id: chat.id.toString(),
+          name: name,
+          keywords: `${name} chat`,
+          section: 'Chats',
+          parent: 'chat',
+          perform: () => chatStore.selectChat(chat),
+        })
       })
 
       setChatOptions(nextChatActions)
