@@ -61,10 +61,11 @@ function RenderResults() {
         return (
           <button
             className={
-              'w-full cursor-pointer justify-normal rounded-none border-l-2 border-l-transparent px-6 py-3 text-left text-base-content' +
+              'w-full cursor-pointer justify-normal rounded-none border-l-2 px-6 py-3 text-left text-base-content' +
               (item.ancestors[0] ? '' : '') +
               (active ? ' border-l-base-content/40 bg-base-200 ' : '') +
-              (selected ? ' border-l-primary/40 ' : '')
+              (selected ? ' border-l-primary/40 ' : '') +
+              (!active && !selected ? ' border-l-transparent ' : '')
             }
           >
             <span className=" text-base-content/70">
