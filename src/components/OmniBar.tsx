@@ -329,12 +329,43 @@ const useRegisterMessageActions = () => {
   useRegisterActions(messageActions, [messageActions])
 }
 
+const useNewChatActions = () => {
+  const [newChatActions, setNewChatActions] = useState<Action[]>([])
+
+  useEffect(() => {
+    autorun(() => {
+      let action
+      const emptyChat = chatStore.emptyChat
+      if (emptyChat) {
+        action = createAction({
+          name: 'Go to new chat',
+          keywords: 'empty goto go to new chat ' + emptyChat.name,
+          section: 'Actions',
+          perform: () => chatStore.selectChat(emptyChat),
+        })
+      } else {
+        action = createAction({
+          name: 'Create New chat',
+          keywords: 'creat new chat',
+          section: 'Actions',
+          perform: chatStore.createChat,
+        })
+      }
+
+      setNewChatActions([action])
+    })
+  }, [])
+
+  useRegisterActions(newChatActions, [newChatActions])
+}
+
 const OmniBar = () => {
   useRegisterThemeActions()
   useRegisterModelActions()
   useRegisterPersonaActions()
   useRegisterChatActions()
   useRegisterMessageActions()
+  useNewChatActions()
 
   useRegisterActions([
     createAction({

@@ -95,7 +95,7 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
           <button
             className="btn join-item btn-neutral mb-2 flex flex-1 flex-row items-center justify-center gap-2 p-2"
             onClick={chatStore.createChat}
-            disabled={chatStore.hasEmptyChat}
+            disabled={!!chatStore.emptyChat}
           >
             New Chat
             <Edit className="h-5 w-5" />

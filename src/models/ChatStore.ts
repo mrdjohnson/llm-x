@@ -51,8 +51,8 @@ export const ChatStore = types
       return !!self.selectedChat?.isGettingData
     },
 
-    get hasEmptyChat() {
-      return _.some(self.chats, chat => chat.messages.length === 0)
+    get emptyChat(): IChatModel | undefined {
+      return _.find(self.chats, chat => chat.messages.length === 0)
     },
   }))
 
