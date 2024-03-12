@@ -26,6 +26,28 @@ const createHumanMessage = (message: IMessageModel): HumanMessage => {
   return new HumanMessage(message.content)
 }
 
+const getMessages = (chatMessages: IMessageModel[], incomingMessage: IMessageModel) => {
+  const messages: BaseMessage[] = []
+
+  const selectedPersona = personaStore.selectedPersona
+
+  if (selectedPersona) {
+    messages.push(new SystemMessage(selectedPersona.description))
+  }
+
+  for (const message of chatMessages) {
+    if (message.uniqId === incomingMessage.uniqId) break
+
+    if (message.fromBot) {
+      messages.push(new AIMessage(message.content))
+    } else {
+      messages.push(createHumanMessage(message))
+    }
+  }
+
+  return messages
+}
+
 export class OllmaApi {
   private static abortController?: AbortController
 
@@ -37,23 +59,7 @@ export class OllmaApi {
 
     OllmaApi.abortController = new AbortController()
 
-    const messages: BaseMessage[] = []
-
-    const selectedPersona = personaStore.selectedPersona
-
-    if (selectedPersona) {
-      messages.push(new SystemMessage(selectedPersona.description))
-    }
-
-    for (const message of chatMessages) {
-      if (message.uniqId === incomingMessage.uniqId) break
-
-      if (message.fromBot) {
-        messages.push(new AIMessage(message.content))
-      } else {
-        messages.push(createHumanMessage(message))
-      }
-    }
+    const messages = getMessages(chatMessages, incomingMessage)
 
     const chatOllama = new ChatOllama({
       baseUrl: host,
