@@ -148,10 +148,9 @@ const ModelSelectionModal = observer(() => {
                   <td>
                     <input
                       type="checkbox"
-                      defaultChecked
+                      defaultChecked={model.supportsImages}
                       className="checkbox checkbox-xs tooltip tooltip-bottom"
                       data-tip="Supports Images?"
-                      checked={model.supportsImages}
                     />
                   </td>
                 </tr>
