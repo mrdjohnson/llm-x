@@ -307,7 +307,9 @@ const useRegisterMessageActions = () => {
         createAction({
           name: '',
           subtitle: 'No Chats found',
-          keywords: text,
+          keywords: `z ${text}`,
+          priority: Priority.LOW,
+          perform: () => null,
         }),
       )
     }
