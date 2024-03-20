@@ -11,6 +11,7 @@ import { chatStore } from '../../models/ChatStore'
 import Check from '../../icons/Check'
 import Delete from '../../icons/Delete'
 import DocumentArrowDown from '../../icons/DocumentArrowDown'
+import Tooltip from '../Tooltip'
 
 export const ChatSettingsSection = observer(
   ({ isOpen, onSectionClicked }: AccordionSectionProps) => {
@@ -101,18 +102,24 @@ export const ChatSettingsSection = observer(
           </div>
 
           <div className="flex flex-row gap-2">
-            <button
-              onClick={exportChat}
-              className="btn btn-ghost tooltip tooltip-top z-10 flex flex-1"
-              title="Export Chat"
-              data-tip="Export Chat"
-            >
-              <DocumentArrowDown />
-            </button>
+            <Tooltip label="Export Chat">
+              <button
+                onClick={exportChat}
+                className="btn btn-ghost flex flex-1"
+                title="Export Chat"
+              >
+                <DocumentArrowDown />
+              </button>
+            </Tooltip>
 
-            <button onClick={() => chatStore.deleteChat(chat)} className="btn btn-ghost text-error">
-              <Delete className="h-5 w-5" />
-            </button>
+            <Tooltip label="Delete Chat">
+              <button
+                onClick={() => chatStore.deleteChat(chat)}
+                className="btn btn-ghost text-error"
+              >
+                <Delete className="h-5 w-5" />
+              </button>
+            </Tooltip>
           </div>
         </AccordionPanel>
       </AccordionItem>

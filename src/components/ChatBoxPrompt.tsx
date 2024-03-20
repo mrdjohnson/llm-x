@@ -8,6 +8,7 @@ import { personaStore } from '../models/PersonaStore'
 
 import AttachImageWrapper from './AttachImageWrapper'
 import FunTitle from './FunTitle'
+import ToolTip from './Tooltip'
 
 type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
 
@@ -83,13 +84,14 @@ const ChatBoxPrompt = observer(() => {
               <Step type="secondary" isCompleted={!_.isEmpty(personaStore.personas)}>
                 {'Create and Select a'}
 
-                <button
-                  className="link tooltip ml-1 decoration-secondary"
-                  onClick={personaStore.openSelectionModal}
-                  data-tip="aka System prompt: How the bot should respond"
-                >
-                  Persona
-                </button>
+                <ToolTip label="aka System prompt: How the bot should respond">
+                  <button
+                    className="link ml-1 decoration-secondary"
+                    onClick={personaStore.openSelectionModal}
+                  >
+                    Persona
+                  </button>
+                </ToolTip>
 
                 {'to give your bot some pizzaz'}
               </Step>
