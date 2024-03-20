@@ -208,8 +208,7 @@ const ChatBox = observer(() => {
   const outgoingUniqId = chat.messageToEdit?.uniqId
 
   const renderMessage = (message: IMessageModel) => {
-    if (message.uniqId === incomingUniqId)
-      return <IncomingMessage key={message.uniqId + message.content} />
+    if (message.uniqId === incomingUniqId) return <IncomingMessage key={message.content.length} />
 
     if (message.uniqId === outgoingUniqId)
       return <MessageToEdit key={message.uniqId} message={message} />
