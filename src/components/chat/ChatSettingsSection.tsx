@@ -111,7 +111,7 @@ export const ChatSettingsSection = observer(
             </button>
 
             <button onClick={() => chatStore.deleteChat(chat)} className="btn btn-ghost text-error">
-              <Delete />
+              <Delete className="h-5 w-5" />
             </button>
           </div>
         </AccordionPanel>
