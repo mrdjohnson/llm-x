@@ -90,8 +90,8 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
           : ''
       }
     >
-      <AccordionButton onClick={onSectionClicked}>
-        <div className={'join join-horizontal w-full' + (isOpen ? ' flex' : ' hidden')}>
+      {isOpen ? (
+        <div className="join join-horizontal flex w-full">
           <button
             className="btn join-item btn-neutral mb-2 flex flex-1 flex-row items-center justify-center gap-2 p-2"
             onClick={chatStore.createChat}
@@ -111,11 +111,11 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
             </button>
           </Tooltip>
         </div>
-
-        <button className={'btn btn-neutral w-full' + (isOpen ? ' hidden' : ' inline-flex')}>
+      ) : (
+        <AccordionButton onClick={onSectionClicked} className="btn btn-neutral inline-flex w-full">
           Chat List <AccordionIcon />
-        </button>
-      </AccordionButton>
+        </AccordionButton>
+      )}
 
       <AccordionPanel flex={1} className=" flex flex-1 flex-col text-base-content">
         <div className="no-scrollbar flex h-full flex-1 flex-col gap-2 overflow-y-scroll rounded-md">
@@ -135,7 +135,7 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
           ))}
         </div>
 
-        <div className="flex flex-col justify-center gap-2">
+        <div className="mt-2 flex flex-col justify-center gap-2">
           <label className=" text-center">Import / Export</label>
 
           {/* hidden file input */}
