@@ -79,7 +79,7 @@ const Drawer = () => {
     <>
       <input id="app-drawer" type="checkbox" className="drawer-toggle" />
 
-      <section className="drawer-side z-20 overflow-hidden">
+      <section className="drawer-side z-20 overflow-hidden" role="drawer">
         <label htmlFor="app-drawer" aria-label="close sidebar" className="drawer-overlay" />
 
         <div className="flex max-h-full min-h-full w-80 flex-col overflow-hidden bg-base-200 p-3">
