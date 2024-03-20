@@ -64,6 +64,7 @@ export class OllmaApi {
     const chatOllama = new ChatOllama({
       baseUrl: host,
       model,
+      keepAlive: '20m',
     }).bind({ signal: OllmaApi.abortController.signal })
 
     const stream = await ChatPromptTemplate.fromMessages(messages)
