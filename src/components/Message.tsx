@@ -138,7 +138,7 @@ export const Message = ({
     <div
       className={
         'group indicator relative flex w-fit min-w-6 max-w-full flex-col ' +
-        (fromBot ? 'pr-6 ' : ' ml-2 self-end ') +
+        (fromBot ? 'pr-4 lg:pr-8' : ' ml-2 self-end ') +
         (shouldDimMessage ? ' opacity-55 ' : '')
       }
       key={uniqId}
@@ -159,7 +159,7 @@ export const Message = ({
         >
           <Markdown
             remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
-            className="prose inline-table w-full"
+            className="prose flex w-full flex-wrap overflow-x-hidden overscroll-none"
             components={{
               code: DelayedCustomCodeBlock,
             }}

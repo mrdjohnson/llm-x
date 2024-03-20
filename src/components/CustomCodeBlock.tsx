@@ -21,7 +21,7 @@ const CustomCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
 
   if (multiLine) {
     return (
-      <div className="indicator w-full ">
+      <div className="indicator inline-grid w-full pr-2 ">
         <button
           className="indicator-item z-10 text-neutral-content/30 hover:text-neutral-content "
           onClick={copy}
@@ -32,7 +32,7 @@ const CustomCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
         <code
           {...rest}
           dangerouslySetInnerHTML={{ __html: highlightedText }}
-          className="w-full max-w-lg overflow-x-scroll xl:max-w-[700px] 2xl:max-w-[1000px]"
+          className="w-full overflow-x-scroll "
         />
       </div>
     )

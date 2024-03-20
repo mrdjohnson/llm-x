@@ -28,6 +28,10 @@
     @apply modal-bottom !p-2 lg:modal-top lg:!p-3;
   }
 
+  .prose {
+    @apply !max-w-full;
+  }
+
   table {
     @apply max-h-96;
   }
