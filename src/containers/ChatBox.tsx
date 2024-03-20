@@ -179,6 +179,12 @@ const ChatBox = observer(() => {
     })
   }
 
+  useEffect(() => {
+    setTimeout(() => {
+      scrollableFeedRef.current?.scrollToBottom()
+    }, 50)
+  }, [chat])
+
   if (!chat) return null
 
   const handleMessageToSend = (userMessageContent: string, image?: string) => {
