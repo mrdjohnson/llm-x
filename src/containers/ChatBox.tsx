@@ -2,6 +2,7 @@ import { useRef, PropsWithChildren, MouseEvent, useEffect, useState, KeyboardEve
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
+import { Editable, EditablePreview, EditableTextarea } from '@chakra-ui/react'
 
 import { chatStore } from '../models/ChatStore'
 import { settingStore } from '../models/SettingStore'
@@ -21,6 +22,7 @@ const ChatBoxInputRow = observer(
     children,
   }: PropsWithChildren<{ onSend: (message: string, image?: string) => void }>) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const previewAreaRef = useRef<HTMLSpanElement>(null)
 
     const [messageContent, setMessageContent] = useState('')
 
@@ -46,11 +48,16 @@ const ChatBoxInputRow = observer(
       chat.setPreviewImage(undefined)
     }
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+      console.log('handling key down')
       if (e.shiftKey) return
 
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && messageContent) {
         sendMessage()
+
+        textareaRef.current?.blur()
+
+        e.preventDefault()
       }
     }
 
@@ -62,6 +69,14 @@ const ChatBoxInputRow = observer(
 
       setMessageContent(messageToEdit?.content || '')
     }, [messageToEdit])
+
+    useEffect(() => {
+      if (inputDisabled) {
+        textareaRef.current?.blur()
+      } else {
+        previewAreaRef.current?.focus()
+      }
+    }, [inputDisabled, chat])
 
     // can revisit if this slows things down but its been fine so far
     const lineCount = messageContent.split('\n').length
@@ -83,19 +98,26 @@ const ChatBoxInputRow = observer(
           onSubmit={onFormSubmit}
         >
           <div className="join-item relative p-2">
-            <textarea
-              className="no-scrollbar textarea textarea-ghost ml-2 h-full max-h-[400px] w-full resize-none overflow-scroll border-0 p-0 text-base focus:outline-none"
+            <Editable
               placeholder="Enter Prompt"
-              ref={textareaRef}
-              disabled={inputDisabled}
+              startWithEditView
+              selectAllOnFocus={false}
               value={messageContent}
-              rows={lineCount}
-              onKeyDown={handleKeyDown}
-              onChange={e => setMessageContent(e.target.value)}
-              autoFocus
-            />
+              className="min-h-8"
+            >
+              <EditablePreview className="w-full py-0 opacity-30" ref={previewAreaRef} />
 
-            {/* TODO: add persona information here */}
+              <EditableTextarea
+                className="no-scrollbar my-0 max-h-[400px] w-full resize-none overflow-scroll py-0 focus:outline-none"
+                placeholder="Enter Prompt"
+                ref={textareaRef}
+                disabled={inputDisabled}
+                rows={lineCount}
+                onKeyDown={handleKeyDown}
+                onChange={e => setMessageContent(_.trimStart(e.target.value))}
+                autoFocus
+              />
+            </Editable>
 
             {previewImage && (
               <div className="absolute bottom-full end-0 mb-2 w-fit">
@@ -182,7 +204,7 @@ const ChatBox = observer(() => {
   useEffect(() => {
     setTimeout(() => {
       scrollableFeedRef.current?.scrollToBottom()
-    }, 50)
+    }, 300)
   }, [chat])
 
   if (!chat) return null
