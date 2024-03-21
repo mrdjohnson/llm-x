@@ -7,7 +7,8 @@ import {
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 import { getSnapshot, applySnapshot } from 'mobx-state-tree'
-import { useRef, ChangeEvent } from 'react'
+import { useRef, ChangeEvent, Fragment } from 'react'
+import _ from 'lodash'
 
 import { AccordionSectionProps } from '../../containers/SideBar'
 
@@ -23,8 +24,6 @@ import { settingStore } from '../../models/SettingStore'
 export const ChatListSection = observer(({ isOpen, onSectionClicked }: AccordionSectionProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const importTypeRef = useRef<'all' | 'chat'>('all')
-
-  const chats = chatStore.chats
 
   const exportAll = () => {
     const data = JSON.stringify({
@@ -119,19 +118,30 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
 
       <AccordionPanel flex={1} className=" flex flex-1 flex-col text-base-content">
         <div className="no-scrollbar flex h-full flex-1 flex-col gap-2 overflow-y-scroll rounded-md">
-          {chats.map(chat => (
-            <button
-              className={
-                ' group flex w-full flex-row justify-between rounded-md p-2 text-left lg:dropdown-right ' +
-                (chat.id === chatStore.selectedChat?.id
-                  ? ' btn-neutral btn-active cursor-default'
-                  : ' btn-ghost cursor-pointer')
-              }
-              onClick={() => handleChatSelected(chat)}
-              key={chat.id}
-            >
-              <span className="line-clamp-1 flex-1">{chat.name || 'new chat'}</span>
-            </button>
+          {_.map(chatStore.dateLabelToChatPairs, ([dateLabel, chats]) => (
+            <Fragment key={dateLabel}>
+              <span
+                className="-mb-1 pl-2 text-sm font-semibold text-base-content/30"
+                key={dateLabel}
+              >
+                {dateLabel}
+              </span>
+
+              {chats.map(chat => (
+                <button
+                  className={
+                    ' group flex w-full flex-row justify-between rounded-md p-2 text-left lg:dropdown-right ' +
+                    (chat.id === chatStore.selectedChat?.id
+                      ? ' btn-neutral btn-active cursor-default'
+                      : ' btn-ghost cursor-pointer')
+                  }
+                  onClick={() => handleChatSelected(chat)}
+                  key={chat.id}
+                >
+                  <span className="line-clamp-1 flex-1">{chat.name || 'new chat'}</span>
+                </button>
+              ))}
+            </Fragment>
           ))}
         </div>
 

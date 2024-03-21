@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { types, Instance, detach, flow, cast } from 'mobx-state-tree'
+import moment from 'moment'
 
 import { IMessageModel, MessageModel } from './MessageModel'
 import { settingStore } from './SettingStore'
@@ -192,6 +193,44 @@ export const ChatModel = types
 
     get isEditingMessage() {
       return !!self.messageToEdit
+    },
+
+    get lastMessageDate() {
+      if (self.messages.length === 0) return moment()
+
+      const lastMessage = _.last(self.messages)
+      const sentTime = moment(parseInt(lastMessage!.uniqId.split('_')[1]))
+
+      return sentTime
+    },
+
+    get lastMessageDateLabel() {
+      const sentTime = this.lastMessageDate
+
+      const today = moment().startOf('day')
+
+      if (sentTime.isAfter(today)) {
+        return 'Today'
+      }
+
+      if (sentTime.isAfter(today.subtract(1, 'days'))) {
+        return 'Yesterday'
+      }
+
+      const thisWeek = moment().startOf('week')
+
+      if (sentTime.isAfter(thisWeek)) {
+        return 'This Week'
+      }
+
+      const thisMonth = moment().startOf('month')
+
+      if (sentTime.isAfter(thisMonth.subtract(2, 'months'))) {
+        // January February ...
+        return sentTime.format('MMMM')
+      }
+
+      return 'Older'
     },
   }))
 

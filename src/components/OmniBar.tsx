@@ -246,7 +246,7 @@ const useRegisterChatActions = () => {
         },
       ]
 
-      chatStore.chats.forEach(chat => {
+      _.orderBy(chatStore.chats, 'lastMessageDate', 'desc').forEach(chat => {
         const name = chat.name || 'new chat'
 
         return nextChatActions.push({

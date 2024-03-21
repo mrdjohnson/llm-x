@@ -54,6 +54,15 @@ export const ChatStore = types
     get emptyChat(): IChatModel | undefined {
       return _.find(self.chats, chat => chat.messages.length === 0)
     },
+
+    get dateLabelToChatPairs() {
+      // [['today', todayChats], ['yesterday', [yesterdayChats], [....], ['older', olderChats]]
+      return _.chain(self.chats)
+        .orderBy('lastMessageDate', 'desc') // newest sent message first
+        .groupBy('lastMessageDateLabel') // {today: todayChats, yesterday: yesterdayChats, ...., older: olderChats},
+        .toPairs()
+        .value()
+    },
   }))
 
 export const chatStore = ChatStore.create()
