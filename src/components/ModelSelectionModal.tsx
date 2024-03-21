@@ -7,7 +7,6 @@ import { settingStore } from '../models/SettingStore'
 import ChevronDown from '../icons/ChevronDown'
 import Globe from '../icons/Globe'
 import Image from '../icons/Image'
-import ToolTip from './Tooltip'
 
 enum SortType {
   None = 'none',
@@ -114,11 +113,12 @@ const ModelSelectionModal = observer(() => {
                     className="flex w-fit cursor-pointer flex-row items-center"
                     onClick={() => handleSortTypeChanged(SortType.Image)}
                   >
-                    <ToolTip label="Supports Images?">
-                      <span className="w-fit border-b-[1.5px] border-b-current">
-                        <Image />
-                      </span>
-                    </ToolTip>
+                    <span
+                      className="tooltip tooltip-bottom w-fit border-b-[1.5px] border-b-current"
+                      data-tip="Supports Images?"
+                    >
+                      <Image />
+                    </span>
 
                     {makeChevron(SortType.Image)}
                   </span>
@@ -146,13 +146,12 @@ const ModelSelectionModal = observer(() => {
                   <td>{model.details.parameterSize}</td>
 
                   <td>
-                    <ToolTip label="Supports Images?">
-                      <input
-                        type="checkbox"
-                        defaultChecked={model.supportsImages}
-                        className="checkbox checkbox-xs"
-                      />
-                    </ToolTip>
+                    <input
+                      type="checkbox"
+                      defaultChecked={model.supportsImages}
+                      className="checkbox checkbox-xs tooltip tooltip-bottom"
+                      data-tip="Supports Images?"
+                    />
                   </td>
                 </tr>
               ))}
