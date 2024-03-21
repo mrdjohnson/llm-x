@@ -27,6 +27,10 @@
 | ----------------------------------------------------------------------------------------------------------------------- |
 | ![Logo convo screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-logo-convo.png) |
 
+| Showing off omnibar and code                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------- |
+| ![Omnibar and code screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-omnibar-code.png) |
+
 | Showing off code and light theme                                                                                                  |
 | --------------------------------------------------------------------------------------------------------------------------------- |
 | ![Code and light theme screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-code-light.png) |
