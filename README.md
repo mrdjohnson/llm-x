@@ -1,3 +1,5 @@
+[![Deployed to github pages](https://github.com/mrdjohnson/llm-x/actions/workflows/deploy_to_gh_pages.yml/badge.svg)](https://github.com/mrdjohnson/llm-x/actions/workflows/deploy_to_gh_pages.yml)
+
 # LLM X
 
 ![LLM X logo](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/public/LLMX.png)
