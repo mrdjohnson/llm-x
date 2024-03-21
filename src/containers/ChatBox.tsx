@@ -49,15 +49,27 @@ const ChatBoxInputRow = observer(
     }
 
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-      console.log('handling key down')
-      if (e.shiftKey) return
+      if (e.shiftKey || !textareaRef.current) return
 
       if (e.key === 'Enter' && messageContent) {
         sendMessage()
 
-        textareaRef.current?.blur()
+        textareaRef.current.blur()
 
         e.preventDefault()
+      }
+
+      const { selectionStart, selectionEnd } = textareaRef.current
+
+      // we either want the start, or the end to be the same
+      if (selectionStart !== selectionEnd) return
+
+      if (e.key === 'ArrowUp' && selectionStart === 0) {
+        chat.findAndEditPreviousMessage()
+      }
+
+      if (e.key === 'ArrowDown' && selectionStart === messageContent.length) {
+        chat.findAndEditNextMessage()
       }
     }
 

@@ -101,6 +101,23 @@ export const ChatModel = types
       this.generateMessage(botMessageToEdit)
     },
 
+    findAndEditPreviousMessage() {
+      // this goes in a loop, letting it happen though.
+      const currentIndex = self.messageToEdit
+        ? _.indexOf(self.messages, self.messageToEdit)
+        : self.messages.length
+
+      self.messageToEdit = _.findLast(self.messages, { fromBot: false }, currentIndex - 1)
+    },
+
+    findAndEditNextMessage() {
+      const currentIndex = self.messageToEdit
+        ? _.indexOf(self.messages, self.messageToEdit)
+        : self.messages.length
+
+      self.messageToEdit = _.find(self.messages, { fromBot: false }, currentIndex + 1)
+    },
+
     createIncomingMessage() {
       const uniqId = 'bot_' + Date.now()
 
