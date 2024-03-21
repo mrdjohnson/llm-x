@@ -87,7 +87,8 @@ const LazyMessage = ({
       className={
         'group indicator relative flex w-fit min-w-6 max-w-full flex-col ' +
         (fromBot ? 'pr-4 lg:pr-8' : ' ml-2 self-end ') +
-        (shouldDimMessage ? ' opacity-55 ' : '')
+        (shouldDimMessage ? ' opacity-55 ' : '') +
+        (children ? ' mt-2 ' : '')
       }
       key={uniqId}
     >
