@@ -1,51 +1,10 @@
 import { RefObject } from 'react'
-import { types, Instance, cast, flow } from 'mobx-state-tree'
+import { types, cast, flow } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
-import _ from 'lodash'
 import camelcaseKeys from 'camelcase-keys'
-import moment from 'moment'
 
 import { toastStore } from './ToastStore'
-
-const ModelDetails = types.model({
-  parameterSize: types.maybe(types.string),
-  families: types.maybeNull(types.array(types.string)),
-})
-
-const Model = types
-  .model({
-    name: types.identifier,
-    model: types.string,
-    digest: types.string,
-    modifiedAt: types.string,
-    size: types.number,
-    details: ModelDetails,
-  })
-  .views(self => ({
-    // inspiration for gbSize and timeAgo are from chat-ollama!
-
-    get gbSize() {
-      return (self.size / 1e9).toFixed(2) + ' GB'
-    },
-
-    get timeAgo() {
-      return moment(self.modifiedAt).fromNow()
-    },
-
-    get supportsImages() {
-      return self.details.families?.includes('clip') || false
-    },
-
-    get paramSize() {
-      if (self.details.parameterSize) {
-        return parseInt(self.details.parameterSize)
-      } else {
-        return NaN
-      }
-    },
-  }))
-
-export interface IModel extends Instance<typeof Model> {}
+import { IOllamaModel, OllamaModel } from './OllamaModel'
 
 export const DefaultHost = 'http://localhost:11434'
 
@@ -54,7 +13,7 @@ const min_3 = 3 * 60 * 1000
 export const SettingStore = types
   .model({
     host: types.maybe(types.string),
-    models: types.optional(types.array(Model), []),
+    models: types.optional(types.array(OllamaModel), []),
     selectedModelName: types.maybeNull(types.string),
     theme: types.optional(types.string, '_system'),
     pwaNeedsUpdate: types.optional(types.boolean, false),
@@ -117,14 +76,14 @@ export const SettingStore = types
       updateModels: flow(function* updateModels() {
         const host = self.host || DefaultHost
 
-        let data: Array<IModel> = []
+        let data: Array<IOllamaModel> = []
 
         try {
           const response = yield fetch(`${host}/api/tags`)
 
           const json = yield response.json()
 
-          data = camelcaseKeys(json?.models, { deep: true }) as IModel[]
+          data = camelcaseKeys(json?.models, { deep: true }) as IOllamaModel[]
 
           self._isServerConnected = true
         } catch (e) {
@@ -140,7 +99,7 @@ export const SettingStore = types
     }
   })
   .views(self => ({
-    get selectedModel(): IModel | undefined {
+    get selectedModel(): IOllamaModel | undefined {
       return self.models.find(model => model.name === self.selectedModelName) || self.models[0]
     },
 
