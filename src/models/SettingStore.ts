@@ -3,6 +3,7 @@ import { types, Instance, cast, flow } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
 import _ from 'lodash'
 import camelcaseKeys from 'camelcase-keys'
+import moment from 'moment'
 
 import { toastStore } from './ToastStore'
 
@@ -28,19 +29,7 @@ const Model = types
     },
 
     get timeAgo() {
-      const modifiedAtDate = new Date(self.modifiedAt)
-      const diffInSeconds = Math.floor((Date.now() - modifiedAtDate.getTime()) / 1000)
-      const minutes = Math.floor(diffInSeconds / 60)
-      const hours = Math.floor(minutes / 60)
-      const days = Math.floor(hours / 24)
-
-      const pluralTimeAgo = (units: number) => (units !== 1 ? 's' : '') + ' ago'
-
-      if (days > 0) return `${days} day${pluralTimeAgo(days)}`
-
-      if (hours > 0) return `${hours} hour${pluralTimeAgo(hours)}`
-
-      return `${minutes} minute${pluralTimeAgo(minutes)}`
+      return moment(self.modifiedAt).fromNow()
     },
 
     get supportsImages() {
