@@ -80,8 +80,6 @@ const LazyMessage = ({
     )
   }, [chat, fromBot, disableRegeneration, disableEditing])
 
-  if (!message.content && !error) return null
-
   return (
     <div
       className={
@@ -101,7 +99,7 @@ const LazyMessage = ({
 
       {message.botName && <span className="opacity-30">{message.botName}</span>}
 
-      <div className="join join-vertical relative border border-base-content/20">
+      <div className="join join-vertical relative min-h-10 border border-base-content/20">
         {children}
 
         <div
