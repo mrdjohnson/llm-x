@@ -95,7 +95,10 @@ const LazyMessage = ({
       {children}
 
       {image && (
-        <img className="h-56 w-56 place-self-center rounded-md object-contain" src={image} />
+        <img
+          className="mb-2 h-56 max-w-56 place-self-center rounded-md object-contain"
+          src={image}
+        />
       )}
 
       <div className="join join-vertical border border-base-content/20">
