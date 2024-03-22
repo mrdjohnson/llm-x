@@ -101,6 +101,8 @@ const LazyMessage = ({
         />
       )}
 
+      {message.botName && <span className="opacity-30">{message.botName}</span>}
+
       <div className="join join-vertical border border-base-content/20">
         <div
           className={

@@ -13,6 +13,7 @@ const MessageExtrasModel = types.model({
 export const MessageModel = types
   .model({
     fromBot: types.boolean,
+    // this should have been modelName
     botName: types.maybe(types.string),
     content: types.optional(types.string, ''),
     image: types.maybe(types.string),
