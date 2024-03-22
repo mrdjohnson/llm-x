@@ -92,8 +92,6 @@ const LazyMessage = ({
       }
       key={uniqId}
     >
-      {children}
-
       {image && (
         <img
           className="mb-2 h-56 max-w-56 place-self-center rounded-md object-contain"
@@ -103,7 +101,9 @@ const LazyMessage = ({
 
       {message.botName && <span className="opacity-30">{message.botName}</span>}
 
-      <div className="join join-vertical border border-base-content/20">
+      <div className="join join-vertical relative border border-base-content/20">
+        {children}
+
         <div
           className={
             'w-full p-2 ' +

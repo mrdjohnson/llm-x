@@ -10,7 +10,7 @@ import { chatStore } from '../models/ChatStore'
 const LazyMessage = React.lazy(() => import('./LazyMessage'))
 
 const Loading = () => (
-  <span className="indicator-item loading loading-dots loading-sm indicator-start ml-8" />
+  <span className="indicator-item loading loading-dots loading-sm indicator-start ml-4 opacity-65" />
 )
 
 // this one is observed for incoming text changes, the rest do not need to be observed
