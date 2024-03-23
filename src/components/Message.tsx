@@ -28,6 +28,7 @@ export const IncomingMessage = observer(() => {
       onDestroy={chat.abortGeneration}
       customDeleteIcon={<Stop />}
       disableRegeneration
+      shouldScrollIntoView
     >
       <Loading />
     </Message>
@@ -43,6 +44,7 @@ export const MessageToEdit = observer(({ message }: { message: IMessageModel }) 
       onDestroy={() => chat.setMessageToEdit(undefined)}
       customDeleteIcon={<Stop />}
       shouldDimMessage={false}
+      shouldScrollIntoView
     >
       <Loading />
     </Message>
@@ -57,6 +59,7 @@ export type MessageProps = PropsWithChildren<{
   disableRegeneration?: boolean
   disableEditing?: boolean
   shouldDimMessage?: boolean
+  shouldScrollIntoView?: boolean
 }>
 
 export const Message = (props: MessageProps) => {

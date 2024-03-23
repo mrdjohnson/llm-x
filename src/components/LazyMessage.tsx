@@ -1,4 +1,4 @@
-import React, { Suspense, useMemo } from 'react'
+import React, { Suspense, useEffect, useMemo, useRef } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { PropsWithChildren, useState } from 'react'
@@ -31,10 +31,13 @@ const LazyMessage = ({
   disableRegeneration,
   disableEditing,
   shouldDimMessage,
+  shouldScrollIntoView,
 }: MessageProps) => {
   const { content, fromBot, uniqId, image, extras } = message
   const error = extras?.error
   const chat = chatStore.selectedChat!
+
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const [copied, setCopied] = useState(false)
 
@@ -80,15 +83,22 @@ const LazyMessage = ({
     )
   }, [chat, fromBot, disableRegeneration, disableEditing])
 
+  useEffect(() => {
+    if (shouldScrollIntoView) {
+      containerRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [shouldScrollIntoView])
+
   return (
     <div
       className={
-        'group indicator relative flex w-fit min-w-6 max-w-full flex-col ' +
+        'group indicator relative flex w-fit min-w-6 max-w-full scroll-m-5 flex-col ' +
         (fromBot ? 'pr-4 lg:pr-8' : ' ml-2 self-end ') +
         (shouldDimMessage ? ' opacity-55 ' : '') +
         (children ? ' mt-2 ' : '')
       }
       key={uniqId}
+      ref={containerRef}
     >
       {image && (
         <img
