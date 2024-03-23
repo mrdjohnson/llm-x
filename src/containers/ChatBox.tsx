@@ -71,6 +71,12 @@ const ChatBoxInputRow = observer(
       if (e.key === 'ArrowDown' && selectionStart === messageContent.length) {
         chat.findAndEditNextMessage()
       }
+
+      if (e.key === 'Escape') {
+        chat.setMessageToEdit(undefined)
+
+        e.preventDefault()
+      }
     }
 
     const noServer = !settingStore.selectedModel
