@@ -11,10 +11,12 @@ const Dropzone = ({ children }: PropsWithChildren) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, maxFiles: 1 })
 
-  const { onClick, ...rootProps } = getRootProps()
-
   return (
-    <div className="grid h-svh max-h-svh min-h-svh bg-base-100" {...rootProps}>
+    <div
+      className="grid h-svh max-h-svh min-h-svh bg-base-100"
+      {...getRootProps()}
+      onClick={undefined}
+    >
       <input {...getInputProps()} />
 
       {isDragActive && (
