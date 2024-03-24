@@ -118,6 +118,7 @@ const ChatBoxInputRow = observer(
               selectAllOnFocus={false}
               value={messageContent}
               className="min-h-8"
+              isDisabled={inputDisabled}
             >
               <EditablePreview className="w-full py-0 !text-left opacity-30" ref={previewAreaRef} />
 
