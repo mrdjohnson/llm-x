@@ -2,13 +2,13 @@ import { PropsWithChildren } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
-import { chatStore } from '../models/ChatStore'
-import { settingStore } from '../models/SettingStore'
-import { personaStore } from '../models/PersonaStore'
+import { chatStore } from '~/models/ChatStore'
+import { settingStore } from '~/models/SettingStore'
+import { personaStore } from '~/models/PersonaStore'
 
-import AttachImageWrapper from './AttachImageWrapper'
-import FunTitle from './FunTitle'
-import ToolTip from './Tooltip'
+import AttachImageWrapper from '~/components/AttachImageWrapper'
+import FunTitle from '~/components/FunTitle'
+import ToolTip from '~/components/Tooltip'
 
 type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
 

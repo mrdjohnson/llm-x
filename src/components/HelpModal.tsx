@@ -1,10 +1,10 @@
 import { observer } from 'mobx-react-lite'
 import { useEffect, useRef, useState } from 'react'
 
-import { settingStore } from '../models/SettingStore'
+import { settingStore } from '~/models/SettingStore'
 
-import Copy from '../icons/Copy'
-import CopySuccess from '../icons/CopySuccess'
+import Copy from '~/icons/Copy'
+import CopySuccess from '~/icons/CopySuccess'
 
 const OLLAMA_CODE = 'OLLAMA_ORIGINS=*.github.io ollama serve'
 const POWERSHELL_OLLAMA_CODE = '$env:OLLAMA_ORIGINS="https://%2A.github.io/"; ollama serve'

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 
-import { settingStore } from '../models/SettingStore'
-import Refresh from '../icons/Refresh'
+import { settingStore } from '~/models/SettingStore'
+import Refresh from '~/icons/Refresh'
 
 const ModelRefreshButton = observer(
   ({ small = false, shouldShow = false }: { small?: boolean; shouldShow?: boolean }) => {

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import Copy from '../icons/Copy'
+import Copy from '~/icons/Copy'
 
 import hljs from 'highlight.js/lib/common'
 

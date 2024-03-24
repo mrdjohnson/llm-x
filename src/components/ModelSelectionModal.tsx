@@ -2,11 +2,11 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import _ from 'lodash'
 
-import { settingStore } from '../models/SettingStore'
+import { settingStore } from '~/models/SettingStore'
 
-import ChevronDown from '../icons/ChevronDown'
-import Globe from '../icons/Globe'
-import Image from '../icons/Image'
+import ChevronDown from '~/icons/ChevronDown'
+import Globe from '~/icons/Globe'
+import Image from '~/icons/Image'
 
 enum SortType {
   None = 'none',

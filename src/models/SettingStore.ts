@@ -3,8 +3,8 @@ import { types, cast, flow } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
 import camelcaseKeys from 'camelcase-keys'
 
-import { toastStore } from './ToastStore'
-import { IOllamaModel, OllamaModel } from './OllamaModel'
+import { toastStore } from '~/models/ToastStore'
+import { IOllamaModel, OllamaModel } from '~/models/OllamaModel'
 
 export const DefaultHost = 'http://localhost:11434'
 

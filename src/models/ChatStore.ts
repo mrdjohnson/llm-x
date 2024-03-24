@@ -2,7 +2,7 @@ import { detach, types, SnapshotIn } from 'mobx-state-tree'
 import persist from 'mst-persist'
 import _ from 'lodash'
 
-import { ChatModel, IChatModel } from './ChatModel'
+import { ChatModel, IChatModel } from '~/models/ChatModel'
 
 export const ChatStore = types
   .model({

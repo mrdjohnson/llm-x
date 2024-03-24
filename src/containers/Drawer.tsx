@@ -1,14 +1,14 @@
 import { observer } from 'mobx-react-lite'
 import { ChangeEvent, FormEvent, Suspense, useEffect, useState } from 'react'
 
-import Question from '../icons/Question'
-import Github from '../icons/Github'
+import Question from '~/icons/Question'
+import Github from '~/icons/Github'
 
-import { DefaultHost, settingStore } from '../models/SettingStore'
-import ModelRefreshButton from '../components/ModelRefreshButton'
+import { DefaultHost, settingStore } from '~/models/SettingStore'
+import ModelRefreshButton from '~/components/ModelRefreshButton'
 
-import ModelSelector from '../components/ModelSelector'
-import ThemeSelector from '../components/ThemeSelector'
+import ModelSelector from '~/components/ModelSelector'
+import ThemeSelector from '~/components/ThemeSelector'
 import { SideBar } from './SideBar'
 
 const Input = observer(() => {

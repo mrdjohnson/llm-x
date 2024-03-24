@@ -2,12 +2,12 @@ import _ from 'lodash'
 import { types, Instance, detach, flow, cast } from 'mobx-state-tree'
 import moment from 'moment'
 
-import { IMessageModel, MessageModel } from './MessageModel'
-import { settingStore } from './SettingStore'
-import { toastStore } from './ToastStore'
+import { IMessageModel, MessageModel } from '~/models/MessageModel'
+import { settingStore } from '~/models/SettingStore'
+import { toastStore } from '~/models/ToastStore'
 
-import base64EncodeImage from '../utils/base64EncodeImage'
-import { OllmaApi } from '../utils/OllamaApi'
+import base64EncodeImage from '~/utils/base64EncodeImage'
+import { OllmaApi } from '~/utils/OllamaApi'
 
 export const ChatModel = types
   .model({

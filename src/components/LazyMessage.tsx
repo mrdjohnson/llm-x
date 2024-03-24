@@ -3,14 +3,14 @@ import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { PropsWithChildren, useState } from 'react'
 
-import Delete from '../icons/Delete'
-import Copy from '../icons/Copy'
-import CopySuccess from '../icons/CopySuccess'
-import Refresh from '../icons/Refresh'
-import ChevronDown from '../icons/ChevronDown'
-import Edit from '../icons/Edit'
+import Delete from '~/icons/Delete'
+import Copy from '~/icons/Copy'
+import CopySuccess from '~/icons/CopySuccess'
+import Refresh from '~/icons/Refresh'
+import ChevronDown from '~/icons/ChevronDown'
+import Edit from '~/icons/Edit'
 
-import { chatStore } from '../models/ChatStore'
+import { chatStore } from '~/models/ChatStore'
 import { MessageProps } from './Message'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))

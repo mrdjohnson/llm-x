@@ -3,14 +3,14 @@ import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { Editable, EditablePreview, EditableTextarea } from '@chakra-ui/react'
 
-import { chatStore } from '../models/ChatStore'
-import { settingStore } from '../models/SettingStore'
-import { personaStore } from '../models/PersonaStore'
+import { chatStore } from '~/models/ChatStore'
+import { settingStore } from '~/models/SettingStore'
+import { personaStore } from '~/models/PersonaStore'
 
-import AttachImageWrapper from '../components/AttachImageWrapper'
+import AttachImageWrapper from '~/components/AttachImageWrapper'
 
-import Paperclip from '../icons/Paperclip'
-import ChevronDown from '../icons/ChevronDown'
+import Paperclip from '~/icons/Paperclip'
+import ChevronDown from '~/icons/ChevronDown'
 
 const ChatBoxInputRow = observer(
   ({

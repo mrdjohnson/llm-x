@@ -2,12 +2,12 @@ import { useRef, MouseEvent, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
 
-import { chatStore } from '../models/ChatStore'
-import { IMessageModel } from '../models/MessageModel'
+import { chatStore } from '~/models/ChatStore'
+import { IMessageModel } from '~/models/MessageModel'
 
-import ChatBoxInputRow from '../components/ChatBoxInputRow'
-import ChatBoxPrompt from '../components/ChatBoxPrompt'
-import { IncomingMessage, Message, MessageToEdit } from '../components/Message'
+import ChatBoxInputRow from '~/components/ChatBoxInputRow'
+import ChatBoxPrompt from '~/components/ChatBoxPrompt'
+import { IncomingMessage, Message, MessageToEdit } from '~/components/Message'
 
 const ChatBox = observer(() => {
   const chat = chatStore.selectedChat

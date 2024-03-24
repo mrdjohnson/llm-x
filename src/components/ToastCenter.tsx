@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
-import { toastStore } from '../models/ToastStore'
+import { toastStore } from '~/models/ToastStore'
 
 const ToastCenter = observer(() => {
   const [hovering, setHovering] = useState(false)

@@ -2,12 +2,12 @@ import React, { Suspense } from 'react'
 import type { PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import Stop from '../icons/Stop'
+import Stop from '~/icons/Stop'
 
-import { IMessageModel } from '../models/MessageModel'
-import { chatStore } from '../models/ChatStore'
+import { IMessageModel } from '~/models/MessageModel'
+import { chatStore } from '~/models/ChatStore'
 
-const LazyMessage = React.lazy(() => import('./LazyMessage'))
+const LazyMessage = React.lazy(() => import('~/components/LazyMessage'))
 
 const Loading = () => (
   <span className="indicator-item loading loading-dots loading-sm indicator-start ml-4 opacity-65" />

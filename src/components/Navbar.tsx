@@ -1,16 +1,16 @@
 import { observer } from 'mobx-react-lite'
 import { useKBar } from 'kbar'
 
-import ModelSelector from './ModelSelector'
-import ModelRefreshButton from './ModelRefreshButton'
-import FunTitle from './FunTitle'
+import ModelSelector from '~/components/ModelSelector'
+import ModelRefreshButton from '~/components/ModelRefreshButton'
+import FunTitle from '~/components/FunTitle'
 
-import { settingStore } from '../models/SettingStore'
+import { settingStore } from '~/models/SettingStore'
 
-import Warning from '../icons/Warning'
-import Bars3 from '../icons/Bars3'
-import CloudDown from '../icons/CloudDown'
-import Search from '../icons/Search'
+import Warning from '~/icons/Warning'
+import Bars3 from '~/icons/Bars3'
+import CloudDown from '~/icons/CloudDown'
+import Search from '~/icons/Search'
 
 const Navbar = observer(() => {
   const { query } = useKBar()

@@ -15,10 +15,10 @@ import type { Action, ActionImpl } from 'kbar'
 import { autorun } from 'mobx'
 import _ from 'lodash'
 
-import { settingStore } from '../models/SettingStore'
-import { personaStore } from '../models/PersonaStore'
-import { chatStore } from '../models/ChatStore'
-import type { IMessageModel } from '../models/MessageModel'
+import { settingStore } from '~/models/SettingStore'
+import { personaStore } from '~/models/PersonaStore'
+import { chatStore } from '~/models/ChatStore'
+import type { IMessageModel } from '~/models/MessageModel'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {

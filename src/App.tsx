@@ -1,15 +1,15 @@
-import Dropzone from './containers/Dropzone'
-import { SideBar } from './containers/SideBar'
-import Drawer from './containers/Drawer'
-import ChatBox from './containers/ChatBox'
+import Dropzone from '~/containers/Dropzone'
+import { SideBar } from '~/containers/SideBar'
+import Drawer from '~/containers/Drawer'
+import ChatBox from '~/containers/ChatBox'
 
-import Navbar from './components/Navbar'
-import HelpModal from './components/HelpModal'
-import ToastCenter from './components/ToastCenter'
-import PwaReloadPrompt from './components/PwaReloadPrompt'
-import ModelSelectionModal from './components/ModelSelectionModal'
-import PersonaSelectionModal from './components/PersonaSelectionModal'
-import OmniBar from './components/OmniBar'
+import Navbar from '~/components/Navbar'
+import HelpModal from '~/components/HelpModal'
+import ToastCenter from '~/components/ToastCenter'
+import PwaReloadPrompt from '~/components/PwaReloadPrompt'
+import ModelSelectionModal from '~/components/ModelSelectionModal'
+import PersonaSelectionModal from '~/components/PersonaSelectionModal'
+import OmniBar from '~/components/OmniBar'
 
 function App() {
   return (

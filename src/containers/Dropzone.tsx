@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-import DocumentDownload from '../icons/DocumentDownload'
-import { chatStore } from '../models/ChatStore'
+import DocumentDownload from '~/icons/DocumentDownload'
+import { chatStore } from '~/models/ChatStore'
 
 const Dropzone = ({ children }: PropsWithChildren) => {
   const onDrop = ([file]: File[]) => {

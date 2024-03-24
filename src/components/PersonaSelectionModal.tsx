@@ -2,11 +2,11 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useRef, MouseEvent } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { IPersonaModel, personaStore } from '../models/PersonaStore'
+import { IPersonaModel, personaStore } from '~/models/PersonaStore'
 
-import Delete from '../icons/Delete'
-import Copy from '../icons/Copy'
-import Edit from '../icons/Edit'
+import Delete from '~/icons/Delete'
+import Copy from '~/icons/Copy'
+import Edit from '~/icons/Edit'
 
 type PersonaItemProps = {
   persona: IPersonaModel

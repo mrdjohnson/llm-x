@@ -3,8 +3,8 @@ import { observer } from 'mobx-react-lite'
 import useMedia from 'use-media'
 import { useMemo } from 'react'
 
-import ChevronDown from '../icons/ChevronDown'
-import { settingStore } from '../models/SettingStore'
+import ChevronDown from '~/icons/ChevronDown'
+import { settingStore } from '~/models/SettingStore'
 
 const themes: Record<string, string> = {
   _system: 'System theme',

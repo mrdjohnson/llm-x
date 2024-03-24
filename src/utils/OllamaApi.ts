@@ -3,9 +3,9 @@ import { AIMessage, HumanMessage, SystemMessage, BaseMessage } from '@langchain/
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { StringOutputParser } from '@langchain/core/output_parsers'
 
-import { IMessageModel } from '../models/MessageModel'
-import { DefaultHost, settingStore } from '../models/SettingStore'
-import { personaStore } from '../models/PersonaStore'
+import { IMessageModel } from '~/models/MessageModel'
+import { DefaultHost, settingStore } from '~/models/SettingStore'
+import { personaStore } from '~/models/PersonaStore'
 
 const createHumanMessage = (message: IMessageModel): HumanMessage => {
   if (message.image) {

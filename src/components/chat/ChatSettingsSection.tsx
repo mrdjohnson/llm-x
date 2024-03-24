@@ -5,13 +5,13 @@ import { observer } from 'mobx-react-lite'
 import { getSnapshot } from 'mobx-state-tree'
 import { useForm } from 'react-hook-form'
 
-import { AccordionSectionProps } from '../../containers/SideBar'
-import { chatStore } from '../../models/ChatStore'
+import { AccordionSectionProps } from '~/containers/SideBar'
+import { chatStore } from '~/models/ChatStore'
 
-import Check from '../../icons/Check'
-import Delete from '../../icons/Delete'
-import DocumentArrowDown from '../../icons/DocumentArrowDown'
-import Tooltip from '../Tooltip'
+import Check from '~/icons/Check'
+import Delete from '~/icons/Delete'
+import DocumentArrowDown from '~/icons/DocumentArrowDown'
+import Tooltip from '~/components/Tooltip'
 
 export const ChatSettingsSection = observer(
   ({ isOpen, onSectionClicked }: AccordionSectionProps) => {

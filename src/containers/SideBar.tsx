@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Accordion } from '@chakra-ui/react'
 
-import { ChatSettingsSection } from '../components/chat/ChatSettingsSection'
-import { ChatListSection } from '../components/chat/ChatListSection'
+import { ChatSettingsSection } from '~/components/chat/ChatSettingsSection'
+import { ChatListSection } from '~/components/chat/ChatListSection'
 
-import { chatStore } from '../models/ChatStore'
+import { chatStore } from '~/models/ChatStore'
 
 export type AccordionSectionProps = {
   isOpen: boolean

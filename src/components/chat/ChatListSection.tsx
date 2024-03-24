@@ -10,16 +10,16 @@ import { getSnapshot, applySnapshot } from 'mobx-state-tree'
 import { useRef, ChangeEvent, Fragment } from 'react'
 import _ from 'lodash'
 
-import { AccordionSectionProps } from '../../containers/SideBar'
+import { AccordionSectionProps } from '~/containers/SideBar'
 
-import DocumentArrowDown from '../../icons/DocumentArrowDown'
-import DocumentArrowUp from '../../icons/DocumentArrowUp'
-import Edit from '../../icons/Edit'
+import DocumentArrowDown from '~/icons/DocumentArrowDown'
+import DocumentArrowUp from '~/icons/DocumentArrowUp'
+import Edit from '~/icons/Edit'
 
-import { IChatModel } from '../../models/ChatModel'
-import { chatStore } from '../../models/ChatStore'
-import { personaStore } from '../../models/PersonaStore'
-import { settingStore } from '../../models/SettingStore'
+import { IChatModel } from '~/models/ChatModel'
+import { chatStore } from '~/models/ChatStore'
+import { personaStore } from '~/models/PersonaStore'
+import { settingStore } from '~/models/SettingStore'
 
 export const ChatListSection = observer(({ isOpen, onSectionClicked }: AccordionSectionProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)

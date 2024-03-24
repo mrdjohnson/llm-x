@@ -1,5 +1,5 @@
 import { ChangeEvent, PropsWithChildren, useRef } from 'react'
-import { chatStore } from '../models/ChatStore'
+import { chatStore } from '~/models/ChatStore'
 
 const AttachImageWrapper = ({ children }: PropsWithChildren) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
