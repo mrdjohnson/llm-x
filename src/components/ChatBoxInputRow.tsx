@@ -119,7 +119,7 @@ const ChatBoxInputRow = observer(
               value={messageContent}
               className="min-h-8"
             >
-              <EditablePreview className="w-full py-0 opacity-30" ref={previewAreaRef} />
+              <EditablePreview className="w-full py-0 !text-left opacity-30" ref={previewAreaRef} />
 
               <EditableTextarea
                 className="no-scrollbar my-0 max-h-[400px] w-full resize-none overflow-scroll py-0 focus:outline-none"
