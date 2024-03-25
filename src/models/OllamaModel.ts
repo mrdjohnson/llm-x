@@ -1,5 +1,4 @@
 import { types, Instance } from 'mobx-state-tree'
-import _ from 'lodash'
 import moment from 'moment'
 
 const OllamaModelDetails = types.model({

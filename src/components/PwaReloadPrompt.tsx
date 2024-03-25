@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import useMedia from 'use-media'
 import { useEffect } from 'react'

@@ -9,7 +9,7 @@ import ChevronDown from '~/icons/ChevronDown'
 import Edit from '~/icons/Edit'
 
 import { chatStore } from '~/models/ChatStore'
-import { MessageProps } from './Message'
+import { MessageProps } from '~/components/Message'
 import CopyButton from '~/components/CopyButton'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))

@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { types, Instance } from 'mobx-state-tree'
 
 const MessageErrorModel = types.model({

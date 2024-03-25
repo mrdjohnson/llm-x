@@ -9,7 +9,7 @@ import ModelRefreshButton from '~/components/ModelRefreshButton'
 
 import ModelSelector from '~/components/ModelSelector'
 import ThemeSelector from '~/components/ThemeSelector'
-import { SideBar } from './SideBar'
+import { SideBar } from '~/containers/SideBar'
 
 const Input = observer(() => {
   const [hostChanged, setHostChanged] = useState(false)
