@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
-
-import Copy from '~/icons/Copy'
-
 import hljs from 'highlight.js/lib/common'
+
+import CopyButton from '~/components/CopyButton'
 
 import 'highlight.js/styles/base16/woodland.min.css'
 
@@ -12,8 +11,6 @@ const CustomCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
   const text = children?.toString() || ''
 
   const multiLine = text.includes('\n')
-
-  const copy = () => navigator.clipboard.writeText(text)
 
   const { highlightedText, language } = useMemo(() => {
     const hightligted = hljs.highlightAuto(text)
@@ -27,12 +24,10 @@ const CustomCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
   if (multiLine) {
     return (
       <div className="indicator inline-grid w-full pr-2 pt-4">
-        <button
-          className="indicator-item z-10 text-neutral-content/30 hover:text-neutral-content "
-          onClick={copy}
-        >
-          <Copy />
-        </button>
+        <CopyButton
+          className="indicator-item !absolute z-10 text-neutral-content/30 hover:text-neutral-content"
+          text={text}
+        />
 
         <div className="absolute -left-2 -top-2 text-sm opacity-30">{language}</div>
 

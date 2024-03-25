@@ -1,17 +1,16 @@
 import React, { Suspense, useEffect, useMemo, useRef } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { PropsWithChildren, useState } from 'react'
+import { type PropsWithChildren } from 'react'
 
 import Delete from '~/icons/Delete'
-import Copy from '~/icons/Copy'
-import CopySuccess from '~/icons/CopySuccess'
 import Refresh from '~/icons/Refresh'
 import ChevronDown from '~/icons/ChevronDown'
 import Edit from '~/icons/Edit'
 
 import { chatStore } from '~/models/ChatStore'
 import { MessageProps } from './Message'
+import CopyButton from '~/components/CopyButton'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
 
@@ -38,14 +37,6 @@ const LazyMessage = ({
   const chat = chatStore.selectedChat!
 
   const containerRef = useRef<HTMLDivElement>(null)
-
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(content)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1500)
-  }
 
   const handleRegeneration = async () => {
     chatStore.selectedChat!.generateMessage(message)
@@ -166,16 +157,10 @@ const LazyMessage = ({
           {customDeleteIcon || <Delete />}
         </button>
 
-        <button
+        <CopyButton
           className="place-items-center rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
-          onClick={handleCopy}
-          title="Copy contents to clipboard"
-        >
-          <label className={'swap h-full ' + (copied && 'swap-active')}>
-            <Copy className="swap-off" />
-            <CopySuccess className="swap-on" />
-          </label>
-        </button>
+          text={content}
+        />
 
         {extraButton}
       </div>
