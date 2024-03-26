@@ -112,12 +112,15 @@ const LazyMessage = ({
         >
           <Markdown
             remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
-            className="prose flex w-full flex-wrap overflow-x-hidden overscroll-none"
+            className={
+              'prose flex w-full flex-wrap overflow-x-hidden overscroll-none' +
+              (fromBot ? '' : ' prose-p:w-full ')
+            }
             components={{
               code: DelayedCustomCodeBlock,
             }}
           >
-            {content}
+            {content.replace(/\n/g, '  \n')}
           </Markdown>
         </div>
 
