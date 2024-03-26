@@ -29,7 +29,7 @@
   }
 
   .prose {
-    @apply !max-w-full;
+    @apply prose-spacing [&>ul]:prose-spacing [&>ol]:prose-spacing !max-w-full;
   }
 
   table {
@@ -71,6 +71,10 @@
   .pause-animation {
     transition-delay: 500ms;
     animation-play-state: paused;
+  }
+
+  .prose-spacing {
+    @apply [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0 [&>*]:!my-[10px];
   }
 }
 
