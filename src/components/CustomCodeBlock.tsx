@@ -47,7 +47,7 @@ const CustomCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
         <code
           {...rest}
           dangerouslySetInnerHTML={{ __html: highlightedText }}
-          className="w-full overflow-x-scroll "
+          className="not-prose w-full overflow-x-scroll text-sm [&>*]:!text-sm"
         />
       </div>
     )
