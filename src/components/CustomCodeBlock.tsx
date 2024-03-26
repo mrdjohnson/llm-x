@@ -6,13 +6,26 @@ import CopyButton from '~/components/CopyButton'
 import 'highlight.js/styles/base16/woodland.min.css'
 
 const CustomCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
-  const { children, ...rest } = props
+  const { children, className, ...rest } = props
 
   const text = children?.toString() || ''
 
   const multiLine = text.includes('\n')
 
+  const languageOverride = useMemo(() => {
+    return className?.replace('language-', '')
+  }, [className, multiLine])
+
   const { highlightedText, language } = useMemo(() => {
+    if (languageOverride) {
+      const hightligted = hljs.highlight(languageOverride, text)
+
+      return {
+        highlightedText: hightligted.value,
+        language: languageOverride,
+      }
+    }
+
     const hightligted = hljs.highlightAuto(text)
 
     return {
