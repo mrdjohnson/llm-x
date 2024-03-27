@@ -97,7 +97,7 @@ const ModelSelectionModal = observer(() => {
         </div>
 
         <div className="modal-box-content no-scrollbar relative mb-3 max-h-[500px] overflow-y-auto pt-0">
-          <table className="table table-zebra mt-0 border-separate border-spacing-y-2 pt-0">
+          <table className="table table-zebra -mt-2 border-separate border-spacing-y-2 pt-0">
             <thead className="sticky top-0 z-20 bg-base-200">
               <tr>
                 {makeHeader('Name', SortType.Name)}
