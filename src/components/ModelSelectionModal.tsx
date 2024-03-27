@@ -102,10 +102,6 @@ const ModelSelectionModal = observer(() => {
               <tr>
                 {makeHeader('Name', SortType.Name)}
 
-                {makeHeader('Size', SortType.Size)}
-
-                {makeHeader('Updated', SortType.Updated)}
-
                 {makeHeader('Params', SortType.Params)}
 
                 <th className="table-cell w-fit">
@@ -123,6 +119,10 @@ const ModelSelectionModal = observer(() => {
                     {makeChevron(SortType.Image)}
                   </span>
                 </th>
+
+                {makeHeader('Size', SortType.Size)}
+
+                {makeHeader('Updated', SortType.Updated)}
               </tr>
               <tr />
             </thead>
@@ -141,8 +141,6 @@ const ModelSelectionModal = observer(() => {
                   key={model.name}
                 >
                   <td>{model.name}</td>
-                  <td>{model.gbSize}</td>
-                  <td>{model.timeAgo}</td>
                   <td>{model.details.parameterSize}</td>
 
                   <td>
@@ -153,6 +151,9 @@ const ModelSelectionModal = observer(() => {
                       data-tip="Supports Images?"
                     />
                   </td>
+
+                  <td>{model.gbSize}</td>
+                  <td className=" opacity-65">{model.timeAgo}</td>
                 </tr>
               ))}
             </tbody>
