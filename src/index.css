@@ -57,6 +57,10 @@
     @apply underline-offset-2;
   }
 
+  .btn {
+    @apply !shadow-none;
+  }
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
