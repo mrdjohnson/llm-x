@@ -20,6 +20,8 @@ import { personaStore } from '~/models/PersonaStore'
 import { chatStore } from '~/models/ChatStore'
 import type { IMessageModel } from '~/models/MessageModel'
 
+import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
+
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
     return id === settingStore.theme
@@ -385,13 +387,15 @@ const OmniBar = () => {
 
   return (
     <KBarPortal>
-      <KBarPositioner className="container z-50 mx-auto">
-        <KBarAnimator className="inline-table w-full transform-none overflow-hidden rounded-lg border-2 border-base-content/30 bg-base-100 p-2 shadow-xl md:mx-2 md:max-w-[750px]">
-          <KBarSearch className=" input w-full rounded-none border-0 border-b border-base-content/30 px-4 pb-2 text-base-content focus:outline-none" />
+      <DaisyUiThemeProvider>
+        <KBarPositioner className="container z-50 mx-auto">
+          <KBarAnimator className="inline-table w-full transform-none overflow-hidden rounded-lg border-2 border-base-content/30 bg-base-100 p-2 shadow-xl md:mx-2 md:max-w-[750px]">
+            <KBarSearch className=" input w-full rounded-none border-0 border-b border-base-content/30 px-4 pb-2 text-base-content focus:outline-none" />
 
-          <RenderResults />
-        </KBarAnimator>
-      </KBarPositioner>
+            <RenderResults />
+          </KBarAnimator>
+        </KBarPositioner>
+      </DaisyUiThemeProvider>
     </KBarPortal>
   )
 }
