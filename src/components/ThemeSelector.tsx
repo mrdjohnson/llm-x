@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
-import useMedia from 'use-media'
-import { useMemo } from 'react'
+import { useState } from 'react'
 
 import ChevronDown from '~/icons/ChevronDown'
 import { settingStore } from '~/models/SettingStore'
@@ -14,14 +13,8 @@ const themes: Record<string, string> = {
 }
 
 const ThemeSelector = observer(() => {
+  const [isOpen, setIsOpen] = useState(false)
   const selectedTheme = settingStore.theme
-  const prefersDarkMode = useMedia('(prefers-color-scheme: dark)')
-
-  const theme = useMemo(() => {
-    if (selectedTheme !== '_system') return selectedTheme
-
-    return prefersDarkMode ? 'dark' : 'garden'
-  }, [selectedTheme, prefersDarkMode])
 
   return (
     <div className="form-control">
@@ -29,27 +22,38 @@ const ThemeSelector = observer(() => {
         <span className="label-text text-sm">Theme:</span>
       </div>
 
-      <div className="dropdown ">
-        <div tabIndex={0} role="button" className="btn btn-active w-full">
+      <div
+        className={'dropdown dropdown-top ' + (isOpen ? ' dropdown-open' : '')}
+        onFocus={() => setIsOpen(true)}
+        onBlur={() => setIsOpen(false)}
+      >
+        <button role="button" className="btn btn-active w-full">
           {themes[selectedTheme]}
-          <ChevronDown />
-        </div>
 
-        <ul
-          tabIndex={0}
-          className="dropdown-content z-[1] mt-2 w-52 rounded-box bg-base-300 p-2 shadow-2xl"
-        >
+          <div
+            className={
+              'transition-transform duration-200 ease-in-out' + (isOpen ? ' rotate-180 ' : '')
+            }
+          >
+            <ChevronDown />
+          </div>
+        </button>
+
+        <ul className="dropdown-content z-[1] mb-1 w-full rounded-box bg-base-300 p-2 shadow-2xl">
+          <label className="text-sm text-base-content/60">Select theme</label>
+
           {_.map(themes, (label, value) => (
             <li key={value}>
-              <input
-                type="radio"
-                name="theme-dropdown"
-                className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
+              <button
+                className={
+                  'btn btn-ghost btn-sm btn-block justify-start' +
+                  (selectedTheme === value ? ' btn-active' : '')
+                }
                 aria-label={label}
-                value={theme}
-                checked={selectedTheme === value}
-                onChange={() => settingStore.setTheme(value)}
-              />
+                onClick={() => settingStore.setTheme(value)}
+              >
+                {label}
+              </button>
             </li>
           ))}
         </ul>

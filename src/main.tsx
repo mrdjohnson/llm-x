@@ -4,15 +4,18 @@ import { ChakraBaseProvider } from '@chakra-ui/react'
 import { KBarProvider } from 'kbar'
 
 import App from '~/App'
+import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 
 import '~/index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ChakraBaseProvider>
-      <KBarProvider>
-        <App />
-      </KBarProvider>
-    </ChakraBaseProvider>
+    <DaisyUiThemeProvider>
+      <ChakraBaseProvider>
+        <KBarProvider>
+          <App />
+        </KBarProvider>
+      </ChakraBaseProvider>
+    </DaisyUiThemeProvider>
   </React.StrictMode>,
 )
