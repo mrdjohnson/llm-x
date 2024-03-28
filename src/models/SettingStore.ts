@@ -1,14 +1,12 @@
-import { RefObject } from 'react'
 import { types, cast, flow } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
 import camelcaseKeys from 'camelcase-keys'
 
 import { toastStore } from '~/models/ToastStore'
 import { IOllamaModel, OllamaModel } from '~/models/OllamaModel'
+import { type SettingPanelOptionsType } from '~/features/settings/settingsPanels'
 
 export const DefaultHost = 'http://localhost:11434'
-
-const min_3 = 3 * 60 * 1000
 
 export const SettingStore = types
   .model({
@@ -18,34 +16,20 @@ export const SettingStore = types
     theme: types.optional(types.string, '_system'),
     pwaNeedsUpdate: types.optional(types.boolean, false),
     lastHelpModalNotificationTime: types.optional(types.number, () => Date.now()),
+    _settingsPanelName: types.maybe(types.string),
     _isServerConnected: types.maybe(types.boolean),
     _funTitle: types.maybe(types.string),
   })
   .actions(self => {
     let updateServiceWorker: undefined | (() => void)
-    let helpModalRef: RefObject<HTMLDialogElement>
-    let modelSelectionModalRef: RefObject<HTMLDialogElement>
 
     return {
-      setModelSelectionModalRef(nextModelSelectionModalRef: RefObject<HTMLDialogElement>) {
-        modelSelectionModalRef = nextModelSelectionModalRef
+      openSettingsModal(panelName: SettingPanelOptionsType | 'initial' = 'initial') {
+        self._settingsPanelName = panelName
       },
 
-      openModelSelectionModal() {
-        modelSelectionModalRef.current?.showModal()
-      },
-
-      setHelpModalRef(nextHelpModalRef: RefObject<HTMLDialogElement>) {
-        helpModalRef = nextHelpModalRef
-      },
-
-      openUpdateModal({ fromUser }: { fromUser: boolean }) {
-        const now = Date.now()
-
-        if (fromUser || now - self.lastHelpModalNotificationTime > min_3) {
-          helpModalRef.current?.showModal()
-          self.lastHelpModalNotificationTime = now
-        }
+      closeSettingsModal() {
+        self._settingsPanelName = undefined
       },
 
       selectModel(name: string) {
@@ -110,12 +94,16 @@ export const SettingStore = types
     get funTitle() {
       return self._funTitle
     },
+
+    get settingsPanelName() {
+      return self._settingsPanelName as SettingPanelOptionsType | undefined
+    },
   }))
 
 export const settingStore = SettingStore.create()
 
 persist('settings', settingStore, {
-  blacklist: ['models', 'pwaNeedsUpdate', '_isServerConnected', '_funTitle'],
+  blacklist: ['models', 'pwaNeedsUpdate', '_isServerConnected', '_funTitle', '_settingsPanelName'],
 }).then(() => {
   console.log('updated store')
   settingStore.updateModels()

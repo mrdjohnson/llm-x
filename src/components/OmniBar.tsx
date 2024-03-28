@@ -383,6 +383,14 @@ const OmniBar = () => {
       priority: Priority.LOW,
       perform: settingStore.updateModels,
     }),
+    createAction({
+      name: 'Open settings',
+      keywords: 'settings open',
+      section: 'Actions',
+      shortcut: [','],
+      priority: Priority.LOW,
+      perform: () => settingStore.openSettingsModal('general'),
+    }),
   ])
 
   return (

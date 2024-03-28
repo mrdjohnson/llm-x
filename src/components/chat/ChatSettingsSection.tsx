@@ -72,7 +72,7 @@ export const ChatSettingsSection = observer(
 
         <AccordionPanel flex={1} className=" mt-2 flex flex-1 flex-col text-base-content">
           <div className="no-scrollbar flex h-full flex-1 flex-col overflow-y-scroll rounded-md">
-            <div className="flex flex-col gap-2 rounded-box bg-base-300 text-base-content">
+            <div className="flex flex-1 flex-col gap-2 self-stretch rounded-box bg-base-300 text-base-content">
               <form className="flex w-full flex-row gap-2" onSubmit={handleFormSubmit}>
                 <div className="form-control w-full">
                   <div className="label pb-1 pt-0">

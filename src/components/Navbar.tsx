@@ -11,6 +11,7 @@ import Warning from '~/icons/Warning'
 import Bars3 from '~/icons/Bars3'
 import CloudDown from '~/icons/CloudDown'
 import Search from '~/icons/Search'
+import AppSettings from '~/icons/AppSettings'
 
 const Navbar = observer(() => {
   const { query } = useKBar()
@@ -24,10 +25,10 @@ const Navbar = observer(() => {
   }
 
   return (
-    <nav className="navbar mb-2 flex justify-between rounded-md bg-base-300">
-      <div className="ml-2 flex-1 text-xl">
+    <nav className="navbar mb-2 flex h-auto min-h-0 justify-between rounded-md bg-base-300">
+      <div className="ml-2 flex-1 text-sm md:text-xl">
         <h1 className="hidden">LLM-X</h1>
-        <FunTitle className="text-xl" />
+        <FunTitle className="md:text-xl" />
       </div>
 
       <div className="hidden flex-1 flex-row gap-2 md:flex">
@@ -38,7 +39,7 @@ const Navbar = observer(() => {
       <div className="flex flex-1 flex-row justify-end gap-2">
         {settingStore.pwaNeedsUpdate && (
           <button
-            className="btn btn-square btn-ghost"
+            className="btn btn-square btn-ghost btn-sm md:btn-md"
             onClick={handlePwaUpdate}
             title="Update from cloud"
           >
@@ -46,13 +47,25 @@ const Navbar = observer(() => {
           </button>
         )}
 
-        <button className="btn btn-square btn-ghost" onClick={query.toggle}>
+        <button className="btn btn-square btn-ghost btn-md hidden md:flex" onClick={query.toggle}>
           <Search />
         </button>
 
-        <label htmlFor="app-drawer" className="btn btn-square btn-ghost drawer-button ">
+        <label
+          htmlFor="app-drawer"
+          className="btn btn-square btn-ghost btn-sm md:btn-md "
+          onClick={() => settingStore.openSettingsModal()}
+        >
           <div className="indicator p-1">
-            <Bars3 />
+            <div className="swap lg:swap-active">
+              <div className="swap-on align-middle">
+                <AppSettings />
+              </div>
+
+              <div className="swap-off">
+                <Bars3 />
+              </div>
+            </div>
 
             {noServer && (
               <span className="indicator-item">

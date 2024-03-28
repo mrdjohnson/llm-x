@@ -33,10 +33,10 @@ const ChatBoxPrompt = observer(() => {
     <div className="hero my-auto">
       <div className="hero-content w-fit text-center">
         <div>
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-2xl font-bold md:text-4xl">
             {'Getting started with '}
 
-            <FunTitle className="text-4xl font-bold" />
+            <FunTitle className="text-2xl font-bold md:text-4xl" />
           </h1>
 
           <div className="text-2xl">
@@ -47,7 +47,7 @@ const ChatBoxPrompt = observer(() => {
                 {': Learn more'}
                 <button
                   className="link decoration-primary"
-                  onClick={() => settingStore.openUpdateModal({ fromUser: true })}
+                  onClick={() => settingStore.openSettingsModal('connection')}
                 >
                   here
                 </button>

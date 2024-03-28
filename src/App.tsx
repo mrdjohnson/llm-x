@@ -1,14 +1,11 @@
 import Dropzone from '~/containers/Dropzone'
 import { SideBar } from '~/containers/SideBar'
-import Drawer from '~/containers/Drawer'
 import ChatBox from '~/containers/ChatBox'
+import SettingsModal from '~/features/settings/containers/SettingsModal'
 
 import Navbar from '~/components/Navbar'
-import HelpModal from '~/components/HelpModal'
 import ToastCenter from '~/components/ToastCenter'
 import PwaReloadPrompt from '~/components/PwaReloadPrompt'
-import ModelSelectionModal from '~/components/ModelSelectionModal'
-import PersonaSelectionModal from '~/components/PersonaSelectionModal'
 import OmniBar from '~/components/OmniBar'
 
 function App() {
@@ -17,13 +14,7 @@ function App() {
       <div className="container drawer drawer-end mx-auto flex max-h-screen flex-col place-self-center p-3 text-base-content">
         <Navbar />
 
-        <Drawer />
-
-        <HelpModal />
-
-        <ModelSelectionModal />
-
-        <PersonaSelectionModal />
+        <SettingsModal />
 
         <ToastCenter />
 
@@ -32,7 +23,7 @@ function App() {
         <OmniBar />
 
         <section className="drawer-content flex h-screen max-h-full w-full flex-grow flex-row gap-4 overflow-hidden text-xl">
-          <aside className="hidden h-full lg:block" role="complementary">
+          <aside className="hidden h-full w-[260px] min-w-[260px] lg:block" role="complementary">
             <SideBar />
           </aside>
 

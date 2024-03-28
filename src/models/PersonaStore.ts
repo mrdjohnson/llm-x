@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import { Instance, cast, detach, types } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
-import { RefObject } from 'react'
 
 export const PersonaModel = types.model({
   id: types.identifierNumber,
@@ -18,19 +17,9 @@ const PersonaStore = types
     personaToEdit: types.safeReference(PersonaModel),
   })
   .actions(self => {
-    let personaSelectionModalRef: RefObject<HTMLDialogElement>
-
     return {
       afterCreate() {
         self.personaToEdit = undefined
-      },
-
-      setPersonaSelectionModalRef(nextPersonaSelectionModalRef: RefObject<HTMLDialogElement>) {
-        personaSelectionModalRef = nextPersonaSelectionModalRef
-      },
-
-      openSelectionModal() {
-        personaSelectionModalRef.current?.showModal?.()
       },
 
       createPersona(name: string, description: string) {

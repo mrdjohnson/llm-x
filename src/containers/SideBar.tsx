@@ -26,7 +26,7 @@ export const SideBar = observer(() => {
 
   return (
     <Accordion
-      className="flex h-auto w-[260px] min-w-[260px] flex-1 flex-col flex-nowrap gap-2 rounded-md bg-base-300 p-2 lg:h-full "
+      className="flex h-full flex-1 flex-col flex-nowrap gap-2 self-stretch rounded-md bg-base-300 p-2"
       onChange={(index: number) => setOpenIndex(index)}
       index={openIndex}
     >

@@ -161,54 +161,29 @@ const PersonaForm = observer(() => {
   )
 })
 
-const PersonaSelectionModal = observer(() => {
-  const { selectedPersona, personas, personaToEdit } = personaStore
-
-  const modalRef = useRef<HTMLDialogElement>(null)
-
-  useEffect(() => {
-    personaStore.setPersonaSelectionModalRef(modalRef)
-  }, [])
+export const PersonaPanel = observer(() => {
+  const { personas, selectedPersona } = personaStore
 
   return (
-    <dialog ref={modalRef} id="persona-modal" className="modal modal-bottom">
-      <div className="modal-box-container relative mb-16 overflow-hidden rounded-md p-4">
-        <div
-          className="btn btn-ghost btn-sm absolute right-1 top-1 z-30 !text-lg opacity-70 md:btn-md"
-          onClick={() => modalRef.current?.close()}
-        >
-          x
-        </div>
+    <div className="no-scrollbar flex flex-col gap-2">
+      <button
+        className={'btn w-full ' + (selectedPersona ? '' : ' btn-primary')}
+        onClick={() => personaStore.setSelectedPersona(undefined)}
+      >
+        Default (No persona)
+      </button>
 
-        <div className="pb-3 text-xl">Select a persona for the bot:</div>
+      {personas.map(persona => (
+        <PersonaItem
+          key={persona.id}
+          persona={persona}
+          isSelectedPersona={persona === selectedPersona}
+        />
+      ))}
 
-        <button
-          className={'btn w-full ' + (selectedPersona ? '' : ' btn-primary')}
-          onClick={() => personaStore.setSelectedPersona(undefined)}
-        >
-          Default (No persona)
-        </button>
-
-        <div className="no-scrollbar mt-2 flex max-h-[500px] flex-col flex-nowrap gap-2 overflow-y-scroll">
-          {personas.map(persona => (
-            <PersonaItem
-              persona={persona}
-              shouldDimPersona={personaToEdit && personaToEdit !== persona}
-              isSelectedPersona={selectedPersona === persona}
-              key={persona.id}
-            />
-          ))}
-
-          <PersonaForm />
-        </div>
-      </div>
-
-      <form method="dialog" className="modal-backdrop">
-        {/* close button */}
-        <button onClick={() => personaStore.setPersonaToEdit(undefined)} />
-      </form>
-    </dialog>
+      <PersonaForm />
+    </div>
   )
 })
 
-export default PersonaSelectionModal
+export default PersonaPanel
