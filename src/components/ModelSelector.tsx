@@ -26,7 +26,7 @@ const ModelSelector = observer(() => {
       role="button"
       className="btn btn-active flex-1"
       disabled={noServer}
-      onClick={() => settingStore.openModelSelectionModal()}
+      onClick={() => settingStore.openSettingsModal('models')}
     >
       {label}
       <ChevronDown />

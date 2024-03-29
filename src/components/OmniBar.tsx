@@ -159,7 +159,7 @@ const useRegisterModelActions = () => {
           keywords: 'model modal open select',
           section: 'Actions',
           priority: Priority.LOW,
-          perform: settingStore.openModelSelectionModal,
+          perform: () => settingStore.openSettingsModal('models'),
         })
       }
 

@@ -6,7 +6,6 @@ import SettingsModal from '~/features/settings/containers/SettingsModal'
 import Navbar from '~/components/Navbar'
 import ToastCenter from '~/components/ToastCenter'
 import PwaReloadPrompt from '~/components/PwaReloadPrompt'
-import ModelSelectionModal from '~/components/ModelSelectionModal'
 import OmniBar from '~/components/OmniBar'
 
 function App() {
@@ -16,8 +15,6 @@ function App() {
         <Navbar />
 
         <SettingsModal />
-
-        <ModelSelectionModal />
 
         <ToastCenter />
 

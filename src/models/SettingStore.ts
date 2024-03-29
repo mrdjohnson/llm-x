@@ -1,4 +1,3 @@
-import { RefObject } from 'react'
 import { types, cast, flow } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
 import camelcaseKeys from 'camelcase-keys'
@@ -23,7 +22,6 @@ export const SettingStore = types
   })
   .actions(self => {
     let updateServiceWorker: undefined | (() => void)
-    let modelSelectionModalRef: RefObject<HTMLDialogElement>
 
     return {
       openSettingsModal(panelName: SettingPanelOptionsType | 'initial' = 'initial') {
@@ -32,14 +30,6 @@ export const SettingStore = types
 
       closeSettingsModal() {
         self._settingsPanelName = undefined
-      },
-
-      setModelSelectionModalRef(nextModelSelectionModalRef: RefObject<HTMLDialogElement>) {
-        modelSelectionModalRef = nextModelSelectionModalRef
-      },
-
-      openModelSelectionModal() {
-        modelSelectionModalRef.current?.showModal()
       },
 
       selectModel(name: string) {
