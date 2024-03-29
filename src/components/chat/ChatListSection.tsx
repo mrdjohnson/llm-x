@@ -112,7 +112,7 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
         </div>
       ) : (
         <AccordionButton onClick={onSectionClicked} className="btn btn-neutral inline-flex w-full">
-          Chat List <AccordionIcon />
+          See Chat List <AccordionIcon />
         </AccordionButton>
       )}
 
