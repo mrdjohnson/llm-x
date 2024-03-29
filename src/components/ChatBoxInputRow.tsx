@@ -159,7 +159,7 @@ const ChatBoxInputRow = observer(
               type="button"
               className="btn btn-active rounded-none rounded-bl-md"
               disabled={inputDisabled}
-              onClick={() => personaStore.openSelectionModal()}
+              onClick={() => settingStore.openSettingsModal('personas')}
             >
               {personaStore.selectedPersona?.name || 'No personas selected'}
               <ChevronDown />

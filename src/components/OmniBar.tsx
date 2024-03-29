@@ -200,7 +200,7 @@ const useRegisterPersonaActions = () => {
           keywords: 'persona open select',
           section: 'Actions',
           priority: Priority.LOW,
-          perform: personaStore.openSelectionModal,
+          perform: () => settingStore.openSettingsModal('personas'),
         },
       ]
 

@@ -87,7 +87,7 @@ const ChatBoxPrompt = observer(() => {
                 <ToolTip label="aka System prompt: How the bot should respond">
                   <button
                     className="link ml-1 decoration-secondary"
-                    onClick={personaStore.openSelectionModal}
+                    onClick={() => settingStore.openSettingsModal('personas')}
                   >
                     Persona
                   </button>

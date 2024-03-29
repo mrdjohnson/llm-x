@@ -7,7 +7,6 @@ import Navbar from '~/components/Navbar'
 import ToastCenter from '~/components/ToastCenter'
 import PwaReloadPrompt from '~/components/PwaReloadPrompt'
 import ModelSelectionModal from '~/components/ModelSelectionModal'
-import PersonaSelectionModal from '~/components/PersonaSelectionModal'
 import OmniBar from '~/components/OmniBar'
 
 function App() {
@@ -19,8 +18,6 @@ function App() {
         <SettingsModal />
 
         <ModelSelectionModal />
-
-        <PersonaSelectionModal />
 
         <ToastCenter />
 
