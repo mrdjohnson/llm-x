@@ -4,7 +4,6 @@ import ChatBox from '~/containers/ChatBox'
 import SettingsModal from '~/features/settings/containers/SettingsModal'
 
 import Navbar from '~/components/Navbar'
-import HelpModal from '~/components/HelpModal'
 import ToastCenter from '~/components/ToastCenter'
 import PwaReloadPrompt from '~/components/PwaReloadPrompt'
 import ModelSelectionModal from '~/components/ModelSelectionModal'
@@ -18,8 +17,6 @@ function App() {
         <Navbar />
 
         <SettingsModal />
-
-        <HelpModal />
 
         <ModelSelectionModal />
 

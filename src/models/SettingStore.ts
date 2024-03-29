@@ -9,8 +9,6 @@ import { type SettingPanelOptionsType } from '~/features/settings/settingsPanels
 
 export const DefaultHost = 'http://localhost:11434'
 
-const min_3 = 3 * 60 * 1000
-
 export const SettingStore = types
   .model({
     host: types.maybe(types.string),
@@ -25,7 +23,6 @@ export const SettingStore = types
   })
   .actions(self => {
     let updateServiceWorker: undefined | (() => void)
-    let helpModalRef: RefObject<HTMLDialogElement>
     let modelSelectionModalRef: RefObject<HTMLDialogElement>
 
     return {
@@ -43,19 +40,6 @@ export const SettingStore = types
 
       openModelSelectionModal() {
         modelSelectionModalRef.current?.showModal()
-      },
-
-      setHelpModalRef(nextHelpModalRef: RefObject<HTMLDialogElement>) {
-        helpModalRef = nextHelpModalRef
-      },
-
-      openUpdateModal({ fromUser }: { fromUser: boolean }) {
-        const now = Date.now()
-
-        if (fromUser || now - self.lastHelpModalNotificationTime > min_3) {
-          helpModalRef.current?.showModal()
-          self.lastHelpModalNotificationTime = now
-        }
       },
 
       selectModel(name: string) {

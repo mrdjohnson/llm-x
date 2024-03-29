@@ -34,7 +34,7 @@ const HostInput = observer(() => {
           Host:
           <div
             className="cursor-pointer"
-            onClick={() => settingStore.openUpdateModal({ fromUser: true })}
+            onClick={() => settingStore.openSettingsModal('connection')}
           >
             <Question />
           </div>
