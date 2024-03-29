@@ -11,6 +11,7 @@ export const DefaultHost = 'http://localhost:11434'
 export const SettingStore = types
   .model({
     host: types.maybe(types.string),
+    keepAliveTime: types.optional(types.number, 20),
     models: types.optional(types.array(OllamaModel), []),
     selectedModelName: types.maybeNull(types.string),
     theme: types.optional(types.string, '_system'),
@@ -38,6 +39,10 @@ export const SettingStore = types
 
       setHost(host: string) {
         self.host = host
+      },
+
+      setKeepAliveTime(keepAliveTime: number) {
+        self.keepAliveTime = keepAliveTime
       },
 
       setTheme(theme: string) {
