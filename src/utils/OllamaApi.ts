@@ -65,6 +65,7 @@ export class OllmaApi {
       baseUrl: host,
       model,
       keepAlive: settingStore.keepAliveTime + 'm',
+      temperature: settingStore.temperature,
     }).bind({ signal: OllmaApi.abortController.signal })
 
     const stream = await ChatPromptTemplate.fromMessages(messages)

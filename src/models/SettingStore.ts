@@ -12,6 +12,7 @@ export const SettingStore = types
   .model({
     host: types.maybe(types.string),
     keepAliveTime: types.optional(types.number, 20),
+    temperature: types.optional(types.number, 0.8),
     models: types.optional(types.array(OllamaModel), []),
     selectedModelName: types.maybeNull(types.string),
     theme: types.optional(types.string, '_system'),
@@ -43,6 +44,10 @@ export const SettingStore = types
 
       setKeepAliveTime(keepAliveTime: number) {
         self.keepAliveTime = keepAliveTime
+      },
+
+      setTemperature(temperature: number) {
+        self.temperature = temperature
       },
 
       setTheme(theme: string) {
