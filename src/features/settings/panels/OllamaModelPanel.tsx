@@ -81,8 +81,8 @@ const OllamaModelPanel = observer(() => {
   }
 
   return (
-    <div className="w-full">
-      <table className="table table-zebra -mt-2 border-separate border-spacing-y-2 pt-0">
+    <div className="flex w-full flex-col">
+      <table className="table table-zebra -mt-2 mb-4 border-separate border-spacing-y-2 pt-0">
         <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
           <tr>
             {makeHeader('Name', SortType.Name)}
@@ -146,7 +146,7 @@ const OllamaModelPanel = observer(() => {
 
       <a
         href="https://ollama.com/library"
-        className="btn btn-outline btn-neutral btn-sm mx-auto mt-4 flex w-fit flex-row gap-2 px-4"
+        className="btn btn-outline btn-neutral btn-sm mx-auto mt-auto flex w-fit flex-row gap-2 px-4"
         target="__blank"
         title="Open Ollama Library in new tab"
       >
