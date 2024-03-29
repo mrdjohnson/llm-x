@@ -5,6 +5,7 @@ import camelcaseKeys from 'camelcase-keys'
 
 import { toastStore } from '~/models/ToastStore'
 import { IOllamaModel, OllamaModel } from '~/models/OllamaModel'
+import { type SettingPanelOptionsType } from '~/features/settings/settingsPanels'
 
 export const DefaultHost = 'http://localhost:11434'
 
@@ -18,6 +19,7 @@ export const SettingStore = types
     theme: types.optional(types.string, '_system'),
     pwaNeedsUpdate: types.optional(types.boolean, false),
     lastHelpModalNotificationTime: types.optional(types.number, () => Date.now()),
+    _settingsPanelName: types.maybe(types.string),
     _isServerConnected: types.maybe(types.boolean),
     _funTitle: types.maybe(types.string),
   })
@@ -27,6 +29,14 @@ export const SettingStore = types
     let modelSelectionModalRef: RefObject<HTMLDialogElement>
 
     return {
+      openSettingsModal(panelName: SettingPanelOptionsType | 'initial' = 'initial') {
+        self._settingsPanelName = panelName
+      },
+
+      closeSettingsModal() {
+        self._settingsPanelName = undefined
+      },
+
       setModelSelectionModalRef(nextModelSelectionModalRef: RefObject<HTMLDialogElement>) {
         modelSelectionModalRef = nextModelSelectionModalRef
       },
@@ -110,12 +120,16 @@ export const SettingStore = types
     get funTitle() {
       return self._funTitle
     },
+
+    get settingsPanelName() {
+      return self._settingsPanelName as SettingPanelOptionsType | undefined
+    },
   }))
 
 export const settingStore = SettingStore.create()
 
 persist('settings', settingStore, {
-  blacklist: ['models', 'pwaNeedsUpdate', '_isServerConnected', '_funTitle'],
+  blacklist: ['models', 'pwaNeedsUpdate', '_isServerConnected', '_funTitle', '_settingsPanelName'],
 }).then(() => {
   console.log('updated store')
   settingStore.updateModels()
