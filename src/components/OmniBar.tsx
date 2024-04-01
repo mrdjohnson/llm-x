@@ -118,6 +118,14 @@ const useRegisterThemeActions = () => {
       parent: 'theme',
     },
     {
+      id: '_system',
+      name: 'System',
+      keywords: 'system theme',
+      section: 'Theme',
+      perform: () => settingStore.setTheme('_system'),
+      parent: 'theme',
+    },
+    {
       id: 'garden',
       name: 'Light',
       keywords: 'light garden theme',
