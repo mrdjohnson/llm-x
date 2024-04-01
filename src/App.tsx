@@ -7,6 +7,7 @@ import Navbar from '~/components/Navbar'
 import ToastCenter from '~/components/ToastCenter'
 import PwaReloadPrompt from '~/components/PwaReloadPrompt'
 import OmniBar from '~/components/OmniBar'
+import Lightbox from '~/components/lightbox/Lightbox'
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
         <Navbar />
 
         <SettingsModal />
+
+        <Lightbox />
 
         <ToastCenter />
 

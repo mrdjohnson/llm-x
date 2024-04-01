@@ -76,7 +76,7 @@ const ChatBoxInputRow = observer(
     }
 
     const noServer = !settingStore.selectedModel
-    const inputDisabled = chatStore.isGettingData || noServer
+    const inputDisabled = chatStore.isGettingData || noServer || !!chat.lightboxMessage
 
     useEffect(() => {
       if (!textareaRef.current) return

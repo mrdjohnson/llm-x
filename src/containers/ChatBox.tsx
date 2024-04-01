@@ -55,6 +55,7 @@ const ChatBox = observer(() => {
   const isEditingMessage = chat.isEditingMessage
   const incomingUniqId = chat.incomingMessage?.uniqId
   const outgoingUniqId = chat.messageToEdit?.uniqId
+  const lightboxMessageId = chat.lightboxMessage?.uniqId
 
   const renderMessage = (message: IMessageModel) => {
     if (message.uniqId === incomingUniqId) return <IncomingMessage key={message.content.length} />
@@ -70,6 +71,7 @@ const ChatBox = observer(() => {
         disableRegeneration={disableRegeneration}
         disableEditing={isEditingMessage}
         shouldDimMessage={isEditingMessage}
+        shouldScrollIntoView={message.uniqId === lightboxMessageId}
       />
     )
   }

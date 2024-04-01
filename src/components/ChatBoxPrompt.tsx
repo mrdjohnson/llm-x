@@ -43,13 +43,12 @@ const ChatBoxPrompt = observer(() => {
             <ul className="steps steps-vertical list-inside list-disc py-6 text-left *:text-lg [&_a]:text-lg [&_span]:text-lg">
               <Step isCompleted={settingStore.isServerConnected}>
                 {'Tell Ollama that '}
-                <span className="text-primary">we're cool</span>
-                {': Learn more'}
+                <span className="text-primary">we're cool:</span>
                 <button
                   className="link decoration-primary"
                   onClick={() => settingStore.openSettingsModal('connection')}
                 >
-                  here
+                  How to connect
                 </button>
               </Step>
 

@@ -18,6 +18,7 @@ export const ChatModel = types
     _incomingMessageAbortedByUser: types.maybe(types.boolean),
     previewImage: types.maybe(types.string),
     messageToEdit: types.safeReference(MessageModel), // user message to edit
+    _lightboxMessage: types.safeReference(MessageModel),
   })
   .actions(self => ({
     afterCreate() {
@@ -28,6 +29,7 @@ export const ChatModel = types
       // do not persist the draft information
       self.previewImage = undefined
       self.messageToEdit = undefined
+      self._lightboxMessage = undefined
     },
 
     beforeDestroy() {
@@ -63,6 +65,14 @@ export const ChatModel = types
         console.error(e)
       }
     }),
+
+    setLightboxMessage(lightboxMessage: IMessageModel) {
+      self._lightboxMessage = lightboxMessage
+    },
+
+    closeLightbox() {
+      self._lightboxMessage = undefined
+    },
 
     setName(name?: string) {
       if (name) {
@@ -248,6 +258,39 @@ export const ChatModel = types
       }
 
       return 'Older'
+    },
+
+    get lightboxMessage() {
+      return self._lightboxMessage
+    },
+
+    get lightboxMessagesWithPrompts() {
+      if (!self._lightboxMessage) return []
+
+      const messages: Array<{ message: IMessageModel; userPrompt?: string }> = []
+
+      let userPrompt: string | undefined
+
+      self.messages.forEach(message => {
+        if (message.fromBot === false) {
+          userPrompt = message.content
+        }
+
+        if (message.image) {
+          messages.push({ message, userPrompt })
+        }
+      })
+
+      return messages
+    },
+
+    get lightboxMessageIndex() {
+      if (!self._lightboxMessage) return -1
+
+      return _.findIndex(
+        this.lightboxMessagesWithPrompts,
+        ({ message }) => message.uniqId === self._lightboxMessage!.uniqId,
+      )
     },
   }))
 

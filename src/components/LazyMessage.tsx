@@ -93,8 +93,9 @@ const LazyMessage = ({
     >
       {image && (
         <img
-          className="mb-2 h-56 max-w-56 place-self-center rounded-md object-contain"
+          className="mb-2 h-56 max-w-56 cursor-pointer place-self-center rounded-md object-contain"
           src={image}
+          onClick={() => chat.setLightboxMessage(message)}
         />
       )}
 

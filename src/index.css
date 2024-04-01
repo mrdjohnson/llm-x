@@ -93,3 +93,21 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.yarl__slide {
+  @apply cursor-pointer;
+}
+
+.yarl__slide_image,
+.yarl__slide_captions_container {
+  @apply cursor-default;
+}
+
+.yarl__container,
+.yarl__slide {
+  @apply !bg-black !bg-opacity-35;
+}
+
+.yarl__container {
+  @apply backdrop-blur-sm;
+}
