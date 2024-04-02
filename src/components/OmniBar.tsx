@@ -420,7 +420,7 @@ const OmniBar = () => {
       name: 'Open settings',
       keywords: 'settings open',
       section: 'Actions',
-      shortcut: [','],
+      shortcut: ['/'],
       priority: Priority.LOW,
       perform: () => settingStore.openSettingsModal('general'),
     }),
