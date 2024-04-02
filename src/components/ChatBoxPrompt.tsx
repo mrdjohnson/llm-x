@@ -52,6 +52,17 @@ const ChatBoxPrompt = observer(() => {
                 </button>
               </Step>
 
+              <Step type="primary" isCompleted={settingStore.isA1111ServerConnected}>
+                {'Befriend AUTOMATIC1111 for '}
+                <span className="font-semibold text-primary">image generation:</span>
+                <button
+                  className="link decoration-primary"
+                  onClick={() => settingStore.openSettingsModal('connection')}
+                >
+                  How to connect
+                </button>
+              </Step>
+
               <Step isCompleted={!_.isEmpty(settingStore.models)}>
                 {'Download a model from ollama:'}
                 <a
@@ -62,6 +73,21 @@ const ChatBoxPrompt = observer(() => {
                 >
                   Ollama Library
                 </a>
+              </Step>
+
+              <Step type="secondary" isCompleted={!_.isEmpty(personaStore.personas)}>
+                {'Create and Select a'}
+
+                <ToolTip label="aka System prompt: How the bot should respond" placement="top">
+                  <button
+                    className="link ml-1 decoration-secondary"
+                    onClick={() => settingStore.openSettingsModal('personas')}
+                  >
+                    Persona
+                  </button>
+                </ToolTip>
+
+                {'to give your bot some pizzaz'}
               </Step>
 
               <Step type="secondary">
@@ -80,24 +106,9 @@ const ChatBoxPrompt = observer(() => {
                 {'for use with multimodal models'}
               </Step>
 
-              <Step type="secondary" isCompleted={!_.isEmpty(personaStore.personas)}>
-                {'Create and Select a'}
-
-                <ToolTip label="aka System prompt: How the bot should respond">
-                  <button
-                    className="link ml-1 decoration-secondary"
-                    onClick={() => settingStore.openSettingsModal('personas')}
-                  >
-                    Persona
-                  </button>
-                </ToolTip>
-
-                {'to give your bot some pizzaz'}
-              </Step>
-
               <Step inCompleteIcon="★">
                 <span>
-                  <span className="text-primary">Send</span> a prompt!
+                  <span className="font-semibold text-primary">Send</span> a prompt!
                 </span>
               </Step>
             </ul>

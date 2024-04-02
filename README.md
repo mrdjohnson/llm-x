@@ -27,6 +27,10 @@
 | ----------------------------------------------------------------------------------------------------------------------- |
 | ![Logo convo screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-logo-convo.png) |
 
+| Image generation example!                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------- |
+| ![Image generation screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-image-generation-1.png) |
+
 | Showing off omnibar and code                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------- |
 | ![Omnibar and code screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-omnibar-code.png) |
@@ -98,10 +102,13 @@ Clone the project, and run `yarn` in the root directory
 - [x] Refresh LLM response button
 - [x] Re-write user message (triggering LLM refresh)
 - [x] Bot "Personas" allow users to override the bot's system message
+- [x] **Image generation** through AUTOMATIC1111
 
 ## MISC
 
 - LangChain.js was attempted while spiking on this app but unfortunately it was not set up correctly for stopping incoming streams, I hope this gets fixed later in the future OR if possible a custom LLM Agent can be utilized in order to use LangChain
+
+  - edit: Langchain is working and added to the app now!
 
 - Originally I used create-react-app 👴 while making this project without knowing it is no longer maintained, I am now using Vite. 🤞 This already allows me to use libs like `ollama-js` that I could not use before. Will be testing more with langchain very soon
 
