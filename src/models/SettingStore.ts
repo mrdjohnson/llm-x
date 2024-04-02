@@ -97,8 +97,12 @@ export const SettingStore = types
 
       setA1111Enabled(a1111Enabled: boolean) {
         // if we're turning this off
-        if (self.a1111Enabled && !a1111Enabled) {
+        if (!a1111Enabled) {
+          self._isA1111ServerConnected = false
+
           self.selectedModelType = 'Ollama'
+        } else {
+          self.selectedModelType = 'A1111'
         }
 
         self.a1111Enabled = a1111Enabled
@@ -129,6 +133,11 @@ export const SettingStore = types
 
       getUpdateServiceWorker() {
         return updateServiceWorker
+      },
+
+      refreshAllModels() {
+        this.updateModels()
+        this.fetchA1111Models()
       },
 
       updateModels: flow(function* updateModels() {
@@ -173,7 +182,7 @@ export const SettingStore = types
         } catch (e) {
           toastStore.addToast('Failed to fetch models for a1111 host: ' + a1111Host, 'error')
 
-          self._isServerConnected = false
+          self._isA1111ServerConnected = false
         }
 
         self.a1111Models = cast(data)
@@ -206,7 +215,7 @@ export const SettingStore = types
     },
 
     get isA1111ServerConnected() {
-      return self._isServerConnected
+      return self._isA1111ServerConnected
     },
 
     get a1111ImageSize() {

@@ -68,7 +68,7 @@ const A1111ModelPanel = observer(() => {
     )
   }
 
-  if (!settingStore.a1111Enabled) {
+  if (!settingStore.isA1111ServerConnected) {
     const openA1111Panel = () => {
       settingStore.setModelType('A1111')
       settingStore.openSettingsModal('general')
@@ -77,11 +77,11 @@ const A1111ModelPanel = observer(() => {
     return (
       <div className="flex w-full flex-col justify-center gap-3">
         <span className="text-center text-lg font-semibold">
-          Image generation through AUTOMATIC1111 is currently disabled
+          Image generation through AUTOMATIC1111 is not currently active
         </span>
 
         <button className="btn btn-active" onClick={openA1111Panel}>
-          Go to A1111 settings to turn on
+          Go to A1111 settings
         </button>
       </div>
     )

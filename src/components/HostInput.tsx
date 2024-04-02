@@ -108,7 +108,7 @@ export const A1111HostInput = observer(() => {
           <button
             className={'btn btn-ghost px-2 align-middle'}
             type="button"
-            onClick={() => settingStore.updateModels()}
+            onClick={() => settingStore.fetchA1111Models()}
             title="Refresh models"
           >
             <Refresh />

@@ -16,7 +16,7 @@ import AppSettings from '~/icons/AppSettings'
 const Navbar = observer(() => {
   const { query } = useKBar()
 
-  const noServer = !settingStore.isServerConnected
+  const noServer = !settingStore.isAnyServerConnected
 
   const handlePwaUpdate = () => {
     settingStore.getUpdateServiceWorker()?.()

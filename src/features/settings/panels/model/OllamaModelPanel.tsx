@@ -80,6 +80,23 @@ const OllamaModelPanel = observer(() => {
     )
   }
 
+  if (!settingStore.isServerConnected) {
+    const openOllamaPanel = () => {
+      settingStore.setModelType('Ollama')
+      settingStore.openSettingsModal('general')
+    }
+
+    return (
+      <div className="flex w-full flex-col justify-center gap-3">
+        <span className="text-center text-lg font-semibold">Ollama is not currently active</span>
+
+        <button className="btn btn-active" onClick={openOllamaPanel}>
+          Go to Ollama settings
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="relative flex h-full w-full flex-col">
       {/* <label className="flex flex-row gap-2">
