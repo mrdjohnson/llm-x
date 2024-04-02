@@ -23,7 +23,7 @@ const ThemeSelector = observer(() => {
       </div>
 
       <div
-        className={'dropdown dropdown-top ' + (isOpen ? ' dropdown-open' : '')}
+        className={'dropdown dropdown-bottom ' + (isOpen ? ' dropdown-open' : '')}
         onFocus={() => setIsOpen(true)}
         onBlur={() => setIsOpen(false)}
       >
@@ -39,7 +39,7 @@ const ThemeSelector = observer(() => {
           </div>
         </button>
 
-        <ul className="dropdown-content z-[1] mb-1 w-full rounded-box bg-base-300 p-2 shadow-2xl">
+        <ul className="dropdown-content z-[1] mt-1 w-full rounded-box bg-base-300 p-2 shadow-2xl">
           <label className="text-sm text-base-content/60">Select theme</label>
 
           {_.map(themes, (label, value) => (

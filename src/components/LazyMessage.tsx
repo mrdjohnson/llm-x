@@ -80,6 +80,8 @@ const LazyMessage = ({
     }
   }, [shouldScrollIntoView])
 
+  const hasInnerContent = children || content || error
+
   return (
     <div
       className={
@@ -91,6 +93,8 @@ const LazyMessage = ({
       key={uniqId}
       ref={containerRef}
     >
+      {message.botName && <span className="opacity-30">{message.botName}</span>}
+
       {image && (
         <img
           className="mb-2 h-56 max-w-56 cursor-pointer place-self-center rounded-md object-contain"
@@ -99,50 +103,50 @@ const LazyMessage = ({
         />
       )}
 
-      {message.botName && <span className="opacity-30">{message.botName}</span>}
+      {hasInnerContent && (
+        <div className="join join-vertical relative min-h-10 border border-base-content/20">
+          {children}
 
-      <div className="join join-vertical relative min-h-10 border border-base-content/20">
-        {children}
-
-        <div
-          className={
-            'w-full p-2 ' +
-            (children ? 'min-w-16 ' : '') +
-            (error ? 'join-item border-b-0' : 'rounded-md')
-          }
-        >
-          <Markdown
-            remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
-            className="prose-spacing prose flex w-full flex-wrap overflow-x-hidden overscroll-none prose-p:w-full"
-            components={{
-              code: DelayedCustomCodeBlock,
-            }}
-          >
-            {content.replace(/\n/g, '  \n')}
-          </Markdown>
-        </div>
-
-        {error && (
           <div
-            className="group/error collapse join-item transition-all duration-300 ease-in-out"
-            tabIndex={0}
+            className={
+              'w-full p-2 ' +
+              (children ? 'min-w-16 ' : '') +
+              (error ? 'join-item border-b-0' : 'rounded-md')
+            }
           >
-            <div className="collapse-title line-clamp-1 flex max-h-8 min-h-0 flex-row flex-nowrap bg-error/30 p-2 text-xs font-medium">
-              {error.message}
-
-              <span className="ml-2 scale-90 transition-all duration-300 ease-in-out group-focus/error:rotate-180">
-                <ChevronDown />
-              </span>
-            </div>
-
-            {error.stack && (
-              <div className="collapse-content">
-                <p className="whitespace-pre-line pt-2 text-xs">{error.stack}</p>
-              </div>
-            )}
+            <Markdown
+              remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
+              className="prose-spacing prose flex w-full flex-wrap overflow-x-hidden overscroll-none prose-p:w-full"
+              components={{
+                code: DelayedCustomCodeBlock,
+              }}
+            >
+              {content.replace(/\n/g, '  \n')}
+            </Markdown>
           </div>
-        )}
-      </div>
+
+          {error && (
+            <div
+              className="group/error collapse join-item transition-all duration-300 ease-in-out"
+              tabIndex={0}
+            >
+              <div className="collapse-title line-clamp-1 flex max-h-8 min-h-0 flex-row flex-nowrap bg-error/30 p-2 text-xs font-medium">
+                {error.message}
+
+                <span className="ml-2 scale-90 transition-all duration-300 ease-in-out group-focus/error:rotate-180">
+                  <ChevronDown />
+                </span>
+              </div>
+
+              {error.stack && (
+                <div className="collapse-content">
+                  <p className="whitespace-pre-line pt-2 text-xs">{error.stack}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <div
         className={

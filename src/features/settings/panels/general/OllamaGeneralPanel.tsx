@@ -8,7 +8,6 @@ import {
   NumberDecrementStepper,
 } from '@chakra-ui/react'
 
-import ThemeSelector from '~/components/ThemeSelector'
 import HostInput from '~/components/HostInput'
 
 import { settingStore } from '~/models/SettingStore'
@@ -60,7 +59,7 @@ const TemperatureInput = observer(() => {
             min={0}
             max={1}
             value={settingStore.temperature}
-            className="range"
+            className="range range-sm"
             step={0.05}
             onChange={e => settingStore.setTemperature(e.target.valueAsNumber)}
             ref={rangeRef}
@@ -94,20 +93,16 @@ const TemperatureInput = observer(() => {
   )
 })
 
-const General = observer(() => {
+const OllamaGeneralPanel = observer(() => {
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className="flex h-full w-full flex-col gap-4">
       <HostInput />
 
       <KeepAliveInput />
 
       <TemperatureInput />
-
-      <div className="mt-auto">
-        <ThemeSelector />
-      </div>
     </div>
   )
 })
 
-export default General
+export default OllamaGeneralPanel

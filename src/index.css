@@ -21,7 +21,7 @@
 
   input,
   textarea {
-    @apply placeholder:opacity-30;
+    @apply placeholder:opacity-50 focus:!outline-none;
   }
 
   .modal {

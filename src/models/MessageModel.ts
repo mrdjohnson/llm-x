@@ -13,7 +13,8 @@ export const MessageModel = types
   .model({
     fromBot: types.boolean,
     // this should have been modelName
-    botName: types.maybe(types.string),
+    botName: types.maybeNull(types.string),
+    modelType: types.maybe(types.string),
     content: types.optional(types.string, ''),
     image: types.maybe(types.string),
     uniqId: types.identifier,

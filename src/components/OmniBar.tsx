@@ -34,7 +34,8 @@ const isSelected = ({ parent, id }: ActionImpl) => {
   }
 
   if (parent === 'model') {
-    return id === settingStore.selectedModel?.name
+    console.log('model: ', id, settingStore.selectedModelName)
+    return id === settingStore.selectedModelName
   }
 
   if (parent === 'chat') {
@@ -146,13 +147,26 @@ const useRegisterModelActions = () => {
       if (_.isEmpty(settingStore.models)) {
         nextModelActions.push({
           id: 'model',
-          name: 'No Models to select: Refresh',
+          name: 'No Ollama Models to select: Refresh',
           keywords: 'model modal open select refresh',
           section: 'Actions',
           priority: Priority.LOW,
           perform: settingStore.updateModels,
         })
-      } else {
+      }
+
+      if (_.isEmpty(settingStore.a1111Models)) {
+        nextModelActions.push({
+          id: 'model',
+          name: 'No A1111 Models to select: Refresh',
+          keywords: 'model modal open select refresh',
+          section: 'Actions',
+          priority: Priority.LOW,
+          perform: settingStore.fetchA1111Models,
+        })
+      }
+
+      if (!settingStore.allModelsEmpty) {
         nextModelActions.push({
           id: 'model',
           name: 'Select Model',
@@ -176,8 +190,19 @@ const useRegisterModelActions = () => {
           id: model.name,
           name: model.name,
           keywords: `${model.name} model ${model.details.parameterSize}`,
-          section: 'Models',
+          section: 'Ollama Models',
           perform: () => settingStore.selectModel(model.name),
+          parent: 'model',
+        })
+      })
+
+      settingStore.a1111Models.forEach(model => {
+        nextModelActions.push({
+          id: model.modelName,
+          name: model.modelName,
+          keywords: `${model.modelName} model`,
+          section: 'A1111 Models',
+          perform: () => settingStore.selectModel(model.modelName, 'A1111'),
           parent: 'model',
         })
       })

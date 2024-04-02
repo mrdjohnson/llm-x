@@ -11,6 +11,7 @@ import AttachImageWrapper from '~/components/AttachImageWrapper'
 
 import Paperclip from '~/icons/Paperclip'
 import ChevronDown from '~/icons/ChevronDown'
+import Edit from '~/icons/Edit'
 
 const ChatBoxInputRow = observer(
   ({
@@ -75,7 +76,7 @@ const ChatBoxInputRow = observer(
       }
     }
 
-    const noServer = !settingStore.selectedModel
+    const noServer = !settingStore.isAnyServerConnected
     const inputDisabled = chatStore.isGettingData || noServer || !!chat.lightboxMessage
 
     useEffect(() => {
@@ -134,6 +135,27 @@ const ChatBoxInputRow = observer(
               />
             </Editable>
 
+            {settingStore.isImageGenerationMode && (
+              <>
+                <div className="divider my-0" />
+
+                <div
+                  className="join-item flex w-full cursor-pointer flex-row gap-4 text-base-content/45 [&>span]:text-sm"
+                  onClick={() => settingStore.openSettingsModal('general')}
+                >
+                  <span>
+                    Dimensions: {settingStore.a1111Width} x {settingStore.a1111Height}
+                  </span>
+
+                  <span>Steps: {settingStore.a1111Steps}</span>
+
+                  <span>
+                    <Edit />
+                  </span>
+                </div>
+              </>
+            )}
+
             {previewImage && (
               <div className="absolute bottom-full end-0 mb-2 w-fit">
                 <div className="relative h-full w-fit">
@@ -158,7 +180,7 @@ const ChatBoxInputRow = observer(
               tabIndex={0}
               type="button"
               className="btn btn-active rounded-none rounded-bl-md"
-              disabled={inputDisabled}
+              disabled={inputDisabled || settingStore.isImageGenerationMode}
               onClick={() => settingStore.openSettingsModal('personas')}
             >
               {personaStore.selectedPersona?.name || 'No personas selected'}

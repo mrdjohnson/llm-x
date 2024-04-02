@@ -8,6 +8,7 @@ import { toastStore } from '~/models/ToastStore'
 
 import base64EncodeImage from '~/utils/base64EncodeImage'
 import { OllmaApi } from '~/utils/OllamaApi'
+import { A1111Api } from '~/utils/A1111Api'
 
 export const ChatModel = types
   .model({
@@ -133,7 +134,8 @@ export const ChatModel = types
 
       const incomingMessage = MessageModel.create({
         fromBot: true,
-        botName: settingStore.selectedModel?.name,
+        botName: settingStore.selectedModelLabel,
+        modelType: settingStore.selectedModelType,
         uniqId,
         content: '',
       })
@@ -160,10 +162,72 @@ export const ChatModel = types
       self.incomingMessage!.content += content
     },
 
+    addIncomingImage(image: string) {
+      self.incomingMessage!.image = 'data:image/png;base64,' + image
+    },
+
     abortGeneration() {
       self._incomingMessageAbortedByUser = true
 
-      OllmaApi.cancelStream()
+      // error prone by quick switching during generation
+      if (settingStore.isImageGenerationMode) {
+        A1111Api.cancelGeneration()
+      } else {
+        OllmaApi.cancelStream()
+      }
+    },
+
+    async generateImage(incomingMessage: IMessageModel) {
+      self.incomingMessage = incomingMessage
+
+      const incomingIndex = _.findIndex(self.messages, { uniqId: incomingMessage.uniqId })
+      const prompt = _.findLast(self.messages, { fromBot: false }, incomingIndex)?.content
+
+      if (!prompt) {
+        if (incomingMessage.image || incomingMessage.extras?.error) {
+          this.commitIncomingMessage()
+        } else {
+          this.deleteMessage(incomingMessage)
+        }
+
+        toastStore.addToast('no prompt found to regenerate image from', 'error')
+
+        return
+      }
+
+      incomingMessage.image = undefined
+
+      if (incomingMessage.extras) {
+        incomingMessage.extras.error = undefined
+      }
+
+      if (!prompt) {
+        this.commitIncomingMessage()
+        return
+      }
+
+      console.log(prompt)
+
+      try {
+        const image = await A1111Api.generateImage(prompt)
+
+        this.addIncomingImage(image)
+      } catch (error: unknown) {
+        if (self._incomingMessageAbortedByUser) {
+          incomingMessage.setError(new Error('Stream stopped by user'))
+
+          if (_.isEmpty(incomingMessage.content)) {
+            this.deleteMessage(incomingMessage)
+          }
+        } else if (error instanceof Error) {
+          incomingMessage.setError(error)
+
+          // make sure the server is still connected
+          settingStore.updateModels()
+        }
+      } finally {
+        this.commitIncomingMessage()
+      }
     },
 
     async generateMessage(incomingMessage: IMessageModel) {
@@ -172,6 +236,10 @@ export const ChatModel = types
 
       if (incomingMessage.extras) {
         incomingMessage.extras.error = undefined
+      }
+
+      if (settingStore.isImageGenerationMode) {
+        return this.generateImage(incomingMessage)
       }
 
       try {

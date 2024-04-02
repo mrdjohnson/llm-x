@@ -5,20 +5,16 @@ import ChevronDown from '~/icons/ChevronDown'
 import { settingStore } from '~/models/SettingStore'
 
 const ModelSelector = observer(() => {
-  const { selectedModel, isServerConnected } = settingStore
-  const noServer = !isServerConnected
+  const { selectedModelLabel, isAnyServerConnected } = settingStore
+  const noServer = !isAnyServerConnected
 
   const label = useMemo(() => {
-    if (!isServerConnected) {
+    if (noServer) {
       return 'Server not connected'
     }
 
-    if (selectedModel?.name) {
-      return selectedModel.name
-    }
-
-    return 'No models available'
-  }, [isServerConnected, selectedModel])
+    return selectedModelLabel || 'No models available'
+  }, [noServer, selectedModelLabel])
 
   return (
     <button
