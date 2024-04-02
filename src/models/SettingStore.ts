@@ -6,6 +6,7 @@ import { toastStore } from '~/models/ToastStore'
 import { IOllamaModel, OllamaModel } from '~/models/OllamaModel'
 import { type SettingPanelOptionsType } from '~/features/settings/settingsPanels'
 import _ from 'lodash'
+import axios from 'axios'
 
 export const DefaultHost = 'http://localhost:11434'
 export const DefaultA1111Host = 'http://127.0.0.1:7860'
@@ -146,11 +147,9 @@ export const SettingStore = types
         let data: Array<IOllamaModel> = []
 
         try {
-          const response = yield fetch(`${host}/api/tags`)
+          const response = yield axios.get(`${host}/api/tags`)
 
-          const json = yield response.json()
-
-          data = camelcaseKeys(json?.models, { deep: true }) as IOllamaModel[]
+          data = camelcaseKeys(response.data?.models, { deep: true }) as IOllamaModel[]
 
           self._isServerConnected = true
         } catch (e) {
@@ -172,11 +171,9 @@ export const SettingStore = types
         let data: Array<IA1111Model> = []
 
         try {
-          const response = yield fetch(`${a1111Host}/sdapi/v1/sd-models`)
+          const response = yield axios.get(`${a1111Host}/sdapi/v1/sd-models`)
 
-          const json = yield response.json()
-
-          data = camelcaseKeys(json) as IA1111Model[]
+          data = camelcaseKeys(response.data) as IA1111Model[]
 
           self._isA1111ServerConnected = true
         } catch (e) {
