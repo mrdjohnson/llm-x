@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { types, Instance, detach, flow, cast } from 'mobx-state-tree'
+import { types, Instance, flow, cast, destroy } from 'mobx-state-tree'
 import moment from 'moment'
 
 import { IMessageModel, MessageModel } from '~/models/MessageModel'
@@ -82,9 +82,7 @@ export const ChatModel = types
     },
 
     deleteMessage(message: IMessageModel) {
-      detach(message)
-
-      _.remove(self.messages, message)
+      destroy(message)
     },
 
     findAndRegenerateResponse() {

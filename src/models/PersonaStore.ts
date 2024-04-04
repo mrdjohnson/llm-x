@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Instance, cast, detach, types } from 'mobx-state-tree'
+import { Instance, cast, destroy, types } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
 
 export const PersonaModel = types.model({
@@ -29,13 +29,7 @@ const PersonaStore = types
       },
 
       deletePersona(persona: IPersonaModel) {
-        detach(persona)
-
-        _.remove(self.personas, persona)
-
-        if (persona === self.selectedPersona) {
-          self.selectedPersona = undefined
-        }
+        destroy(persona)
       },
 
       duplicatePersona(persona: IPersonaModel) {
