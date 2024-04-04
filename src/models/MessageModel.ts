@@ -1,4 +1,7 @@
-import { types, Instance } from 'mobx-state-tree'
+import { types, Instance, getParentOfType, cast, flow } from 'mobx-state-tree'
+
+import CachedStorage from '~/utils/CachedStorage'
+import { ChatModel } from '~/models/ChatModel'
 
 const MessageErrorModel = types.model({
   message: types.string,
@@ -16,11 +19,44 @@ export const MessageModel = types
     botName: types.maybeNull(types.string),
     modelType: types.maybe(types.string),
     content: types.optional(types.string, ''),
+    // deprecated
     image: types.maybe(types.string),
     uniqId: types.identifier,
     extras: types.maybe(MessageExtrasModel),
+    imageUrls: types.array(types.string),
   })
+  .views(self => ({
+    get imageUrl() {
+      return self.imageUrls[0]
+    },
+  }))
   .actions(self => ({
+    async afterAttach() {
+      // migration from .image: large_image_data => .imageUrls: cached_image_url
+      // deprecating field
+      const image = self.image
+      self.image = undefined
+      if (image) {
+        const chatId = getParentOfType(self, ChatModel)?.id
+
+        await this.setImage(chatId, image)
+      }
+    },
+
+    async beforeDestroy() {
+      for (const imageUrl of self.imageUrls) {
+        await CachedStorage.delete(imageUrl)
+      }
+    },
+
+    setImage: flow(function* setImage(parentId: number, imageData: string) {
+      const imageUrl = `/llm-x/${parentId}/${self.uniqId}/image-${self.imageUrls.length}.png`
+
+      yield CachedStorage.put(imageUrl, imageData)
+
+      self.imageUrls = cast([imageUrl])
+    }),
+
     setError(error: Error) {
       self.extras ||= MessageExtrasModel.create()
 
