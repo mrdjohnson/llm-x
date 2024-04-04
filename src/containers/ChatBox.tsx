@@ -58,7 +58,7 @@ const ChatBox = observer(() => {
   const lightboxMessageId = chat.lightboxMessage?.uniqId
 
   const renderMessage = (message: IMessageModel) => {
-    if (message.uniqId === incomingUniqId) return <IncomingMessage key={message.content.length} />
+    if (message.uniqId === incomingUniqId) return <IncomingMessage key={message.uniqId} />
 
     if (message.uniqId === outgoingUniqId)
       return <MessageToEdit key={message.uniqId} message={message} />
@@ -80,7 +80,10 @@ const ChatBox = observer(() => {
     <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-hidden rounded-md">
       <ScrollableFeed
         ref={scrollableFeedRef}
-        className="no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-hidden"
+        className={
+          'no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden' +
+          (isEditingMessage || incomingUniqId ? ' !overflow-y-hidden ' : '')
+        }
         animateScroll={(element, offset) => element.scrollBy({ top: offset, behavior: 'smooth' })}
       >
         {chat.messages.length > 0 ? chat.messages.map(renderMessage) : <ChatBoxPrompt />}

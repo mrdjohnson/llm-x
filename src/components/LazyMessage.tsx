@@ -1,7 +1,8 @@
-import React, { Suspense, useEffect, useMemo, useRef } from 'react'
+import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { type PropsWithChildren } from 'react'
+import _ from 'lodash'
 
 import Delete from '~/icons/Delete'
 import Refresh from '~/icons/Refresh'
@@ -74,11 +75,29 @@ const LazyMessage = ({
     )
   }, [chat, fromBot, disableRegeneration, disableEditing])
 
+  // every 300ms try to scroll to the bottom of the component
+  // throttling allows the previous animation to try and finish
+  const scrollIntoView = useCallback(
+    _.throttle(() => {
+      containerRef.current?.scrollIntoView({
+        behavior: 'smooth',
+
+        // bottom of the component
+        block: 'end',
+        inline: 'nearest',
+      })
+    }, 300),
+    [],
+  )
+
+  // we should scroll into view when:
+  // - we get a message to edit (by user or bot)
+  // - the content of that message is updated (by bot)
   useEffect(() => {
     if (shouldScrollIntoView) {
-      containerRef.current?.scrollIntoView({ behavior: 'smooth' })
+      scrollIntoView()
     }
-  }, [shouldScrollIntoView])
+  }, [shouldScrollIntoView, content])
 
   const hasInnerContent = children || content || error
 
