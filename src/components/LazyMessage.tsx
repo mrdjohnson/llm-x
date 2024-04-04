@@ -13,6 +13,7 @@ import Edit from '~/icons/Edit'
 import { chatStore } from '~/models/ChatStore'
 import { MessageProps } from '~/components/Message'
 import CopyButton from '~/components/CopyButton'
+import CachedImage from '~/components/CachedImage'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
 
@@ -35,7 +36,7 @@ const LazyMessage = observer(
     shouldDimMessage,
     shouldScrollIntoView,
   }: MessageProps) => {
-    const { content, fromBot, uniqId, image, extras } = message
+    const { content, fromBot, uniqId, extras, imageUrl } = message
     const error = extras?.error
     const chat = chatStore.selectedChat!
 
@@ -116,10 +117,10 @@ const LazyMessage = observer(
       >
         {message.botName && <span className="opacity-30">{message.botName}</span>}
 
-        {image && (
-          <img
+        {imageUrl && (
+          <CachedImage
             className="mb-2 h-56 max-w-56 cursor-pointer place-self-center rounded-md object-contain"
-            src={image}
+            src={imageUrl}
             onClick={() => chat.setLightboxMessage(message)}
           />
         )}

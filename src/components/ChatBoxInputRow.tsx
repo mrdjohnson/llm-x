@@ -8,6 +8,9 @@ import { settingStore } from '~/models/SettingStore'
 import { personaStore } from '~/models/PersonaStore'
 
 import AttachImageWrapper from '~/components/AttachImageWrapper'
+import CachedImage from '~/components/CachedImage'
+
+import CachedStorage from '~/utils/CachedStorage'
 
 import Paperclip from '~/icons/Paperclip'
 import ChevronDown from '~/icons/ChevronDown'
@@ -24,7 +27,7 @@ const ChatBoxInputRow = observer(
     const [messageContent, setMessageContent] = useState('')
 
     const chat = chatStore.selectedChat!
-    const { previewImage, messageToEdit } = chat
+    const { previewImageUrl, messageToEdit } = chat
 
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
@@ -32,10 +35,16 @@ const ChatBoxInputRow = observer(
       sendMessage()
     }
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
       if (!textareaRef.current) return
 
       const userMessage = textareaRef.current.value || ''
+
+      let previewImage
+
+      if (previewImageUrl) {
+        previewImage = await CachedStorage.get(previewImageUrl)
+      }
 
       onSend(userMessage, previewImage)
 
@@ -156,7 +165,7 @@ const ChatBoxInputRow = observer(
               </>
             )}
 
-            {previewImage && (
+            {previewImageUrl && (
               <div className="absolute bottom-full end-0 mb-2 w-fit">
                 <div className="relative h-full w-fit">
                   <div
@@ -166,8 +175,8 @@ const ChatBoxInputRow = observer(
                     x
                   </div>
 
-                  <img
-                    src={previewImage}
+                  <CachedImage
+                    src={previewImageUrl}
                     className="m-auto max-h-24 max-w-24 place-self-end rounded-md object-scale-down object-right"
                   />
                 </div>

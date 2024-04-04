@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { types, Instance, flow, cast, destroy } from 'mobx-state-tree'
+import { types, Instance, cast, destroy, flow } from 'mobx-state-tree'
 import moment from 'moment'
 
 import { IMessageModel, MessageModel } from '~/models/MessageModel'
@@ -9,6 +9,7 @@ import { toastStore } from '~/models/ToastStore'
 import base64EncodeImage from '~/utils/base64EncodeImage'
 import { OllmaApi } from '~/utils/OllamaApi'
 import { A1111Api } from '~/utils/A1111Api'
+import CachedStorage from '~/utils/CachedStorage'
 
 export const ChatModel = types
   .model({
@@ -20,6 +21,7 @@ export const ChatModel = types
     previewImage: types.maybe(types.string),
     messageToEdit: types.safeReference(MessageModel), // user message to edit
     _lightboxMessage: types.safeReference(MessageModel),
+    _previewImageUrl: types.maybe(types.string),
   })
   .actions(self => ({
     afterCreate() {
@@ -31,9 +33,11 @@ export const ChatModel = types
       self.previewImage = undefined
       self.messageToEdit = undefined
       self._lightboxMessage = undefined
+      self._incomingMessageAbortedByUser = undefined
+      self._previewImageUrl = undefined
     },
 
-    beforeDestroy() {
+    async beforeDestroy() {
       OllmaApi.cancelStream()
     },
 
@@ -51,12 +55,22 @@ export const ChatModel = types
 
     setPreviewImage: flow(function* setFile(file?: File) {
       if (!file) {
-        self.previewImage = undefined
+        if (self._previewImageUrl) {
+          CachedStorage.delete(self._previewImageUrl)
+
+          self._previewImageUrl = undefined
+        }
+
         return
       }
 
       try {
-        self.previewImage = yield base64EncodeImage(file)
+        const previewUrl = `/llm-x/${_.uniqueId('preview-image-')}`
+        const imageData = yield base64EncodeImage(file)
+
+        yield CachedStorage.put(previewUrl, imageData)
+
+        self._previewImageUrl = previewUrl
       } catch (e) {
         toastStore.addToast(
           'Unable to read image, check the console for error information',
@@ -160,10 +174,6 @@ export const ChatModel = types
       self.incomingMessage!.content += content
     },
 
-    addIncomingImage(image: string) {
-      self.incomingMessage!.image = 'data:image/png;base64,' + image
-    },
-
     abortGeneration() {
       self._incomingMessageAbortedByUser = true
 
@@ -209,7 +219,7 @@ export const ChatModel = types
       try {
         const image = await A1111Api.generateImage(prompt)
 
-        this.addIncomingImage(image)
+        await self.incomingMessage.setImage(self.id, 'data:image/png;base64,' + image)
       } catch (error: unknown) {
         if (self._incomingMessageAbortedByUser) {
           incomingMessage.setError(new Error('Stream stopped by user'))
@@ -277,6 +287,10 @@ export const ChatModel = types
       })
 
       self.messages.push(message)
+
+      if (image) {
+        message.setImage(self.id, image)
+      }
     },
   }))
   .views(self => ({
@@ -357,6 +371,10 @@ export const ChatModel = types
         this.lightboxMessagesWithPrompts,
         ({ message }) => message.uniqId === self._lightboxMessage!.uniqId,
       )
+    },
+
+    get previewImageUrl() {
+      return self._previewImageUrl
     },
   }))
 
