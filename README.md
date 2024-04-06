@@ -4,13 +4,25 @@
 
 ![LLM X logo](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/public/LLMX.png)
 
-## How to use web client:
+## Privacy statement:
+
+LLM X does not make any external api calls. (go ahead, check your network tab and see the Fetch section). Your chats and image generations are 100% private. This site / app works completely offline.
+
+## How to use web client (no install):
 
 - Download and install [Ollama](https://ollama.com/)
 - Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava`
 - Run this in your terminal `OLLAMA_ORIGINS=*.github.io ollama serve`
 - (Powershell users: `$env:OLLAMA_ORIGINS="https://%2A.github.io/"; ollama serve`)
 - Use your browser to go to [LLM-X](https://mrdjohnson.github.io/llm-x/)
+- Go offline! (optional)
+- Start chatting!
+
+## How to use offline:
+
+- Follow instructions for "How to use web client"
+- In your browser search bar, there should be a download/install button, press that.
+- Go offline! (optional)
 - Start chatting!
 
 ## How to use from project:
@@ -19,7 +31,26 @@
 - Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava`
 - Run this in your terminal `ollama serve` (no need for special origins command)
 - Pull down this project; `yarn install`, `yarn dev`
+- Go offline! (optional)
 - Start chatting!
+
+## Goals / Features
+
+- [x] **Text to Image generation** through AUTOMATIC1111
+- [x] **Image to Text** using Ollama's multi modal abilities
+- [x] **Offline Support** via PWA technology
+- [x] **Code highlighting** with Highlight.js (only handles common languages for now)
+- [x] **Search/Command bar** provides quick access to app features through kbar
+- [x] Text Entry and Response to Ollama
+- [x] Auto saved Chat history
+- [x] Manage multiple chats
+- [x] Copy/Edit/Detele messages sent or recieved
+- [x] Re-write user message (triggering response refresh)
+- [x] System Prompt customization through "Personas" feature
+- [x] Theme changing through DaisyUI
+- [x] Chat image Modal previews through Yet another react lightbox
+- [x] Import / Export chat(s)
+- [x] **Continuous Deployment!** Merging to the master branch triggers a new github page build/deploy automatically
 
 ## Screenshots:
 
@@ -48,7 +79,7 @@
 | ![Logo 2 screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-logo-1.png) |
 
 **_What is this?_**
-Chat GPT style UI for the niche group of folks who run [Ollama](https://ollama.com/) (think of this like an offline chat gpt) locally. Supports sending images and text!
+ChatGPT style UI for the niche group of folks who run [Ollama](https://ollama.com/) (think of this like an offline chat gpt server) locally. Supports sending and receiving images and text!
 **WORKS OFFLINE** through PWA ([Progressive Web App](https://web.dev/explore/progressive-web-apps)) standards (its not dead!)
 
 **_Why do this?_**
@@ -64,14 +95,18 @@ I couldn't help but bee cool 😎
 
 - [React](https://react.dev/)
 - [Typescript](https://www.typescriptlang.org/)
+- [Lodash](https://lodash.com/docs/4.17.15)
 - [Mobx State Tree](https://mobx-state-tree.js.org/intro/welcome)
 
 **_UI Helpers:_**
 
 - [Tailwind css](https://tailwindcss.com/)
 - [DaisyUI](https://daisyui.com/)
+- [Chakra](https://chakra-ui.com/)
 - [Highlight.js](https://www.npmjs.com/package/highlight.js)
 - [React Markdown](https://www.npmjs.com/package/react-markdown)
+- [kbar](https://www.npmjs.com/package/kbar)
+- [Yet Another React Lightbox](https://yet-another-react-lightbox.com/)
 
 **_Project setup helpers:_**
 
@@ -85,24 +120,11 @@ I couldn't help but bee cool 😎
 
 ## Getting started
 
+(please note the minimum engine requirements in the package json)
+
 Clone the project, and run `yarn` in the root directory
 
 `yarn dev` starts a local instance and opens up a browser tab under https:// (for PWA reasons)
-
-## Goals
-
-- [x] Text Entry and Response to Ollama
-- [x] Conversation history
-- [x] Ability to manage multiple chats
-- [x] Code highlighting with Highlight.js
-- [x] Ability to copy responses from Ollama
-- [x] **Image to text** using Ollama's multi modal abilities
-- [x] **Offline Support** via PWA technology
-- [x] Add Screenshots because no one is going to read these
-- [x] Refresh LLM response button
-- [x] Re-write user message (triggering LLM refresh)
-- [x] Bot "Personas" allow users to override the bot's system message
-- [x] **Image generation** through AUTOMATIC1111
 
 ## MISC
 
