@@ -44,14 +44,17 @@ export const ChatModel = types
 
     setMessageToEdit(message?: IMessageModel) {
       self.messageToEdit = message
-      self.previewImage = message?.image
+      self._previewImageUrl = message?.imageUrls[0]
     },
 
     commitMessageToEdit(content: string, image?: string) {
       const messageToEdit = self.messageToEdit!
 
       messageToEdit.content = content
-      messageToEdit.image = image
+
+      if (image) {
+        messageToEdit.setImage(self.id, image)
+      }
     },
 
     setPreviewImage: flow(function* setFile(file?: File) {
