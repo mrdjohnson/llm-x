@@ -17,20 +17,26 @@ const CustomCodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
   }, [className, multiLine])
 
   const { highlightedText, language } = useMemo(() => {
-    if (languageOverride) {
-      const hightligted = hljs.highlight(languageOverride, text)
+    try {
+      if (languageOverride) {
+        const hightligted = hljs.highlight(languageOverride, text)
+
+        return {
+          highlightedText: hightligted.value,
+          language: languageOverride,
+        }
+      }
+      const hightligted = hljs.highlightAuto(text)
 
       return {
         highlightedText: hightligted.value,
-        language: languageOverride,
+        language: hightligted.language,
       }
-    }
-
-    const hightligted = hljs.highlightAuto(text)
-
-    return {
-      highlightedText: hightligted.value,
-      language: hightligted.language,
+    } catch (e) {
+      return {
+        highlightedText: text,
+        language: languageOverride || undefined,
+      }
     }
   }, [text])
 
