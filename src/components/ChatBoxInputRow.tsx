@@ -38,7 +38,7 @@ const ChatBoxInputRow = observer(
     const sendMessage = async () => {
       if (!textareaRef.current) return
 
-      const userMessage = textareaRef.current.value || ''
+      const messageToSend = textareaRef.current.value || ''
 
       let previewImage
 
@@ -46,7 +46,7 @@ const ChatBoxInputRow = observer(
         previewImage = await CachedStorage.get(previewImageUrl)
       }
 
-      onSend(userMessage, previewImage)
+      onSend(messageToSend, previewImage)
 
       setMessageContent('')
       textareaRef.current.focus()

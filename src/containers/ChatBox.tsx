@@ -36,7 +36,11 @@ const ChatBox = observer(() => {
     if (chat.messageToEdit) {
       chat.commitMessageToEdit(userMessageContent, image)
 
-      chat.findAndRegenerateResponse()
+      if (chat.messageToEdit.fromBot) {
+        chat.setMessageToEdit(undefined)
+      } else {
+        chat.findAndRegenerateResponse()
+      }
     } else {
       chat.addUserMessage(userMessageContent, image)
 

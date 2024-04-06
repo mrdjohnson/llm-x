@@ -50,31 +50,31 @@ const LazyMessage = observer(
       chatStore.selectedChat!.setMessageToEdit(message)
     }
 
-    const extraButton = useMemo(() => {
+    const extraButtons = useMemo(() => {
       if (chat.isEditingMessage || chat.isGettingData) return null
 
-      if (fromBot) {
-        return (
+      return (
+        <>
           <button
             className="rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
-            onClick={handleRegeneration}
-            disabled={disableRegeneration}
-            title={customDeleteIcon ? 'Stop' : 'Regenerate message'}
+            onClick={handleEdit}
+            disabled={disableEditing}
+            title="Edit message"
           >
-            {customDeleteIcon || <Refresh />}
+            <Edit className="h-4 w-4" />
           </button>
-        )
-      }
 
-      return (
-        <button
-          className="rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
-          onClick={handleEdit}
-          disabled={disableEditing}
-          title="Edit message"
-        >
-          <Edit className="h-4 w-4" />
-        </button>
+          {fromBot && (
+            <button
+              className="rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
+              onClick={handleRegeneration}
+              disabled={disableRegeneration}
+              title={customDeleteIcon ? 'Stop' : 'Regenerate message'}
+            >
+              {customDeleteIcon || <Refresh />}
+            </button>
+          )}
+        </>
       )
     }, [chat, fromBot, disableRegeneration, disableEditing])
 
@@ -189,7 +189,7 @@ const LazyMessage = observer(
             text={content}
           />
 
-          {extraButton}
+          {extraButtons}
         </div>
       </div>
     )
