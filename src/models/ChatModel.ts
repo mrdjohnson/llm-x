@@ -280,7 +280,7 @@ export const ChatModel = types
       if (!content && !image) return
 
       if (!self.name) {
-        this.setName(content.substring(0, 20))
+        this.setName(content.substring(0, 40))
       }
 
       const message = MessageModel.create({
