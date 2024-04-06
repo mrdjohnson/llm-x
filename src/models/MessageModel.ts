@@ -1,4 +1,4 @@
-import { types, Instance, getParentOfType, cast, flow } from 'mobx-state-tree'
+import { types, Instance, getParentOfType, cast } from 'mobx-state-tree'
 
 import CachedStorage from '~/utils/CachedStorage'
 import { ChatModel } from '~/models/ChatModel'
@@ -51,23 +51,32 @@ export const MessageModel = types
       await this.clearImages()
     },
 
-    clearImages: flow(function* clearImages() {
+    _setImageUrls(imageUrls: string[]) {
+      self.imageUrls = cast(imageUrls)
+    },
+
+    async clearImages() {
       const imageUrls = self.imageUrls
 
-      self.imageUrls = cast([])
+      this._setImageUrls([])
 
       for (const imageUrl of imageUrls) {
-        yield CachedStorage.delete(imageUrl)
+        await CachedStorage.delete(imageUrl)
       }
-    }),
+    },
 
-    setImage: flow(function* setImage(parentId: number, imageData: string) {
+    async setImage(parentId: number, imageData?: string) {
+      if (!imageData) {
+        await this.clearImages()
+        return
+      }
+
       const imageUrl = `/llm-x/${parentId}/${self.uniqId}/image-${self.imageUrls.length}.png`
 
-      yield CachedStorage.put(imageUrl, imageData)
+      await CachedStorage.put(imageUrl, imageData)
 
-      self.imageUrls = cast([imageUrl])
-    }),
+      this._setImageUrls([imageUrl])
+    },
 
     setError(error: Error) {
       self.extras ||= MessageExtrasModel.create()

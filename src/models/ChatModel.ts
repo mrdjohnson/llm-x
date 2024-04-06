@@ -52,10 +52,7 @@ export const ChatModel = types
 
       messageToEdit.content = content
 
-      if (image) {
-        await messageToEdit.clearImages()
-        await messageToEdit.setImage(self.id, image)
-      }
+      await messageToEdit.setImage(self.id, image)
     },
 
     setPreviewImage: flow(function* setFile(file?: File) {
@@ -291,9 +288,7 @@ export const ChatModel = types
 
       self.messages.push(message)
 
-      if (image) {
-        await message.setImage(self.id, image)
-      }
+      await message.setImage(self.id, image)
     },
   }))
   .views(self => ({
