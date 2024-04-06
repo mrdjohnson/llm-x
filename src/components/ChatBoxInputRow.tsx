@@ -100,7 +100,7 @@ const ChatBoxInputRow = observer(
       } else {
         previewAreaRef.current?.focus()
       }
-    }, [inputDisabled, chat])
+    }, [inputDisabled, chat, messageToEdit])
 
     // can revisit if this slows things down but its been fine so far
     const lineCount = messageContent.split('\n').length
