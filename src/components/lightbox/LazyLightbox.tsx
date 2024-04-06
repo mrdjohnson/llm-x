@@ -6,6 +6,7 @@ import Captions from 'yet-another-react-lightbox/plugins/captions'
 import Zoom from 'yet-another-react-lightbox/plugins/zoom'
 
 import { chatStore } from '~/models/ChatStore'
+import CachedImage from '~/components/CachedImage'
 
 import 'yet-another-react-lightbox/styles.css'
 import 'yet-another-react-lightbox/plugins/thumbnails.css'
@@ -19,7 +20,7 @@ const LazyLightbox = observer(() => {
   const index = chat.lightboxMessageIndex
   if (index === -1) return null
 
-  const messages = chat.lightboxMessagesWithPrompts
+  const slides = chat.lightboxSlides
 
   return (
     <Lightbox
@@ -28,12 +29,13 @@ const LazyLightbox = observer(() => {
       index={index}
       carousel={{ finite: true }}
       on={{
-        view: ({ index }) => chat.setLightboxMessage(messages[index].message),
+        view: ({ index }) => chat.setLightboxMessageById(slides[index].uniqId),
       }}
-      slides={messages.map(({ message, userPrompt }) => ({
-        src: message.image!,
-        description: userPrompt,
-      }))}
+      slides={slides}
+      render={{
+        slide: ({ slide }) => <CachedImage src={slide.src} />,
+        thumbnail: ({ slide }) => <CachedImage src={slide.src} />,
+      }}
       controller={{ closeOnBackdropClick: true }}
       zoom={{ maxZoomPixelRatio: 7 }}
       open

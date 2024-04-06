@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { types, Instance, cast, destroy, flow } from 'mobx-state-tree'
 import moment from 'moment'
+import { type Slide } from 'yet-another-react-lightbox'
 
 import { IMessageModel, MessageModel } from '~/models/MessageModel'
 import { settingStore } from '~/models/SettingStore'
@@ -81,8 +82,8 @@ export const ChatModel = types
       }
     }),
 
-    setLightboxMessage(lightboxMessage: IMessageModel) {
-      self._lightboxMessage = lightboxMessage
+    setLightboxMessageById(uniqId: string) {
+      self._lightboxMessage = _.find(self.messages, { uniqId })
     },
 
     closeLightbox() {
@@ -344,10 +345,10 @@ export const ChatModel = types
       return self._lightboxMessage
     },
 
-    get lightboxMessagesWithPrompts() {
+    get lightboxSlides() {
       if (!self._lightboxMessage) return []
 
-      const messages: Array<{ message: IMessageModel; userPrompt?: string }> = []
+      const lightBoxSources: Array<Slide & { uniqId: string }> = []
 
       let userPrompt: string | undefined
 
@@ -356,20 +357,24 @@ export const ChatModel = types
           userPrompt = message.content
         }
 
-        if (message.image) {
-          messages.push({ message, userPrompt })
-        }
+        message.imageUrls.forEach(imageUrl => {
+          lightBoxSources.push({
+            description: userPrompt,
+            src: imageUrl,
+            uniqId: message.uniqId,
+          })
+        })
       })
 
-      return messages
+      return lightBoxSources
     },
 
     get lightboxMessageIndex() {
       if (!self._lightboxMessage) return -1
 
       return _.findIndex(
-        this.lightboxMessagesWithPrompts,
-        ({ message }) => message.uniqId === self._lightboxMessage!.uniqId,
+        this.lightboxSlides,
+        ({ uniqId }) => uniqId === self._lightboxMessage!.uniqId,
       )
     },
 

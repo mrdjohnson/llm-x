@@ -121,7 +121,7 @@ const LazyMessage = observer(
           <CachedImage
             className="mb-2 h-56 max-w-56 cursor-pointer place-self-center rounded-md object-contain"
             src={imageUrl}
-            onClick={() => chat.setLightboxMessage(message)}
+            onClick={() => chat.setLightboxMessageById(message.uniqId)}
           />
         )}
 
