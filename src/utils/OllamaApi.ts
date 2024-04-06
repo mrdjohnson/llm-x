@@ -1,24 +1,43 @@
 import { ChatOllama } from '@langchain/community/chat_models/ollama'
-import { AIMessage, HumanMessage, SystemMessage, BaseMessage } from '@langchain/core/messages'
+import {
+  AIMessage,
+  HumanMessage,
+  SystemMessage,
+  BaseMessage,
+  type MessageContentImageUrl,
+} from '@langchain/core/messages'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { StringOutputParser } from '@langchain/core/output_parsers'
+import _ from 'lodash'
 
 import { IMessageModel } from '~/models/MessageModel'
 import { DefaultHost, settingStore } from '~/models/SettingStore'
 import { personaStore } from '~/models/PersonaStore'
 
-const createHumanMessage = (message: IMessageModel): HumanMessage => {
-  if (message.image) {
+import CachedStorage from '~/utils/CachedStorage'
+
+const createHumanMessage = async (message: IMessageModel): Promise<HumanMessage> => {
+  if (!_.isEmpty(message.imageUrls)) {
+    const imageUrls: MessageContentImageUrl[] = []
+
+    for (const cachedImageUrl of message.imageUrls) {
+      const imageData = await CachedStorage.get(cachedImageUrl)
+
+      if (imageData) {
+        imageUrls.push({
+          type: 'image_url',
+          image_url: imageData,
+        })
+      }
+    }
+
     return new HumanMessage({
       content: [
         {
           type: 'text',
           text: message.content,
         },
-        {
-          type: 'image_url',
-          image_url: message.image,
-        },
+        ...imageUrls,
       ],
     })
   }
@@ -26,7 +45,7 @@ const createHumanMessage = (message: IMessageModel): HumanMessage => {
   return new HumanMessage(message.content)
 }
 
-const getMessages = (chatMessages: IMessageModel[], incomingMessage: IMessageModel) => {
+const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMessageModel) => {
   const messages: BaseMessage[] = []
 
   const selectedPersona = personaStore.selectedPersona
@@ -41,7 +60,7 @@ const getMessages = (chatMessages: IMessageModel[], incomingMessage: IMessageMod
     if (message.fromBot) {
       messages.push(new AIMessage(message.content))
     } else {
-      messages.push(createHumanMessage(message))
+      messages.push(await createHumanMessage(message))
     }
   }
 
@@ -59,7 +78,7 @@ export class OllmaApi {
 
     OllmaApi.abortController = new AbortController()
 
-    const messages = getMessages(chatMessages, incomingMessage)
+    const messages = await getMessages(chatMessages, incomingMessage)
 
     const chatOllama = new ChatOllama({
       baseUrl: host,
