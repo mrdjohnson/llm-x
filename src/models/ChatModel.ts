@@ -134,7 +134,9 @@ export const ChatModel = types
         ? _.indexOf(self.messages, self.messageToEdit)
         : self.messages.length
 
-      self.messageToEdit = _.findLast(self.messages, { fromBot: false }, currentIndex - 1)
+      const messageToEdit = _.findLast(self.messages, { fromBot: false }, currentIndex - 1)
+
+      this.setMessageToEdit(messageToEdit)
     },
 
     findAndEditNextMessage() {
@@ -142,7 +144,9 @@ export const ChatModel = types
         ? _.indexOf(self.messages, self.messageToEdit)
         : self.messages.length
 
-      self.messageToEdit = _.find(self.messages, { fromBot: false }, currentIndex + 1)
+      const messageToEdit = _.find(self.messages, { fromBot: false }, currentIndex + 1)
+
+      this.setMessageToEdit(messageToEdit)
     },
 
     createIncomingMessage() {
