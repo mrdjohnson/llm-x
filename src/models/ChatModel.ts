@@ -47,13 +47,14 @@ export const ChatModel = types
       self._previewImageUrl = message?.imageUrls[0]
     },
 
-    commitMessageToEdit(content: string, image?: string) {
+    async commitMessageToEdit(content: string, image?: string) {
       const messageToEdit = self.messageToEdit!
 
       messageToEdit.content = content
 
       if (image) {
-        messageToEdit.setImage(self.id, image)
+        await messageToEdit.clearImages()
+        await messageToEdit.setImage(self.id, image)
       }
     },
 
@@ -275,7 +276,7 @@ export const ChatModel = types
       }
     },
 
-    addUserMessage(content: string = '', image?: string) {
+    async addUserMessage(content: string = '', image?: string) {
       if (!content && !image) return
 
       if (!self.name) {
@@ -291,7 +292,7 @@ export const ChatModel = types
       self.messages.push(message)
 
       if (image) {
-        message.setImage(self.id, image)
+        await message.setImage(self.id, image)
       }
     },
   }))
