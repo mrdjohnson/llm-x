@@ -29,6 +29,10 @@ export const MessageModel = types
     get imageUrl() {
       return self.imageUrls[0]
     },
+
+    isBlank() {
+      return self.content || !this.imageUrl || !self.extras?.error
+    },
   }))
   .actions(self => ({
     async afterAttach() {
@@ -44,10 +48,18 @@ export const MessageModel = types
     },
 
     async beforeDestroy() {
-      for (const imageUrl of self.imageUrls) {
-        await CachedStorage.delete(imageUrl)
-      }
+      await this.clearImages()
     },
+
+    clearImages: flow(function* clearImages() {
+      const imageUrls = self.imageUrls
+
+      self.imageUrls = cast([])
+
+      for (const imageUrl of imageUrls) {
+        yield CachedStorage.delete(imageUrl)
+      }
+    }),
 
     setImage: flow(function* setImage(parentId: number, imageData: string) {
       const imageUrl = `/llm-x/${parentId}/${self.uniqId}/image-${self.imageUrls.length}.png`

@@ -200,7 +200,7 @@ export const ChatModel = types
       const prompt = _.findLast(self.messages, { fromBot: false }, incomingIndex)?.content
 
       if (!prompt) {
-        if (incomingMessage.image || incomingMessage.extras?.error) {
+        if (!incomingMessage.isBlank()) {
           this.commitIncomingMessage()
         } else {
           this.deleteMessage(incomingMessage)
@@ -211,15 +211,10 @@ export const ChatModel = types
         return
       }
 
-      incomingMessage.image = undefined
+      await incomingMessage.clearImages()
 
       if (incomingMessage.extras) {
         incomingMessage.extras.error = undefined
-      }
-
-      if (!prompt) {
-        this.commitIncomingMessage()
-        return
       }
 
       console.log(prompt)
@@ -291,7 +286,6 @@ export const ChatModel = types
         fromBot: false,
         content,
         uniqId: 'user_' + Date.now(),
-        image,
       })
 
       self.messages.push(message)
