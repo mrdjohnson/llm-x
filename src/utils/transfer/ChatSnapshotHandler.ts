@@ -3,6 +3,8 @@ import { SnapshotOut, getSnapshot, SnapshotIn } from 'mobx-state-tree'
 
 import { ChatModel, IChatModel } from '~/models/ChatModel'
 import { IMessageModel, MessageModel } from '~/models/MessageModel'
+
+import { DownloadOptions } from '~/utils/transfer/TransferHandler'
 import CachedStorage from '~/utils/CachedStorage'
 
 export type FormattedMessageSnpashot = Omit<SnapshotOut<IMessageModel>, 'imageUrls'> & {
@@ -14,25 +16,31 @@ export type FormattedChatSnapshot = Omit<SnapshotOut<IChatModel>, 'messages'> & 
 }
 
 export class ChatSnapshotHandler {
-  static async formatChatToExport(chat: IChatModel): Promise<FormattedChatSnapshot> {
+  static async formatChatToExport(
+    chat: IChatModel,
+    options: DownloadOptions = {},
+  ): Promise<FormattedChatSnapshot> {
     const snapshot: SnapshotOut<IChatModel> = _.cloneDeep(getSnapshot(chat))
 
-    return ChatSnapshotHandler.formatChatSnapshotToExport(snapshot)
+    return ChatSnapshotHandler.formatChatSnapshotToExport(snapshot, options)
   }
 
   static async formatChatSnapshotToExport(
     snapshot: SnapshotOut<IChatModel>,
+    options: DownloadOptions = {},
   ): Promise<FormattedChatSnapshot> {
     const formmattedMessages = []
 
     for (const { imageUrls, ...message } of snapshot.messages) {
       const images: string[] = []
 
-      for (const imageUrl of imageUrls) {
-        const imageData = await CachedStorage.get(imageUrl)
+      if (options.includeImages) {
+        for (const imageUrl of imageUrls) {
+          const imageData = await CachedStorage.get(imageUrl)
 
-        if (imageData) {
-          images.push(imageData)
+          if (imageData) {
+            images.push(imageData)
+          }
         }
       }
 

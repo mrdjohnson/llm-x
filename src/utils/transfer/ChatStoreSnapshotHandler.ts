@@ -4,19 +4,20 @@ import { SnapshotOut, getSnapshot, SnapshotIn } from 'mobx-state-tree'
 import { IChatModel } from '~/models/ChatModel'
 import { chatStore, IChatStore } from '~/models/ChatStore'
 import { ChatSnapshotHandler, FormattedChatSnapshot } from '~/utils/transfer/ChatSnapshotHandler'
+import { DownloadOptions } from '~/utils/transfer/TransferHandler'
 
 type FormattedChatStore = Omit<SnapshotOut<IChatStore>, 'chats'> & {
   chats: FormattedChatSnapshot[]
 }
 
 export class ChatStoreSnapshotHandler {
-  static async formatChatStoreToExport(): Promise<FormattedChatStore> {
+  static async formatChatStoreToExport(options: DownloadOptions = {}): Promise<FormattedChatStore> {
     const snapshot: SnapshotOut<IChatStore> = _.cloneDeep(getSnapshot(chatStore))
 
     const formattedChats = []
 
     for (const chat of snapshot.chats) {
-      formattedChats.push(await ChatSnapshotHandler.formatChatSnapshotToExport(chat))
+      formattedChats.push(await ChatSnapshotHandler.formatChatSnapshotToExport(chat, options))
     }
 
     return {

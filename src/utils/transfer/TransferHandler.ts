@@ -9,6 +9,10 @@ import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
 import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
 import _ from 'lodash'
 
+export type DownloadOptions = {
+  includeImages?: boolean
+}
+
 export class TransferHandler {
   static async handleImport(files?: FileList | File[] | null) {
     if (!files) return
