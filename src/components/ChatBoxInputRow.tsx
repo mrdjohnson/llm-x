@@ -7,7 +7,7 @@ import { chatStore } from '~/models/ChatStore'
 import { settingStore } from '~/models/SettingStore'
 import { personaStore } from '~/models/PersonaStore'
 
-import AttachImageWrapper from '~/components/AttachImageWrapper'
+import AttachmentWrapper from '~/components/AttachmentWrapper'
 import CachedImage from '~/components/CachedImage'
 
 import CachedStorage from '~/utils/CachedStorage'
@@ -197,7 +197,7 @@ const ChatBoxInputRow = observer(
             </button>
 
             <div className="flex">
-              <AttachImageWrapper>
+              <AttachmentWrapper>
                 <button
                   className="btn btn-ghost rounded-none"
                   type="button"
@@ -205,7 +205,7 @@ const ChatBoxInputRow = observer(
                 >
                   <Paperclip />
                 </button>
-              </AttachImageWrapper>
+              </AttachmentWrapper>
 
               {chat.isEditingMessage && (
                 <button

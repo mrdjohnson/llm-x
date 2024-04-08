@@ -6,7 +6,7 @@ import { chatStore } from '~/models/ChatStore'
 import { settingStore } from '~/models/SettingStore'
 import { personaStore } from '~/models/PersonaStore'
 
-import AttachImageWrapper from '~/components/AttachImageWrapper'
+import AttachmentWrapper from '~/components/AttachmentWrapper'
 import FunTitle from '~/components/FunTitle'
 import ToolTip from '~/components/Tooltip'
 
@@ -99,9 +99,9 @@ const ChatBoxPrompt = observer(() => {
               <Step type="secondary" isCompleted={!!chatStore.selectedChat?.previewImage}>
                 {'Drag and Drop (or attach) an'}
 
-                <AttachImageWrapper>
+                <AttachmentWrapper>
                   <span className="link decoration-secondary">image</span>
-                </AttachImageWrapper>
+                </AttachmentWrapper>
 
                 {'for use with multimodal models'}
               </Step>

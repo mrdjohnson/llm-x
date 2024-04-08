@@ -2,7 +2,7 @@ import { ChangeEvent, PropsWithChildren, useRef } from 'react'
 
 import { TransferHandler } from '~/utils/transfer/TransferHandler'
 
-const AttachImageWrapper = ({ children }: PropsWithChildren) => {
+const AttachmentWrapper = ({ children }: PropsWithChildren) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -30,4 +30,4 @@ const AttachImageWrapper = ({ children }: PropsWithChildren) => {
   )
 }
 
-export default AttachImageWrapper
+export default AttachmentWrapper
