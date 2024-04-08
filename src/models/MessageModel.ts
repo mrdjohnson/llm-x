@@ -1,4 +1,5 @@
 import { types, Instance, getParentOfType, cast } from 'mobx-state-tree'
+import _ from 'lodash'
 
 import CachedStorage from '~/utils/CachedStorage'
 import { ChatModel } from '~/models/ChatModel'
@@ -55,6 +56,10 @@ export const MessageModel = types
       self.imageUrls = cast(imageUrls)
     },
 
+    _addImageUrl(imageUrl: string) {
+      self.imageUrls.push(imageUrl)
+    },
+
     async clearImages() {
       const imageUrls = self.imageUrls
 
@@ -66,16 +71,26 @@ export const MessageModel = types
     },
 
     async setImage(parentId: number, imageData?: string) {
+      await this.clearImages()
+
       if (!imageData) {
-        await this.clearImages()
         return
       }
 
-      const imageUrl = `/llm-x/${parentId}/${self.uniqId}/image-${self.imageUrls.length}.png`
+      await this.addImages(parentId, [imageData])
+    },
 
-      await CachedStorage.put(imageUrl, imageData)
+    async addImages(parentId: number, imageDatums?: string[]) {
+      if (!imageDatums || _.isEmpty(imageDatums)) return
 
-      this._setImageUrls([imageUrl])
+      for (const imageDatum of imageDatums) {
+        const imageName = _.uniqueId('image-')
+        const imageUrl = `/llm-x/${parentId}/${self.uniqId}/${imageName}.png`
+
+        await CachedStorage.put(imageUrl, imageDatum)
+
+        this._addImageUrl(imageUrl)
+      }
     },
 
     setError(error: Error) {
