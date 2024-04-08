@@ -2,12 +2,10 @@ import { PropsWithChildren } from 'react'
 import { useDropzone } from 'react-dropzone'
 
 import DocumentDownload from '~/icons/DocumentDownload'
-import { chatStore } from '~/models/ChatStore'
+import { TransferHandler } from '~/utils/transfer/TransferHandler'
 
 const Dropzone = ({ children }: PropsWithChildren) => {
-  const onDrop = ([file]: File[]) => {
-    chatStore.selectedChat?.setPreviewImage(file)
-  }
+  const onDrop = TransferHandler.handleImport
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, maxFiles: 1 })
 

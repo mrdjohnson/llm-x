@@ -18,6 +18,11 @@ export class TransferHandler {
         return
       }
 
+      if (file.type.startsWith('image/')) {
+        chatStore.selectedChat?.setPreviewImage(file)
+        return
+      }
+
       try {
         const data = JSON.parse(await file.text())
 

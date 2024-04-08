@@ -1,22 +1,15 @@
 import { ChangeEvent, PropsWithChildren, useRef } from 'react'
-import { chatStore } from '~/models/ChatStore'
+
+import { TransferHandler } from '~/utils/transfer/TransferHandler'
 
 const AttachImageWrapper = ({ children }: PropsWithChildren) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const chat = chatStore.selectedChat!
-
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-
-    if (!file) {
-      return
-    }
+    await TransferHandler.handleImport(event.target.files)
 
     // reset file input
     event.target.value = ''
-
-    chat.setPreviewImage(file)
   }
 
   return (
