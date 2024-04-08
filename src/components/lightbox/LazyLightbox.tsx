@@ -21,17 +21,15 @@ const LazyLightbox = observer(() => {
   const getAllSlideImages = async () => {
     if (!chat) return
 
-    const slides = []
+    const slides: Array<Slide & { uniqId: string }> = []
 
     for (const slide of chat.lightboxSlides) {
       const src = await CachedStorage.get(slide.src)
 
-      if (src) {
-        slides.push({
-          ...slide,
-          src,
-        })
-      }
+      slides.push({
+        ...slide,
+        src: src ?? '',
+      })
     }
 
     setSlides(slides)
