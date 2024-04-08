@@ -18,10 +18,13 @@ export const ChatStore = types
       return _.find(self.chats, chat => chat.messages.length === 0)
     },
 
+    get orderedChats() {
+      return _.orderBy(self.chats, 'lastMessageDate', 'desc') // newest sent message first
+    },
+
     get dateLabelToChatPairs() {
       // [['today', todayChats], ['yesterday', [yesterdayChats], [....], ['older', olderChats]]
-      return _.chain(self.chats)
-        .orderBy('lastMessageDate', 'desc') // newest sent message first
+      return _.chain(this.orderedChats)
         .groupBy('lastMessageDateLabel') // {today: todayChats, yesterday: yesterdayChats, ...., older: olderChats},
         .toPairs()
         .value()
@@ -43,7 +46,7 @@ export const ChatStore = types
 
     deleteChat(chat: IChatModel) {
       if (self.selectedChat?.id === chat.id) {
-        self.selectedChat = self.chats[0]
+        self.selectedChat = _.without(self.orderedChats, chat)[0]
       }
 
       if (!self.selectedChat) {
