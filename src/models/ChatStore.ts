@@ -1,4 +1,4 @@
-import { types, SnapshotIn, destroy } from 'mobx-state-tree'
+import { types, destroy, Instance } from 'mobx-state-tree'
 import persist from 'mst-persist'
 import _ from 'lodash'
 
@@ -60,13 +60,13 @@ export const ChatStore = types
       self.selectedChat = chat
     },
 
-    importChat(data: SnapshotIn<IChatModel>) {
-      const chat = ChatModel.create({ ...data, id: Date.now() })
-
+    importChat(chat: IChatModel) {
       self.chats.push(chat)
       self.selectedChat = chat
     },
   }))
+
+export interface IChatStore extends Instance<typeof ChatStore> {}
 
 export const chatStore = ChatStore.create()
 

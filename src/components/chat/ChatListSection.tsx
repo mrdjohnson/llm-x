@@ -6,8 +6,8 @@ import {
   Tooltip,
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
-import { getSnapshot, applySnapshot } from 'mobx-state-tree'
-import { useRef, ChangeEvent, Fragment } from 'react'
+import { getSnapshot } from 'mobx-state-tree'
+import { useRef, Fragment } from 'react'
 import _ from 'lodash'
 
 import { AccordionSectionProps } from '~/containers/SideBar'
@@ -21,13 +21,15 @@ import { chatStore } from '~/models/ChatStore'
 import { personaStore } from '~/models/PersonaStore'
 import { settingStore } from '~/models/SettingStore'
 
+import { TransferHandler } from '~/utils/transfer/TransferHandler'
+import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
+
 export const ChatListSection = observer(({ isOpen, onSectionClicked }: AccordionSectionProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const importTypeRef = useRef<'all' | 'chat'>('all')
 
-  const exportAll = () => {
+  const exportAll = async () => {
     const data = JSON.stringify({
-      chatStore: getSnapshot(chatStore),
+      chatStore: await ChatStoreSnapshotHandler.formatChatStoreToExport(),
       personaStore: getSnapshot(personaStore),
       settingStore: getSnapshot(settingStore),
     })
@@ -36,43 +38,6 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
     link.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
     link.download = 'llm-x-data.json'
     link.click()
-  }
-
-  const handleImport = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-
-    if (!file) {
-      return
-    }
-
-    // reset file input
-    event.target.value = ''
-
-    if (importTypeRef.current === 'all') {
-      importAll(file)
-    } else {
-      importChat(file)
-    }
-  }
-
-  const importAll = async (file: File) => {
-    const data = JSON.parse(await file.text())
-
-    applySnapshot(chatStore, data.chatStore)
-    applySnapshot(personaStore, data.personaStore)
-    applySnapshot(settingStore, data.settingStore)
-  }
-
-  const importChat = async (file: File) => {
-    const data = JSON.parse(await file.text())
-
-    chatStore.importChat(data)
-  }
-
-  const handleImportClicked = (importType: 'all' | 'chat') => {
-    importTypeRef.current = importType
-
-    fileInputRef.current?.click()
   }
 
   const handleChatSelected = (chat: IChatModel) => {
@@ -104,7 +69,7 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
             <button
               className="btn join-item btn-neutral mb-2 gap-2 p-2"
               title="Import chat"
-              onClick={() => handleImportClicked('chat')}
+              onClick={() => fileInputRef.current?.click()}
             >
               <DocumentArrowUp />
             </button>
@@ -154,14 +119,14 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
             ref={fileInputRef}
             type="file"
             accept=".json"
-            onChange={handleImport}
+            onChange={e => TransferHandler.handleImport(e.target.files)}
           />
 
           <div className="flex flex-row justify-center gap-2">
             <button
               className="btn btn-ghost btn-active"
               title="Import All"
-              onClick={() => handleImportClicked('all')}
+              onClick={() => fileInputRef.current?.click()}
             >
               <DocumentArrowUp />
             </button>

@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { AccordionItem, AccordionButton, AccordionIcon, AccordionPanel } from '@chakra-ui/react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
-import { getSnapshot } from 'mobx-state-tree'
 import { useForm } from 'react-hook-form'
 
 import { AccordionSectionProps } from '~/containers/SideBar'
@@ -12,6 +11,8 @@ import Check from '~/icons/Check'
 import Delete from '~/icons/Delete'
 import DocumentArrowDown from '~/icons/DocumentArrowDown'
 import Tooltip from '~/components/Tooltip'
+
+import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
 
 export const ChatSettingsSection = observer(
   ({ isOpen, onSectionClicked }: AccordionSectionProps) => {
@@ -34,8 +35,8 @@ export const ChatSettingsSection = observer(
       reset()
     })
 
-    const exportChat = () => {
-      const data = JSON.stringify(getSnapshot(chat))
+    const exportChat = async () => {
+      const data = JSON.stringify(await ChatSnapshotHandler.formatChatToExport(chat))
 
       const link = document.createElement('a')
       link.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
