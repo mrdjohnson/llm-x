@@ -14,15 +14,24 @@ const A1111EnabledCheckbox = observer(() => {
 
   return (
     <label className="label w-fit cursor-pointer gap-2">
-      <input
-        type="checkbox"
-        className="checkbox checkbox-xs rounded-sm"
-        checked={settingStore.a1111Enabled}
-        onChange={e => settingStore.setA1111Enabled(e.target.checked)}
-      />
-      <span className="label-text">
-        Image Generation {settingStore.a1111Enabled ? 'Enabled' : 'Disabled'}
-      </span>
+      <span className="label-text">Image Generation through AUTOMATIC1111:</span>
+
+      <div className="join">
+        {[true, false].map(isEnabled => (
+          <button
+            className={
+              'btn join-item btn-sm mr-0 ' +
+              (settingStore.a1111Enabled === isEnabled ? 'btn-active cursor-default ' : 'btn ')
+            }
+            onClick={() => settingStore.setA1111Enabled(isEnabled)}
+          >
+            <span>
+              {isEnabled ? 'Enable' : 'Disable'}
+              {settingStore.a1111Enabled === isEnabled ? 'd' : '?'}
+            </span>
+          </button>
+        ))}
+      </div>
     </label>
   )
 })
