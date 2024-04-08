@@ -9,6 +9,24 @@ export const ChatStore = types
     chats: types.optional(types.array(ChatModel), []),
     selectedChat: types.safeReference(ChatModel),
   })
+  .views(self => ({
+    get isGettingData() {
+      return !!self.selectedChat?.isGettingData
+    },
+
+    get emptyChat(): IChatModel | undefined {
+      return _.find(self.chats, chat => chat.messages.length === 0)
+    },
+
+    get dateLabelToChatPairs() {
+      // [['today', todayChats], ['yesterday', [yesterdayChats], [....], ['older', olderChats]]
+      return _.chain(self.chats)
+        .orderBy('lastMessageDate', 'desc') // newest sent message first
+        .groupBy('lastMessageDateLabel') // {today: todayChats, yesterday: yesterdayChats, ...., older: olderChats},
+        .toPairs()
+        .value()
+    },
+  }))
   .actions(self => ({
     afterCreate() {
       if (self.chats.length === 0) {
@@ -44,24 +62,6 @@ export const ChatStore = types
 
       self.chats.push(chat)
       self.selectedChat = chat
-    },
-  }))
-  .views(self => ({
-    get isGettingData() {
-      return !!self.selectedChat?.isGettingData
-    },
-
-    get emptyChat(): IChatModel | undefined {
-      return _.find(self.chats, chat => chat.messages.length === 0)
-    },
-
-    get dateLabelToChatPairs() {
-      // [['today', todayChats], ['yesterday', [yesterdayChats], [....], ['older', olderChats]]
-      return _.chain(self.chats)
-        .orderBy('lastMessageDate', 'desc') // newest sent message first
-        .groupBy('lastMessageDateLabel') // {today: todayChats, yesterday: yesterdayChats, ...., older: olderChats},
-        .toPairs()
-        .value()
     },
   }))
 
