@@ -119,7 +119,10 @@ const LazyMessage = observer(
 
         {imageUrl && (
           <CachedImage
-            className="mb-2 h-56 max-w-56 cursor-pointer place-self-center rounded-md object-contain"
+            className={
+              'mb-2 h-56 max-w-56 cursor-pointer rounded-md object-contain ' +
+              (fromBot ? 'place-self-start' : 'place-self-end')
+            }
             src={imageUrl}
             onClick={() => chat.setLightboxMessageById(message.uniqId)}
           />
