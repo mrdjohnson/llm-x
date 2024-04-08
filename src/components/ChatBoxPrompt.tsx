@@ -91,16 +91,20 @@ const ChatBoxPrompt = observer(() => {
               </Step>
 
               <Step type="secondary">
-                <span>
-                  <span className="text-secondary">Import</span> a chat from a previous session
-                </span>
+                {'Drag and Drop or'}
+
+                <AttachmentWrapper accept=".json">
+                  <span className="link decoration-secondary">Import a chat or save</span>
+                </AttachmentWrapper>
+
+                {'from a previous session'}
               </Step>
 
               <Step type="secondary" isCompleted={!!chatStore.selectedChat?.previewImage}>
-                {'Drag and Drop (or attach) an'}
+                {'Drag and Drop or'}
 
                 <AttachmentWrapper>
-                  <span className="link decoration-secondary">image</span>
+                  <span className="link decoration-secondary">Attach an image</span>
                 </AttachmentWrapper>
 
                 {'for use with multimodal models'}
