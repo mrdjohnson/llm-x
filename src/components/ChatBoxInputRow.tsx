@@ -11,6 +11,7 @@ import AttachmentWrapper from '~/components/AttachmentWrapper'
 import CachedImage from '~/components/CachedImage'
 
 import CachedStorage from '~/utils/CachedStorage'
+import { TransferHandler } from '~/utils/transfer/TransferHandler'
 
 import Paperclip from '~/icons/Paperclip'
 import ChevronDown from '~/icons/ChevronDown'
@@ -140,6 +141,7 @@ const ChatBoxInputRow = observer(
                 rows={lineCount}
                 onKeyDown={handleKeyDown}
                 onChange={e => setMessageContent(_.trimStart(e.target.value))}
+                onPaste={e => TransferHandler.handleImport(e.clipboardData.files)}
                 autoFocus
               />
             </Editable>

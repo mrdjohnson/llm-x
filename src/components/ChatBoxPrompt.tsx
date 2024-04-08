@@ -101,7 +101,7 @@ const ChatBoxPrompt = observer(() => {
               </Step>
 
               <Step type="secondary" isCompleted={!!chatStore.selectedChat?.previewImage}>
-                {'Drag and Drop or'}
+                {'Drag and Drop, Paste, or'}
 
                 <AttachmentWrapper>
                   <span className="link decoration-secondary">Attach an image</span>
