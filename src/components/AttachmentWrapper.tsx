@@ -2,7 +2,10 @@ import { ChangeEvent, PropsWithChildren, useRef } from 'react'
 
 import { TransferHandler } from '~/utils/transfer/TransferHandler'
 
-const AttachmentWrapper = ({ children }: PropsWithChildren) => {
+const AttachmentWrapper = ({
+  children,
+  accept = 'image/*',
+}: PropsWithChildren<{ accept?: string }>) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -19,7 +22,7 @@ const AttachmentWrapper = ({ children }: PropsWithChildren) => {
         style={{ display: 'none' }}
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept={accept}
         onChange={handleFileChange}
       />
 

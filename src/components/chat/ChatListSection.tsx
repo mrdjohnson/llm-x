@@ -6,10 +6,11 @@ import {
   Tooltip,
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
-import { useRef, Fragment } from 'react'
+import { Fragment } from 'react'
 import _ from 'lodash'
 
 import { AccordionSectionProps } from '~/containers/SideBar'
+import AttachmentWrapper from '~/components/AttachmentWrapper'
 
 import DocumentArrowUp from '~/icons/DocumentArrowUp'
 import Edit from '~/icons/Edit'
@@ -18,8 +19,6 @@ import { IChatModel } from '~/models/ChatModel'
 import { chatStore } from '~/models/ChatStore'
 
 export const ChatListSection = observer(({ isOpen, onSectionClicked }: AccordionSectionProps) => {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   const handleChatSelected = (chat: IChatModel) => {
     chatStore.selectChat(chat)
 
@@ -46,13 +45,11 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
           </button>
 
           <Tooltip label="Import chat" className="!bg-base-100 px-2 font-normal text-base-content">
-            <button
-              className="btn join-item btn-neutral mb-2 gap-2 p-2"
-              title="Import chat"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <DocumentArrowUp />
-            </button>
+            <AttachmentWrapper accept=".json">
+              <button className="btn join-item btn-neutral mb-2 gap-2 p-2" title="Import chat">
+                <DocumentArrowUp />
+              </button>
+            </AttachmentWrapper>
           </Tooltip>
         </div>
       ) : (
