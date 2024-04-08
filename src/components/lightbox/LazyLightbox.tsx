@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
-import Lightbox from 'yet-another-react-lightbox'
+import Lightbox, { Slide } from 'yet-another-react-lightbox'
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails'
 import Download from 'yet-another-react-lightbox/plugins/download'
 import Captions from 'yet-another-react-lightbox/plugins/captions'
@@ -7,7 +8,6 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom'
 import _ from 'lodash'
 
 import { chatStore } from '~/models/ChatStore'
-import CachedImage from '~/components/CachedImage'
 import CachedStorage from '~/utils/CachedStorage'
 
 import 'yet-another-react-lightbox/styles.css'
@@ -15,14 +15,36 @@ import 'yet-another-react-lightbox/plugins/thumbnails.css'
 import 'yet-another-react-lightbox/plugins/captions.css'
 
 const LazyLightbox = observer(() => {
+  const [slides, setSlides] = useState<Array<Slide & { uniqId: string }>>([])
   const chat = chatStore.selectedChat
+
+  const getAllSlideImages = async () => {
+    if (!chat) return
+
+    const slides = []
+
+    for (const slide of chat.lightboxSlides) {
+      const src = await CachedStorage.get(slide.src)
+
+      if (src) {
+        slides.push({
+          ...slide,
+          src,
+        })
+      }
+    }
+
+    setSlides(slides)
+  }
+
+  useEffect(() => {
+    getAllSlideImages()
+  }, [chat?.lightboxSlides?.length])
 
   if (!chat) return null
 
   const index = chat.lightboxMessageIndex
-  if (index === -1) return null
-
-  const slides = chat.lightboxSlides
+  if (index === -1 || _.isEmpty(slides)) return null
 
   return (
     <Lightbox
@@ -30,17 +52,13 @@ const LazyLightbox = observer(() => {
       plugins={[Thumbnails, Download, Captions, Zoom]}
       download={{
         download: ({ slide, saveAs }) => {
-          CachedStorage.get(slide.src).then(imageData => {
-            if (!imageData) return
+          let name: string | undefined
 
-            let name: string | undefined
+          if (_.isString(slide.description)) {
+            name = _.snakeCase(slide.description)
+          }
 
-            if (_.isString(slide.description)) {
-              name = _.snakeCase(slide.description)
-            }
-
-            return saveAs(imageData, name)
-          })
+          saveAs(slide.src, name)
         },
       }}
       index={index}
@@ -49,10 +67,6 @@ const LazyLightbox = observer(() => {
         view: ({ index }) => chat.setLightboxMessageById(slides[index].uniqId),
       }}
       slides={slides}
-      render={{
-        slide: ({ slide }) => <CachedImage src={slide.src} />,
-        thumbnail: ({ slide }) => <CachedImage src={slide.src} />,
-      }}
       controller={{ closeOnBackdropClick: true }}
       zoom={{ maxZoomPixelRatio: 7 }}
       open
