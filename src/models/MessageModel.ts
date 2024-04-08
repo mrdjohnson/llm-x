@@ -63,7 +63,7 @@ export const MessageModel = types
     },
 
     async clearImages() {
-      const imageUrls = self.imageUrls
+      const imageUrls = [...self.imageUrls]
 
       this._setImageUrls([])
 
