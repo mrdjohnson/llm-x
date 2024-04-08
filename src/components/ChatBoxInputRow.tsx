@@ -10,7 +10,6 @@ import { personaStore } from '~/models/PersonaStore'
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import CachedImage from '~/components/CachedImage'
 
-import CachedStorage from '~/utils/CachedStorage'
 import { TransferHandler } from '~/utils/transfer/TransferHandler'
 
 import Paperclip from '~/icons/Paperclip'
@@ -41,13 +40,7 @@ const ChatBoxInputRow = observer(
 
       const messageToSend = textareaRef.current.value || ''
 
-      let previewImage
-
-      if (previewImageUrl) {
-        previewImage = await CachedStorage.get(previewImageUrl)
-      }
-
-      onSend(messageToSend, previewImage)
+      onSend(messageToSend, previewImageUrl)
 
       setMessageContent('')
       textareaRef.current.focus()

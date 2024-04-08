@@ -144,21 +144,24 @@ export const ChatModel = types
       self._previewImageUrl = message?.imageUrls[0]
     },
 
-    async commitMessageToEdit(content: string, image?: string) {
+    async commitMessageToEdit(content: string, imageUrl?: string) {
       const messageToEdit = self.messageToEdit!
 
       messageToEdit.content = content
 
-      await messageToEdit.setImage(self.id, image)
+      if (imageUrl !== messageToEdit.imageUrl) {
+        if (!imageUrl) {
+          messageToEdit.setImage(self.id, undefined)
+        } else {
+          const image = await CachedStorage.get(imageUrl)
+          await messageToEdit.setImage(self.id, image)
+        }
+      }
     },
 
     setPreviewImage: flow(function* setFile(file?: File) {
       if (!file) {
-        if (self._previewImageUrl) {
-          CachedStorage.delete(self._previewImageUrl)
-
-          self._previewImageUrl = undefined
-        }
+        self._previewImageUrl = undefined
 
         return
       }
@@ -370,8 +373,8 @@ export const ChatModel = types
       }
     },
 
-    async addUserMessage(content: string = '', image?: string) {
-      if (!content && !image) return
+    async addUserMessage(content: string = '', imageUrl?: string) {
+      if (!content && !imageUrl) return
 
       if (!self.name) {
         this.setName(content.substring(0, 40))
@@ -385,7 +388,11 @@ export const ChatModel = types
 
       self.messages.push(message)
 
-      await message.setImage(self.id, image)
+      if (imageUrl) {
+        const image = await CachedStorage.get(imageUrl)
+
+        await message.setImage(self.id, image)
+      }
     },
   }))
 

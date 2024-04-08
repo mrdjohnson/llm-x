@@ -30,9 +30,9 @@ const ChatBox = observer(() => {
 
   if (!chat) return null
 
-  const handleMessageToSend = async (userMessageContent: string, image?: string) => {
+  const handleMessageToSend = async (userMessageContent: string, imageUrl?: string) => {
     if (chat.messageToEdit) {
-      await chat.commitMessageToEdit(userMessageContent, image)
+      await chat.commitMessageToEdit(userMessageContent, imageUrl)
 
       if (chat.messageToEdit.fromBot) {
         chat.setMessageToEdit(undefined)
@@ -40,7 +40,7 @@ const ChatBox = observer(() => {
         chat.findAndRegenerateResponse()
       }
     } else {
-      await chat.addUserMessage(userMessageContent, image)
+      await chat.addUserMessage(userMessageContent, imageUrl)
 
       const incomingMessage = chat.createAndPushIncomingMessage()
       sendMessage(incomingMessage)
