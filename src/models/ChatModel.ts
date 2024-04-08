@@ -17,20 +17,32 @@ export const ChatModel = types
     id: types.optional(types.identifierNumber, Date.now),
     name: types.optional(types.string, ''),
     messages: types.array(MessageModel),
-    incomingMessage: types.safeReference(MessageModel), // bot message
+    _incomingMessageId: types.maybe(types.string), // bot message id
     _incomingMessageAbortedByUser: types.maybe(types.boolean),
     previewImage: types.maybe(types.string),
-    messageToEdit: types.safeReference(MessageModel), // user message to edit
-    _lightboxMessage: types.safeReference(MessageModel),
+    _messageToEditId: types.maybe(types.string), // user message to edit
+    _lightboxMessageId: types.maybe(types.string),
     _previewImageUrl: types.maybe(types.string),
   })
   .views(self => ({
+    get incomingMessage() {
+      if (!self._incomingMessageId) return
+
+      return _.find(self.messages, { uniqId: self._incomingMessageId })
+    },
+
+    get messageToEdit() {
+      if (!self._messageToEditId) return
+
+      return _.find(self.messages, { uniqId: self._messageToEditId })
+    },
+
     get isGettingData() {
-      return !!self.incomingMessage
+      return !!this.incomingMessage
     },
 
     get isEditingMessage() {
-      return !!self.messageToEdit
+      return !!this.messageToEdit
     },
 
     get lastMessageDate() {
@@ -72,11 +84,11 @@ export const ChatModel = types
     },
 
     get lightboxMessage() {
-      return self._lightboxMessage
+      return _.find(self.messages, { uniqId: self._lightboxMessageId })
     },
 
     get lightboxSlides() {
-      if (!self._lightboxMessage) return []
+      if (!this.lightboxMessage) return []
 
       const lightBoxSources: Array<Slide & { uniqId: string }> = []
 
@@ -100,12 +112,9 @@ export const ChatModel = types
     },
 
     get lightboxMessageIndex() {
-      if (!self._lightboxMessage) return -1
+      if (!self._lightboxMessageId) return -1
 
-      return _.findIndex(
-        this.lightboxSlides,
-        ({ uniqId }) => uniqId === self._lightboxMessage!.uniqId,
-      )
+      return _.findIndex(this.lightboxSlides, ({ uniqId }) => uniqId === self._lightboxMessageId)
     },
 
     get previewImageUrl() {
@@ -120,8 +129,8 @@ export const ChatModel = types
 
       // do not persist the draft information
       self.previewImage = undefined
-      self.messageToEdit = undefined
-      self._lightboxMessage = undefined
+      self._messageToEditId = undefined
+      self._lightboxMessageId = undefined
       self._incomingMessageAbortedByUser = undefined
       self._previewImageUrl = undefined
     },
@@ -131,7 +140,7 @@ export const ChatModel = types
     },
 
     setMessageToEdit(message?: IMessageModel) {
-      self.messageToEdit = message
+      self._messageToEditId = message?.uniqId
       self._previewImageUrl = message?.imageUrls[0]
     },
 
@@ -172,11 +181,11 @@ export const ChatModel = types
     }),
 
     setLightboxMessageById(uniqId: string) {
-      self._lightboxMessage = _.find(self.messages, { uniqId })
+      self._lightboxMessageId = uniqId
     },
 
     closeLightbox() {
-      self._lightboxMessage = undefined
+      self._lightboxMessageId = undefined
     },
 
     setName(name?: string) {
@@ -191,9 +200,9 @@ export const ChatModel = types
 
     findAndRegenerateResponse() {
       const messageToEditIndex = _.indexOf(self.messages, self.messageToEdit)
-      const messageAfterEditedMessage = self.messages[messageToEditIndex + 1]
+      const messageAfterEditedMessage: IMessageModel = self.messages[messageToEditIndex + 1]
 
-      let botMessageToEdit
+      let botMessageToEdit: IMessageModel
 
       // edited message was the last message
       if (!messageAfterEditedMessage) {
@@ -210,7 +219,7 @@ export const ChatModel = types
         botMessageToEdit = messageAfterEditedMessage
       }
 
-      self.messageToEdit = undefined
+      self._messageToEditId = undefined
       this.generateMessage(botMessageToEdit)
     },
 
@@ -250,17 +259,17 @@ export const ChatModel = types
     },
 
     createAndPushIncomingMessage() {
-      const incomingMessage = this.createIncomingMessage()
+      const incomingMessage: IMessageModel = this.createIncomingMessage()
 
       self.messages.push(incomingMessage)
 
-      self.incomingMessage = incomingMessage
+      self._incomingMessageId = incomingMessage.uniqId
 
-      return self.incomingMessage
+      return incomingMessage
     },
 
     commitIncomingMessage() {
-      self.incomingMessage = undefined
+      self._incomingMessageId = undefined
       self._incomingMessageAbortedByUser = false
     },
 
@@ -280,7 +289,7 @@ export const ChatModel = types
     },
 
     async generateImage(incomingMessage: IMessageModel) {
-      self.incomingMessage = incomingMessage
+      self._incomingMessageId = incomingMessage.uniqId
 
       const incomingIndex = _.findIndex(self.messages, { uniqId: incomingMessage.uniqId })
       const prompt = _.findLast(self.messages, { fromBot: false }, incomingIndex)?.content
@@ -308,7 +317,7 @@ export const ChatModel = types
       try {
         const image = await A1111Api.generateImage(prompt)
 
-        await self.incomingMessage.setImage(self.id, 'data:image/png;base64,' + image)
+        await incomingMessage.setImage(self.id, 'data:image/png;base64,' + image)
       } catch (error: unknown) {
         if (self._incomingMessageAbortedByUser) {
           incomingMessage.setError(new Error('Stream stopped by user'))
@@ -328,7 +337,7 @@ export const ChatModel = types
     },
 
     async generateMessage(incomingMessage: IMessageModel) {
-      self.incomingMessage = incomingMessage
+      self._incomingMessageId = incomingMessage.uniqId
       incomingMessage.content = ''
 
       if (incomingMessage.extras) {

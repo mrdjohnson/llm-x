@@ -13,6 +13,8 @@ const MessageExtrasModel = types.model({
   error: types.maybe(MessageErrorModel),
 })
 
+// note: do not use types.refrence for MessageModel, the uniq id can be duplicated between different chats
+// instead use the types.maybe(types.string) for the uniq id, and find it per chat if it exists
 export const MessageModel = types
   .model({
     fromBot: types.boolean,
