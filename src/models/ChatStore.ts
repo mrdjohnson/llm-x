@@ -73,7 +73,7 @@ export const chatStore = ChatStore.create()
 persist('chat-store', chatStore).then(() => {
   if (!chatStore.selectedChat) {
     if (chatStore.chats.length > 0) {
-      chatStore.selectChat(chatStore.chats[0])
+      chatStore.selectChat(chatStore.orderedChats[0])
     } else {
       chatStore.createChat()
     }
