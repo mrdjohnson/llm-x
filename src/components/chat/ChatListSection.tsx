@@ -6,39 +6,19 @@ import {
   Tooltip,
 } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
-import { getSnapshot } from 'mobx-state-tree'
 import { useRef, Fragment } from 'react'
 import _ from 'lodash'
 
 import { AccordionSectionProps } from '~/containers/SideBar'
 
-import DocumentArrowDown from '~/icons/DocumentArrowDown'
 import DocumentArrowUp from '~/icons/DocumentArrowUp'
 import Edit from '~/icons/Edit'
 
 import { IChatModel } from '~/models/ChatModel'
 import { chatStore } from '~/models/ChatStore'
-import { personaStore } from '~/models/PersonaStore'
-import { settingStore } from '~/models/SettingStore'
-
-import { TransferHandler } from '~/utils/transfer/TransferHandler'
-import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
 
 export const ChatListSection = observer(({ isOpen, onSectionClicked }: AccordionSectionProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
-
-  const exportAll = async () => {
-    const data = JSON.stringify({
-      chatStore: await ChatStoreSnapshotHandler.formatChatStoreToExport(),
-      personaStore: getSnapshot(personaStore),
-      settingStore: getSnapshot(settingStore),
-    })
-
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
-    link.download = 'llm-x-data.json'
-    link.click()
-  }
 
   const handleChatSelected = (chat: IChatModel) => {
     chatStore.selectChat(chat)
@@ -108,33 +88,6 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
               ))}
             </Fragment>
           ))}
-        </div>
-
-        <div className="mt-2 flex flex-col justify-center gap-2">
-          <label className=" text-center">Import / Export</label>
-
-          {/* hidden file input */}
-          <input
-            style={{ display: 'none' }}
-            ref={fileInputRef}
-            type="file"
-            accept=".json"
-            onChange={e => TransferHandler.handleImport(e.target.files)}
-          />
-
-          <div className="flex flex-row justify-center gap-2">
-            <button
-              className="btn btn-ghost btn-active"
-              title="Import All"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <DocumentArrowUp />
-            </button>
-
-            <button className="btn btn-ghost btn-active" title="Export All" onClick={exportAll}>
-              <DocumentArrowDown />
-            </button>
-          </div>
         </div>
       </AccordionPanel>
     </AccordionItem>
