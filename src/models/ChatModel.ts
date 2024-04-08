@@ -24,6 +24,94 @@ export const ChatModel = types
     _lightboxMessage: types.safeReference(MessageModel),
     _previewImageUrl: types.maybe(types.string),
   })
+  .views(self => ({
+    get isGettingData() {
+      return !!self.incomingMessage
+    },
+
+    get isEditingMessage() {
+      return !!self.messageToEdit
+    },
+
+    get lastMessageDate() {
+      if (self.messages.length === 0) return moment()
+
+      const lastMessage = _.last(self.messages)
+      const sentTime = moment(parseInt(lastMessage!.uniqId.split('_')[1]))
+
+      return sentTime
+    },
+
+    get lastMessageDateLabel() {
+      const sentTime = this.lastMessageDate
+
+      const today = moment().startOf('day')
+
+      if (sentTime.isAfter(today)) {
+        return 'Today'
+      }
+
+      if (sentTime.isAfter(today.subtract(1, 'days'))) {
+        return 'Yesterday'
+      }
+
+      const thisWeek = moment().startOf('week')
+
+      if (sentTime.isAfter(thisWeek)) {
+        return 'This Week'
+      }
+
+      const thisMonth = moment().startOf('month')
+
+      if (sentTime.isAfter(thisMonth.subtract(2, 'months'))) {
+        // January February ...
+        return sentTime.format('MMMM')
+      }
+
+      return 'Older'
+    },
+
+    get lightboxMessage() {
+      return self._lightboxMessage
+    },
+
+    get lightboxSlides() {
+      if (!self._lightboxMessage) return []
+
+      const lightBoxSources: Array<Slide & { uniqId: string }> = []
+
+      let userPrompt: string | undefined
+
+      self.messages.forEach(message => {
+        if (message.fromBot === false) {
+          userPrompt = message.content
+        }
+
+        message.imageUrls.forEach(imageUrl => {
+          lightBoxSources.push({
+            description: userPrompt,
+            src: imageUrl,
+            uniqId: message.uniqId,
+          })
+        })
+      })
+
+      return lightBoxSources
+    },
+
+    get lightboxMessageIndex() {
+      if (!self._lightboxMessage) return -1
+
+      return _.findIndex(
+        this.lightboxSlides,
+        ({ uniqId }) => uniqId === self._lightboxMessage!.uniqId,
+      )
+    },
+
+    get previewImageUrl() {
+      return self._previewImageUrl
+    },
+  }))
   .actions(self => ({
     afterCreate() {
       if (self.incomingMessage) {
@@ -289,94 +377,6 @@ export const ChatModel = types
       self.messages.push(message)
 
       await message.setImage(self.id, image)
-    },
-  }))
-  .views(self => ({
-    get isGettingData() {
-      return !!self.incomingMessage
-    },
-
-    get isEditingMessage() {
-      return !!self.messageToEdit
-    },
-
-    get lastMessageDate() {
-      if (self.messages.length === 0) return moment()
-
-      const lastMessage = _.last(self.messages)
-      const sentTime = moment(parseInt(lastMessage!.uniqId.split('_')[1]))
-
-      return sentTime
-    },
-
-    get lastMessageDateLabel() {
-      const sentTime = this.lastMessageDate
-
-      const today = moment().startOf('day')
-
-      if (sentTime.isAfter(today)) {
-        return 'Today'
-      }
-
-      if (sentTime.isAfter(today.subtract(1, 'days'))) {
-        return 'Yesterday'
-      }
-
-      const thisWeek = moment().startOf('week')
-
-      if (sentTime.isAfter(thisWeek)) {
-        return 'This Week'
-      }
-
-      const thisMonth = moment().startOf('month')
-
-      if (sentTime.isAfter(thisMonth.subtract(2, 'months'))) {
-        // January February ...
-        return sentTime.format('MMMM')
-      }
-
-      return 'Older'
-    },
-
-    get lightboxMessage() {
-      return self._lightboxMessage
-    },
-
-    get lightboxSlides() {
-      if (!self._lightboxMessage) return []
-
-      const lightBoxSources: Array<Slide & { uniqId: string }> = []
-
-      let userPrompt: string | undefined
-
-      self.messages.forEach(message => {
-        if (message.fromBot === false) {
-          userPrompt = message.content
-        }
-
-        message.imageUrls.forEach(imageUrl => {
-          lightBoxSources.push({
-            description: userPrompt,
-            src: imageUrl,
-            uniqId: message.uniqId,
-          })
-        })
-      })
-
-      return lightBoxSources
-    },
-
-    get lightboxMessageIndex() {
-      if (!self._lightboxMessage) return -1
-
-      return _.findIndex(
-        this.lightboxSlides,
-        ({ uniqId }) => uniqId === self._lightboxMessage!.uniqId,
-      )
-    },
-
-    get previewImageUrl() {
-      return self._previewImageUrl
     },
   }))
 
