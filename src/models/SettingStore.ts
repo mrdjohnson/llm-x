@@ -32,6 +32,7 @@ export const SettingStore = types
     // general settings
     theme: types.optional(types.string, '_system'),
     pwaNeedsUpdate: types.optional(types.boolean, false),
+    isSidebarOpen: types.optional(types.boolean, true),
 
     // image generation settings
     a1111Enabled: types.maybe(types.boolean),
@@ -51,6 +52,10 @@ export const SettingStore = types
     let updateServiceWorker: undefined | (() => void)
 
     return {
+      toggleSidebar() {
+        self.isSidebarOpen = !self.isSidebarOpen
+      },
+
       openSettingsModal(panelName: SettingPanelOptionsType | 'initial' = 'initial') {
         self._settingsPanelName = panelName
       },

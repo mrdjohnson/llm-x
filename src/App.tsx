@@ -26,7 +26,7 @@ function App() {
         <OmniBar />
 
         <section className="drawer-content flex h-screen max-h-full w-full flex-grow flex-row gap-4 overflow-hidden text-xl">
-          <aside className="hidden h-full w-[260px] min-w-[260px] lg:block" role="complementary">
+          <aside className="hidden lg:block" role="complementary">
             <SideBar />
           </aside>
 
