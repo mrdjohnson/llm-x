@@ -32,14 +32,13 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up Node
         uses: actions/setup-node@v3
-      - name: Run install
-        uses: borales/actions-yarn@v4
         with:
-          cmd: install # will run `yarn install` command 
-      - name: Run build
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: build # will run `yarn install` command
+          node-version: 18
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
