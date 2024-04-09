@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import _ from 'lodash'
 
 import { settingStore } from '~/models/SettingStore'
@@ -19,9 +19,11 @@ enum SortType {
 
 const OllamaModelPanel = observer(() => {
   const { selectedModelLabel, models } = settingStore
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const [activeSortType, setActiveSortType] = useState(SortType.None)
   const [ascendingSort, setAscendingSort] = useState(true)
+  const [filterText, setFilterText] = useState('')
 
   const sortedModels = useMemo(() => {
     if (activeSortType === SortType.None) return models
@@ -38,6 +40,12 @@ const OllamaModelPanel = observer(() => {
 
     return _.orderBy(models, [activeSortType, SortType.Name], direction)
   }, [activeSortType, ascendingSort, models.length])
+
+  const filteredModels = useMemo(() => {
+    if (!filterText) return sortedModels
+
+    return sortedModels.filter(model => model.name.includes(filterText))
+  }, [filterText, sortedModels])
 
   const handleSortTypeChanged = (nextSortType: SortType) => {
     if (activeSortType !== nextSortType) {
@@ -80,6 +88,10 @@ const OllamaModelPanel = observer(() => {
     )
   }
 
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
+
   if (!settingStore.isServerConnected) {
     const openOllamaPanel = () => {
       settingStore.setModelType('Ollama')
@@ -99,15 +111,19 @@ const OllamaModelPanel = observer(() => {
 
   return (
     <div className="relative flex h-full w-full flex-col">
-      {/* <label className="flex flex-row gap-2">
+      <label className="flex w-full flex-row gap-2">
         <input
           type="text"
           placeholder="Filter..."
-          className="input input-sm input-bordered sticky focus:outline-none"
+          className="input input-sm input-bordered sticky w-full focus:outline-none"
+          onChange={e => setFilterText(e.target.value)}
+          value={filterText}
+          ref={inputRef}
+          autoFocus
         />
-      </label> */}
+      </label>
 
-      <div className="mt-2 h-full overflow-y-scroll rounded-md">
+      <div className="mt-2 flex h-full flex-col overflow-y-scroll rounded-md">
         <table className="table table-zebra -mt-4 mb-4 border-separate border-spacing-y-2 pt-0">
           <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
             <tr>
@@ -139,7 +155,7 @@ const OllamaModelPanel = observer(() => {
           </thead>
 
           <tbody className="-mt-4 gap-2 px-2">
-            {sortedModels?.map(model => (
+            {filteredModels?.map(model => (
               <tr
                 className={
                   'cursor-pointer ' +

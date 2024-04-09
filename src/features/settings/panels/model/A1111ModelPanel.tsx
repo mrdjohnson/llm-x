@@ -97,7 +97,7 @@ const A1111ModelPanel = observer(() => {
         />
       </label> */}
 
-      <div className="mt-2 h-full overflow-y-scroll rounded-md">
+      <div className="mt-2 flex h-full flex-col overflow-y-scroll rounded-md">
         <table className="table table-zebra -mt-4 mb-4 border-separate border-spacing-y-2 pt-0">
           <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
             <tr>
