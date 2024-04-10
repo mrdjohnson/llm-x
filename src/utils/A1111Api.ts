@@ -5,7 +5,7 @@ import { DefaultA1111Host, settingStore } from '~/models/SettingStore'
 export class A1111Api {
   private static abortController?: AbortController
 
-  static async generateImage(prompt: string): Promise<string> {
+  static async generateImage(prompt: string): Promise<string[]> {
     const host = settingStore.a1111Host || DefaultA1111Host
 
     A1111Api.abortController = new AbortController()
@@ -18,21 +18,22 @@ export class A1111Api {
         width: settingStore.a1111Width,
         height: settingStore.a1111Height,
         hr_checkpoint_name: settingStore.selectedModelLabel,
+        batch_size: settingStore.a1111BatchSize,
       },
       {
         signal: A1111Api.abortController.signal,
       },
     )
 
-    const image: string | undefined = response.data.images?.[0]
+    const images: string[] | undefined = response.data.images
 
-    if (!image) {
+    if (!images) {
       throw new Error('A1111 API failed to return any generated image')
     }
 
     this.abortController = undefined
 
-    return image!
+    return images
   }
 
   static cancelGeneration() {
