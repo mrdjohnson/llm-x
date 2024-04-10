@@ -29,12 +29,8 @@ export const MessageModel = types
     imageUrls: types.array(types.string),
   })
   .views(self => ({
-    get imageUrl() {
-      return self.imageUrls[0]
-    },
-
     isBlank() {
-      return self.content || !this.imageUrl || !self.extras?.error
+      return self.content || _.isEmpty(self.imageUrls) || !self.extras?.error
     },
   }))
   .actions(self => ({
@@ -46,7 +42,7 @@ export const MessageModel = types
       if (image) {
         const chatId = getParentOfType(self, ChatModel)?.id
 
-        await this.setImage(chatId, image)
+        await this.addImages(chatId, [image])
       }
     },
 
@@ -72,14 +68,26 @@ export const MessageModel = types
       }
     },
 
-    async setImage(parentId: number, imageData?: string) {
-      await this.clearImages()
+    async removeImageUrls(imageUrls: string[]) {
+      for (const imageUrl of _.toArray(imageUrls)) {
+        await CachedStorage.delete(imageUrl)
 
-      if (!imageData) {
-        return
+        this._setImageUrls(_.without(self.imageUrls, imageUrl))
       }
+    },
 
-      await this.addImages(parentId, [imageData])
+    async addImageUrls(parentId: number, imageUrls?: string[]) {
+      if (!imageUrls || _.isEmpty(imageUrls)) return
+
+      for (const imageUrl of _.toArray(imageUrls)) {
+        const image = await CachedStorage.get(imageUrl)
+
+        if (!image) continue
+
+        await this.addImages(parentId, [image])
+
+        await CachedStorage.delete(imageUrl)
+      }
     },
 
     async addImages(parentId: number, imageDatums?: string[]) {

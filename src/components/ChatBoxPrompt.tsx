@@ -100,11 +100,13 @@ const ChatBoxPrompt = observer(() => {
                 {'from a previous session'}
               </Step>
 
-              <Step type="secondary" isCompleted={!!chatStore.selectedChat?.previewImage}>
+              <Step type="secondary" isCompleted={!!chatStore.selectedChat?.previewImageUrls[0]}>
                 {'Drag and Drop, Paste, or'}
 
                 <AttachmentWrapper>
-                  <span className="link decoration-secondary">Attach an image</span>
+                  <span className="link decoration-secondary">
+                    Attach as many images as you want
+                  </span>
                 </AttachmentWrapper>
 
                 {'for use with multimodal models'}

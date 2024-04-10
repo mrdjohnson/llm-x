@@ -19,12 +19,12 @@ export class TransferHandler {
 
     for (const file of files) {
       if (!file) {
-        return
+        continue
       }
 
       if (file.type.startsWith('image/')) {
-        chatStore.selectedChat?.setPreviewImage(file)
-        return
+        await chatStore.selectedChat?.addPreviewImage(file)
+        continue
       }
 
       try {

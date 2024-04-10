@@ -20,14 +20,14 @@ const ChatBoxInputRow = observer(
   ({
     onSend,
     children,
-  }: PropsWithChildren<{ onSend: (message: string, image?: string) => void }>) => {
+  }: PropsWithChildren<{ onSend: (message: string, imageUrls?: string[]) => void }>) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const previewAreaRef = useRef<HTMLSpanElement>(null)
 
     const [messageContent, setMessageContent] = useState('')
 
     const chat = chatStore.selectedChat!
-    const { previewImageUrl, messageToEdit } = chat
+    const { previewImageUrls, messageToEdit } = chat
 
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
@@ -40,12 +40,12 @@ const ChatBoxInputRow = observer(
 
       const messageToSend = textareaRef.current.value || ''
 
-      onSend(messageToSend, previewImageUrl)
+      onSend(messageToSend, previewImageUrls)
 
       setMessageContent('')
       textareaRef.current.focus()
 
-      chat.setPreviewImage(undefined)
+      await chat.clearImagePreviews()
     }
 
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -102,83 +102,106 @@ const ChatBoxInputRow = observer(
     return (
       <div
         className={
-          'no-scrollbar mt-2 h-fit w-full shrink-0 ' + (noServer && 'tooltip cursor-not-allowed')
+          'no-scrollbar join join-vertical relative mt-2 h-fit max-h-[700px] w-full shrink-0 rounded-md border border-base-content/20 ' +
+          (noServer && 'tooltip cursor-not-allowed')
         }
         data-tip={
           settingStore.isServerConnected ? 'No Models Available' : 'Server is not connected'
         }
       >
+        <div className="join-item max-h-[600px] overflow-y-scroll p-2">
+          {previewImageUrls[0] && (
+            <div className="relative">
+              <div className="flex max-h-[200px] flex-row flex-wrap gap-2 overflow-hidden overflow-y-scroll pb-0">
+                {previewImageUrls.map(previewImageUrl => (
+                  <div
+                    className="group relative h-24 place-content-center rounded-sm border border-base-content/30 bg-base-content/30"
+                    key={previewImageUrl}
+                  >
+                    <button
+                      className="btn btn-circle btn-neutral btn-xs absolute right-0 top-0 z-20 scale-75 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
+                      onClick={() => chat.removePreviewImageUrl(previewImageUrl)}
+                      role="button"
+                    >
+                      ✕
+                    </button>
+
+                    <CachedImage
+                      src={previewImageUrl}
+                      className="max-h-24 min-w-16 max-w-24 rounded-sm object-contain object-center py-[1px]"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {previewImageUrls.length >= 5 && (
+                <div className="absolute inset-x-0 -bottom-1 flex justify-around">
+                  <button
+                    className="btn btn-neutral btn-xs"
+                    role="button"
+                    onClick={() => console.log('afd')}
+                  >
+                    Clear {previewImageUrls.length} images
+                  </button>
+                </div>
+              )}
+
+              <div className="divider my-0" />
+            </div>
+          )}
+
+          <Editable
+            placeholder="Enter Prompt"
+            startWithEditView
+            selectAllOnFocus={false}
+            value={messageContent}
+            className="min-h-8"
+            isDisabled={inputDisabled}
+          >
+            <EditablePreview
+              className="!line-clamp-3 w-full py-0 !text-left opacity-30"
+              ref={previewAreaRef}
+            />
+
+            <EditableTextarea
+              className="no-scrollbar my-0 w-full resize-none py-0 focus:outline-none"
+              placeholder="Enter Prompt"
+              ref={textareaRef}
+              disabled={inputDisabled}
+              rows={lineCount}
+              onKeyDown={handleKeyDown}
+              onChange={e => setMessageContent(_.trimStart(e.target.value))}
+              onPaste={e => TransferHandler.handleImport(e.clipboardData.files)}
+              autoFocus
+            />
+          </Editable>
+        </div>
+
+        {settingStore.isImageGenerationMode && (
+          <div className=" px-2 pb-2">
+            <div className="divider my-0" />
+
+            <div
+              className="join-item flex w-full cursor-pointer flex-row gap-4 text-base-content/45 [&>span]:text-sm"
+              onClick={() => settingStore.openSettingsModal('general')}
+            >
+              <span>
+                Dimensions: {settingStore.a1111Width} x {settingStore.a1111Height}
+              </span>
+
+              <span>Steps: {settingStore.a1111Steps}</span>
+
+              <span>
+                <Edit />
+              </span>
+            </div>
+          </div>
+        )}
+
         <form
-          className={
-            'join join-vertical h-full min-h-fit w-full rounded-md border border-base-content/20 ' +
-            (inputDisabled ? 'bg-base-200' : '')
-          }
+          className={' h-full min-h-fit w-full ' + (inputDisabled ? 'bg-base-200' : '')}
           onSubmit={onFormSubmit}
         >
-          <div className="join-item relative p-2">
-            <Editable
-              placeholder="Enter Prompt"
-              startWithEditView
-              selectAllOnFocus={false}
-              value={messageContent}
-              className="min-h-8"
-              isDisabled={inputDisabled}
-            >
-              <EditablePreview className="w-full py-0 !text-left opacity-30" ref={previewAreaRef} />
-
-              <EditableTextarea
-                className="no-scrollbar my-0 max-h-[400px] w-full resize-none overflow-scroll py-0 focus:outline-none"
-                placeholder="Enter Prompt"
-                ref={textareaRef}
-                disabled={inputDisabled}
-                rows={lineCount}
-                onKeyDown={handleKeyDown}
-                onChange={e => setMessageContent(_.trimStart(e.target.value))}
-                onPaste={e => TransferHandler.handleImport(e.clipboardData.files)}
-                autoFocus
-              />
-            </Editable>
-
-            {settingStore.isImageGenerationMode && (
-              <>
-                <div className="divider my-0" />
-
-                <div
-                  className="join-item flex w-full cursor-pointer flex-row gap-4 text-base-content/45 [&>span]:text-sm"
-                  onClick={() => settingStore.openSettingsModal('general')}
-                >
-                  <span>
-                    Dimensions: {settingStore.a1111Width} x {settingStore.a1111Height}
-                  </span>
-
-                  <span>Steps: {settingStore.a1111Steps}</span>
-
-                  <span>
-                    <Edit />
-                  </span>
-                </div>
-              </>
-            )}
-
-            {previewImageUrl && (
-              <div className="absolute bottom-full end-0 mb-2 w-fit">
-                <div className="relative h-full w-fit">
-                  <div
-                    className="btn btn-xs absolute right-1 top-1 opacity-70"
-                    onClick={() => chat.setPreviewImage(undefined)}
-                  >
-                    x
-                  </div>
-
-                  <CachedImage
-                    src={previewImageUrl}
-                    className="m-auto max-h-24 max-w-24 place-self-end rounded-md object-scale-down object-right"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
           <div className="join-item flex w-full flex-row justify-between gap-2 bg-base-200 align-middle">
             <button
               tabIndex={0}

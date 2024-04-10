@@ -36,7 +36,7 @@ const LazyMessage = observer(
     shouldDimMessage,
     shouldScrollIntoView,
   }: MessageProps) => {
-    const { content, fromBot, uniqId, extras, imageUrl } = message
+    const { content, fromBot, uniqId, extras, imageUrls } = message
     const error = extras?.error
     const chat = chatStore.selectedChat!
 
@@ -117,15 +117,30 @@ const LazyMessage = observer(
       >
         {message.botName && <span className="opacity-30">{message.botName}</span>}
 
-        {imageUrl && (
-          <CachedImage
+        {imageUrls && (
+          <button
             className={
-              'mb-2 h-56 max-w-56 cursor-pointer rounded-md object-contain ' +
-              (fromBot ? 'place-self-start' : 'place-self-end')
+              'mb-2 flex flex-row flex-wrap place-content-stretch gap-2 transition-opacity duration-300 ease-in-out hover:opacity-75 ' +
+              (fromBot ? 'justify-start ' : 'justify-end ')
             }
-            src={imageUrl}
             onClick={() => chat.setLightboxMessageById(message.uniqId)}
-          />
+          >
+            {imageUrls.map(imageUrl => (
+              <div
+                key={imageUrl}
+                className="h-56 place-content-center rounded-md border border-base-content/30 bg-base-content/30"
+              >
+                <CachedImage
+                  className={
+                    'max-h-56 min-w-20 max-w-56 rounded-md object-contain object-center p-[1px] ' +
+                    (fromBot ? 'place-self-start' : ' place-self-end')
+                  }
+                  style={{ maskSize: 'cover' }}
+                  src={imageUrl}
+                />
+              </div>
+            ))}
+          </button>
         )}
 
         {hasInnerContent && (

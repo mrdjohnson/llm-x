@@ -24,6 +24,7 @@ const AttachmentWrapper = ({
         type="file"
         accept={accept}
         onChange={handleFileChange}
+        multiple
       />
 
       <span role="button" onClick={() => fileInputRef.current?.click()}>

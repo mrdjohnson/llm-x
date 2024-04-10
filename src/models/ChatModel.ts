@@ -19,10 +19,9 @@ export const ChatModel = types
     messages: types.array(MessageModel),
     _incomingMessageId: types.maybe(types.string), // bot message id
     _incomingMessageAbortedByUser: types.maybe(types.boolean),
-    previewImage: types.maybe(types.string),
     _messageToEditId: types.maybe(types.string), // user message to edit
     _lightboxMessageId: types.maybe(types.string),
-    _previewImageUrl: types.maybe(types.string),
+    _previewImageUrls: types.array(types.string),
   })
   .views(self => ({
     get incomingMessage() {
@@ -117,8 +116,8 @@ export const ChatModel = types
       return _.findIndex(this.lightboxSlides, ({ uniqId }) => uniqId === self._lightboxMessageId)
     },
 
-    get previewImageUrl() {
-      return self._previewImageUrl
+    get previewImageUrls() {
+      return self._previewImageUrls
     },
   }))
   .actions(self => ({
@@ -128,11 +127,11 @@ export const ChatModel = types
       }
 
       // do not persist the draft information
-      self.previewImage = undefined
+      this.removePreviewImageUrlsOnly()
       self._messageToEditId = undefined
       self._lightboxMessageId = undefined
       self._incomingMessageAbortedByUser = undefined
-      self._previewImageUrl = undefined
+      self._previewImageUrls = cast([])
     },
 
     async beforeDestroy() {
@@ -140,39 +139,58 @@ export const ChatModel = types
     },
 
     setMessageToEdit(message?: IMessageModel) {
+      // todo, does this clear out previews?
       self._messageToEditId = message?.uniqId
-      self._previewImageUrl = message?.imageUrls[0]
+      self._previewImageUrls = cast(_.toArray(message?.imageUrls))
     },
 
-    async commitMessageToEdit(content: string, imageUrl?: string) {
+    async commitMessageToEdit(content: string, imageUrls: string[] = []) {
       const messageToEdit = self.messageToEdit!
 
       messageToEdit.content = content
 
-      if (imageUrl !== messageToEdit.imageUrl) {
-        if (!imageUrl) {
-          messageToEdit.setImage(self.id, undefined)
-        } else {
-          const image = await CachedStorage.get(imageUrl)
-          await messageToEdit.setImage(self.id, image)
-        }
-      }
+      const urlsToRemove = _.difference(messageToEdit.imageUrls, imageUrls)
+      const nextImageUrls = _.difference(imageUrls, messageToEdit.imageUrls)
+
+      // remove saved images
+      await messageToEdit.removeImageUrls(urlsToRemove)
+
+      // add preview images
+      await messageToEdit.addImageUrls(self.id, nextImageUrls)
     },
 
-    setPreviewImage: flow(function* setFile(file?: File) {
-      if (!file) {
-        self._previewImageUrl = undefined
+    _setPreviewImageUrls(previewImageUrls: string[]) {
+      self._previewImageUrls = cast(previewImageUrls)
+    },
 
-        return
+    clearImagePreviews() {
+      this._setPreviewImageUrls([])
+    },
+
+    async removePreviewImageUrlsOnly() {
+      for (const imageUrl of self.previewImageUrls) {
+        if (imageUrl.includes('preview-image-')) {
+          await CachedStorage.delete(imageUrl)
+        }
       }
 
+      this._setPreviewImageUrls([])
+    },
+
+    async removePreviewImageUrl(imageUrl: string) {
+      await CachedStorage.delete(imageUrl)
+
+      this._setPreviewImageUrls(_.without(self.previewImageUrls, imageUrl))
+    },
+
+    addPreviewImage: flow(function* addPreviewImage(file: File) {
       try {
         const previewUrl = `/llm-x/${_.uniqueId('preview-image-')}`
         const imageData = yield base64EncodeImage(file)
 
         yield CachedStorage.put(previewUrl, imageData)
 
-        self._previewImageUrl = previewUrl
+        self.previewImageUrls.push(previewUrl)
       } catch (e) {
         toastStore.addToast(
           'Unable to read image, check the console for error information',
@@ -320,7 +338,7 @@ export const ChatModel = types
       try {
         const image = await A1111Api.generateImage(prompt)
 
-        await incomingMessage.setImage(self.id, 'data:image/png;base64,' + image)
+        await incomingMessage.addImages(self.id, ['data:image/png;base64,' + image])
       } catch (error: unknown) {
         if (self._incomingMessageAbortedByUser) {
           incomingMessage.setError(new Error('Stream stopped by user'))
@@ -373,8 +391,8 @@ export const ChatModel = types
       }
     },
 
-    async addUserMessage(content: string = '', imageUrl?: string) {
-      if (!content && !imageUrl) return
+    async addUserMessage(content: string = '', imageUrls?: string[]) {
+      if (!content && _.isEmpty(imageUrls)) return
 
       if (!self.name) {
         this.setName(content.substring(0, 40))
@@ -388,11 +406,7 @@ export const ChatModel = types
 
       self.messages.push(message)
 
-      if (imageUrl) {
-        const image = await CachedStorage.get(imageUrl)
-
-        await message.setImage(self.id, image)
-      }
+      message.addImageUrls(self.id, imageUrls)
     },
   }))
 
