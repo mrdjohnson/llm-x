@@ -115,7 +115,7 @@ const ChatBoxInputRow = observer(
               <div className="flex max-h-[200px] flex-row flex-wrap gap-2 overflow-hidden overflow-y-scroll pb-0">
                 {previewImageUrls.map(previewImageUrl => (
                   <div
-                    className="group relative h-24 place-content-center rounded-sm border border-base-content/30 bg-base-content/30"
+                    className="group relative h-24 place-content-center overflow-hidden rounded-sm border border-base-content/30 bg-base-content/30"
                     key={previewImageUrl}
                   >
                     <button
@@ -128,7 +128,7 @@ const ChatBoxInputRow = observer(
 
                     <CachedImage
                       src={previewImageUrl}
-                      className="max-h-24 min-w-16 max-w-24 rounded-sm object-contain object-center py-[1px]"
+                      className="max-h-24 min-w-16 max-w-24 rounded-sm object-contain object-center"
                     />
                   </div>
                 ))}
