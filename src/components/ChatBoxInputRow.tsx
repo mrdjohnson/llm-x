@@ -191,6 +191,8 @@ const ChatBoxInputRow = observer(
 
               <span>Steps: {settingStore.a1111Steps}</span>
 
+              <span>Batch Size: {settingStore.a1111BatchSize}</span>
+
               <span>
                 <Edit />
               </span>

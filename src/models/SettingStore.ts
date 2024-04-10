@@ -42,6 +42,7 @@ export const SettingStore = types
     a1111Width: types.maybe(types.number),
     a1111Height: types.maybe(types.number),
     a1111Steps: types.maybe(types.number),
+    a1111BatchSize: types.optional(types.number, 1),
 
     // app settings
     _settingsPanelName: types.maybe(types.string),
@@ -135,6 +136,10 @@ export const SettingStore = types
 
       setA1111Steps(steps?: number) {
         self.a1111Steps = steps
+      },
+
+      setA1111BatchSize(batchSize: number = 0) {
+        self.a1111BatchSize = batchSize
       },
 
       getUpdateServiceWorker() {

@@ -336,9 +336,12 @@ export const ChatModel = types
       console.log(prompt)
 
       try {
-        const image = await A1111Api.generateImage(prompt)
+        const images = await A1111Api.generateImage(prompt)
 
-        await incomingMessage.addImages(self.id, ['data:image/png;base64,' + image])
+        await incomingMessage.addImages(
+          self.id,
+          images.map(image => 'data:image/png;base64,' + image),
+        )
       } catch (error: unknown) {
         if (self._incomingMessageAbortedByUser) {
           incomingMessage.setError(new Error('Stream stopped by user'))

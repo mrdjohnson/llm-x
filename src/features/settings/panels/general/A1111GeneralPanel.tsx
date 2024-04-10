@@ -100,7 +100,7 @@ const A1111StepsSelector = observer(() => {
             className={'btn btn-outline btn-sm' + (steps === count ? ' btn-primary ' : '')}
             onClick={() => settingStore.setA1111Steps(count)}
             disabled={!a1111Enabled}
-            key={25}
+            key={count}
           >
             {count}
           </button>
@@ -121,6 +121,40 @@ const A1111StepsSelector = observer(() => {
   )
 })
 
+const A1111BatchSizeSelector = observer(() => {
+  const { a1111BatchSize: batchSize, a1111Enabled } = settingStore
+
+  return (
+    <>
+      <label className="label-text">Batch Size (image count):</label>
+
+      <div className="flex flex-row gap-2">
+        {[1, 2, 3, 5, 7, 11].map(count => (
+          <button
+            className={'btn btn-outline btn-sm' + (batchSize === count ? ' btn-primary ' : '')}
+            onClick={() => settingStore.setA1111BatchSize(count)}
+            disabled={!a1111Enabled}
+            key={count}
+          >
+            {count}
+          </button>
+        ))}
+
+        <input
+          type="number"
+          className="input input-sm input-bordered"
+          min={0}
+          max={99999}
+          value={batchSize}
+          onChange={e => settingStore.setA1111BatchSize(e.target.valueAsNumber)}
+          placeholder="Size"
+          disabled={!a1111Enabled}
+        />
+      </div>
+    </>
+  )
+})
+
 const A1111GeneralPanel = observer(() => {
   return (
     <div className="flex w-full flex-col gap-4">
@@ -129,6 +163,7 @@ const A1111GeneralPanel = observer(() => {
 
       <A1111SizeSelector />
       <A1111StepsSelector />
+      <A1111BatchSizeSelector />
     </div>
   )
 })
