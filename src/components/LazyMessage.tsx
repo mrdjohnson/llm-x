@@ -118,23 +118,15 @@ const LazyMessage = observer(
         {message.botName && <span className="opacity-30">{message.botName}</span>}
 
         {imageUrls && (
-          <div
-            className={
-              'mb-2 flex flex-row flex-wrap place-content-stretch gap-2 ' +
-              (fromBot ? 'justify-start ' : 'justify-end ')
-            }
-          >
+          <div className="mb-2 flex flex-row flex-wrap place-content-stretch gap-2">
             {imageUrls.map(imageUrl => (
               <button
                 key={imageUrl}
-                className="h-56 place-content-center rounded-md border border-base-content/30 bg-base-content/30"
+                className="h-56 place-content-center overflow-hidden rounded-md border border-base-content/30 bg-base-content/30"
                 onClick={() => chat.setLightboxMessageById(message.uniqId, imageUrl)}
               >
                 <CachedImage
-                  className={
-                    'max-h-56 min-w-20 max-w-56 rounded-md object-contain object-center p-[1px] ' +
-                    (fromBot ? 'place-self-start' : ' place-self-end')
-                  }
+                  className="max-h-56 min-w-20 max-w-56 rounded-md object-contain object-center"
                   style={{ maskSize: 'cover' }}
                   src={imageUrl}
                 />
