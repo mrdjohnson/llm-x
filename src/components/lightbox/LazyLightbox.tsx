@@ -41,7 +41,7 @@ const LazyLightbox = observer(() => {
 
   if (!chat) return null
 
-  const index = chat.lightboxMessageIndex
+  const index = chat.lightboxImageUrlIndex
   if (index === -1 || _.isEmpty(slides)) return null
 
   return (
@@ -62,7 +62,11 @@ const LazyLightbox = observer(() => {
       index={index}
       carousel={{ finite: true }}
       on={{
-        view: ({ index }) => chat.setLightboxMessageById(slides[index].uniqId),
+        view: ({ index }) => {
+          const { src, uniqId } = chat.lightboxSlides[index]
+
+          return chat.setLightboxMessageById(uniqId, src)
+        },
       }}
       slides={slides}
       controller={{ closeOnBackdropClick: true }}
