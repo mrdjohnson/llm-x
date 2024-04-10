@@ -99,9 +99,9 @@ export const ChatModel = types
           userPrompt = message.content
         }
 
-        message.imageUrls.forEach(imageUrl => {
+        message.imageUrls.forEach((imageUrl, index) => {
           lightBoxSources.push({
-            description: userPrompt,
+            description: userPrompt + ` (${index + 1}/${message.imageUrls.length})`,
             src: imageUrl,
             uniqId: message.uniqId,
           })
