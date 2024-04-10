@@ -21,6 +21,7 @@ export const ChatModel = types
     _incomingMessageAbortedByUser: types.maybe(types.boolean),
     _messageToEditId: types.maybe(types.string), // user message to edit
     _lightboxMessageId: types.maybe(types.string),
+    _lightboxImageUrl: types.maybe(types.string),
     _previewImageUrls: types.array(types.string),
   })
   .views(self => ({
@@ -110,10 +111,9 @@ export const ChatModel = types
       return lightBoxSources
     },
 
-    get lightboxMessageIndex() {
-      if (!self._lightboxMessageId) return -1
-
-      return _.findIndex(this.lightboxSlides, ({ uniqId }) => uniqId === self._lightboxMessageId)
+    get lightboxImageUrlIndex() {
+      if (!self._lightboxImageUrl) return -1
+      return _.findIndex(this.lightboxSlides, ({ src }) => src === self._lightboxImageUrl)
     },
 
     get previewImageUrls() {
@@ -129,6 +129,7 @@ export const ChatModel = types
       // do not persist the draft information
       this.removePreviewImageUrlsOnly()
       self._messageToEditId = undefined
+      self._lightboxImageUrl = undefined
       self._lightboxMessageId = undefined
       self._incomingMessageAbortedByUser = undefined
       self._previewImageUrls = cast([])
@@ -201,12 +202,14 @@ export const ChatModel = types
       }
     }),
 
-    setLightboxMessageById(uniqId: string) {
+    setLightboxMessageById(uniqId: string, imageUrl: string) {
       self._lightboxMessageId = uniqId
+      self._lightboxImageUrl = imageUrl
     },
 
     closeLightbox() {
       self._lightboxMessageId = undefined
+      self._lightboxImageUrl = undefined
     },
 
     setName(name?: string) {
