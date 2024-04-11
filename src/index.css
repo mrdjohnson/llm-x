@@ -111,3 +111,29 @@ code {
 .yarl__container {
   @apply backdrop-blur-sm;
 }
+
+.text-area-wrap {
+  position: relative;
+  display: grid;
+  width: 150px;
+  font-size: 14px;
+}
+
+.text-area-wrap::after {
+  display: block;
+  content: attr(data-value) ' ';
+  white-space: pre-wrap;
+  visibility: hidden;
+}
+
+.text-area-wrap textarea {
+  resize: none;
+  overflow: hidden;
+}
+
+.text-area-wrap::after,
+.text-area-wrap textarea {
+  font: inherit;
+  grid-area: 1/1/2/2;
+  padding: 2px;
+}

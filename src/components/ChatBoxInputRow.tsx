@@ -1,7 +1,7 @@
 import { useRef, PropsWithChildren, useEffect, useState, KeyboardEvent } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
-import { Editable, EditablePreview, EditableTextarea } from '@chakra-ui/react'
+import TextareaAutosize from 'react-textarea-autosize'
 
 import { chatStore } from '~/models/ChatStore'
 import { settingStore } from '~/models/SettingStore'
@@ -24,7 +24,6 @@ const ChatBoxInputRow = observer(
     children,
   }: PropsWithChildren<{ onSend: (message: string, imageUrls?: string[]) => void }>) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
-    const previewAreaRef = useRef<HTMLSpanElement>(null)
 
     const [messageContent, setMessageContent] = useState('')
 
@@ -94,12 +93,9 @@ const ChatBoxInputRow = observer(
       if (inputDisabled) {
         textareaRef.current?.blur()
       } else {
-        previewAreaRef.current?.focus()
+        textareaRef.current?.focus()
       }
     }, [inputDisabled, chat, messageToEdit])
-
-    // can revisit if this slows things down but its been fine so far
-    const lineCount = messageContent.split('\n').length
 
     return (
       <div
@@ -111,7 +107,7 @@ const ChatBoxInputRow = observer(
           settingStore.isServerConnected ? 'No Models Available' : 'Server is not connected'
         }
       >
-        <div className="join-item max-h-[600px] overflow-y-scroll p-2">
+        <div className="join-item max-h-[600px] overflow-y-scroll p-2 pb-0">
           {previewImageUrls[0] && (
             <div className="relative">
               <div className="flex max-h-[200px] flex-row flex-wrap gap-2 overflow-hidden overflow-y-scroll pb-0">
@@ -152,31 +148,16 @@ const ChatBoxInputRow = observer(
             </div>
           )}
 
-          <Editable
-            placeholder="Enter Prompt"
-            startWithEditView
-            selectAllOnFocus={false}
-            value={messageContent}
-            className="min-h-8"
-            isDisabled={inputDisabled}
-          >
-            <EditablePreview
-              className="!line-clamp-3 w-full py-0 !text-left opacity-30"
-              ref={previewAreaRef}
-            />
-
-            <EditableTextarea
-              className="no-scrollbar my-0 w-full resize-none py-0 focus:outline-none"
-              placeholder="Enter Prompt"
-              ref={textareaRef}
-              disabled={inputDisabled}
-              rows={lineCount}
-              onKeyDown={handleKeyDown}
-              onChange={e => setMessageContent(_.trimStart(e.target.value))}
-              onPaste={e => TransferHandler.handleImport(e.clipboardData.files)}
-              autoFocus
-            />
-          </Editable>
+          <TextareaAutosize
+            className="no-scrollbar textarea m-0 min-h-8 w-full resize-none border-0 p-0 text-base focus:outline-none "
+            ref={textareaRef}
+            disabled={inputDisabled}
+            minRows={1}
+            onKeyDown={handleKeyDown}
+            onChange={e => setMessageContent(_.trimStart(e.target.value))}
+            onPaste={e => TransferHandler.handleImport(e.clipboardData.files)}
+            autoFocus
+          />
         </div>
 
         {settingStore.isImageGenerationMode && (
