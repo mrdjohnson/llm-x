@@ -141,7 +141,10 @@ export const ChatModel = types
     },
 
     async removePreviewImageUrl(imageUrl: string) {
-      await CachedStorage.delete(imageUrl)
+      // only destroy images for new messages
+      if (!self.messageToEdit) {
+        await CachedStorage.delete(imageUrl)
+      }
 
       this._setPreviewImageUrls(_.without(self.previewImageUrls, imageUrl))
     },
