@@ -140,13 +140,15 @@ export const ChatModel = types
       this._setPreviewImageUrls([])
     },
 
-    async removePreviewImageUrl(imageUrl: string) {
+    async removePreviewImageUrls(imageUrls: string[]) {
       // only destroy images for new messages
       if (!self.messageToEdit) {
-        await CachedStorage.delete(imageUrl)
+        for (const imageUrl of imageUrls) {
+          await CachedStorage.delete(imageUrl)
+        }
       }
 
-      this._setPreviewImageUrls(_.without(self.previewImageUrls, imageUrl))
+      this._setPreviewImageUrls(_.without(self.previewImageUrls, ...imageUrls))
     },
 
     addPreviewImage: flow(function* addPreviewImage(file: File) {

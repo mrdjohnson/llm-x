@@ -122,7 +122,7 @@ const ChatBoxInputRow = observer(
                   >
                     <button
                       className="btn btn-circle btn-neutral btn-xs absolute right-0 top-0 z-20 scale-75 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
-                      onClick={() => chat.removePreviewImageUrl(previewImageUrl)}
+                      onClick={() => chat.removePreviewImageUrls([previewImageUrl])}
                       role="button"
                     >
                       ✕
@@ -141,7 +141,7 @@ const ChatBoxInputRow = observer(
                   <button
                     className="btn btn-neutral btn-xs"
                     role="button"
-                    onClick={() => console.log('afd')}
+                    onClick={() => chat.removePreviewImageUrls(chat.previewImageUrls)}
                   >
                     Clear {previewImageUrls.length} images
                   </button>
