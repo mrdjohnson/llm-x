@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 
-const LazyLightbox = React.lazy(() => import('~/components/lightbox/LazyLightbox'))
+const LazyLightbox = React.lazy(() => import('~/features/lightbox/components/LazyLightbox'))
 
 const Lightbox = () => {
   return (
