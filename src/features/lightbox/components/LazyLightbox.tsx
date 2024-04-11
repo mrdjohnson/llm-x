@@ -7,7 +7,7 @@ import Captions from 'yet-another-react-lightbox/plugins/captions'
 import Zoom from 'yet-another-react-lightbox/plugins/zoom'
 import _ from 'lodash'
 
-import { chatStore } from '~/models/ChatStore'
+import { lightboxStore } from '~/features/lightbox/LightboxStore'
 import CachedStorage from '~/utils/CachedStorage'
 
 import 'yet-another-react-lightbox/styles.css'
@@ -16,14 +16,14 @@ import 'yet-another-react-lightbox/plugins/captions.css'
 
 const LazyLightbox = observer(() => {
   const [slides, setSlides] = useState<Array<Slide & { uniqId: string }>>([])
-  const chat = chatStore.selectedChat
+  const { chat, lightboxSlides, imageUrlIndex } = lightboxStore
 
   const getAllSlideImages = async () => {
     if (!chat) return
 
     const slides: Array<Slide & { uniqId: string }> = []
 
-    for (const slide of chat.lightboxSlides) {
+    for (const slide of lightboxSlides) {
       const src = await CachedStorage.get(slide.src)
 
       slides.push({
@@ -37,16 +37,15 @@ const LazyLightbox = observer(() => {
 
   useEffect(() => {
     getAllSlideImages()
-  }, [chat?.lightboxSlides?.length])
+  }, [lightboxSlides?.length])
 
   if (!chat) return null
 
-  const index = chat.lightboxImageUrlIndex
-  if (index === -1 || _.isEmpty(slides)) return null
+  if (imageUrlIndex === -1 || _.isEmpty(slides)) return null
 
   return (
     <Lightbox
-      close={chat.closeLightbox}
+      close={lightboxStore.closeLightbox}
       plugins={[Thumbnails, Download, Captions, Zoom]}
       download={{
         download: ({ slide, saveAs }) => {
@@ -59,13 +58,13 @@ const LazyLightbox = observer(() => {
           saveAs(slide.src, name)
         },
       }}
-      index={index}
+      index={imageUrlIndex}
       carousel={{ finite: true }}
       on={{
         view: ({ index }) => {
-          const { src, uniqId } = chat.lightboxSlides[index]
+          const { src, uniqId } = lightboxSlides[index]
 
-          return chat.setLightboxMessageById(uniqId, src)
+          return lightboxStore.setLightboxMessageById(uniqId, src)
         },
       }}
       slides={slides}

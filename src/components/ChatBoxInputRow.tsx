@@ -16,6 +16,8 @@ import Paperclip from '~/icons/Paperclip'
 import ChevronDown from '~/icons/ChevronDown'
 import Edit from '~/icons/Edit'
 
+import { lightboxStore } from '~/features/lightbox/LightboxStore'
+
 const ChatBoxInputRow = observer(
   ({
     onSend,
@@ -80,7 +82,7 @@ const ChatBoxInputRow = observer(
     }
 
     const noServer = !settingStore.isAnyServerConnected
-    const inputDisabled = chatStore.isGettingData || noServer || !!chat.lightboxMessage
+    const inputDisabled = chatStore.isGettingData || noServer || !!lightboxStore.lightboxMessage
 
     useEffect(() => {
       if (!textareaRef.current) return

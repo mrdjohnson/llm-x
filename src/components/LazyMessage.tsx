@@ -11,6 +11,8 @@ import ChevronDown from '~/icons/ChevronDown'
 import Edit from '~/icons/Edit'
 
 import { chatStore } from '~/models/ChatStore'
+import { lightboxStore } from '~/features/lightbox/LightboxStore'
+
 import { MessageProps } from '~/components/Message'
 import CopyButton from '~/components/CopyButton'
 import CachedImage from '~/components/CachedImage'
@@ -123,7 +125,7 @@ const LazyMessage = observer(
               <button
                 key={imageUrl}
                 className="h-56 place-content-center overflow-hidden rounded-md border border-base-content/30 bg-base-content/30"
-                onClick={() => chat.setLightboxMessageById(message.uniqId, imageUrl)}
+                onClick={() => lightboxStore.setLightboxMessageById(message.uniqId, imageUrl)}
               >
                 <CachedImage
                   className="max-h-56 min-w-20 max-w-56 rounded-md object-contain object-center"

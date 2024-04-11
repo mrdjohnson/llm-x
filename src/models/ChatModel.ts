@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import { types, Instance, cast, destroy, flow } from 'mobx-state-tree'
 import moment from 'moment'
-import { type Slide } from 'yet-another-react-lightbox'
 
 import { IMessageModel, MessageModel } from '~/models/MessageModel'
 import { settingStore } from '~/models/SettingStore'
@@ -20,8 +19,6 @@ export const ChatModel = types
     _incomingMessageId: types.maybe(types.string), // bot message id
     _incomingMessageAbortedByUser: types.maybe(types.boolean),
     _messageToEditId: types.maybe(types.string), // user message to edit
-    _lightboxMessageId: types.maybe(types.string),
-    _lightboxImageUrl: types.maybe(types.string),
     _previewImageUrls: types.array(types.string),
   })
   .views(self => ({
@@ -83,39 +80,6 @@ export const ChatModel = types
       return 'Older'
     },
 
-    get lightboxMessage() {
-      return _.find(self.messages, { uniqId: self._lightboxMessageId })
-    },
-
-    get lightboxSlides() {
-      if (!this.lightboxMessage) return []
-
-      const lightBoxSources: Array<Slide & { uniqId: string }> = []
-
-      let userPrompt: string | undefined
-
-      self.messages.forEach(message => {
-        if (message.fromBot === false) {
-          userPrompt = message.content
-        }
-
-        message.imageUrls.forEach((imageUrl, index) => {
-          lightBoxSources.push({
-            description: userPrompt + ` (${index + 1}/${message.imageUrls.length})`,
-            src: imageUrl,
-            uniqId: message.uniqId,
-          })
-        })
-      })
-
-      return lightBoxSources
-    },
-
-    get lightboxImageUrlIndex() {
-      if (!self._lightboxImageUrl) return -1
-      return _.findIndex(this.lightboxSlides, ({ src }) => src === self._lightboxImageUrl)
-    },
-
     get previewImageUrls() {
       return self._previewImageUrls
     },
@@ -129,8 +93,6 @@ export const ChatModel = types
       // do not persist the draft information
       this.removePreviewImageUrlsOnly()
       self._messageToEditId = undefined
-      self._lightboxImageUrl = undefined
-      self._lightboxMessageId = undefined
       self._incomingMessageAbortedByUser = undefined
       self._previewImageUrls = cast([])
     },
@@ -201,16 +163,6 @@ export const ChatModel = types
         console.error(e)
       }
     }),
-
-    setLightboxMessageById(uniqId: string, imageUrl: string) {
-      self._lightboxMessageId = uniqId
-      self._lightboxImageUrl = imageUrl
-    },
-
-    closeLightbox() {
-      self._lightboxMessageId = undefined
-      self._lightboxImageUrl = undefined
-    },
 
     setName(name?: string) {
       if (name) {

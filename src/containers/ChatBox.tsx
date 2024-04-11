@@ -9,6 +9,8 @@ import ChatBoxInputRow from '~/components/ChatBoxInputRow'
 import ChatBoxPrompt from '~/components/ChatBoxPrompt'
 import { IncomingMessage, Message, MessageToEdit } from '~/components/Message'
 
+import { lightboxStore } from '~/features/lightbox/LightboxStore'
+
 const ChatBox = observer(() => {
   const chat = chatStore.selectedChat
 
@@ -57,7 +59,7 @@ const ChatBox = observer(() => {
   const isEditingMessage = chat.isEditingMessage
   const incomingUniqId = chat.incomingMessage?.uniqId
   const outgoingUniqId = chat.messageToEdit?.uniqId
-  const lightboxMessageId = chat.lightboxMessage?.uniqId
+  const lightboxMessageId = lightboxStore.lightboxMessage?.uniqId
 
   const renderMessage = (message: IMessageModel) => {
     if (message.uniqId === incomingUniqId) return <IncomingMessage key={message.uniqId} />
