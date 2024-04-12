@@ -150,6 +150,7 @@ const ChatBoxInputRow = observer(
 
           <TextareaAutosize
             className="no-scrollbar textarea m-0 min-h-8 w-full resize-none border-0 p-0 text-base focus:outline-none "
+            placeholder="Enter Prompt..."
             ref={textareaRef}
             disabled={inputDisabled}
             minRows={1}
