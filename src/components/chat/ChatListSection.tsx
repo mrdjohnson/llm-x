@@ -29,7 +29,7 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
     <AccordionItem
       className={
         isOpen
-          ? 'flex flex-1 flex-col overflow-y-hidden [&>.chakra-collapse]:!flex [&>.chakra-collapse]:!flex-1'
+          ? 'relative flex flex-1 flex-col overflow-y-hidden [&>.chakra-collapse]:!flex [&>.chakra-collapse]:!flex-1'
           : ''
       }
     >
@@ -58,12 +58,12 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
         </AccordionButton>
       )}
 
-      <AccordionPanel flex={1} className=" flex flex-1 flex-col text-base-content">
-        <div className="no-scrollbar flex h-full flex-1 flex-col gap-2 overflow-y-scroll rounded-md">
+      <AccordionPanel flex={1} className=" flex w-full flex-1 flex-col text-base-content">
+        <div className="no-scrollbar relative flex h-full w-full flex-1 flex-col gap-2 overflow-y-auto overflow-x-clip rounded-md">
           {_.map(chatStore.dateLabelToChatPairs, ([dateLabel, chats]) => (
             <Fragment key={dateLabel}>
               <span
-                className="-mb-1 pl-2 text-sm font-semibold text-base-content/30"
+                className="sticky top-0 bg-base-300 text-sm font-semibold text-base-content/30"
                 key={dateLabel}
               >
                 {dateLabel}
@@ -72,7 +72,7 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
               {chats.map(chat => (
                 <button
                   className={
-                    ' group flex w-full flex-row justify-between rounded-md p-2 text-left lg:dropdown-right ' +
+                    ' group flex w-full max-w-full flex-row justify-between rounded-md p-2 text-left lg:dropdown-right ' +
                     (chat.id === chatStore.selectedChat?.id
                       ? ' btn-neutral btn-active cursor-default'
                       : ' btn-ghost cursor-pointer')
@@ -80,7 +80,9 @@ export const ChatListSection = observer(({ isOpen, onSectionClicked }: Accordion
                   onClick={() => handleChatSelected(chat)}
                   key={chat.id}
                 >
-                  <span className="line-clamp-1 flex-1">{chat.name || 'new chat'}</span>
+                  <span className="line-clamp-1 flex-1 text-ellipsis">
+                    {chat.name || 'new chat'}
+                  </span>
                 </button>
               ))}
             </Fragment>
