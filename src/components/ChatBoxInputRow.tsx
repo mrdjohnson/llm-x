@@ -80,8 +80,9 @@ const ChatBoxInputRow = observer(
       }
     }
 
-    const noServer = !settingStore.isAnyServerConnected
-    const inputDisabled = chatStore.isGettingData || noServer || !!lightboxStore.lightboxMessage
+    const noModelSelected = !settingStore.selectedModelLabel
+    const inputDisabled =
+      chatStore.isGettingData || noModelSelected || !!lightboxStore.lightboxMessage
 
     useEffect(() => {
       if (!textareaRef.current) return
@@ -101,10 +102,10 @@ const ChatBoxInputRow = observer(
       <div
         className={
           'no-scrollbar join join-vertical relative mt-2 h-fit max-h-[700px] w-full shrink-0 rounded-md border border-base-content/20 ' +
-          (noServer && 'tooltip cursor-not-allowed')
+          (noModelSelected && 'tooltip cursor-not-allowed')
         }
         data-tip={
-          settingStore.isServerConnected ? 'No Models Available' : 'Server is not connected'
+          settingStore.isAnyServerConnected ? 'No Models Selected' : 'Server is not connected'
         }
       >
         <div
@@ -221,7 +222,7 @@ const ChatBoxInputRow = observer(
                 <button
                   className="btn btn-ghost rounded-none text-error/50 hover:text-error"
                   type="button"
-                  disabled={noServer}
+                  disabled={noModelSelected}
                   onClick={() => chat.setMessageToEdit(undefined)}
                 >
                   Cancel
@@ -231,7 +232,7 @@ const ChatBoxInputRow = observer(
               {children || (
                 <button
                   className="btn btn-ghost rounded-none rounded-br-md bg-base-100"
-                  disabled={noServer || _.isEmpty(messageContent)}
+                  disabled={noModelSelected || _.isEmpty(messageContent)}
                 >
                   Send
                 </button>
