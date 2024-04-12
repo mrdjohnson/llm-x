@@ -107,7 +107,12 @@ const ChatBoxInputRow = observer(
           settingStore.isServerConnected ? 'No Models Available' : 'Server is not connected'
         }
       >
-        <div className="join-item max-h-[600px] overflow-y-scroll p-2 pb-0">
+        <div
+          className={
+            'join-item max-h-[600px] overflow-y-scroll p-2 pb-0' +
+            (inputDisabled ? ' bg-base-200' : '')
+          }
+        >
           {previewImageUrls[0] && (
             <div className="relative">
               <div className="flex max-h-[200px] flex-row flex-wrap gap-2 overflow-hidden overflow-y-scroll pb-0">
@@ -152,6 +157,7 @@ const ChatBoxInputRow = observer(
             className="no-scrollbar textarea m-0 min-h-8 w-full resize-none border-0 p-0 text-base focus:outline-none "
             placeholder="Enter Prompt..."
             ref={textareaRef}
+            value={messageContent}
             disabled={inputDisabled}
             minRows={1}
             onKeyDown={handleKeyDown}
