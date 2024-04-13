@@ -12,31 +12,62 @@ const HelpPanel = observer(() => {
       <h3 className="-ml-2 pb-3 text-lg font-bold">How to connect to Ollama Server:</h3>
 
       <div className="flex flex-col gap-2">
-        <p>By default, Ollama allows cross origin requests from 127.0.0.1 and 0.0.0.0.</p>{' '}
         <p>
-          To use custom origins (like this one), you can set
+          By default, Ollama only allows requests from local host. To use custom origins (like this
+          one), you need to change
           <span className="prose mx-1">
             <code>OLLAMA_ORIGINS</code>
           </span>
-          when starting ollama:
+        </p>
+        <p>
+          <p>Option 1:</p>
+
+          <p className="ml-2">
+            1: Follow the instructions in the faq:
+            <a
+              href="https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server"
+              className=" link self-center"
+            >
+              Ollama FAQ
+            </a>
+            <span>and set the</span>
+            <span className="prose mx-1">
+              <code>OLLAMA_ORIGINS</code>
+            </span>
+            <span>to be</span>
+            <span className="prose mx-1">
+              <code>*.github.io</code>
+            </span>
+            (this tells ollama that all github projects are OK to listen to).
+            <p>
+              2: You are now set up to run{' '}
+              <span className="prose mx-1">
+                <code>ollama serve</code>
+              </span>
+              normally, or you can start the application normally
+            </p>
+          </p>
         </p>
       </div>
 
-      <div className="my-4 flex flex-row place-content-center gap-2">
-        <div className="prose">
-          <code>{OLLAMA_CODE}</code>
-        </div>
+      <p className="my-2">
+        Option 2:
+        <p className="ml-2">
+          <div className="my-2 flex flex-row place-content-center gap-2">
+            <div className="prose">
+              When starting ollama: <code>{OLLAMA_CODE}</code>
+            </div>
+            <CopyButton className="btn swap btn-sm my-auto" text={OLLAMA_CODE} />
+          </div>
+          <div className="my-2 flex flex-row place-content-center gap-2">
+            <div className="prose">
+              Powershell version: <code>{POWERSHELL_OLLAMA_CODE}</code>
+            </div>
 
-        <CopyButton className="btn swap btn-sm" text={OLLAMA_CODE} />
-      </div>
-
-      <div className="my-4 flex flex-row place-content-center gap-2">
-        <div className="prose">
-          Powershell version: <code>{POWERSHELL_OLLAMA_CODE}</code>
-        </div>
-
-        <CopyButton className="btn swap btn-sm" text={POWERSHELL_OLLAMA_CODE} />
-      </div>
+            <CopyButton className="btn swap btn-sm my-auto" text={POWERSHELL_OLLAMA_CODE} />
+          </div>
+        </p>
+      </p>
 
       <div>
         Find out more about Ollama on their website:
@@ -65,7 +96,7 @@ const HelpPanel = observer(() => {
           <code>{A1111_CODE}</code>
         </div>
 
-        <CopyButton className="btn swap btn-sm" text={A1111_CODE} />
+        <CopyButton className="btn swap btn-sm my-auto" text={A1111_CODE} />
       </div>
     </div>
   )

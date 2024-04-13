@@ -8,12 +8,21 @@
 
 LLM X does not make any external api calls. (go ahead, check your network tab and see the Fetch section). Your chats and image generations are 100% private. This site / app works completely offline.
 
-## How to use web client (no install):
+# How To Use:
+
+## Install Ollama (and AUTOMATIC1111):
 
 - Download and install [Ollama](https://ollama.com/)
 - Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava`
-- Run this in your terminal `OLLAMA_ORIGINS=*.github.io ollama serve`
-- (Powershell users: `$env:OLLAMA_ORIGINS="https://%2A.github.io/"; ollama serve`)
+- Download and install [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#installation-and-running) (for image generation)
+
+## How to use web client (no install):
+
+- Follow instructions for "Install Ollama"
+- Tell Ollama to listen:
+  - Use [Ollama's FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server) to set `OLLAMA_ORIGINS` = `*.github.io`
+  - Run this in your terminal `OLLAMA_ORIGINS=*.github.io ollama serve`
+    - (Powershell users: `$env:OLLAMA_ORIGINS="https://%2A.github.io/"; ollama serve`)
 - Use your browser to go to [LLM-X](https://mrdjohnson.github.io/llm-x/)
 - Go offline! (optional)
 - Start chatting!
@@ -27,8 +36,7 @@ LLM X does not make any external api calls. (go ahead, check your network tab an
 
 ## How to use from project:
 
-- Download and install [Ollama](https://ollama.com/)
-- Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava`
+- Follow instructions for "Install Ollama"
 - Run this in your terminal `ollama serve` (no need for special origins command)
 - Pull down this project; `yarn install`, `yarn dev`
 - Go offline! (optional)
@@ -116,7 +124,7 @@ I couldn't help but bee cool 😎
 **_Inspiration:_**
 [ollama-ui's](https://github.com/ollama-ui/ollama-ui) project. Which allows users to connect to ollama via a [web app](https://ollama-ui.github.io/ollama-ui/)
 
-[Perplexity.ai](https://www.perplexity.ai/) Perpexlity has sone some amazing UI advancements in the LLM UI space and I have been very interested in getting to that point. Hopefully this starter project lets me get closer to doing something similar!
+[Perplexity.ai](https://www.perplexity.ai/) Perpexlity has some amazing UI advancements in the LLM UI space and I have been very interested in getting to that point. Hopefully this starter project lets me get closer to doing something similar!
 
 ## Getting started
 
