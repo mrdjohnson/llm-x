@@ -3,10 +3,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import _ from 'lodash'
 
 import { settingStore } from '~/models/SettingStore'
+import { ollamaStore } from '~/features/ollama/OllamaStore'
 
 import ChevronDown from '~/icons/ChevronDown'
 import Globe from '~/icons/Globe'
 import Image from '~/icons/Image'
+import DownloadTray from '~/icons/DownloadTray'
 
 enum SortType {
   None = 'none',
@@ -88,6 +90,12 @@ const OllamaModelPanel = observer(() => {
     )
   }
 
+  const pullModel = () => {
+    ollamaStore.pull(filterText)
+
+    settingStore.closeSettingsModal()
+  }
+
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
@@ -114,7 +122,7 @@ const OllamaModelPanel = observer(() => {
       <label className="flex w-full flex-row gap-2">
         <input
           type="text"
-          placeholder="Filter..."
+          placeholder="Filter by name or pull..."
           className="input input-sm input-bordered sticky w-full focus:outline-none"
           onChange={e => setFilterText(e.target.value)}
           value={filterText}
@@ -186,15 +194,25 @@ const OllamaModelPanel = observer(() => {
           </tbody>
         </table>
 
-        <a
-          href="https://ollama.com/library"
-          className="btn btn-outline btn-neutral btn-sm mx-auto mt-auto flex w-fit flex-row gap-2 px-4"
-          target="__blank"
-          title="Open Ollama Library in new tab"
-        >
-          <span className=" whitespace-nowrap text-sm ">Ollama Library</span>
-          <Globe />
-        </a>
+        <div className="mx-auto mt-auto flex flex-row content-center gap-2">
+          <a
+            href="https://ollama.com/library"
+            className="btn btn-outline btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
+            target="__blank"
+            title="Open Ollama Library in new tab"
+          >
+            <span className=" whitespace-nowrap text-sm ">Ollama Library</span>
+            <Globe />
+          </a>
+
+          <button
+            className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
+            onClick={pullModel}
+          >
+            <span className=" whitespace-nowrap text-sm ">Pull model: {filterText}</span>
+            <DownloadTray />
+          </button>
+        </div>
       </div>
     </div>
   )

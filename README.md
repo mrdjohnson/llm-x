@@ -13,7 +13,7 @@ LLM X does not make any external api calls. (go ahead, check your network tab an
 ## Install Ollama (and AUTOMATIC1111):
 
 - Download and install [Ollama](https://ollama.com/)
-- Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava`
+- Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava` (or use the app)
 - Download and install [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#installation-and-running) (for image generation)
 
 ## How to use web client (no install):

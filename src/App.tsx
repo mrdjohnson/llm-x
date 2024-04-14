@@ -2,6 +2,7 @@ import Dropzone from '~/containers/Dropzone'
 import { SideBar } from '~/containers/SideBar'
 import ChatBox from '~/containers/ChatBox'
 import SettingsModal from '~/features/settings/containers/SettingsModal'
+import PullProgresses from '~/features/ollama/components/PullProgresses'
 
 import Navbar from '~/components/Navbar'
 import ToastCenter from '~/components/ToastCenter'
@@ -34,6 +35,8 @@ function App() {
             <ChatBox />
           </main>
         </section>
+
+        <PullProgresses />
       </div>
     </Dropzone>
   )
