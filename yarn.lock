@@ -8478,6 +8478,7 @@ __metadata:
     moment: "npm:^2.30.1"
     mst-persist: "npm:^0.1.4"
     msw: "npm:^2.2.2"
+    ollama: "npm:^0.5.0"
     playwright: "npm:^1.42.1"
     postcss: "npm:^8.4.34"
     prettier: "npm:^3.2.5"
@@ -9836,6 +9837,15 @@ __metadata:
     define-properties: "npm:^1.2.1"
     es-object-atoms: "npm:^1.0.0"
   checksum: 10c0/15809dc40fd6c5529501324fec5ff08570b7d70fb5ebbe8e2b3901afec35cf2b3dc484d1210c6c642cd3e7e0a5e18dd1d6850115337fef46bdae14ab0cb18ac3
+  languageName: node
+  linkType: hard
+
+"ollama@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "ollama@npm:0.5.0"
+  dependencies:
+    whatwg-fetch: "npm:^3.6.20"
+  checksum: 10c0/8e3f5f8eecb4bf302f4467a5e35ff569da48554e4d4069a51e0361474b6beff43565264edf429f65ecb3e71a4e583cda35472cca511cdd8dc42d3323639f54a8
   languageName: node
   linkType: hard
 
@@ -12888,6 +12898,13 @@ __metadata:
   version: 4.0.2
   resolution: "webidl-conversions@npm:4.0.2"
   checksum: 10c0/def5c5ac3479286dffcb604547628b2e6b46c5c5b8a8cfaa8c71dc3bafc85859bde5fbe89467ff861f571ab38987cf6ab3d6e7c80b39b999e50e803c12f3164f
+  languageName: node
+  linkType: hard
+
+"whatwg-fetch@npm:^3.6.20":
+  version: 3.6.20
+  resolution: "whatwg-fetch@npm:3.6.20"
+  checksum: 10c0/fa972dd14091321d38f36a4d062298df58c2248393ef9e8b154493c347c62e2756e25be29c16277396046d6eaa4b11bd174f34e6403fff6aaca9fb30fa1ff46d
   languageName: node
   linkType: hard
 
