@@ -153,18 +153,18 @@ export const ChatSettingsSection = observer(
 
         <dialog className="modal modal-middle" ref={modalRef} onClose={onExportClose}>
           <div className="modal-box">
-            <h3 className="mb-4 text-lg font-bold">Export type:</h3>
+            <h3 className="mb-4 text-center text-lg font-bold">Export type:</h3>
 
             <div className="flex flex-row justify-between px-6">
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-center">
                 <button className="btn btn-neutral" onClick={() => exportChat(true)}>
                   With images
                 </button>
 
-                <span className="label-text">(larger file size)</span>
+                <span className="label-text text-center">(larger file size)</span>
               </div>
 
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-center">
                 <button
                   className="btn btn-neutral"
                   onClick={() => {
@@ -174,7 +174,7 @@ export const ChatSettingsSection = observer(
                   Without images
                 </button>
 
-                <span className="label-text text-right">(smaller file size)</span>
+                <span className="label-text text-center">(smaller file size)</span>
               </div>
             </div>
 
