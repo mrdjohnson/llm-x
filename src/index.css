@@ -80,6 +80,14 @@
   .prose-spacing {
     @apply [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0 [&>*]:!my-[10px];
   }
+
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number'] {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield !important;
+  }
 }
 
 body {
