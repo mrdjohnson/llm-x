@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { observer } from 'mobx-react-lite'
-import { Accordion } from '@chakra-ui/react'
 import useMedia from 'use-media'
 
 import { ChatSettingsSection } from '~/components/chat/ChatSettingsSection'
@@ -17,7 +16,7 @@ export type AccordionSectionProps = {
 }
 
 export const SideBar = observer(() => {
-  const [openIndex, setOpenIndex] = useState(1)
+  const [openSectionType, setOpenSectionType] = useState<'chatList' | 'chat'>('chatList')
 
   const isMobile = useMedia('(max-width: 1024px)')
 
@@ -31,30 +30,34 @@ export const SideBar = observer(() => {
     return 'transition-[width] duration-300 ease-in-out ' + (isSidebarOpen ? ' w-[260px]' : ' w-0')
   }, [isMobile, isSidebarOpen])
 
-  const handleSectionClicked = () => {
-    // clicking on self or other will open other
-    setOpenIndex((openIndex + 1) % 2)
+  const goToChat = () => {
+    setOpenSectionType('chat')
+  }
+
+  const goToChatList = () => {
+    setOpenSectionType('chatList')
   }
 
   useEffect(() => {
-    setOpenIndex(0)
+    goToChat()
   }, [chatStore.selectedChat])
 
   return (
     <div className={'group/sidebar relative h-full ' + width}>
-      <Accordion
+      <div
         className={
           'flex h-full flex-1 flex-col flex-nowrap gap-2 self-stretch rounded-md bg-base-300 p-2 transition-opacity duration-300 ease-in-out' +
           (settingStore.isSidebarOpen || isMobile ? ' opacity-100' : ' opacity-0')
         }
-        onChange={(index: number) => setOpenIndex(index)}
-        index={openIndex}
       >
-        <ChatSettingsSection isOpen={openIndex === 0} onSectionClicked={handleSectionClicked} />
+        {openSectionType === 'chat' ? (
+          <ChatSettingsSection onBackClicked={goToChatList} />
+        ) : (
+          <ChatListSection onChatSelected={goToChat} />
+        )}
+      </div>
 
-        <ChatListSection isOpen={openIndex === 1} onSectionClicked={handleSectionClicked} />
-      </Accordion>
-
+      {/* hide sidebar button */}
       <button
         className={
           'group absolute top-[45%] z-20 opacity-30 transition-all duration-300 ease-in-out hover:opacity-100 group-hover/sidebar:opacity-100' +
