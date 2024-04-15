@@ -112,7 +112,7 @@ const SettingsModal = observer(() => {
             <div className="ml-auto justify-end">
               <button
                 className={
-                  'btn btn-ghost btn-sm !text-lg opacity-70 md:btn-md ' +
+                  'btn btn-circle btn-ghost btn-sm !text-lg opacity-70 ' +
                   (shouldShowBackButton ? ' z-0 ' : ' -z-20') // hack to hide the button but keep spacing
                 }
                 onClick={() => settingStore.openSettingsModal('initial')}
@@ -127,10 +127,10 @@ const SettingsModal = observer(() => {
 
             <div className="ml-auto justify-end">
               <button
-                className="btn btn-ghost btn-sm !text-lg opacity-70 md:btn-md"
+                className="btn btn-circle btn-ghost btn-sm opacity-70 lg:text-lg"
                 onClick={handleClose}
               >
-                x
+                ✕
               </button>
             </div>
           </div>
