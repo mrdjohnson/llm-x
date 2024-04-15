@@ -1,19 +1,25 @@
 import type { PropsWithChildren } from 'react'
-import { Tooltip as ChakraTooltip, type PlacementWithLogical } from '@chakra-ui/react'
+import { Tooltip as NextUiTooltip, TooltipProps as NextUiTooltipProps } from '@nextui-org/react'
 
-const ToolTip = ({
-  label,
-  placement = 'auto',
-  children,
-}: PropsWithChildren<{ label: string; placement?: PlacementWithLogical }>) => {
+type ToolTipProps = PropsWithChildren<{
+  label: string
+  className?: string
+  placement?: NextUiTooltipProps['placement']
+}>
+
+const ToolTip = ({ label, placement, children, className = '' }: ToolTipProps) => {
   return (
-    <ChakraTooltip
-      label={label}
-      className="badge badge-neutral rounded-sm p-2 font-semibold"
+    <NextUiTooltip
+      content={label}
+      className={'badge !badge-neutral rounded-full p-2 font-semibold shadow-none  ' + className}
+      classNames={{
+        base: 'before:bg-neutral before:mt-1 before:shadow-none',
+      }}
       placement={placement}
+      showArrow
     >
       {children}
-    </ChakraTooltip>
+    </NextUiTooltip>
   )
 }
 

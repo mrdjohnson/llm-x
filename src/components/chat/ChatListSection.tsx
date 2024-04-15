@@ -1,9 +1,9 @@
-import { Tooltip } from '@chakra-ui/react'
 import { observer } from 'mobx-react-lite'
 import { Fragment } from 'react'
 import _ from 'lodash'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
+import Tooltip from '~/components/Tooltip'
 
 import DocumentArrowUp from '~/icons/DocumentArrowUp'
 import Edit from '~/icons/Edit'
@@ -30,13 +30,13 @@ export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: (
           <Edit className="h-5 w-5" />
         </button>
 
-        <Tooltip label="Import chat" className="!bg-base-100 px-2 font-normal text-base-content">
-          <AttachmentWrapper accept=".json">
-            <button className="btn join-item btn-neutral mb-2 gap-2 p-2" title="Import chat">
+        <AttachmentWrapper accept=".json">
+          <Tooltip label="Import chat" className="px-2 font-normal text-base-content">
+            <button className="btn join-item btn-neutral mb-2 gap-2 p-2">
               <DocumentArrowUp />
             </button>
-          </AttachmentWrapper>
-        </Tooltip>
+          </Tooltip>
+        </AttachmentWrapper>
       </div>
 
       <div className=" flex w-full flex-1 flex-col overflow-y-scroll text-base-content">
