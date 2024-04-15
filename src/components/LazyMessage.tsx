@@ -98,6 +98,7 @@ const LazyMessage = observer(
     // we should scroll into view when:
     // - we get a message to edit (by user or bot)
     // - the content of that message is updated (by bot)
+    // - the message has an image in view
     useEffect(() => {
       if (shouldScrollIntoView) {
         scrollIntoView()
