@@ -4,7 +4,7 @@ import { HTMLProps } from 'react'
 import ChevronDown from '~/icons/ChevronDown'
 
 type NumberInputProps = Omit<HTMLProps<HTMLInputElement>, 'onChange'> & {
-  value: number
+  value?: number
   onChange: (nextValue: number) => void
   step?: number
   min?: number
@@ -23,8 +23,8 @@ const NumberInput = ({
   className = '',
   ...props
 }: NumberInputProps) => {
-  const increaseDisabled = disabled || _.gt(value + step, max)
-  const decreaseDisabled = disabled || _.lt(value - step, min)
+  const increaseDisabled = disabled || _.gt((value || 0) + step, max)
+  const decreaseDisabled = disabled || _.lt((value || 0) - step, min)
 
   return (
     <div
@@ -35,7 +35,7 @@ const NumberInput = ({
     >
       <input
         type="number"
-        value={_.ceil(value, precision)}
+        value={value && _.ceil(value, precision)}
         onChange={e => onChange(e.target.valueAsNumber)}
         className={'input w-full focus:border-transparent focus:!outline-none ' + className}
         min={min}
@@ -52,7 +52,7 @@ const NumberInput = ({
             'btn btn-square btn-xs rounded-none opacity-70 ' +
             (increaseDisabled ? 'cursor-not-allowed ' : ' group hover:scale-100 hover:opacity-100')
           }
-          onClick={() => onChange(value + step)}
+          onClick={() => onChange((value || 0) + step)}
           disabled={increaseDisabled}
         >
           <ChevronDown className="rotate-180 !stroke-2" />
@@ -64,7 +64,7 @@ const NumberInput = ({
             'btn btn-square btn-xs rounded-none opacity-70 ' +
             (decreaseDisabled ? 'cursor-not-allowed ' : ' group hover:scale-100 hover:opacity-100')
           }
-          onClick={() => onChange(value - step)}
+          onClick={() => onChange((value || 0) - step)}
           disabled={decreaseDisabled}
         >
           <ChevronDown className="!stroke-2" />
