@@ -1,14 +1,8 @@
 import { useRef } from 'react'
 import { observer } from 'mobx-react-lite'
-import {
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-} from '@chakra-ui/react'
 
 import HostInput from '~/components/HostInput'
+import NumberInput from '~/components/form/NumberInput'
 
 import { settingStore } from '~/models/SettingStore'
 
@@ -26,16 +20,10 @@ const KeepAliveInput = observer(() => {
         value={settingStore.keepAliveTime}
         max={90}
         step={5}
-        min={5}
-        onChange={(_valueAsString, valueAsNumber) => settingStore.setKeepAliveTime(valueAsNumber)}
-      >
-        <NumberInputField className="input input-bordered focus:!outline-none" />
-
-        <NumberInputStepper className="p-1 pr-2">
-          <NumberIncrementStepper className="text-base-content/30 hover:text-base-content" />
-          <NumberDecrementStepper className="text-base-content/30 hover:text-base-content" />
-        </NumberInputStepper>
-      </NumberInput>
+        min={0}
+        placeholder="20"
+        onChange={settingStore.setKeepAliveTime}
+      />
     </form>
   )
 })
@@ -53,7 +41,7 @@ const TemperatureInput = observer(() => {
       </span>
 
       <div className="flex flex-row gap-3 align-middle">
-        <div className="flex flex-1 flex-col">
+        <div className="flex-grow-1 flex w-full flex-1 flex-col">
           <input
             type="range"
             min={0}
@@ -75,19 +63,17 @@ const TemperatureInput = observer(() => {
           </div>
         </div>
 
-        <NumberInput
-          value={settingStore.temperature}
-          step={0.05}
-          min={0}
-          onChange={(_valueAsString, valueAsNumber) => settingStore.setTemperature(valueAsNumber)}
-        >
-          <NumberInputField className="input input-bordered max-w-24 focus:!outline-none" />
-
-          <NumberInputStepper className="p-1 pr-2">
-            <NumberIncrementStepper className="text-base-content/30 hover:text-base-content" />
-            <NumberDecrementStepper className="text-base-content/30 hover:text-base-content" />
-          </NumberInputStepper>
-        </NumberInput>
+        <div className="flex-shrink-1">
+          <NumberInput
+            value={settingStore.temperature}
+            step={0.05}
+            min={0}
+            precision={2}
+            placeholder="50"
+            className="max-w-[9ch]"
+            onChange={settingStore.setTemperature}
+          />
+        </div>
       </div>
     </form>
   )

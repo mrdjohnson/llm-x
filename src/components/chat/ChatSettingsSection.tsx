@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react'
-import { useDisclosure } from '@chakra-ui/react'
+import { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { useForm } from 'react-hook-form'
@@ -24,11 +23,20 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
     formState: { isDirty },
   } = useForm<{ name: string }>({})
 
-  const { isOpen: isExportOpen, onOpen: openExportDialog, onClose: onExportClose } = useDisclosure()
+  const [isExportOpen, setIsExportOpen] = useState(false)
+
   const modalRef = useRef<HTMLDialogElement>(null)
 
   const selectedChat = chatStore.selectedChat
   const chat = chatStore.selectedChat!
+
+  const onExportClose = () => {
+    setIsExportOpen(false)
+  }
+
+  const openExportDialog = () => {
+    setIsExportOpen(true)
+  }
 
   const handleFormSubmit = handleSubmit(formData => {
     const { name } = formData
