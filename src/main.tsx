@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { KBarProvider } from 'kbar'
+import { NextUIProvider } from '@nextui-org/react'
 
 import App from '~/App'
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
@@ -9,10 +10,12 @@ import '~/index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <DaisyUiThemeProvider>
-      <KBarProvider>
-        <App />
-      </KBarProvider>
-    </DaisyUiThemeProvider>
+    <NextUIProvider>
+      <DaisyUiThemeProvider>
+        <KBarProvider>
+          <App />
+        </KBarProvider>
+      </DaisyUiThemeProvider>
+    </NextUIProvider>
   </React.StrictMode>,
 )

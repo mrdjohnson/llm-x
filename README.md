@@ -110,7 +110,7 @@ I couldn't help but bee cool 😎
 
 - [Tailwind css](https://tailwindcss.com/)
 - [DaisyUI](https://daisyui.com/)
-- [Chakra](https://chakra-ui.com/)
+- [NextUI](https://nextui.org/)
 - [Highlight.js](https://www.npmjs.com/package/highlight.js)
 - [React Markdown](https://www.npmjs.com/package/react-markdown)
 - [kbar](https://www.npmjs.com/package/kbar)
