@@ -83,7 +83,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
             <Back />
           </button>
 
-          <span className="flex-shrink-1 line-clamp-1 max-w-[85%] flex-1 text-center md:text-lg">
+          <span className="flex-shrink-1 line-clamp-1 max-w-[85%] flex-1 text-left md:text-lg">
             {selectedChat?.name || 'new chat'}
           </span>
         </div>
