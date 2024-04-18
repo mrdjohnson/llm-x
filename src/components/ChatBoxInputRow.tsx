@@ -6,6 +6,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { chatStore } from '~/models/ChatStore'
 import { settingStore } from '~/models/SettingStore'
 import { personaStore } from '~/models/PersonaStore'
+import { incomingMessageStore } from '~/models/IncomingMessageStore'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import CachedImage from '~/components/CachedImage'
@@ -82,7 +83,7 @@ const ChatBoxInputRow = observer(
 
     const noModelSelected = !settingStore.selectedModelLabel
     const inputDisabled =
-      chatStore.isGettingData || noModelSelected || !!lightboxStore.lightboxMessage
+      incomingMessageStore.isGettingData || noModelSelected || !!lightboxStore.lightboxMessage
 
     useEffect(() => {
       if (!textareaRef.current) return

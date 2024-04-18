@@ -68,7 +68,7 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
 }
 
 export class OllmaApi {
-  private static abortController?: AbortController
+  private static abortControllerById: Record<string, AbortController> = {}
 
   static async *streamChat(chatMessages: IMessageModel[], incomingMessage: IMessageModel) {
     const model = settingStore.selectedModel?.name
@@ -76,7 +76,9 @@ export class OllmaApi {
 
     const host = settingStore.host || DefaultHost
 
-    OllmaApi.abortController = new AbortController()
+    const abortController = new AbortController()
+
+    OllmaApi.abortControllerById[incomingMessage.uniqId] = abortController
 
     const messages = await getMessages(chatMessages, incomingMessage)
 
@@ -85,7 +87,7 @@ export class OllmaApi {
       model,
       keepAlive: settingStore.keepAliveTime + 'm',
       temperature: settingStore.temperature,
-    }).bind({ signal: OllmaApi.abortController.signal })
+    }).bind({ signal: abortController.signal })
 
     const stream = await ChatPromptTemplate.fromMessages(messages)
       .pipe(chatOllama)
@@ -96,14 +98,22 @@ export class OllmaApi {
       yield chunk
     }
 
-    this.abortController = undefined
+    delete OllmaApi.abortControllerById[incomingMessage.uniqId]
   }
 
-  static cancelStream() {
-    if (!OllmaApi.abortController) return
+  static cancelStream(id?: string) {
+    if (id) {
+      if (!OllmaApi.abortControllerById[id]) return
 
-    OllmaApi.abortController.abort('Stream ended manually')
+      OllmaApi.abortControllerById[id].abort('Stream ended manually')
 
-    OllmaApi.abortController = undefined
+      delete OllmaApi.abortControllerById[id]
+    } else {
+      for (const id in OllmaApi.abortControllerById) {
+        OllmaApi.abortControllerById[id].abort('Stream ended manually')
+      }
+
+      OllmaApi.abortControllerById = {}
+    }
   }
 }

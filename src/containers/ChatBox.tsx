@@ -4,6 +4,7 @@ import ScrollableFeed from 'react-scrollable-feed'
 
 import { chatStore } from '~/models/ChatStore'
 import { IMessageModel } from '~/models/MessageModel'
+import { incomingMessageStore } from '~/models/IncomingMessageStore'
 
 import ChatBoxInputRow from '~/components/ChatBoxInputRow'
 import ChatBoxPrompt from '~/components/ChatBoxPrompt'
@@ -15,14 +16,6 @@ const ChatBox = observer(() => {
   const chat = chatStore.selectedChat
 
   const scrollableFeedRef = useRef<ScrollableFeed>(null)
-
-  const sendMessage = async (incomingMessage: IMessageModel) => {
-    if (!chat) return
-
-    chat.generateMessage(incomingMessage).finally(() => {
-      scrollableFeedRef.current?.scrollToBottom()
-    })
-  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -45,24 +38,27 @@ const ChatBox = observer(() => {
       await chat.addUserMessage(userMessageContent, imageUrls)
 
       const incomingMessage = chat.createAndPushIncomingMessage()
-      sendMessage(incomingMessage)
+
+      incomingMessageStore.generateMessage(chat, incomingMessage).finally(() => {
+        scrollableFeedRef.current?.scrollToBottom()
+      })
     }
   }
 
   const handleMessageStopped = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
-    chat.abortGeneration()
+    incomingMessageStore.abortGeneration()
   }
 
-  const disableRegeneration = !!chat.incomingMessage
+  const isGettingData = incomingMessageStore.isGettingData
   const isEditingMessage = chat.isEditingMessage
-  const incomingUniqId = chat.incomingMessage?.uniqId
   const outgoingUniqId = chat.messageToEdit?.uniqId
   const lightboxMessageId = lightboxStore.lightboxMessage?.uniqId
 
   const renderMessage = (message: IMessageModel) => {
-    if (message.uniqId === incomingUniqId) return <IncomingMessage key={message.uniqId} />
+    if (incomingMessageStore.contains(message))
+      return <IncomingMessage key={message.uniqId} message={message} />
 
     if (message.uniqId === outgoingUniqId)
       return <MessageToEdit key={message.uniqId} message={message} />
@@ -72,7 +68,7 @@ const ChatBox = observer(() => {
         message={message}
         key={message.uniqId}
         onDestroy={() => chat.deleteMessage(message)}
-        disableRegeneration={disableRegeneration}
+        disableRegeneration={isGettingData}
         disableEditing={isEditingMessage}
         shouldDimMessage={isEditingMessage}
         shouldScrollIntoView={message.uniqId === lightboxMessageId}
@@ -86,7 +82,7 @@ const ChatBox = observer(() => {
         ref={scrollableFeedRef}
         className={
           'no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden' +
-          (isEditingMessage || incomingUniqId ? ' !overflow-y-hidden ' : '')
+          (isEditingMessage || isGettingData ? ' !overflow-y-hidden ' : '')
         }
         animateScroll={(element, offset) => element.scrollBy({ top: offset, behavior: 'smooth' })}
       >
@@ -94,7 +90,7 @@ const ChatBox = observer(() => {
       </ScrollableFeed>
 
       <ChatBoxInputRow onSend={handleMessageToSend}>
-        {chat.isGettingData && (
+        {isGettingData && (
           <button
             type="button"
             className="btn btn-ghost rounded-none rounded-br-md text-error/50 hover:text-error"

@@ -50,6 +50,10 @@ export const MessageModel = types
       await this.clearImages()
     },
 
+    selfDestruct() {
+      getParentOfType(self, ChatModel)?.deleteMessageById(self.uniqId)
+    },
+
     _setImageUrls(imageUrls: string[]) {
       self.imageUrls = cast(imageUrls)
     },
@@ -109,6 +113,10 @@ export const MessageModel = types
       const { message, stack } = error
 
       self.extras.error = MessageErrorModel.create({ message, stack })
+    },
+
+    addContent(content: string) {
+      self.content += content
     },
   }))
 

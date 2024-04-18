@@ -6,6 +6,7 @@ import Stop from '~/icons/Stop'
 
 import { IMessageModel } from '~/models/MessageModel'
 import { chatStore } from '~/models/ChatStore'
+import { incomingMessageStore } from '~/models/IncomingMessageStore'
 
 const LazyMessage = React.lazy(() => import('~/components/LazyMessage'))
 
@@ -13,19 +14,15 @@ const Loading = () => (
   <span className="indicator-item loading loading-dots loading-sm indicator-start ml-4 opacity-65" />
 )
 
-// this one is observed for incoming text changes, the rest do not need to be observed
-export const IncomingMessage = observer(() => {
-  const chat = chatStore.selectedChat!
-  const incomingMessage = chat.incomingMessage
-
+export const IncomingMessage = observer(({ message }: { message: IMessageModel }) => {
   // show an empty loading box when we are getting a message from the server
   // checking for content also tells the observer to re-render
-  if (incomingMessage?.content === undefined) return null
+  if (message?.content === undefined) return null
 
   return (
     <Message
-      message={incomingMessage}
-      onDestroy={chat.abortGeneration}
+      message={message}
+      onDestroy={() => incomingMessageStore.abortGeneration(message)}
       customDeleteIcon={<Stop />}
       disableRegeneration
       shouldScrollIntoView

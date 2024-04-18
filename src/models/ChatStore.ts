@@ -10,10 +10,6 @@ export const ChatStore = types
     selectedChat: types.safeReference(ChatModel),
   })
   .views(self => ({
-    get isGettingData() {
-      return !!self.selectedChat?.isGettingData
-    },
-
     get emptyChat(): IChatModel | undefined {
       return _.find(self.chats, chat => chat.messages.length === 0)
     },

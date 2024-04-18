@@ -6,6 +6,10 @@ import { NextUIProvider } from '@nextui-org/react'
 import App from '~/App'
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 
+// we do not need to USE the root store, but in order to have messages in different branches:
+// they need to be connected to a common source.
+import '~/models/RootStore'
+
 import '~/index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

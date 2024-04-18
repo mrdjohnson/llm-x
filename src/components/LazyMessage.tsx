@@ -11,6 +11,8 @@ import ChevronDown from '~/icons/ChevronDown'
 import Edit from '~/icons/Edit'
 
 import { chatStore } from '~/models/ChatStore'
+import { incomingMessageStore } from '~/models/IncomingMessageStore'
+
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 
 import { MessageProps } from '~/components/Message'
@@ -45,7 +47,7 @@ const LazyMessage = observer(
     const containerRef = useRef<HTMLDivElement>(null)
 
     const handleRegeneration = async () => {
-      chatStore.selectedChat!.generateMessage(message)
+      incomingMessageStore.generateMessage(chat, message)
     }
 
     const handleEdit = async () => {
@@ -53,7 +55,7 @@ const LazyMessage = observer(
     }
 
     const extraButtons = useMemo(() => {
-      if (chat.isEditingMessage || chat.isGettingData) return null
+      if (chat.isEditingMessage || incomingMessageStore.isGettingData) return null
 
       return (
         <>

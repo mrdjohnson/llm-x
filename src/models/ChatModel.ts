@@ -5,10 +5,10 @@ import moment from 'moment'
 import { IMessageModel, MessageModel } from '~/models/MessageModel'
 import { settingStore } from '~/models/SettingStore'
 import { toastStore } from '~/models/ToastStore'
+import { incomingMessageStore } from '~/models/IncomingMessageStore'
 
 import base64EncodeImage from '~/utils/base64EncodeImage'
 import { OllmaApi } from '~/utils/OllamaApi'
-import { A1111Api } from '~/utils/A1111Api'
 import CachedStorage from '~/utils/CachedStorage'
 
 export const ChatModel = types
@@ -16,26 +16,14 @@ export const ChatModel = types
     id: types.optional(types.identifierNumber, Date.now),
     name: types.optional(types.string, ''),
     messages: types.array(MessageModel),
-    _incomingMessageId: types.maybe(types.string), // bot message id
-    _incomingMessageAbortedByUser: types.maybe(types.boolean),
     _messageToEditId: types.maybe(types.string), // user message to edit
     _previewImageUrls: types.array(types.string),
   })
   .views(self => ({
-    get incomingMessage() {
-      if (!self._incomingMessageId) return
-
-      return _.find(self.messages, { uniqId: self._incomingMessageId })
-    },
-
     get messageToEdit() {
       if (!self._messageToEditId) return
 
       return _.find(self.messages, { uniqId: self._messageToEditId })
-    },
-
-    get isGettingData() {
-      return !!this.incomingMessage
     },
 
     get isEditingMessage() {
@@ -86,14 +74,9 @@ export const ChatModel = types
   }))
   .actions(self => ({
     afterCreate() {
-      if (self.incomingMessage) {
-        this.commitIncomingMessage()
-      }
-
       // do not persist the draft information
       this.removePreviewImageUrlsOnly()
       self._messageToEditId = undefined
-      self._incomingMessageAbortedByUser = undefined
       self._previewImageUrls = cast([])
     },
 
@@ -179,6 +162,12 @@ export const ChatModel = types
       destroy(message)
     },
 
+    deleteMessageById(uniqId: string) {
+      const message = _.find(self.messages, { uniqId })
+
+      destroy(message)
+    },
+
     findAndRegenerateResponse() {
       const messageToEditIndex = _.indexOf(self.messages, self.messageToEdit)
       const messageAfterEditedMessage: IMessageModel = self.messages[messageToEditIndex + 1]
@@ -201,7 +190,7 @@ export const ChatModel = types
       }
 
       self._messageToEditId = undefined
-      this.generateMessage(botMessageToEdit)
+      incomingMessageStore.generateMessage(cast(self), botMessageToEdit)
     },
 
     findAndEditPreviousMessage() {
@@ -244,114 +233,7 @@ export const ChatModel = types
 
       self.messages.push(incomingMessage)
 
-      self._incomingMessageId = incomingMessage.uniqId
-
       return incomingMessage
-    },
-
-    commitIncomingMessage() {
-      self._incomingMessageId = undefined
-      self._incomingMessageAbortedByUser = false
-    },
-
-    updateIncomingMessage(content: string) {
-      self.incomingMessage!.content += content
-    },
-
-    abortGeneration() {
-      self._incomingMessageAbortedByUser = true
-
-      // error prone by quick switching during generation
-      if (settingStore.isImageGenerationMode) {
-        A1111Api.cancelGeneration()
-      } else {
-        OllmaApi.cancelStream()
-      }
-    },
-
-    async generateImage(incomingMessage: IMessageModel) {
-      self._incomingMessageId = incomingMessage.uniqId
-
-      const incomingIndex = _.findIndex(self.messages, { uniqId: incomingMessage.uniqId })
-      const prompt = _.findLast(self.messages, { fromBot: false }, incomingIndex)?.content
-
-      if (!prompt) {
-        if (!incomingMessage.isBlank()) {
-          this.commitIncomingMessage()
-        } else {
-          this.deleteMessage(incomingMessage)
-        }
-
-        toastStore.addToast('no prompt found to regenerate image from', 'error')
-
-        return
-      }
-
-      await incomingMessage.clearImages()
-
-      if (incomingMessage.extras) {
-        incomingMessage.extras.error = undefined
-      }
-
-      console.log(prompt)
-
-      try {
-        const images = await A1111Api.generateImage(prompt)
-
-        await incomingMessage.addImages(
-          self.id,
-          images.map(image => 'data:image/png;base64,' + image),
-        )
-      } catch (error: unknown) {
-        if (self._incomingMessageAbortedByUser) {
-          incomingMessage.setError(new Error('Stream stopped by user'))
-
-          if (_.isEmpty(incomingMessage.content)) {
-            this.deleteMessage(incomingMessage)
-          }
-        } else if (error instanceof Error) {
-          incomingMessage.setError(error)
-
-          // make sure the server is still connected
-          settingStore.updateModels()
-        }
-      } finally {
-        this.commitIncomingMessage()
-      }
-    },
-
-    async generateMessage(incomingMessage: IMessageModel) {
-      self._incomingMessageId = incomingMessage.uniqId
-      incomingMessage.content = ''
-
-      if (incomingMessage.extras) {
-        incomingMessage.extras.error = undefined
-      }
-
-      if (settingStore.isImageGenerationMode) {
-        return this.generateImage(incomingMessage)
-      }
-
-      try {
-        for await (const message of OllmaApi.streamChat(self.messages, incomingMessage)) {
-          this.updateIncomingMessage(message)
-        }
-      } catch (error: unknown) {
-        if (self._incomingMessageAbortedByUser) {
-          incomingMessage.setError(new Error('Stream stopped by user'))
-
-          if (_.isEmpty(incomingMessage.content)) {
-            this.deleteMessage(incomingMessage)
-          }
-        } else if (error instanceof Error) {
-          incomingMessage.setError(error)
-
-          // make sure the server is still connected
-          settingStore.updateModels()
-        }
-      } finally {
-        this.commitIncomingMessage()
-      }
     },
 
     async addUserMessage(content: string = '', imageUrls?: string[]) {
