@@ -64,12 +64,17 @@ class OllamaStore {
         progress.label = 'Unable to complete pull.'
       } else if (progress.status === 'complete') {
         toastStore.addToast(`Completed download of ${model}`, 'success')
+
+        progress.extra = 'Finished'
+        progress.label = ''
       }
 
       // remove the progess after 5 seconds
       setTimeout(() => {
         this.pullProgresses = _.without(this.pullProgresses, progress)
       }, 5_000)
+
+      settingStore.updateModels()
     }
   }
 }

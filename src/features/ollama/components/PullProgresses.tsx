@@ -16,7 +16,7 @@ const PullProgresses = observer(() => {
       {pullProgresses.map(progress => (
         <span
           role="progressbar"
-          className="relative mt-2 rounded-full bg-slate-500/45"
+          className="relative mt-2 rounded-md bg-slate-500/45"
           key={progress.id}
         >
           <span className="absolute inset-0 flex items-center justify-center ">
@@ -27,9 +27,7 @@ const PullProgresses = observer(() => {
           </span>
 
           <span
-            className={
-              'skeleton block h-4 rounded-full text-center ' + colorCodedProgress[progress.status]
-            }
+            className={'block h-4 rounded-full text-center ' + colorCodedProgress[progress.status]}
             style={{ width: progress.label }}
           />
         </span>

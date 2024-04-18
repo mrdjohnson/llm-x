@@ -205,13 +205,17 @@ const OllamaModelPanel = observer(() => {
             <Globe />
           </a>
 
-          <button
-            className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
-            onClick={pullModel}
-          >
-            <span className=" whitespace-nowrap text-sm ">Pull model: {filterText}</span>
-            <DownloadTray />
-          </button>
+          {filterText && (
+            <button
+              className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
+              onClick={pullModel}
+            >
+              <span className=" whitespace-nowrap text-sm ">
+                Pull model: {filterText.includes(':') ? filterText : `${filterText}:latest`}
+              </span>
+              <DownloadTray />
+            </button>
+          )}
         </div>
       </div>
     </div>
