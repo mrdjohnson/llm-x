@@ -37,7 +37,9 @@ const NumberInput = ({
         type="number"
         value={value && _.ceil(value, precision)}
         onChange={e => onChange(e.target.valueAsNumber)}
-        className={'input w-full focus:border-transparent focus:!outline-none ' + className}
+        className={
+          'input input-sm w-full focus:border-transparent focus:!outline-none ' + className
+        }
         min={min}
         max={max}
         step={step}
@@ -49,7 +51,7 @@ const NumberInput = ({
         <button
           type="button"
           className={
-            'btn btn-square btn-xs rounded-none opacity-70 ' +
+            'btn btn-square btn-xs h-4 min-h-0 w-4 rounded-none opacity-70 ' +
             (increaseDisabled ? 'cursor-not-allowed ' : ' group hover:scale-100 hover:opacity-100')
           }
           onClick={() => onChange((value || 0) + step)}
@@ -61,7 +63,7 @@ const NumberInput = ({
         <button
           type="button"
           className={
-            'btn btn-square btn-xs rounded-none opacity-70 ' +
+            'btn btn-square h-4 min-h-0 w-4 rounded-none opacity-70 ' +
             (decreaseDisabled ? 'cursor-not-allowed ' : ' group hover:scale-100 hover:opacity-100')
           }
           onClick={() => onChange((value || 0) - step)}
