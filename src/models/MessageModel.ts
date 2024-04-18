@@ -54,6 +54,16 @@ export const MessageModel = types
       getParentOfType(self, ChatModel)?.deleteMessageById(self.uniqId)
     },
 
+    async reset() {
+      self.content = ''
+
+      if (self.extras) {
+        self.extras.error = undefined
+      }
+
+      await this.clearImages()
+    },
+
     _setImageUrls(imageUrls: string[]) {
       self.imageUrls = cast(imageUrls)
     },

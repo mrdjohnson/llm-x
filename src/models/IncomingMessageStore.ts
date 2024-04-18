@@ -81,13 +81,7 @@ export const IncomingMessageStore = types
         return
       }
 
-      await incomingMessage.clearImages()
-
-      if (incomingMessage.extras) {
-        incomingMessage.extras.error = undefined
-      }
-
-      incomingMessage.content = ''
+      await incomingMessage.reset()
 
       console.log(prompt)
 
@@ -108,13 +102,7 @@ export const IncomingMessageStore = types
         return this.generateImage(chat, incomingMessage)
       }
 
-      self.messageById.put(incomingMessage)
-
-      incomingMessage.content = ''
-
-      if (incomingMessage.extras) {
-        incomingMessage.extras.error = undefined
-      }
+      await incomingMessage.reset()
 
       await this.handleIncomingMessage(incomingMessage, async () => {
         for await (const contentChunk of OllmaApi.streamChat(chat.messages, incomingMessage)) {
