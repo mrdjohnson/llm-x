@@ -19,7 +19,7 @@ enum SortType {
   Image = 'supportsImages',
 }
 
-const OllamaModelPanel = observer(() => {
+const OllamaModelPanelTable = observer(() => {
   const { selectedModelLabel, models } = settingStore
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -118,7 +118,7 @@ const OllamaModelPanel = observer(() => {
   }
 
   return (
-    <div className="relative flex h-full w-full flex-col">
+    <>
       <label className="flex w-full flex-row gap-2">
         <input
           type="text"
@@ -132,7 +132,7 @@ const OllamaModelPanel = observer(() => {
       </label>
 
       <div className="mt-2 flex h-full flex-col overflow-y-scroll rounded-md">
-        <table className="table table-zebra -mt-4 mb-4 border-separate border-spacing-y-2 pt-0">
+        <table className="table table-zebra table-sm -mt-4 mb-4 border-separate border-spacing-y-2 pt-0">
           <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
             <tr>
               {makeHeader('Name', SortType.Name)}
@@ -175,7 +175,9 @@ const OllamaModelPanel = observer(() => {
                 style={{ borderTopLeftRadius: 8 }}
                 key={model.name}
               >
-                <td>{model.name}</td>
+                <td>
+                  <span className="block max-w-52 overflow-hidden xl:max-w-80">{model.name}</span>
+                </td>
                 <td>{model.details.parameterSize}</td>
 
                 <td>
@@ -218,6 +220,14 @@ const OllamaModelPanel = observer(() => {
           )}
         </div>
       </div>
+    </>
+  )
+})
+
+const OllamaModelPanel = observer(() => {
+  return (
+    <div className="relative flex h-full w-full flex-col">
+      <OllamaModelPanelTable />
     </div>
   )
 })
