@@ -1,4 +1,4 @@
-import { Ollama } from 'ollama/browser'
+import { ModelDetails, Ollama, ShowResponse } from 'ollama/browser'
 import { makeAutoObservable } from 'mobx'
 import _ from 'lodash'
 
@@ -13,11 +13,30 @@ type PullProgress = {
   status: 'incomplete' | 'complete' | 'error'
 }
 
+export type CorrectShowResponse = Pick<ShowResponse, 'license' | 'modelfile' | 'template'> & {
+  details: ModelDetails
+}
+
 class OllamaStore {
   pullProgresses: PullProgress[] = []
 
   constructor() {
     makeAutoObservable(this)
+  }
+
+  get ollama() {
+    return new Ollama({ host: settingStore.host })
+  }
+
+  show(modelName: string) {
+    // @ts-expect-error library is typed incorrectly; https://github.com/ollama/ollama-js/issues/74
+    return this.ollama.show({ model: modelName }) as Promise<CorrectShowResponse>
+  }
+
+  delete(modelName: string) {
+    return this.ollama.delete({ model: modelName }).then(() => {
+      return settingStore.updateModels()
+    })
   }
 
   async pull(model: string) {
@@ -30,10 +49,8 @@ class OllamaStore {
 
     this.pullProgresses.push(progress)
 
-    const ollama = new Ollama({ host: settingStore.host })
-
     try {
-      const stream = await ollama.pull({ model, stream: true })
+      const stream = await this.ollama.pull({ model, stream: true })
 
       let percent = 0
 

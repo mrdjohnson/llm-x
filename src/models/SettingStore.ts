@@ -200,6 +200,8 @@ export const SettingStore = types
   })
   .views(self => ({
     get selectedModel(): IOllamaModel | undefined {
+      if (this.isImageGenerationMode) return undefined
+
       return self.models.find(model => model.name === self.selectedModelName) || self.models[0]
     },
 
