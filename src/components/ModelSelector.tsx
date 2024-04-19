@@ -5,15 +5,29 @@ import ChevronDown from '~/icons/ChevronDown'
 import { settingStore } from '~/models/SettingStore'
 
 const ModelSelector = observer(() => {
-  const { selectedModelLabel, isAnyServerConnected } = settingStore
+  const {
+    selectedModelLabel,
+    isAnyServerConnected,
+    isA1111ServerConnected,
+    isServerConnected,
+    isImageGenerationMode,
+  } = settingStore
   const noServer = !isAnyServerConnected
 
   const label = useMemo(() => {
     if (noServer) {
-      return 'Server not connected'
+      return 'No Servers connected'
     }
 
-    return selectedModelLabel || 'No models available'
+    if (!isA1111ServerConnected && isImageGenerationMode) {
+      return 'No a1111 models available'
+    }
+
+    if (!isServerConnected) {
+      return 'No models available'
+    }
+
+    return selectedModelLabel
   }, [noServer, selectedModelLabel])
 
   return (
