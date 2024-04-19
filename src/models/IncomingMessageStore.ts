@@ -83,6 +83,8 @@ export const IncomingMessageStore = types
 
       await incomingMessage.reset()
 
+      incomingMessage.setModelName(settingStore.selectedModelLabel)
+
       console.log(prompt)
 
       await this.handleIncomingMessage(incomingMessage, async () => {
@@ -103,6 +105,8 @@ export const IncomingMessageStore = types
       }
 
       await incomingMessage.reset()
+
+      incomingMessage.setModelName(settingStore.selectedModelLabel)
 
       await this.handleIncomingMessage(incomingMessage, async () => {
         for await (const contentChunk of OllmaApi.streamChat(chat.messages, incomingMessage)) {

@@ -61,7 +61,13 @@ export const MessageModel = types
         self.extras.error = undefined
       }
 
+      self.botName = ''
+
       await this.clearImages()
+    },
+
+    setModelName(modelName: string = 'unknown_bot_name') {
+      self.botName = modelName
     },
 
     _setImageUrls(imageUrls: string[]) {
