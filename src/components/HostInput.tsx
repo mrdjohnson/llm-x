@@ -60,7 +60,8 @@ const HostInput = observer(() => {
 
 export const A1111HostInput = observer(() => {
   const [hostChanged, setHostChanged] = useState(true)
-  const hasServer = settingStore.isServerConnected
+  const hasServer = settingStore.isA1111ServerConnected
+  const isA1111Enabled = settingStore.a1111Enabled
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     settingStore.setA1111Host(e.target.value)
@@ -104,7 +105,7 @@ export const A1111HostInput = observer(() => {
           disabled={!settingStore.a1111Enabled}
         />
 
-        {(hostChanged || !hasServer) && (
+        {isA1111Enabled && (hostChanged || !hasServer) && (
           <button
             className={'btn btn-ghost px-2 align-middle'}
             type="button"
