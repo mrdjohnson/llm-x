@@ -315,7 +315,9 @@ const OllamaModelPanel = observer(() => {
     <div className="relative flex h-full w-full flex-col">
       <Breadcrumbs className="mb-2">
         <BreadcrumbItem
-          className={tab === 'all' ? ' [&>*]:!text-primary' : ' scale-90'}
+          className={
+            tab === 'all' ? ' [&>*]:!text-primary' : 'scale-90 [&>*]:!text-base-content/70'
+          }
           isCurrent={tab === 'all'}
           onPress={() => setTab('all')}
         >
@@ -324,7 +326,9 @@ const OllamaModelPanel = observer(() => {
 
         {selectedModel && (
           <BreadcrumbItem
-            className={tab === 'single' ? ' [&>*]:!text-primary' : ' scale-90'}
+            className={
+              tab === 'single' ? ' [&>*]:!text-primary' : 'scale-90 [&>*]:!text-base-content/70'
+            }
             isCurrent={tab === 'single'}
             onPress={() => setTab('single')}
           >
