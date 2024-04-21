@@ -118,7 +118,7 @@ const PersonaForm = observer(() => {
   }, [personaToEdit])
 
   return (
-    <form onSubmit={handleFormSubmit} className="mt-4 flex flex-col gap-2" ref={formRef}>
+    <form onSubmit={handleFormSubmit} className="mt-auto flex flex-col gap-2" ref={formRef}>
       <div>
         <label className="label-text">Name:</label>
 
@@ -165,7 +165,7 @@ export const PersonaPanel = observer(() => {
   const { personas, selectedPersona } = personaStore
 
   return (
-    <div className="no-scrollbar flex flex-col gap-2">
+    <div className="no-scrollbar flex w-full flex-col gap-2">
       <button
         className={'btn w-full ' + (selectedPersona ? '' : ' btn-primary')}
         onClick={() => personaStore.setSelectedPersona(undefined)}
