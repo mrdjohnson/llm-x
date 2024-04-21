@@ -9,9 +9,20 @@ const MessageErrorModel = types.model({
   stack: types.maybe(types.string),
 })
 
-const MessageExtrasModel = types.model({
-  error: types.maybe(MessageErrorModel),
-})
+const MessageExtrasModel = types
+  .model({
+    error: types.maybe(MessageErrorModel),
+    detailString: types.maybe(types.string),
+  })
+  .views(self => ({
+    get details(): Record<string, number | string> | undefined {
+      if (self.detailString) {
+        return JSON.parse(self.detailString)
+      }
+
+      return undefined
+    },
+  }))
 
 // note: do not use types.refrence for MessageModel, the uniq id can be duplicated between different chats
 // instead use the types.maybe(types.string) for the uniq id, and find it per chat if it exists
@@ -68,6 +79,22 @@ export const MessageModel = types
 
     setModelName(modelName: string = 'unknown_bot_name') {
       self.botName = modelName
+    },
+
+    setExtraDetails(details: Record<string, unknown>) {
+      // remove any empty values, stringify any non number/strings
+      const formattedDetails: Record<string, number | string> = _.chain(details)
+        .omitBy(_.isNil)
+        .mapValues(value =>
+          _.isNumber(value) || _.isString(value) ? value : JSON.stringify(value),
+        )
+        .value()
+
+      if (!self.extras) {
+        self.extras = MessageExtrasModel.create()
+      }
+
+      self.extras.detailString = JSON.stringify(formattedDetails)
     },
 
     _setImageUrls(imageUrls: string[]) {

@@ -87,6 +87,19 @@ export class OllmaApi {
       model,
       keepAlive: settingStore.keepAliveTime + 'm',
       temperature: settingStore.temperature,
+      callbacks: [
+        {
+          handleLLMEnd(output) {
+            const generationInfo: Record<string, unknown> =
+              _.get(output, 'generations[0][0].generationInfo') || {}
+
+            if (!_.isEmpty(generationInfo)) {
+              incomingMessage.setExtraDetails(generationInfo)
+            }
+          },
+        },
+      ],
+      // verbose: true,
     }).bind({ signal: abortController.signal })
 
     const stream = await ChatPromptTemplate.fromMessages(messages)

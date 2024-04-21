@@ -9,15 +9,18 @@ import Delete from '~/icons/Delete'
 import Refresh from '~/icons/Refresh'
 import ChevronDown from '~/icons/ChevronDown'
 import Edit from '~/icons/Edit'
+import Warning from '~/icons/Warning'
 
 import { chatStore } from '~/models/ChatStore'
 import { incomingMessageStore } from '~/models/IncomingMessageStore'
+import { IMessageModel } from '~/models/MessageModel'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 
 import { MessageProps } from '~/components/Message'
 import CopyButton from '~/components/CopyButton'
 import CachedImage from '~/components/CachedImage'
+import ToolTip from '~/components/Tooltip'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
 
@@ -28,6 +31,19 @@ const DelayedCustomCodeBlock = (props: PropsWithChildren) => {
     </Suspense>
   )
 }
+
+const DetailsToolTip = observer(({ message }: { message: IMessageModel }) => {
+  return (
+    <div className="flex max-w-[50ch] flex-col gap-1 ">
+      {_.entries(message.extras!.details).map(([key, value]) => (
+        <p key={key} className="text-sm">
+          <span className="text-sm text-base-content">{key}:</span>
+          <span className="ml-2 scale-90 text-sm text-base-content/70">{value}</span>
+        </p>
+      ))}
+    </div>
+  )
+})
 
 const LazyMessage = observer(
   ({
@@ -42,6 +58,7 @@ const LazyMessage = observer(
   }: MessageProps) => {
     const { content, fromBot, uniqId, extras, imageUrls } = message
     const error = extras?.error
+    const details = extras?.details
     const chat = chatStore.selectedChat!
 
     const containerRef = useRef<HTMLDivElement>(null)
@@ -205,6 +222,14 @@ const LazyMessage = observer(
           />
 
           {extraButtons}
+
+          {details && (
+            <ToolTip label={<DetailsToolTip message={message} />} className="rounded-md">
+              <label className=" cursor-context-menu text-base-content/30  hover:text-base-content">
+                <Warning />
+              </label>
+            </ToolTip>
+          )}
         </div>
       </div>
     )
