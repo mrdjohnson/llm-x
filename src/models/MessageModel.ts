@@ -17,7 +17,19 @@ const MessageExtrasModel = types
   .views(self => ({
     get details(): Record<string, number | string> | undefined {
       if (self.detailString) {
-        return JSON.parse(self.detailString)
+        const details = JSON.parse(self.detailString)
+
+        return _.mapValues(details, (value, key) => {
+          if (key.includes('duration') && _.isNumber(value)) {
+            const milliseconds = Math.round(value / 10000) / 100
+
+            if (_.isNil(milliseconds)) return 'N/A'
+
+            return milliseconds + ' ms'
+          }
+
+          return value
+        })
       }
 
       return undefined
