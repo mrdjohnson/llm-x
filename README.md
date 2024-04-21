@@ -4,9 +4,17 @@
 
 ![LLM X logo](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/public/LLMX.png)
 
-## Privacy statement:
+# Privacy statement:
 
 LLM X does not make any external api calls. (go ahead, check your network tab and see the Fetch section). Your chats and image generations are 100% private. This site / app works completely offline.
+
+# Recent additions:
+
+- Ability to pull a model
+- Ability to see model information
+- Ability to delete a model
+- Ability to see generation information on new messages
+- Regenerating a message updates the name
 
 # How To Use:
 
