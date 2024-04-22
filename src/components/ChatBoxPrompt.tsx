@@ -23,7 +23,7 @@ const Step = ({
       className={isCompleted ? `step step-${type}` : 'step'}
       data-content={isCompleted ? '✓' : inCompleteIcon}
     >
-      <span>{children}</span>
+      <span className="text-left">{children}</span>
     </li>
   )
 }
