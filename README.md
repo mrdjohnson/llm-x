@@ -15,6 +15,8 @@ LLM X does not make any external api calls. (go ahead, check your network tab an
 - Ability to delete a model
 - Ability to see generation information on new messages
 - Regenerating a message updates the name
+- Ability to update a model
+- Ability to update ALL models
 
 # How To Use:
 
