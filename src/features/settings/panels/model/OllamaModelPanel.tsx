@@ -250,6 +250,12 @@ const OllamaModelSettings = observer(() => {
 
   const details = modelData.details || {}
 
+  const updateModel = () => {
+    settingStore.closeSettingsModal()
+
+    ollamaStore.pull(selectedModel.name)
+  }
+
   return (
     <div className="flex h-full flex-col">
       <label className="text-lg font-semibold text-base-content ">
@@ -287,10 +293,15 @@ const OllamaModelSettings = observer(() => {
         )}
       </div>
 
-      <div className="mt-auto flex self-end">
+      <div className="mt-auto flex justify-between">
+        <button onClick={updateModel} className="btn btn-neutral btn-sm">
+          Update {selectedModel.name}
+          <DownloadTray />
+        </button>
+
         <button
           onClick={() => ollamaStore.delete(selectedModel.name)}
-          className="btn btn-ghost self-end text-error"
+          className="btn btn-ghost btn-sm self-end text-error"
         >
           <Delete className="h-5 w-5" />
         </button>
