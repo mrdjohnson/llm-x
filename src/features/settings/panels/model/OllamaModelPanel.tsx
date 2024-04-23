@@ -99,6 +99,12 @@ const OllamaModelPanelTable = observer(({ onModelSelected }: { onModelSelected: 
     settingStore.closeSettingsModal()
   }
 
+  const updateAllModels = () => {
+    ollamaStore.updateAll()
+
+    settingStore.closeSettingsModal()
+  }
+
   const handleModelSelected = (modelName: string) => {
     settingStore.selectModel(modelName)
     onModelSelected()
@@ -218,7 +224,7 @@ const OllamaModelPanelTable = observer(({ onModelSelected }: { onModelSelected: 
             <Globe />
           </a>
 
-          {filterText && (
+          {filterText ? (
             <button
               className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
               onClick={pullModel}
@@ -226,6 +232,14 @@ const OllamaModelPanelTable = observer(({ onModelSelected }: { onModelSelected: 
               <span className=" whitespace-nowrap text-sm ">
                 Pull model: {filterText.includes(':') ? filterText : `${filterText}:latest`}
               </span>
+              <DownloadTray />
+            </button>
+          ) : (
+            <button
+              className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
+              onClick={updateAllModels}
+            >
+              <span className=" whitespace-nowrap text-sm ">Update all models</span>
               <DownloadTray />
             </button>
           )}

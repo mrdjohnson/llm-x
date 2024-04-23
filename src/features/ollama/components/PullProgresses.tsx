@@ -22,7 +22,9 @@ const PullProgresses = observer(() => {
           <span className="absolute inset-0 flex items-center justify-center ">
             <div className="relative font-semibold text-primary-content mix-blend-hard-light">
               {progress.model}: {progress.label}
-              <div className="absolute inset-y-0 left-[100%] ml-2">{progress.extra}</div>
+              <div className="absolute inset-y-0 left-[100%] ml-2 line-clamp-1 w-screen">
+                {progress.extra}
+              </div>
             </div>
           </span>
 
