@@ -11,7 +11,9 @@ const ToolTip = ({ label, placement, children, className = '' }: ToolTipProps) =
   return (
     <NextUiTooltip
       content={label}
-      className={'rounded-full bg-neutral p-2 font-semibold shadow-none ' + className}
+      className={
+        'rounded-full bg-neutral p-2 font-semibold text-base-content shadow-none ' + className
+      }
       classNames={{
         base: 'before:bg-neutral before:mt-1 before:shadow-none',
       }}
