@@ -6,7 +6,7 @@ import { toastStore } from '~/models/ToastStore'
 import { IOllamaModel, OllamaModel } from '~/models/OllamaModel'
 import { type SettingPanelOptionsType } from '~/features/settings/settingsPanels'
 import _ from 'lodash'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 export const DefaultHost = 'http://localhost:11434'
 export const DefaultA1111Host = 'http://127.0.0.1:7860'
@@ -163,7 +163,9 @@ export const SettingStore = types
 
           self._isServerConnected = true
         } catch (e) {
-          toastStore.addToast('Failed to fetch models for host: ' + host, 'error')
+          const status = (e instanceof AxiosError && e.status) || ''
+
+          toastStore.addToast(status + ' Failed to fetch models for host: ' + host, 'error')
 
           self._isServerConnected = false
         }
@@ -187,7 +189,12 @@ export const SettingStore = types
 
           self._isA1111ServerConnected = true
         } catch (e) {
-          toastStore.addToast('Failed to fetch models for a1111 host: ' + a1111Host, 'error')
+          const status = (e instanceof AxiosError && e.status) || ''
+
+          toastStore.addToast(
+            status + ' Failed to fetch models for a1111 host: ' + a1111Host,
+            'error',
+          )
 
           self._isA1111ServerConnected = false
         }
