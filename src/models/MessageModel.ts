@@ -53,7 +53,7 @@ export const MessageModel = types
   })
   .views(self => ({
     isBlank() {
-      return self.content || _.isEmpty(self.imageUrls) || !self.extras?.error
+      return _.isEmpty(self.content || self.imageUrls || self.extras?.error)
     },
   }))
   .actions(self => ({
