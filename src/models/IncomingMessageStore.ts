@@ -50,7 +50,7 @@ export const IncomingMessageStore = types
 
         // error prone by quick switching during generation
         if (settingStore.isImageGenerationMode) {
-          A1111Api.cancelGeneration()
+          A1111Api.cancelStream(id)
         } else {
           OllmaApi.cancelStream(id)
         }
@@ -62,7 +62,12 @@ export const IncomingMessageStore = types
         self.messageAbortedById.put({ id: message, abortedManually: true })
       }
 
-      OllmaApi.cancelStream()
+      // error prone by quick switching during generation
+      if (settingStore.isImageGenerationMode) {
+        A1111Api.cancelStream()
+      } else {
+        OllmaApi.cancelStream()
+      }
     },
 
     async generateImage(chat: IChatModel, incomingMessage: IMessageModel) {

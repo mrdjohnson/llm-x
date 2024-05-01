@@ -1,14 +1,17 @@
 import axios from 'axios'
 
 import { DefaultA1111Host, settingStore } from '~/models/SettingStore'
+import { IMessageModel } from '~/models/MessageModel'
 
 export class A1111Api {
-  private static abortController?: AbortController
+  private static abortControllerById: Record<string, AbortController> = {}
 
-  static async generateImage(prompt: string): Promise<string[]> {
+  static async generateImage(prompt: string, incomingMessage: IMessageModel): Promise<string[]> {
     const host = settingStore.a1111Host || DefaultA1111Host
 
-    A1111Api.abortController = new AbortController()
+    const abortController = new AbortController()
+
+    A1111Api.abortControllerById[incomingMessage.uniqId] = abortController
 
     const response = await axios.post(
       host + '/sdapi/v1/txt2img',
@@ -21,7 +24,7 @@ export class A1111Api {
         batch_size: settingStore.a1111BatchSize,
       },
       {
-        signal: A1111Api.abortController.signal,
+        signal: abortController.signal,
       },
     )
 
@@ -31,16 +34,24 @@ export class A1111Api {
       throw new Error('A1111 API failed to return any generated image')
     }
 
-    this.abortController = undefined
+    A1111Api.abortControllerById[incomingMessage.uniqId]
 
     return images
   }
 
-  static cancelGeneration() {
-    if (!A1111Api.abortController) return
+  static cancelStream(id?: string) {
+    if (id) {
+      if (!A1111Api.abortControllerById[id]) return
 
-    A1111Api.abortController.abort('Stream ended manually')
+      A1111Api.abortControllerById[id].abort('Stream ended manually')
 
-    A1111Api.abortController = undefined
+      delete A1111Api.abortControllerById[id]
+    } else {
+      for (const id in A1111Api.abortControllerById) {
+        A1111Api.abortControllerById[id].abort('Stream ended manually')
+      }
+
+      A1111Api.abortControllerById = {}
+    }
   }
 }
