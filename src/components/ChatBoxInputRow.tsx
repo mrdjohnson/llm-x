@@ -178,7 +178,7 @@ const ChatBoxInputRow = observer(
               onClick={() => settingStore.openSettingsModal('general')}
             >
               <span>
-                Dimensions: {settingStore.a1111Width} x {settingStore.a1111Height}
+                Dimensions: {settingStore.a1111Width ?? 512} x {settingStore.a1111Height ?? 512}
               </span>
 
               <span>Steps: {settingStore.a1111Steps}</span>
