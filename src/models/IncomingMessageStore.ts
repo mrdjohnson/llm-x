@@ -93,7 +93,7 @@ export const IncomingMessageStore = types
       console.log(prompt)
 
       await this.handleIncomingMessage(incomingMessage, async () => {
-        const images = await A1111Api.generateImage(prompt)
+        const images = await A1111Api.generateImage(prompt, incomingMessage)
 
         await incomingMessage.addImages(
           chat.id,
