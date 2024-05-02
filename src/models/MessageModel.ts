@@ -1,4 +1,12 @@
-import { types, Instance, getParentOfType, cast } from 'mobx-state-tree'
+import {
+  types,
+  Instance,
+  getParentOfType,
+  cast,
+  IAnyModelType,
+  destroy,
+  hasParentOfType,
+} from 'mobx-state-tree'
 import _ from 'lodash'
 
 import CachedStorage from '~/utils/CachedStorage'
@@ -50,10 +58,29 @@ export const MessageModel = types
     uniqId: types.identifier,
     extras: types.maybe(MessageExtrasModel),
     imageUrls: types.array(types.string),
+    variations: types.array(types.late((): IAnyModelType => MessageModel)),
+    selectedVariationIndex: types.maybe(types.number),
+    showVariations: types.maybe(types.boolean),
   })
   .views(self => ({
     isBlank() {
       return _.isEmpty(self.content || self.imageUrls || self.extras?.error)
+    },
+
+    get selectedVariation(): IMessageModel {
+      return this.getVariation(self.selectedVariationIndex)
+    },
+
+    getVariation(index: number = 0): IMessageModel {
+      return self.variations[index - 1] || self
+    },
+
+    get hasPreviousVariation() {
+      return _.gt(self.selectedVariationIndex, 0)
+    },
+
+    get hasNextVariation() {
+      return _.lt(self.selectedVariationIndex, self.variations.length)
     },
   }))
   .actions(self => ({
@@ -74,19 +101,11 @@ export const MessageModel = types
     },
 
     selfDestruct() {
-      getParentOfType(self, ChatModel)?.deleteMessageById(self.uniqId)
-    },
-
-    async reset() {
-      self.content = ''
-
-      if (self.extras) {
-        self.extras.error = undefined
+      if (hasParentOfType(self, MessageModel)) {
+        getParentOfType(self, MessageModel).removeVariation(cast(self))
+      } else {
+        getParentOfType(self, ChatModel)?.deleteMessageById(self.uniqId)
       }
-
-      self.botName = ''
-
-      await this.clearImages()
     },
 
     setModelName(modelName: string = 'unknown_bot_name') {
@@ -107,6 +126,10 @@ export const MessageModel = types
       }
 
       self.extras.detailString = JSON.stringify(formattedDetails)
+    },
+
+    setShowVariations(showVariations: boolean) {
+      self.showVariations = showVariations
     },
 
     _setImageUrls(imageUrls: string[]) {
@@ -160,6 +183,41 @@ export const MessageModel = types
 
         this._addImageUrl(imageUrl)
       }
+    },
+
+    addVariation(variation: IMessageModel) {
+      self.variations.push(variation)
+
+      self.selectedVariationIndex ??= 0
+
+      self.selectedVariationIndex = self.variations.length
+    },
+
+    selectPreviousVariation() {
+      self.selectedVariationIndex! -= 1
+    },
+
+    selectNextVariation() {
+      self.selectedVariationIndex! += 1
+    },
+
+    setVariationIndex(index: number = 0) {
+      self.selectedVariationIndex = index
+    },
+
+    removeVariation(variation: IMessageModel) {
+      const indexToRemove = _.findIndex(self.variations, variation)
+
+      if (_.lt(indexToRemove, self.selectedVariationIndex)) {
+        self.selectedVariationIndex! -= 1
+      }
+
+      self.variations = cast(_.without(self.variations, variation))
+      if (_.isEmpty(self.variations)) {
+        self.showVariations = false
+      }
+
+      destroy(variation)
     },
 
     setError(error: Error) {

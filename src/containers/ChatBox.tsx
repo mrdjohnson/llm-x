@@ -1,6 +1,7 @@
 import { useRef, MouseEvent, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
+import _ from 'lodash'
 
 import { chatStore } from '~/models/ChatStore'
 import { IMessageModel } from '~/models/MessageModel'
@@ -9,6 +10,7 @@ import { incomingMessageStore } from '~/models/IncomingMessageStore'
 import ChatBoxInputRow from '~/components/ChatBoxInputRow'
 import ChatBoxPrompt from '~/components/ChatBoxPrompt'
 import { IncomingMessage, Message, MessageToEdit } from '~/components/Message'
+import MessageGroup from '~/components/message/MessageGroup'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 
@@ -54,25 +56,56 @@ const ChatBox = observer(() => {
   const isGettingData = incomingMessageStore.isGettingData
   const isEditingMessage = chat.isEditingMessage
   const outgoingUniqId = chat.messageToEdit?.uniqId
+  const outgoingVariantUniqId = chat.messageVariantToEdit?.uniqId
   const lightboxMessageId = lightboxStore.lightboxMessage?.uniqId
 
-  const renderMessage = (message: IMessageModel) => {
-    if (incomingMessageStore.contains(message))
-      return <IncomingMessage key={message.uniqId} message={message} />
+  const renderMessage = (message: IMessageModel, variant: IMessageModel, variantIndex?: number) => {
+    if (incomingMessageStore.contains(variant)) {
+      return <IncomingMessage key={variant.uniqId} message={message} messageVariant={variant} />
+    }
 
-    if (message.uniqId === outgoingUniqId)
-      return <MessageToEdit key={message.uniqId} message={message} />
+    if (message.uniqId === outgoingUniqId && variant.uniqId === outgoingVariantUniqId) {
+      return <MessageToEdit key={variant.uniqId} message={message} messageVariant={variant} />
+    }
+
+    const handleDestroy = () => {
+      if (_.isNil(variantIndex)) {
+        // single view
+        message.selfDestruct()
+      } else if (_.gt(variantIndex, 0)) {
+        // group view
+        variant.selfDestruct()
+      }
+
+      // group view, original message
+      return undefined
+    }
 
     return (
       <Message
         message={message}
-        key={message.uniqId}
-        onDestroy={() => chat.deleteMessage(message)}
+        messageVariant={variant}
+        variationIndex={variantIndex}
+        key={variant.uniqId}
+        onDestroy={handleDestroy}
         disableRegeneration={isGettingData}
         disableEditing={isEditingMessage}
         shouldDimMessage={isEditingMessage}
         shouldScrollIntoView={message.uniqId === lightboxMessageId}
       />
+    )
+  }
+
+  const renderMessageOrGroup = (message: IMessageModel) => {
+    if (!message.showVariations) return renderMessage(message, message.selectedVariation)
+
+    const variations: IMessageModel[] = message.variations
+    const allVariations = [message, ...variations]
+
+    return (
+      <MessageGroup message={message} key={message.uniqId + '_group'}>
+        {allVariations.map((variant, index) => renderMessage(message, variant, index))}
+      </MessageGroup>
     )
   }
 
@@ -86,7 +119,7 @@ const ChatBox = observer(() => {
         }
         animateScroll={(element, offset) => element.scrollBy({ top: offset, behavior: 'smooth' })}
       >
-        {chat.messages.length > 0 ? chat.messages.map(renderMessage) : <ChatBoxPrompt />}
+        {chat.messages.length > 0 ? chat.messages.map(renderMessageOrGroup) : <ChatBoxPrompt />}
       </ScrollableFeed>
 
       <ChatBoxInputRow onSend={handleMessageToSend}>

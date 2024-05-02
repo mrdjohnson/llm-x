@@ -311,7 +311,7 @@ const useRegisterMessageActions = () => {
   const countMessagesWithText = (messages: IMessageModel[], text: string) => {
     // if any of the lowercased messages contain the text
     return _.sumBy(messages, message => {
-      return message.content.toLowerCase().includes(text) ? 1 : 0
+      return message.selectedVariation.content.toLowerCase().includes(text) ? 1 : 0
     })
   }
 

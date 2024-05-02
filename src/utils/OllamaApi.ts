@@ -57,10 +57,12 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
   for (const message of chatMessages) {
     if (message.uniqId === incomingMessage.uniqId) break
 
+    const selectedVariation = message.selectedVariation
+
     if (message.fromBot) {
-      messages.push(new AIMessage(message.content))
+      messages.push(new AIMessage(selectedVariation.content))
     } else {
-      messages.push(await createHumanMessage(message))
+      messages.push(await createHumanMessage(selectedVariation))
     }
   }
 
@@ -70,7 +72,11 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
 export class OllmaApi {
   private static abortControllerById: Record<string, AbortController> = {}
 
-  static async *streamChat(chatMessages: IMessageModel[], incomingMessage: IMessageModel) {
+  static async *streamChat(
+    chatMessages: IMessageModel[],
+    incomingMessage: IMessageModel,
+    incomingMessageVariant: IMessageModel,
+  ) {
     const model = settingStore.selectedModel?.name
     if (!model) return
 
@@ -78,7 +84,7 @@ export class OllmaApi {
 
     const abortController = new AbortController()
 
-    OllmaApi.abortControllerById[incomingMessage.uniqId] = abortController
+    OllmaApi.abortControllerById[incomingMessageVariant.uniqId] = abortController
 
     const messages = await getMessages(chatMessages, incomingMessage)
 
@@ -94,7 +100,7 @@ export class OllmaApi {
               _.get(output, 'generations[0][0].generationInfo') || {}
 
             if (!_.isEmpty(generationInfo)) {
-              incomingMessage.setExtraDetails(generationInfo)
+              incomingMessageVariant.setExtraDetails(generationInfo)
             }
           },
         },

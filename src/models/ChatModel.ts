@@ -17,6 +17,7 @@ export const ChatModel = types
     name: types.optional(types.string, ''),
     messages: types.array(MessageModel),
     _messageToEditId: types.maybe(types.string), // user message to edit
+    _messageVariantToEditId: types.maybe(types.string),
     _previewImageUrls: types.array(types.string),
   })
   .views(self => ({
@@ -24,6 +25,14 @@ export const ChatModel = types
       if (!self._messageToEditId) return
 
       return _.find(self.messages, { uniqId: self._messageToEditId })
+    },
+
+    get messageVariantToEdit(): IMessageModel | undefined {
+      if (!this.messageToEdit || !self._messageVariantToEditId) return undefined
+
+      if (this.messageToEdit.uniqId === self._messageVariantToEditId) return this.messageToEdit
+
+      return _.find(this.messageToEdit?.variations, { uniqId: self._messageVariantToEditId })
     },
 
     get isEditingMessage() {
@@ -77,6 +86,7 @@ export const ChatModel = types
       // do not persist the draft information
       this.removePreviewImageUrlsOnly()
       self._messageToEditId = undefined
+      self._messageVariantToEditId = undefined
       self._previewImageUrls = cast([])
     },
 
@@ -84,14 +94,15 @@ export const ChatModel = types
       OllmaApi.cancelStream()
     },
 
-    setMessageToEdit(message?: IMessageModel) {
+    setMessageToEdit(message?: IMessageModel, messageVariant?: IMessageModel) {
       // todo, does this clear out previews?
       self._messageToEditId = message?.uniqId
-      self._previewImageUrls = cast(_.toArray(message?.imageUrls))
+      self._messageVariantToEditId = messageVariant?.uniqId || message?.selectedVariation?.uniqId
+      self._previewImageUrls = cast(_.toArray(message?.selectedVariation?.imageUrls))
     },
 
     async commitMessageToEdit(content: string, imageUrls: string[] = []) {
-      const messageToEdit = self.messageToEdit!
+      const messageToEdit = self.messageVariantToEdit!
 
       messageToEdit.content = content
 
@@ -190,7 +201,7 @@ export const ChatModel = types
       }
 
       self._messageToEditId = undefined
-      incomingMessageStore.generateMessage(cast(self), botMessageToEdit)
+      incomingMessageStore.generateVariation(cast(self), botMessageToEdit)
     },
 
     findAndEditPreviousMessage() {

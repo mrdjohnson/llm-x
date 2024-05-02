@@ -34,6 +34,8 @@ export const IncomingMessageStore = types
     },
 
     deleteMessage(message: IMessageModel) {
+      this.commitMessage(message)
+
       message.selfDestruct()
     },
 
@@ -86,36 +88,50 @@ export const IncomingMessageStore = types
         return
       }
 
-      await incomingMessage.reset()
+      const messageToEdit = incomingMessage.selectedVariation
 
-      incomingMessage.setModelName(settingStore.selectedModelLabel)
+      messageToEdit.setModelName(settingStore.selectedModelLabel)
 
       console.log(prompt)
 
       await this.handleIncomingMessage(incomingMessage, async () => {
-        const images = await A1111Api.generateImage(prompt, incomingMessage)
+        const images = await A1111Api.generateImage(prompt, messageToEdit)
 
-        await incomingMessage.addImages(
+        await messageToEdit.addImages(
           chat.id,
           images.map(image => 'data:image/png;base64,' + image),
         )
       })
     },
 
+    async generateVariation(chat: IChatModel, incomingMessage: IMessageModel) {
+      if (!incomingMessage.isBlank()) {
+        const variation = chat.createIncomingMessage()
+
+        incomingMessage.addVariation(variation)
+      }
+
+      return this.generateMessage(chat, incomingMessage)
+    },
+
     async generateMessage(chat: IChatModel, incomingMessage: IMessageModel) {
-      self.messageById.put(incomingMessage)
+      const messageToEdit = incomingMessage.selectedVariation
+
+      self.messageById.put(messageToEdit)
 
       if (settingStore.isImageGenerationMode) {
         return this.generateImage(chat, incomingMessage)
       }
 
-      await incomingMessage.reset()
-
-      incomingMessage.setModelName(settingStore.selectedModelLabel)
+      messageToEdit.setModelName(settingStore.selectedModelLabel)
 
       await this.handleIncomingMessage(incomingMessage, async () => {
-        for await (const contentChunk of OllmaApi.streamChat(chat.messages, incomingMessage)) {
-          incomingMessage.addContent(contentChunk)
+        for await (const contentChunk of OllmaApi.streamChat(
+          chat.messages,
+          incomingMessage,
+          messageToEdit,
+        )) {
+          messageToEdit.addContent(contentChunk)
         }
       })
     },
@@ -123,24 +139,26 @@ export const IncomingMessageStore = types
     async handleIncomingMessage(incomingMessage: IMessageModel, callback: () => Promise<void>) {
       let shouldDeleteMessage = false
 
+      const messageToEdit = incomingMessage.selectedVariation
+
       try {
         await callback()
       } catch (error: unknown) {
-        if (self.messageAbortedById.get(incomingMessage.uniqId)) {
-          incomingMessage.setError(new Error('Stream stopped by user'))
+        if (self.messageAbortedById.get(messageToEdit.uniqId)) {
+          messageToEdit.setError(new Error('Stream stopped by user'))
 
-          shouldDeleteMessage = _.isEmpty(incomingMessage.content)
+          shouldDeleteMessage = _.isEmpty(messageToEdit.content)
         } else if (error instanceof Error) {
-          incomingMessage.setError(error)
+          messageToEdit.setError(error)
 
           // make sure the server is still connected
           settingStore.updateModels()
         }
       } finally {
         if (shouldDeleteMessage) {
-          this.deleteMessage(incomingMessage)
+          this.deleteMessage(messageToEdit)
         } else {
-          this.commitMessage(incomingMessage)
+          this.commitMessage(messageToEdit)
         }
       }
     },

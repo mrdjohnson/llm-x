@@ -10,6 +10,7 @@ import Refresh from '~/icons/Refresh'
 import ChevronDown from '~/icons/ChevronDown'
 import Edit from '~/icons/Edit'
 import Warning from '~/icons/Warning'
+import WindowCheck from '~/icons/WindowCheck'
 
 import { chatStore } from '~/models/ChatStore'
 import { incomingMessageStore } from '~/models/IncomingMessageStore'
@@ -21,6 +22,7 @@ import { MessageProps } from '~/components/Message'
 import CopyButton from '~/components/CopyButton'
 import CachedImage from '~/components/CachedImage'
 import ToolTip from '~/components/Tooltip'
+import MessageVariationSelectionRow from '~/components/message/MessageVariationSelectionRow'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
 
@@ -47,7 +49,8 @@ const DetailsToolTip = observer(({ message }: { message: IMessageModel }) => {
 
 const LazyMessage = observer(
   ({
-    message,
+    message: baseMessage,
+    messageVariant,
     onDestroy,
     children,
     customDeleteIcon,
@@ -55,20 +58,29 @@ const LazyMessage = observer(
     disableEditing,
     shouldDimMessage,
     shouldScrollIntoView,
+    variationIndex,
   }: MessageProps) => {
-    const { content, fromBot, uniqId, extras, imageUrls } = message
+    const isVariationGroupView = variationIndex !== undefined
+    const message = messageVariant || baseMessage
+
+    const { content, fromBot, uniqId, extras, imageUrls, botName } = message
     const error = extras?.error
     const details = extras?.details
     const chat = chatStore.selectedChat!
+    const { variations } = baseMessage
 
     const containerRef = useRef<HTMLDivElement>(null)
 
     const handleRegeneration = async () => {
-      incomingMessageStore.generateMessage(chat, message)
+      incomingMessageStore.generateVariation(chat, baseMessage)
     }
 
     const handleEdit = async () => {
-      chatStore.selectedChat!.setMessageToEdit(message)
+      if (variationIndex) {
+        baseMessage.setVariationIndex(variationIndex)
+      }
+
+      chatStore.selectedChat!.setMessageToEdit(baseMessage, messageVariant)
     }
 
     const extraButtons = useMemo(() => {
@@ -87,10 +99,10 @@ const LazyMessage = observer(
 
           {fromBot && (
             <button
-              className="rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
+              className="rounded-md text-base-content/30 hover:scale-125 hover:text-base-content disabled:cursor-not-allowed"
               onClick={handleRegeneration}
               disabled={disableRegeneration}
-              title={customDeleteIcon ? 'Stop' : 'Regenerate message'}
+              title={customDeleteIcon ? 'Stop' : 'Generate message variation'}
             >
               {customDeleteIcon || <Refresh />}
             </button>
@@ -125,6 +137,7 @@ const LazyMessage = observer(
     }, [shouldScrollIntoView, content])
 
     const hasInnerContent = children || content || error
+    const hasVarations = !isVariationGroupView && !_.isEmpty(variations)
 
     return (
       <div
@@ -137,9 +150,52 @@ const LazyMessage = observer(
         key={uniqId}
         ref={containerRef}
       >
-        {message.botName && <span className="opacity-30">{message.botName}</span>}
+        {(botName || isVariationGroupView || hasVarations) && (
+          <div
+            className={
+              'group sticky z-10 mb-2 flex flex-row items-baseline gap-2 bg-base-100 opacity-100 ' +
+              (isVariationGroupView ? ' top-7' : ' top-0')
+            }
+          >
+            {hasVarations && (
+              <MessageVariationSelectionRow message={baseMessage} disableEditing={disableEditing} />
+            )}
 
-        {imageUrls && (
+            {isVariationGroupView && (
+              <div
+                className={'flex w-fit flex-row gap-2 ' + (fromBot ? '' : 'justify-end self-end')}
+              >
+                <span className="text-sm opacity-30">{`${variationIndex + 1}/${variations.length + 1}`}</span>
+
+                <ToolTip
+                  label={
+                    baseMessage.selectedVariation === message
+                      ? 'Default Variation'
+                      : 'Set as default variation'
+                  }
+                  placement="top"
+                  delay={400}
+                >
+                  <button
+                    className={
+                      'opacity-30 hover:opacity-100 ' +
+                      (baseMessage.selectedVariation === message
+                        ? '!text-primary !opacity-100'
+                        : '')
+                    }
+                    onClick={() => baseMessage.setVariationIndex(variationIndex)}
+                  >
+                    <WindowCheck />
+                  </button>
+                </ToolTip>
+              </div>
+            )}
+
+            {botName && <span className="opacity-30">{botName}</span>}
+          </div>
+        )}
+
+        {imageUrls[0] && (
           <div className="mb-2 flex flex-row flex-wrap place-content-stretch gap-2">
             {imageUrls.map(imageUrl => (
               <button
@@ -204,17 +260,19 @@ const LazyMessage = observer(
 
         <div
           className={
-            'sticky bottom-0 mx-2 mt-1 flex w-fit gap-2 rounded-md opacity-0 group-hover:opacity-90 ' +
+            'sticky bottom-0 z-10 flex w-full gap-2 bg-base-100 px-2 pt-2 opacity-0 group-hover:opacity-100 ' +
             (fromBot ? 'flex-row' : 'flex-row-reverse self-end')
           }
         >
-          <button
-            className="rounded-md text-error/30 hover:scale-125 hover:text-error"
-            onClick={onDestroy}
-            title={customDeleteIcon ? 'Stop' : 'Delete'}
-          >
-            {customDeleteIcon || <Delete />}
-          </button>
+          {onDestroy && (
+            <button
+              className="rounded-md text-error/30 hover:scale-125 hover:text-error"
+              onClick={onDestroy}
+              title={customDeleteIcon ? 'Stop' : 'Delete'}
+            >
+              {customDeleteIcon || <Delete />}
+            </button>
+          )}
 
           <CopyButton
             className="place-items-center rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
@@ -224,7 +282,12 @@ const LazyMessage = observer(
           {extraButtons}
 
           {details && (
-            <ToolTip label={<DetailsToolTip message={message} />} className="rounded-md">
+            <ToolTip
+              label={<DetailsToolTip message={message} />}
+              className="rounded-md"
+              delay={400}
+              placement="bottom-start"
+            >
               <label className=" cursor-context-menu text-base-content/30  hover:text-base-content">
                 <Warning />
               </label>

@@ -88,7 +88,7 @@ const ChatBoxInputRow = observer(
     useEffect(() => {
       if (!textareaRef.current) return
 
-      setMessageContent(messageToEdit?.content || '')
+      setMessageContent(messageToEdit?.selectedVariation?.content || '')
     }, [messageToEdit])
 
     useEffect(() => {
