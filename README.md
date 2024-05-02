@@ -10,13 +10,9 @@ LLM X does not make any external api calls. (go ahead, check your network tab an
 
 # Recent additions:
 
-- Ability to pull a model
-- Ability to see model information
-- Ability to delete a model
-- Ability to see generation information on new messages
-- Regenerating a message updates the name
-- Ability to update a model
-- Ability to update ALL models
+- Regenerating a bot message adds it to a message variation list
+- Message headers and footers are sticky with the message, useful for long messages
+- Ability pull and and update models
 
 # How To Use:
 
