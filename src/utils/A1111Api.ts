@@ -34,7 +34,7 @@ export class A1111Api {
       throw new Error('A1111 API failed to return any generated image')
     }
 
-    A1111Api.abortControllerById[incomingMessage.uniqId]
+    delete A1111Api.abortControllerById[incomingMessage.uniqId]
 
     return images
   }
