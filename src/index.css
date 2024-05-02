@@ -29,7 +29,13 @@
   }
 
   .prose {
-    @apply prose-spacing [&>ul]:prose-spacing [&>ol]:prose-spacing !max-w-full;
+    @apply prose-spacing !max-w-full;
+
+    ul,
+    ol,
+    li {
+      @apply prose-spacing [&>p:first-child]:inline;
+    }
   }
 
   table {
