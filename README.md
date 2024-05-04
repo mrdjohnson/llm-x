@@ -8,6 +8,10 @@
 
 LLM X does not make any external api calls. (go ahead, check your network tab and see the Fetch section). Your chats and image generations are 100% private. This site / app works completely offline.
 
+# Bugs!
+
+Firefox: LLM X uses ollama js to update models and show model information, currently there is a cors issue on firefox when using the app from github that does not allow updating models or seeing model information to work. Advised to use chrome for these or use the CLI until fixed. Apologies. [Github issue](https://github.com/ollama/ollama-js/issues/80)
+
 # Recent additions:
 
 - Regenerating a bot message adds it to a message variation list
