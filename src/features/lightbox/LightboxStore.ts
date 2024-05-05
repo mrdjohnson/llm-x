@@ -25,11 +25,13 @@ export const LightboxStore = types
     get lightboxSlides() {
       if (!this.lightboxMessage) return []
 
-      const lightBoxSources: Array<Slide & { uniqId: string }> = []
+      const lightBoxSources: Array<Slide & { baseUniqId: string  }> = []
 
       let userPrompt: string | undefined
 
-      this.chat!.messages.forEach(message => {
+      this.chat!.messages.forEach(baseMessage => {
+        const message = baseMessage.selectedVariation
+
         if (message.fromBot === false) {
           userPrompt = message.content
         }
@@ -38,7 +40,7 @@ export const LightboxStore = types
           lightBoxSources.push({
             description: userPrompt + ` (${index + 1}/${message.imageUrls.length})`,
             src: imageUrl,
-            uniqId: message.uniqId,
+            baseUniqId: baseMessage.uniqId,
           })
         })
       })
@@ -53,8 +55,8 @@ export const LightboxStore = types
     },
   }))
   .actions(self => ({
-    setLightboxMessageById(uniqId: string, imageUrl: string) {
-      self.messageId = uniqId
+    setLightboxMessageById(baseUniqId: string, imageUrl: string) {
+      self.messageId = baseUniqId
       self.imageUrl = imageUrl
     },
 

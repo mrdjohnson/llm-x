@@ -201,7 +201,7 @@ const LazyMessage = observer(
               <button
                 key={imageUrl}
                 className="h-56 place-content-center overflow-hidden rounded-md border border-base-content/30 bg-base-content/30"
-                onClick={() => lightboxStore.setLightboxMessageById(message.uniqId, imageUrl)}
+                onClick={() => lightboxStore.setLightboxMessageById(baseMessage.uniqId, imageUrl)}
               >
                 <CachedImage
                   className="max-h-56 min-w-20 max-w-56 rounded-md object-contain object-center"
