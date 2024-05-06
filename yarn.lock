@@ -5996,17 +5996,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.6.5":
-  version: 1.6.7
-  resolution: "axios@npm:1.6.7"
-  dependencies:
-    follow-redirects: "npm:^1.15.4"
-    form-data: "npm:^4.0.0"
-    proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/131bf8e62eee48ca4bd84e6101f211961bf6a21a33b95e5dfb3983d5a2fe50d9fffde0b57668d7ce6f65063d3dc10f2212cbcb554f75cfca99da1c73b210358d
-  languageName: node
-  linkType: hard
-
 "axios@npm:^1.6.8":
   version: 1.6.8
   resolution: "axios@npm:1.6.8"
@@ -7894,16 +7883,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.15.4":
-  version: 1.15.5
-  resolution: "follow-redirects@npm:1.15.5"
-  peerDependenciesMeta:
-    debug:
-      optional: true
-  checksum: 10c0/418d71688ceaf109dfd6f85f747a0c75de30afe43a294caa211def77f02ef19865b547dfb73fde82b751e1cc507c06c754120b848fe5a7400b0a669766df7615
-  languageName: node
-  linkType: hard
-
 "follow-redirects@npm:^1.15.6":
   version: 1.15.6
   resolution: "follow-redirects@npm:1.15.6"
@@ -9368,7 +9347,7 @@ __metadata:
     typescript: "npm:^5.2.2"
     use-media: "npm:^1.5.0"
     vite: "npm:^5.1.5"
-    vite-plugin-mkcert: "npm:^1.17.4"
+    vite-plugin-mkcert: "npm:^1.17.5"
     vite-plugin-pwa: "npm:^0.19.2"
     vite-plugin-remove-console: "npm:^2.2.0"
     vite-tsconfig-paths: "npm:^4.3.2"
@@ -13542,17 +13521,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-mkcert@npm:^1.17.4":
-  version: 1.17.4
-  resolution: "vite-plugin-mkcert@npm:1.17.4"
+"vite-plugin-mkcert@npm:^1.17.5":
+  version: 1.17.5
+  resolution: "vite-plugin-mkcert@npm:1.17.5"
   dependencies:
     "@octokit/rest": "npm:^20.0.2"
-    axios: "npm:^1.6.5"
+    axios: "npm:^1.6.8"
     debug: "npm:^4.3.4"
     picocolors: "npm:^1.0.0"
   peerDependencies:
     vite: ">=3"
-  checksum: 10c0/e3fd1c477f35fd46e3587e03b062704c75533a97d5a41efc95c127f0602c20c1c718d12f9ab76ba9265e0041683ebbfc4297b729817e671fa183337eb9fccf1d
+  checksum: 10c0/f228e44c6070da1a6a13fb4c3d488cb1fcbb2c236121b097937f5dcbf3a7604185577bcd6c1d157b7dceb08037c12a03be7930016da6b8babd1bf2bce94f7a9d
   languageName: node
   linkType: hard
 

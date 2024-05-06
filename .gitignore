@@ -12,6 +12,7 @@ dist
 dev-dist
 dist-ssr
 *.local
+certs/
 
 # https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 .yarn/*

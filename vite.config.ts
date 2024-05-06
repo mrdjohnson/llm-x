@@ -9,8 +9,9 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 const replaceOptions = { __DATE__: new Date().toISOString(), __RELOAD_SW__: 'false' }
 
 const isDev = process.env.NODE_ENV === 'development'
+const isStaging = process.env.NODE_ENV === 'staging'
 
-const makeCert = isDev ? mkcert() : undefined
+const makeCert = isDev || isStaging ? mkcert({ hosts: ['0.0.0.0'] }) : undefined
 
 const pwaOptions: Partial<VitePWAOptions> = {
   mode: 'production',
@@ -60,9 +61,14 @@ const pwaOptions: Partial<VitePWAOptions> = {
 const reload = process.env.RELOAD_SW === 'true'
 const selfDestroying = process.env.SW_DESTROY === 'true'
 
-if (process.env.SW === 'true' && pwaOptions.manifest) {
-  pwaOptions.manifest.name = 'LLM-X'
-  pwaOptions.manifest.short_name = 'LLM-X'
+if (!isDev && pwaOptions.manifest) {
+  if (isStaging) {
+    pwaOptions.manifest.name = 'LLM-X local'
+    pwaOptions.manifest.short_name = 'LLM-X local'
+  } else {
+    pwaOptions.manifest.name = 'LLM-X prod'
+    pwaOptions.manifest.short_name = 'LLM-X'
+  }
 }
 
 if (reload) {
@@ -91,5 +97,19 @@ export default defineConfig({
     rollupOptions: {
       logLevel: 'silent',
     },
+  },
+  preview: {
+    port: 3030,
+    strictPort: true,
+    cors: true,
+    // @ts-expect-error https allows booleans
+    https: true,
+  },
+  server: {
+    strictPort: true,
+    host: true,
+    // @ts-expect-error https allows booleans
+    https: true,
+    origin: isStaging ? 'http://0.0.0.0:3030' : 'http://0.0.0.0',
   },
 })
