@@ -8,6 +8,7 @@ import { IChatModel } from '~/models/ChatModel'
 
 import { OllmaApi } from '~/utils/OllamaApi'
 import { A1111Api } from '~/utils/A1111Api'
+import { LmsApi } from '~/utils/LmsApi'
 
 const IncomingMessageAbortedModel = types.model({
   id: types.identifier,
@@ -31,6 +32,7 @@ export const IncomingMessageStore = types
   .actions(self => ({
     async beforeDestroy() {
       OllmaApi.cancelStream()
+      LmsApi.cancelStream()
     },
 
     deleteMessage(message: IMessageModel) {
@@ -51,8 +53,10 @@ export const IncomingMessageStore = types
         self.messageAbortedById.put({ id, abortedManually: true })
 
         // error prone by quick switching during generation
-        if (settingStore.isImageGenerationMode) {
+        if (settingStore.modelType === 'A1111') {
           A1111Api.cancelStream(id)
+        } else if (settingStore.modelType === 'LMS') {
+          LmsApi.cancelStream(id)
         } else {
           OllmaApi.cancelStream(id)
         }
@@ -65,8 +69,10 @@ export const IncomingMessageStore = types
       }
 
       // error prone by quick switching during generation
-      if (settingStore.isImageGenerationMode) {
+      if (settingStore.modelType === 'A1111') {
         A1111Api.cancelStream()
+      } else if (settingStore.modelType === 'LMS') {
+        LmsApi.cancelStream()
       } else {
         OllmaApi.cancelStream()
       }
@@ -119,14 +125,22 @@ export const IncomingMessageStore = types
 
       self.messageById.put(messageToEdit)
 
-      if (settingStore.isImageGenerationMode) {
+      if (settingStore.modelType === 'A1111') {
         return this.generateImage(chat, incomingMessage)
+      }
+
+      let streamChat: typeof OllmaApi.streamChat
+
+      if (settingStore.modelType === 'LMS') {
+        streamChat = LmsApi.streamChat
+      } else {
+        streamChat = OllmaApi.streamChat
       }
 
       messageToEdit.setModelName(settingStore.selectedModelLabel)
 
       await this.handleIncomingMessage(incomingMessage, async () => {
-        for await (const contentChunk of OllmaApi.streamChat(
+        for await (const contentChunk of streamChat(
           chat.messages,
           incomingMessage,
           messageToEdit,

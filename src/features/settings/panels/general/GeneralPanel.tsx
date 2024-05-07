@@ -1,22 +1,26 @@
 import { observer } from 'mobx-react-lite'
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 
-import { settingStore } from '~/models/SettingStore'
+import { ConnectionTypes, settingStore } from '~/models/SettingStore'
 
 import AppGeneralPanel from '~/features/settings/panels/general/AppGeneralPanel'
 import OllamaGeneralPanel from '~/features/settings/panels/general/OllamaGeneralPanel'
 import A1111GeneralPanel from '~/features/settings/panels/general/A1111GeneralPanel'
+import LmsGeneralPanel from '~/features/settings/panels/general/LmsGeneralPanel'
 
-const Panels = [
+type PanelTypes = ConnectionTypes | 'App'
+
+const Panels: Array<{ title: PanelTypes; Component: () => JSX.Element }> = [
   { title: 'App', Component: AppGeneralPanel },
   { title: 'Ollama', Component: OllamaGeneralPanel },
+  { title: 'LMS', Component: LmsGeneralPanel },
   { title: 'A1111', Component: A1111GeneralPanel },
 ]
 
 const GeneralModelPanel = observer(() => {
-  const { selectedModelType } = settingStore
+  const { modelType: selectedModelType } = settingStore
 
-  const [selectedTab, setSelectedTab] = useState(selectedModelType)
+  const [selectedTab, setSelectedTab] = useState<PanelTypes>(selectedModelType)
 
   return (
     <div className="flex w-full flex-col">

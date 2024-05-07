@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@langchain/community": "^0.0.36",
+    "@lmstudio/sdk": "^0.0.12",
     "@nextui-org/react": "^2.2.10",
     "axios": "^1.6.8",
     "camelcase-keys": "^9.1.3",

@@ -8,9 +8,7 @@ const ModelSelector = observer(() => {
   const {
     selectedModelLabel,
     isAnyServerConnected,
-    isA1111ServerConnected,
-    isServerConnected,
-    isImageGenerationMode,
+    modelType,
   } = settingStore
   const noServer = !isAnyServerConnected
 
@@ -19,16 +17,18 @@ const ModelSelector = observer(() => {
       return 'No Servers connected'
     }
 
-    if (!isA1111ServerConnected && isImageGenerationMode) {
-      return 'No a1111 models available'
+    if(selectedModelLabel) return selectedModelLabel
+
+    if (modelType === 'A1111' ) {
+      return 'No A1111 models available'
     }
 
-    if (!isServerConnected) {
-      return 'No models available'
+    if (modelType === 'LMS') {
+      return 'No Lm studio models available'
     }
 
-    return selectedModelLabel
-  }, [noServer, selectedModelLabel])
+    return 'No Ollama models available'
+  }, [noServer, modelType, selectedModelLabel])
 
   return (
     <button
