@@ -25,18 +25,18 @@ const Navbar = observer(() => {
   }
 
   return (
-    <nav className="navbar mb-2 flex h-auto min-h-0 justify-between rounded-md bg-base-300">
-      <div className="ml-2 flex-1 text-sm md:text-xl">
+    <nav className="navbar mb-2 flex h-auto min-h-0 justify-between gap-4 rounded-md bg-base-300">
+      <div className="ml-2 pr-2 text-sm md:text-xl">
         <h1 className="hidden">LLM-X</h1>
         <FunTitle className="md:text-xl" />
       </div>
 
-      <div className="hidden flex-1 flex-row gap-2 md:flex">
+      <div className="hidden flex-1 max-w-[600px] flex-row gap-2 md:flex">
         <ModelSelector />
         <ModelRefreshButton />
       </div>
 
-      <div className="flex flex-1 flex-row justify-end gap-2">
+      <div className="flex flex-row justify-end gap-2">
         {settingStore.pwaNeedsUpdate && (
           <button
             className="btn btn-square btn-ghost btn-sm md:btn-md"

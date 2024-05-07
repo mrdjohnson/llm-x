@@ -166,6 +166,17 @@ const useRegisterModelActions = () => {
         })
       }
 
+      if (_.isEmpty(settingStore.lmsEnabled)) {
+        nextModelActions.push({
+          id: 'model',
+          name: 'No Lm Studio Models to select: Refresh',
+          keywords: 'model modal open select refresh',
+          section: 'Actions',
+          priority: Priority.LOW,
+          perform: settingStore.fetchLmsModels,
+        })
+      }
+
       if (!settingStore.allModelsEmpty) {
         nextModelActions.push({
           id: 'model',
@@ -203,6 +214,17 @@ const useRegisterModelActions = () => {
           keywords: `${model.modelName} model`,
           section: 'A1111 Models',
           perform: () => settingStore.selectModel(model.modelName, 'A1111'),
+          parent: 'model',
+        })
+      })
+
+      settingStore.lmsModels.forEach(model => {
+        nextModelActions.push({
+          id: model.path,
+          name: model.name,
+          keywords: `${model.path} model`,
+          section: 'LM Studio Models',
+          perform: () => settingStore.selectModel(model.path, 'LMS'),
           parent: 'model',
         })
       })

@@ -5,9 +5,11 @@ import { settingStore } from '~/models/SettingStore'
 
 import OllamaModelPanel from '~/features/settings/panels/model/OllamaModelPanel'
 import A1111ModelPanel from '~/features/settings/panels/model/A1111ModelPanel'
+import LmsModelPanel from '~/features/settings/panels/model/lms/LmsModelPanel'
 
 const Panels = [
   { title: 'Ollama', Component: OllamaModelPanel },
+  { title: 'LMS', Component: LmsModelPanel },
   { title: 'A1111', Component: A1111ModelPanel },
 ]
 
@@ -38,6 +40,7 @@ const ModelPanel = observer(() => {
               aria-label={title}
               checked={title === selectedTab}
               onChange={() => setSelectedTab(title)}
+              key={title}
             />
 
             <div
