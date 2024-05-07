@@ -49,6 +49,63 @@ export const SettingStore = types
     _isServerConnected: types.maybe(types.boolean),
     _funTitle: types.maybe(types.string),
   })
+  .views(self => ({
+    get selectedModel(): IOllamaModel | undefined {
+      if (this.isImageGenerationMode) return undefined
+
+      return self.models.find(model => model.name === self.selectedModelName) || self.models[0]
+    },
+
+    get selectedA1111Model(): IA1111Model | undefined {
+      const modelName = self.selectedModelName || undefined
+
+      return _.find(self.a1111Models, { modelName }) || self.a1111Models[0]
+    },
+
+    get selectedModelLabel() {
+      if (this.isImageGenerationMode) {
+        return this.selectedA1111Model?.modelName
+      } else {
+        return this.selectedModel?.name
+      }
+    },
+
+    get isServerConnected() {
+      return self._isServerConnected
+    },
+
+    get isA1111ServerConnected() {
+      return self._isA1111ServerConnected
+    },
+
+    get a1111ImageSize() {
+      if (self.a1111Width === undefined || self.a1111Height === undefined) {
+        return { width: undefined, height: undefined }
+      }
+
+      return { width: self.a1111Width, height: self.a1111Height }
+    },
+
+    get isAnyServerConnected() {
+      return this.isA1111ServerConnected || this.isServerConnected
+    },
+
+    get funTitle() {
+      return self._funTitle
+    },
+
+    get settingsPanelName() {
+      return self._settingsPanelName as SettingPanelOptionsType | undefined
+    },
+
+    get isImageGenerationMode() {
+      return self.selectedModelType === 'A1111'
+    },
+
+    get allModelsEmpty() {
+      return _.isEmpty(self.models) && _.isEmpty(self.a1111Models)
+    },
+  }))
   .actions(self => {
     let updateServiceWorker: undefined | (() => void)
 
@@ -205,63 +262,6 @@ export const SettingStore = types
       }),
     }
   })
-  .views(self => ({
-    get selectedModel(): IOllamaModel | undefined {
-      if (this.isImageGenerationMode) return undefined
-
-      return self.models.find(model => model.name === self.selectedModelName) || self.models[0]
-    },
-
-    get selectedA1111Model(): IA1111Model | undefined {
-      const modelName = self.selectedModelName || undefined
-
-      return _.find(self.a1111Models, { modelName }) || self.a1111Models[0]
-    },
-
-    get selectedModelLabel() {
-      if (this.isImageGenerationMode) {
-        return this.selectedA1111Model?.modelName
-      } else {
-        return this.selectedModel?.name
-      }
-    },
-
-    get isServerConnected() {
-      return self._isServerConnected
-    },
-
-    get isA1111ServerConnected() {
-      return self._isA1111ServerConnected
-    },
-
-    get a1111ImageSize() {
-      if (self.a1111Width === undefined || self.a1111Height === undefined) {
-        return { width: undefined, height: undefined }
-      }
-
-      return { width: self.a1111Width, height: self.a1111Height }
-    },
-
-    get isAnyServerConnected() {
-      return this.isA1111ServerConnected || this.isServerConnected
-    },
-
-    get funTitle() {
-      return self._funTitle
-    },
-
-    get settingsPanelName() {
-      return self._settingsPanelName as SettingPanelOptionsType | undefined
-    },
-
-    get isImageGenerationMode() {
-      return self.selectedModelType === 'A1111'
-    },
-
-    get allModelsEmpty() {
-      return _.isEmpty(self.models) && _.isEmpty(self.a1111Models)
-    },
-  }))
 
 export const settingStore = SettingStore.create()
 
