@@ -10,29 +10,35 @@ LLM X does not make any external api calls. (go ahead, check your network tab an
 
 # Bugs!
 
-Firefox: LLM X uses ollama js to update models and show model information, currently there is a cors issue on firefox when using the app from github that does not allow updating models or seeing model information to work. Advised to use chrome for these or use the CLI until fixed. Apologies. [Github issue](https://github.com/ollama/ollama-js/issues/80)
+Ollama + Firefox: LLM X uses ollama js to update models and show model information, currently there is a cors issue on firefox when using the app from github that does not allow updating models or seeing model information to work. Advised to use chrome for these or use the CLI until fixed. Apologies. [Github issue](https://github.com/ollama/ollama-js/issues/80)
 
 # Recent additions:
 
+- Text generation through lm studio is here! 
 - Regenerating a bot message adds it to a message variation list
 - Message headers and footers are sticky with the message, useful for long messages
-- Ability pull and and update models
 
 # How To Use:
 
-## Install Ollama (and AUTOMATIC1111):
+### Prerequisites for application
 
-- Download and install [Ollama](https://ollama.com/)
-- Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava` (or use the app)
-- Download and install [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#installation-and-running) (for image generation)
+- Ollama: Download and install [Ollama](https://ollama.com/)
+  - Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava` (or use the app)
+- Lm Studio:  Download and install [Lm Studio](https://lmstudio.ai/)
+- AUTOMATIC1111: Git clone [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#installation-and-running) (for image generation)
 
 ## How to use web client (no install):
 
-- Follow instructions for "Install Ollama"
-- Tell Ollama to listen:
+### Prerequisites for web client
+- Ollama Options: 
   - Use [Ollama's FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server) to set `OLLAMA_ORIGINS` = `*.github.io`
   - Run this in your terminal `OLLAMA_ORIGINS=*.github.io ollama serve`
     - (Powershell users: `$env:OLLAMA_ORIGINS="https://%2A.github.io/"; ollama serve`)
+- Lm Studio:
+  - Run this in your terminal: `lms server start --cors=true`
+- A1111: 
+  - Run this in the a1111 project folder: `./webui.sh --api --listen --cors-allow-origins "*"` 
+---
 - Use your browser to go to [LLM-X](https://mrdjohnson.github.io/llm-x/)
 - Go offline! (optional)
 - Start chatting!
@@ -46,14 +52,19 @@ Firefox: LLM X uses ollama js to update models and show model information, curre
 
 ## How to use from project:
 
-- Follow instructions for "Install Ollama"
-- Run this in your terminal `ollama serve` (no need for special origins command)
+### Prerequisites for local project
+- Ollama: Run this in your terminal `ollama serve`
+- Lm Studio: Run this in your terminal: `lms server start`
+- A1111: Run this in the a1111 project folder: `./webui.sh --api --listen` 
+---
+
 - Pull down this project; `yarn install`, `yarn dev`
 - Go offline! (optional)
 - Start chatting!
 
 ## Goals / Features
 
+- [x] **Lm Studio integration!**
 - [x] **Text to Image generation** through AUTOMATIC1111
 - [x] **Image to Text** using Ollama's multi modal abilities
 - [x] **Offline Support** via PWA technology
