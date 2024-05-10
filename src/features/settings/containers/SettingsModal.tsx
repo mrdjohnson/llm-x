@@ -151,6 +151,7 @@ const SettingsModal = observer(() => {
                   href="https://github.com/mrdjohnson/llm-x"
                   className="btn btn-outline btn-neutral mt-auto hidden fill-base-content stroke-base-content hover:fill-primary-content lg:flex"
                   aria-label="LLM-X's Github"
+                  target='__blank'
                 >
                   <Github />
                 </a>

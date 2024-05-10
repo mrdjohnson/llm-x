@@ -27,6 +27,7 @@ const MobileSplashPanel = observer(() => {
           href="https://github.com/mrdjohnson/llm-x"
           className="btn btn-outline btn-neutral mt-auto flex-1 fill-base-content stroke-base-content hover:fill-primary-content"
           aria-label="LLM-X's Github"
+          target='__blank'
         >
           <Github />
         </a>
