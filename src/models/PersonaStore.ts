@@ -73,4 +73,6 @@ export const personaStore = PersonaStore.create()
 
 persist('personas', personaStore).then(() => {
   console.log('updated persona store')
+
+  personaStore.personaToEdit = undefined
 })
