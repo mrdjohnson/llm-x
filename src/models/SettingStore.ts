@@ -201,7 +201,9 @@ export const SettingStore = types
         if (!a1111Enabled) {
           self._isA1111ServerConnected = false
 
-          self.selectedModelType = 'Ollama'
+          if (self.modelType === 'A1111') {
+            this.setModelType('Ollama')
+          }
         } else {
           self.selectedModelType = 'A1111'
         }
@@ -241,7 +243,9 @@ export const SettingStore = types
         if (!lmsEnabled) {
           self._isLmsServerConnected = false
 
-          this.setModelType('Ollama')
+          if (self.modelType === 'LMS') {
+            this.setModelType('Ollama')
+          }
         } else {
           this.setModelType('LMS')
         }
@@ -336,7 +340,10 @@ export const SettingStore = types
         } catch (e) {
           const status = (e instanceof AxiosError && e.status) || ''
 
-          toastStore.addToast(status + ' Failed to fetch models for lm studio host: ' + lmsHost, 'error')
+          toastStore.addToast(
+            status + ' Failed to fetch models for lm studio host: ' + lmsHost,
+            'error',
+          )
 
           self._isLmsServerConnected = false
         }
