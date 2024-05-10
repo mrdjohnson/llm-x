@@ -25,6 +25,7 @@ const LmsEnabledCheckbox = observer(() => {
               (settingStore.lmsEnabled === isEnabled ? 'btn-active cursor-default ' : 'btn ')
             }
             onClick={() => settingStore.setLmsEnabled(isEnabled)}
+            key={isEnabled ? 0 : 1}
           >
             <span>
               {isEnabled ? 'Enable' : 'Disable'}

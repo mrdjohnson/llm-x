@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 
 import { settingStore } from '~/models/SettingStore'
 
@@ -26,7 +26,7 @@ const ModelPanel = observer(() => {
         style={{ gridTemplateRows: 'max-content auto' }}
       >
         {Panels.map(({ title, Component }) => (
-          <>
+          <Fragment key={title}>
             <input
               type="radio"
               role="tab"
@@ -49,7 +49,7 @@ const ModelPanel = observer(() => {
             >
               <Component />
             </div>
-          </>
+          </Fragment>
         ))}
       </div>
     </div>

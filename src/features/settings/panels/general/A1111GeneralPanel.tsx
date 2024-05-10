@@ -25,6 +25,7 @@ const A1111EnabledCheckbox = observer(() => {
               (settingStore.a1111Enabled === isEnabled ? 'btn-active cursor-default ' : 'btn ')
             }
             onClick={() => settingStore.setA1111Enabled(isEnabled)}
+            key={isEnabled ? 0 : 1}
           >
             <span>
               {isEnabled ? 'Enable' : 'Disable'}
