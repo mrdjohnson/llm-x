@@ -41,8 +41,8 @@ const ChatBoxPrompt = observer(() => {
 
           <div className="text-2xl">
             <ul className="steps steps-vertical list-inside list-disc py-6 text-left *:text-lg [&_a]:text-lg [&_span]:text-lg">
-              <Step isCompleted={settingStore.isServerConnected}>
-                {'Tell Ollama that '}
+              <Step isCompleted={settingStore.isServerConnected || settingStore.isLmsServerConnected}>
+                {'Tell Lm Studio or Ollama that '}
                 <span className="text-primary">we're cool:</span>
                 <button
                   className="link decoration-primary"
@@ -63,8 +63,8 @@ const ChatBoxPrompt = observer(() => {
                 </button>
               </Step>
 
-              <Step isCompleted={!_.isEmpty(settingStore.models)}>
-                {'Download a model from ollama:'}
+              <Step isCompleted={!_.isEmpty([...settingStore.models, ...settingStore.lmsModels])}>
+                {'Download a model from Lm Studio home page or '}
                 <a
                   href="https://ollama.com/library"
                   className="link decoration-primary"
