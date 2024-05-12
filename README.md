@@ -73,7 +73,7 @@ Ollama + Firefox: LLM X uses ollama js to update models and show model informati
 - [x] Text Entry and Response to Ollama
 - [x] Auto saved Chat history
 - [x] Manage multiple chats
-- [x] Copy/Edit/Detele messages sent or recieved
+- [x] Copy/Edit/Detele messages sent or received
 - [x] Re-write user message (triggering response refresh)
 - [x] System Prompt customization through "Personas" feature
 - [x] Theme changing through DaisyUI
