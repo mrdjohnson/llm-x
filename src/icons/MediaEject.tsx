@@ -9,7 +9,7 @@ export default function MediaEject({ className }: { className?: string }) {
       <path
         fill="currentColor"
         className="opacity-0 transition-all duration-300 ease-in-out group-hover:opacity-100 "
-        d="m1.433-5.396L12 4l-6.433 6.604A2 2 0 0 0 7 14h10a2 2 0 0 0 1.433-3.396"
+        d="m12 4L12 4l-6.433 6.604A2 2 0 007 14h10a2 2 0 001.433-3.396"
       />
       <path fill="currentColor" d="M17 16H7a2 2 0 0 0 0 4h10a2 2 0 0 0 0-4" />
     </svg>
