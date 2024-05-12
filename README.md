@@ -31,9 +31,9 @@ Ollama + Firefox: LLM X uses ollama js to update models and show model informati
 
 ### Prerequisites for web client
 - Ollama Options: 
-  - Use [Ollama's FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server) to set `OLLAMA_ORIGINS` = `*.github.io`
-  - Run this in your terminal `OLLAMA_ORIGINS=*.github.io ollama serve`
-    - (Powershell users: `$env:OLLAMA_ORIGINS="https://%2A.github.io/"; ollama serve`)
+  - Use [Ollama's FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server) to set `OLLAMA_ORIGINS` = `https://mrdjohnson.github.io`
+  - Run this in your terminal `OLLAMA_ORIGINS=https://mrdjohnson.github.io ollama serve`
+    - (Powershell users: `$env:OLLAMA_ORIGINS="https://mrdjohnson.github.io"; ollama serve`)
 - Lm Studio:
   - Run this in your terminal: `lms server start --cors=true`
 - A1111: 
