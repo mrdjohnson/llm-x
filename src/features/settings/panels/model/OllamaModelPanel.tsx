@@ -12,6 +12,7 @@ import Globe from '~/icons/Globe'
 import Image from '~/icons/Image'
 import DownloadTray from '~/icons/DownloadTray'
 import Delete from '~/icons/Delete'
+import Edit from '~/icons/Edit'
 
 enum SortType {
   None = 'none',
@@ -22,7 +23,7 @@ enum SortType {
   Image = 'supportsImages',
 }
 
-const OllamaModelPanelTable = observer(({ onModelSelected }: { onModelSelected: () => void }) => {
+const OllamaModelPanelTable = observer(({ onShowDetails }: { onShowDetails: () => void }) => {
   const { selectedModelLabel, models } = settingStore
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -112,7 +113,6 @@ const OllamaModelPanelTable = observer(({ onModelSelected }: { onModelSelected: 
 
   const handleModelSelected = (modelName: string) => {
     settingStore.selectModel(modelName)
-    onModelSelected()
   }
 
   useEffect(() => {
@@ -163,6 +163,8 @@ const OllamaModelPanelTable = observer(({ onModelSelected }: { onModelSelected: 
               {makeHeader('Size', SortType.Size)}
 
               {makeHeader('Updated', SortType.Updated)}
+
+              <th className="w-fit" />
             </tr>
             <tr />
           </thead>
@@ -199,6 +201,15 @@ const OllamaModelPanelTable = observer(({ onModelSelected }: { onModelSelected: 
 
                 <td>{model.gbSize}</td>
                 <td className=" opacity-65">{model.timeAgo}</td>
+
+                <td className="w-fit">
+                  <button
+                    className="align-center flex opacity-30 transition-opacity duration-200 ease-in-out hover:opacity-100"
+                    onClick={onShowDetails}
+                  >
+                    <Edit />
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -354,7 +365,7 @@ const OllamaModelPanel = observer(() => {
       </Breadcrumbs>
 
       {tab === 'all' || !selectedModel ? (
-        <OllamaModelPanelTable onModelSelected={() => setTab('single')} />
+        <OllamaModelPanelTable onShowDetails={() => setTab('single')} />
       ) : (
         <OllamaModelSettings />
       )}
