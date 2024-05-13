@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import _ from 'lodash'
 import { Breadcrumbs, BreadcrumbItem } from '@nextui-org/react'
 
@@ -78,14 +78,19 @@ const OllamaModelPanelTable = observer(({ onModelSelected }: { onModelSelected: 
     )
   }
 
-  const makeHeader = (label: string, sortType: SortType) => {
+  const makeHeader = (
+    label: ReactNode,
+    sortType: SortType,
+    tooltip: string | undefined = undefined,
+  ) => {
     return (
       <th>
         <span
-          className="flex w-fit cursor-pointer select-none flex-row items-center underline"
+          className="tooltip tooltip-bottom flex w-fit cursor-pointer select-none flex-row items-center"
           onClick={() => handleSortTypeChanged(sortType)}
+          data-tip={tooltip}
         >
-          {label}
+          <span className="border-b-[1.5px] border-b-current leading-[1.25]">{label}</span>
 
           {makeChevron(sortType)}
         </span>
@@ -153,21 +158,7 @@ const OllamaModelPanelTable = observer(({ onModelSelected }: { onModelSelected: 
 
               {makeHeader('Params', SortType.Params)}
 
-              <th className="table-cell w-fit">
-                <span
-                  className="flex w-fit cursor-pointer flex-row items-center"
-                  onClick={() => handleSortTypeChanged(SortType.Image)}
-                >
-                  <span
-                    className="tooltip tooltip-bottom w-fit border-b-[1.5px] border-b-current"
-                    data-tip="Supports Images?"
-                  >
-                    <Image />
-                  </span>
-
-                  {makeChevron(SortType.Image)}
-                </span>
-              </th>
+              {makeHeader(<Image />, SortType.Image, 'Supports Images?')}
 
               {makeHeader('Size', SortType.Size)}
 
