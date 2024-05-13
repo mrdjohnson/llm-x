@@ -4,7 +4,7 @@ import HelpPanel from '~/features/settings/panels/HelpPanel'
 import PersonaPanel from '~/features/settings/panels/PersonaPanel'
 import ModelPanel from '~/features/settings/panels/model/ModelPanel'
 import ConnectionsPanel from '~/features/settings/panels/connections/ConnectionsPanel'
-import FunctionPanel from '~/features/settings/panels/FunctionPanel'
+import FunctionPanel from '~/features/settings/panels/function/FunctionPanel'
 
 export type SettingPanelOptionsType =
   | 'general'
