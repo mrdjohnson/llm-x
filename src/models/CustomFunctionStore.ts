@@ -71,14 +71,14 @@ const CustomFunctionStore = types
   })
   .views(self => ({
     get hasUnnamedCustomFunction() {
-      return !!_.find(self.customFunctions, { name: 'new function' })
+      return !!_.find(self.customFunctions, { name: 'newFunction' })
     },
   }))
   .actions(self => {
     return {
       createCustomFunction(parameters: Omit<SnapshotIn<ICustomFunctionModel>, 'id' | 'name'>) {
         const customFunction = CustomFunctionModel.create({
-          name: 'new function',
+          name: 'newFunction',
           ...parameters,
           id: Date.now(),
         })
