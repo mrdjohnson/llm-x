@@ -81,6 +81,7 @@ const OllamaModelPanelTable = observer(({ onShowDetails }: { onShowDetails: () =
           defaultChecked={model.supportsImages}
           className="checkbox checkbox-xs tooltip tooltip-bottom"
           data-tip="Supports Images?"
+          onClick={e => e.preventDefault()}
         />
       </td>
 
