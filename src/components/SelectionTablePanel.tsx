@@ -6,7 +6,7 @@ import ChevronDown from '~/icons/ChevronDown'
 
 export type SortType<T> = {
   label: ReactNode
-  value: keyof T
+  value?: keyof T
   invertOrder?: boolean
   tooltip?: string
 }
@@ -20,6 +20,7 @@ const EmptySortType = {
 
 type SelectionPanelTableProps<T> = PropsWithChildren<{
   items: T[]
+  className?: string
   sortTypes: Array<SortType<T>>
   onItemSelected: (item: T) => void
   renderRow: (item: T) => ReactNode
@@ -35,6 +36,7 @@ type SelectionPanelTableProps<T> = PropsWithChildren<{
 const SelectionPanelTable = observer(
   <T,>({
     items,
+    className = '',
     sortTypes,
     primarySortTypeLabel,
     itemFilter,
@@ -75,6 +77,8 @@ const SelectionPanelTable = observer(
     }, [filterText, sortedItems])
 
     const handleSortTypeChanged = (nextSortType: SortType<T>) => {
+      if (nextSortType.value === undefined) return
+
       if (activeSortType !== nextSortType) {
         setAscendingSort(true)
         setActiveSortType(nextSortType)
@@ -125,18 +129,26 @@ const SelectionPanelTable = observer(
           </label>
         )}
 
-        <div className="mt-2 flex h-full flex-col overflow-y-scroll rounded-md">
+        <div className={'mt-2 flex h-full flex-col overflow-y-scroll rounded-md ' + className}>
           <table className="table table-zebra table-sm -mt-4 mb-4 border-separate border-spacing-y-2 pt-0">
             <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
               <tr>
                 {sortTypes.map(sortType => (
                   <th>
                     <span
-                      className="tooltip tooltip-bottom flex w-fit cursor-pointer select-none flex-row items-center"
+                      className={
+                        'tooltip tooltip-bottom flex w-fit select-none flex-row items-center' +
+                        (sortType.value === undefined ? ' cursor-pointer' : '')
+                      }
                       onClick={() => handleSortTypeChanged(sortType)}
                       data-tip={sortType.tooltip}
                     >
-                      <span className="border-b-[1.5px] border-b-current leading-[1.25]">
+                      <span
+                        className={
+                          ' border-b-current leading-[1.25]' +
+                          (sortType.value === undefined ? '' : ' border-b-[1.5px]')
+                        }
+                      >
                         {sortType.label}
                       </span>
 
