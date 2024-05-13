@@ -200,4 +200,7 @@ persist('settings', settingStore, {
   ],
 }).then(() => {
   console.log('updated settings store')
+
+  // TODO: REMOVE THIS LINE
+  settingStore.openSettingsModal('functions')
 })
