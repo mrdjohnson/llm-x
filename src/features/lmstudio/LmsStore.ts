@@ -2,8 +2,10 @@ import { makeAutoObservable } from 'mobx'
 import { type DownloadedModel } from '@lmstudio/sdk'
 import { toLmsModel } from '~/utils/lms/toLmsModel'
 
+export type ILmsModel = ReturnType<typeof toLmsModel>
+
 class LmsStore {
-  lmsModels: ReturnType<typeof toLmsModel>[] = []
+  lmsModels: ILmsModel[] = []
 
   constructor() {
     makeAutoObservable(this)
