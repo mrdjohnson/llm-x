@@ -112,17 +112,9 @@ const CustomFunctionStore = types
 
       editCustomFunction(
         customFunction: ICustomFunctionModel,
-        parameters: Partial<SnapshotIn<ICustomFunctionModel>>,
+        values: Partial<SnapshotIn<ICustomFunctionModel>>,
       ) {
-        const nextCustomFunction = CustomFunctionModel.create({
-          name: '',
-          description: '',
-
-          ...parameters,
-          id: customFunction.id,
-        })
-
-        _.merge(customFunction, nextCustomFunction)
+        _.merge(customFunction, values)
 
         self.customFunctionToEdit = undefined
       },
