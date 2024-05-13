@@ -73,7 +73,7 @@ Ollama + Firefox: LLM X uses ollama js to update models and show model informati
 - [x] Text Entry and Response to Ollama
 - [x] Auto saved Chat history
 - [x] Manage multiple chats
-- [x] Copy/Edit/Detele messages sent or recieved
+- [x] Copy/Edit/Delete messages sent or received
 - [x] Re-write user message (triggering response refresh)
 - [x] System Prompt customization through "Personas" feature
 - [x] Theme changing through DaisyUI
@@ -145,7 +145,7 @@ I couldn't help but bee cool 😎
 **_Inspiration:_**
 [ollama-ui's](https://github.com/ollama-ui/ollama-ui) project. Which allows users to connect to ollama via a [web app](https://ollama-ui.github.io/ollama-ui/)
 
-[Perplexity.ai](https://www.perplexity.ai/) Perpexlity has some amazing UI advancements in the LLM UI space and I have been very interested in getting to that point. Hopefully this starter project lets me get closer to doing something similar!
+[Perplexity.ai](https://www.perplexity.ai/) Perplexity has some amazing UI advancements in the LLM UI space and I have been very interested in getting to that point. Hopefully this starter project lets me get closer to doing something similar!
 
 ## Getting started
 
