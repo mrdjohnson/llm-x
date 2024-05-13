@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
-import { Breadcrumbs, BreadcrumbItem } from '@nextui-org/react'
 
 import { settingStore } from '~/models/SettingStore'
 import { IOllamaModel } from '~/models/OllamaModel'
@@ -12,6 +11,7 @@ import SelectionPanelTable, {
   SortType as SelectionPanelSortType,
 } from '~/components/SelectionTablePanel'
 import CopyButton from '~/components/CopyButton'
+import BreadcrumbBar from '~/components/BreadcrumbBar'
 
 import Globe from '~/icons/Globe'
 import Image from '~/icons/Image'
@@ -238,29 +238,20 @@ const OllamaModelPanel = observer(() => {
 
   return (
     <div className="relative flex h-full w-full flex-col">
-      <Breadcrumbs className="mb-2">
-        <BreadcrumbItem
-          className={
-            tab === 'all' ? ' [&>*]:!text-primary' : 'scale-90 [&>*]:!text-base-content/70'
-          }
-          isCurrent={tab === 'all'}
-          onPress={() => setTab('all')}
-        >
-          Models
-        </BreadcrumbItem>
-
-        {selectedModel && (
-          <BreadcrumbItem
-            className={
-              tab === 'single' ? ' [&>*]:!text-primary' : 'scale-90 [&>*]:!text-base-content/70'
-            }
-            isCurrent={tab === 'single'}
-            onPress={() => setTab('single')}
-          >
-            {selectedModel.name}
-          </BreadcrumbItem>
-        )}
-      </Breadcrumbs>
+      <BreadcrumbBar
+        breadcrumbs={[
+          {
+            label: 'Models',
+            isSelected: tab === 'all',
+            onClick: () => setTab('all'),
+          },
+          selectedModel && {
+            label: selectedModel.name,
+            isSelected: tab === 'single',
+            onClick: () => setTab('single'),
+          },
+        ]}
+      />
 
       {tab === 'all' || !selectedModel ? (
         <OllamaModelPanelTable onShowDetails={() => setTab('single')} />
