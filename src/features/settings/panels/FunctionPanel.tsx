@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
 import { useForm, Controller } from 'react-hook-form'
 
@@ -8,9 +8,16 @@ import {
   IFunctionParameterModel,
   customFunctionStore,
 } from '~/models/CustomFunctionStore'
+
+import BreadcrumbBar from '~/components/BreadcrumbBar'
+import SelectionPanelTable, {
+  SortType as SelectionPanelSortType,
+} from '~/components/SelectionTablePanel'
+
 import ChevronDown from '~/icons/ChevronDown'
 import Check from '~/icons/Check'
 import Delete from '~/icons/Delete'
+import Edit from '~/icons/Edit'
 
 type CustomFunctionFormProps = {
   selectedCustomFunction: ICustomFunctionModel
@@ -25,8 +32,9 @@ type CustomFunctionFormDataType = {
 const CustomFunctionForm = observer(({ selectedCustomFunction }: CustomFunctionFormProps) => {
   const {
     register,
-    setValue,
     handleSubmit,
+    control,
+    reset,
     formState: { isValid, isDirty },
   } = useForm<CustomFunctionFormDataType>({})
 
@@ -40,53 +48,107 @@ const CustomFunctionForm = observer(({ selectedCustomFunction }: CustomFunctionF
       description,
       enabled,
     })
+
+    reset(formData)
   })
 
+  const validateName = (name: string) => {
+    if (name.includes(' ')) return false
+
+    return true
+  }
+
   useEffect(() => {
-    setValue('name', selectedCustomFunction.name)
-    setValue('description', selectedCustomFunction.description)
-    setValue('enabled', selectedCustomFunction.enabled)
+    reset({
+      name: selectedCustomFunction.name,
+      description: selectedCustomFunction.description,
+      enabled: selectedCustomFunction.enabled,
+    })
   }, [selectedCustomFunction])
 
   return (
-    <form onSubmit={handleFormSubmit} className="my-4 flex flex-col gap-2" ref={formRef}>
-      <div>
-        <label className="label-text">Function Name:</label>
-
-        <input
-          type="text"
-          className="input input-sm input-bordered ml-2 max-w-full focus:outline-none"
-          minLength={4}
-          placeholder={selectedCustomFunction.name}
-          {...register('name', { required: true, minLength: 4 })}
+    <div className="flex h-full flex-col overflow-y-scroll">
+      <form onSubmit={handleFormSubmit} className="mb-4 mt-2 flex flex-col gap-2" ref={formRef}>
+        <Controller
+          render={({ field }) => (
+            <div className="join">
+              {[true, false].map(isEnabled => (
+                <button
+                  className={
+                    'btn join-item btn-sm mr-0 ' +
+                    (field.value === isEnabled ? 'btn-active cursor-default ' : 'btn ')
+                  }
+                  onClick={() => field.onChange(!field.value)}
+                  key={isEnabled ? 0 : 1}
+                >
+                  <span>
+                    {isEnabled ? 'Enable' : 'Disable'}
+                    {field.value === isEnabled ? 'd' : '?'}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+          control={control}
+          name="enabled"
+          defaultValue={undefined}
         />
+
+        <div>
+          <label className="label-text">Function Name:</label>
+
+          <input
+            type="text"
+            className="input input-sm input-bordered ml-2 max-w-full focus:outline-none"
+            minLength={4}
+            placeholder={selectedCustomFunction.name}
+            {...register('name', { required: true, minLength: 4, validate: validateName })}
+          />
+        </div>
+
+        <div className=" flex flex-col">
+          <label className="label-text">Description:</label>
+
+          <textarea
+            rows={2}
+            className="textarea textarea-bordered textarea-sm ml-2 mt-2 max-w-full resize-none focus:outline-none"
+            placeholder="You are a store manager that is eager to help many customers"
+            {...register('description', {})}
+          />
+        </div>
+      </form>
+
+      <div className="block">
+        <FunctionParameterTable selectedCustomFunction={selectedCustomFunction} />
       </div>
 
-      <div className=" flex flex-col">
-        <label className="label-text">Description:</label>
-
-        <textarea
-          rows={3}
-          className="textarea textarea-bordered textarea-sm ml-2 mt-2 max-w-full resize-none focus:outline-none"
-          placeholder="You are a store manager that is eager to help many customers"
-          {...register('description', { required: true })}
-        />
-      </div>
-
-      <div className="mt-2 flex justify-end gap-2">
+      <div className="sticky bottom-0 mt-auto flex justify-between gap-4 bg-base-100 pt-4">
         <button
-          role="button"
-          className="btn btn-ghost btn-sm text-error/50 hover:text-error"
-          onClick={() => customFunctionStore.setSelectedCustomFunction(undefined)}
+          className="btn btn-ghost btn-sm mr-8 text-error"
+          onClick={() => customFunctionStore.deleteCustomFunction(selectedCustomFunction)}
         >
-          Cancel
+          <Delete />
         </button>
 
-        <button className="btn btn-primary btn-sm" type="submit" disabled={!isValid || !isDirty}>
-          Save Function
-        </button>
+        <div>
+          <button
+            className="btn btn-ghost btn-sm mr-4 text-error"
+            onClick={() => reset()}
+            disabled={!isDirty}
+          >
+            Cancel
+          </button>
+
+          <button
+            className="btn btn-ghost btn-primary btn-sm"
+            disabled={!isValid || !isDirty}
+            onClick={handleFormSubmit}
+          >
+            Save function
+          </button>
+        </div>
       </div>
-    </form>
+    </div>
   )
 })
 
@@ -138,7 +200,7 @@ const FunctionParameterRow = observer(
       console.log('name checking: ', nextName)
       if (nextName === name) return true
 
-      if(nextName.includes(' ')) return false
+      if (nextName.includes(' ')) return false
 
       // does name already exist?
       return _.isUndefined(selectedCustomFunction.parameters.get(nextName))
@@ -154,7 +216,7 @@ const FunctionParameterRow = observer(
     }, [name, parameter])
 
     return (
-      <tr className=" rounded-tl-md">
+      <>
         <td>
           <input
             defaultValue={name}
@@ -239,10 +301,18 @@ const FunctionParameterRow = observer(
             <Delete />
           </button>
         </td>
-      </tr>
+      </>
     )
   },
 )
+
+const functionParameterSortTypes: Array<SelectionPanelSortType<[string, IFunctionParameterModel]>> =
+  [
+    { label: 'Name' }, //, value: 'name' },
+    { label: 'Type' }, //, value: 'type' },
+    { label: 'Description' }, //, value: 'description' },
+    { label: 'Required' }, //, value: 'required' },
+  ]
 
 const FunctionParameterTable = observer(({ selectedCustomFunction }: CustomFunctionFormProps) => {
   const addParam = () => {
@@ -257,43 +327,27 @@ const FunctionParameterTable = observer(({ selectedCustomFunction }: CustomFunct
     selectedCustomFunction.parameters,
   )
 
-  const makeHeader = (label: string) => {
-    return (
-      <th>
-        <span className="flex w-fit select-none flex-row items-center">{label}</span>
-      </th>
-    )
-  }
+  const renderRow = ([name, parameter]: [string, IFunctionParameterModel]) => (
+    <FunctionParameterRow
+      key={name}
+      name={name}
+      parameter={parameter}
+      selectedCustomFunction={selectedCustomFunction}
+    />
+  )
 
   return (
-    <div className="mt-2 flex h-full w-full flex-col overflow-y-scroll rounded-md">
-      <table className="table table-zebra table-sm -mt-4 mb-4 w-full border-separate border-spacing-y-2 pt-0">
-        <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
-          <tr>
-            {makeHeader('Name')}
-
-            {makeHeader('Type')}
-
-            {makeHeader('Description')}
-
-            {makeHeader('Required')}
-
-            {makeHeader('')}
-          </tr>
-        </thead>
-
-        <tbody className="-mt-4 gap-2 px-2">
-          {entries.map(([name, parameter]) => (
-            <FunctionParameterRow
-              name={name}
-              parameter={parameter}
-              selectedCustomFunction={selectedCustomFunction}
-            />
-          ))}
-        </tbody>
-      </table>
-
-      <div>
+    <SelectionPanelTable
+      className="!h-fit min-h-[60px] !overflow-clip !pt-2"
+      items={entries}
+      sortTypes={functionParameterSortTypes}
+      renderRow={renderRow}
+      onItemSelected={() => null}
+      getIsItemSelected={() => false}
+      getItemKey={([name]) => name}
+      includeEmptyHeader
+    >
+      <div className="flex justify-end">
         <button
           onClick={addParam}
           className="btn btn-primary btn-sm"
@@ -302,80 +356,134 @@ const FunctionParameterTable = observer(({ selectedCustomFunction }: CustomFunct
           Add a new param
         </button>
       </div>
-    </div>
+    </SelectionPanelTable>
+  )
+})
+
+const customFunctionSortTypes: Array<SelectionPanelSortType<ICustomFunctionModel>> = [
+  { label: 'Name', value: 'name' },
+  { label: 'Enabled', value: 'enabled' },
+  { label: 'Description', value: 'description' },
+]
+
+const FunctionTablePanel = observer(({ onShowDetails }: { onShowDetails: () => void }) => {
+  const { customFunctions, selectedCustomFunction } = customFunctionStore
+
+  const handleCustomFunctionSelected = (customFunction: ICustomFunctionModel) => {
+    customFunctionStore.setSelectedCustomFunction(customFunction)
+  }
+
+  const createCustomFunction = async () => {
+    const customFunction = customFunctionStore.createCustomFunction({
+      description: 'A sample function',
+      parameters: {
+        newParam: {
+          description: 'A sample parameter',
+          type: 'string',
+          required: false,
+        },
+      },
+    })
+
+    customFunctionStore.setSelectedCustomFunction(customFunction)
+  }
+
+  const renderRow = (customFunction: ICustomFunctionModel) => (
+    <>
+      <td>{customFunction.name}</td>
+
+      <td>
+        <input
+          type="checkbox"
+          defaultChecked={customFunction.enabled}
+          className="checkbox checkbox-xs tooltip tooltip-bottom"
+          onClick={e => e.preventDefault()}
+        />
+      </td>
+
+      <td>{customFunction.description}</td>
+
+      <td className="w-fit">
+        <button
+          className="align-center flex opacity-30 transition-opacity duration-200 ease-in-out hover:opacity-100"
+          onClick={onShowDetails}
+        >
+          <Edit />
+        </button>
+      </td>
+    </>
+  )
+
+  return (
+    <SelectionPanelTable
+      items={customFunctions}
+      sortTypes={customFunctionSortTypes}
+      primarySortTypeLabel="name"
+      itemFilter={(customFunction: ICustomFunctionModel, filterText: string) =>
+        [customFunction.name.toLowerCase(), customFunction.description.toLowerCase()].includes(
+          filterText.toLowerCase(),
+        )
+      }
+      renderRow={renderRow}
+      getItemKey={customFunction => customFunction.id}
+      onItemSelected={handleCustomFunctionSelected}
+      getIsItemSelected={customFunction => customFunction === selectedCustomFunction}
+      filterInputPlaceholder="Filter by name or description..."
+    >
+      <div className="mt-4 flex justify-end gap-4">
+        <button
+          className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 text-error"
+          onClick={() => customFunctionStore.setSelectedCustomFunction(undefined)}
+          disabled={!selectedCustomFunction}
+        >
+          Clear Selection
+        </button>
+
+        <button
+          className="btn btn-neutral btn-sm flex w-fit flex-row gap-2"
+          onClick={createCustomFunction}
+          disabled={customFunctionStore.hasUnnamedCustomFunction}
+        >
+          Add New Function
+        </button>
+      </div>
+    </SelectionPanelTable>
   )
 })
 
 const FunctionPanel = observer(() => {
-  const { selectedCustomFunction, customFunctions, hasUnnamedCustomFunction } = customFunctionStore
+  const { selectedCustomFunction } = customFunctionStore
 
-  const addFunction = async () => {
-    const customFunction = customFunctionStore.createCustomFunction({
-      description: 'A sample function',
-    })
+  const [tab, setTab] = useState<'all' | 'single'>('all')
 
-    customFunctionStore.setSelectedCustomFunction(customFunction)
-
-    addParam()
-  }
-
-  const deleteFunction = () => {
-    customFunctionStore.deleteCustomFunction(selectedCustomFunction)
-  }
-
-  const addParam = () => {
-    selectedCustomFunction?.addParameter('newParam', {
-      description: 'A sample parameter',
-      type: 'string',
-      required: false,
-    })
-  }
+  useEffect(() => {
+    // if the model changes, go into model settings
+    if (!selectedCustomFunction) {
+      setTab('all')
+    }
+  }, [selectedCustomFunction])
 
   return (
-    <div className="h-full w-full p-2">
-      <div className="flex flex-row items-center gap-2">
-        {selectedCustomFunction && (
-          <select
-            className="select select-bordered select-sm flex items-center pb-1 leading-[2]"
-            onChange={e => {
-              const id = _.toNumber(e.target.value)
-              const customFunction = _.find(customFunctions, { id })
+    <div className="relative flex h-full w-full flex-col">
+      <BreadcrumbBar
+        breadcrumbs={[
+          {
+            label: 'Functions',
+            isSelected: tab === 'all',
+            onClick: () => setTab('all'),
+          },
+          selectedCustomFunction && {
+            label: selectedCustomFunction.name,
+            isSelected: tab === 'single',
+            onClick: () => setTab('single'),
+          },
+        ]}
+      />
 
-              customFunctionStore.setSelectedCustomFunction(customFunction)
-            }}
-            value={selectedCustomFunction.id}
-          >
-            {customFunctions.map(({ name, id }) => (
-              <option key={id} value={id}>
-                {name}
-              </option>
-            ))}
-          </select>
-        )}
-
-        <button
-          onClick={addFunction}
-          className="btn btn-outline btn-primary btn-sm"
-          disabled={hasUnnamedCustomFunction}
-        >
-          Add
-        </button>
-
-        <button
-          onClick={deleteFunction}
-          className="btn btn-outline btn-primary btn-sm"
-          disabled={!selectedCustomFunction}
-        >
-          Delete
-        </button>
-      </div>
-
-      {selectedCustomFunction && (
-        <>
-          <CustomFunctionForm selectedCustomFunction={selectedCustomFunction} />
-
-          <FunctionParameterTable selectedCustomFunction={selectedCustomFunction} />
-        </>
+      {tab === 'all' || !selectedCustomFunction ? (
+        <FunctionTablePanel onShowDetails={() => setTab('single')} />
+      ) : (
+        <CustomFunctionForm selectedCustomFunction={selectedCustomFunction} />
       )}
     </div>
   )
