@@ -134,7 +134,7 @@ const SelectionPanelTable = observer(
             <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
               <tr>
                 {sortTypes.map(sortType => (
-                  <th>
+                  <th key={sortType.value as string | number}>
                     <span
                       className={
                         'tooltip tooltip-bottom flex w-fit select-none flex-row items-center' +
