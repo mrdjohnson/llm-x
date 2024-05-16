@@ -10,10 +10,10 @@ import LmsGeneralPanel from '~/features/settings/panels/general/LmsGeneralPanel'
 
 type PanelTypes = ConnectionTypes | 'App'
 
-const Panels: Array<{ title: PanelTypes; Component: () => JSX.Element }> = [
+const Panels: Array<{ title: PanelTypes; label?: string, Component: () => JSX.Element }> = [
   { title: 'App', Component: AppGeneralPanel },
   { title: 'Ollama', Component: OllamaGeneralPanel },
-  { title: 'LMS', Component: LmsGeneralPanel },
+  { title: 'LMS', label: 'LM Studio', Component: LmsGeneralPanel },
   { title: 'A1111', Component: A1111GeneralPanel },
 ]
 
@@ -29,7 +29,7 @@ const GeneralModelPanel = observer(() => {
         className="tabs tabs-lifted -tabs-bordered flex-1 overflow-y-hidden"
         style={{ gridTemplateRows: 'max-content auto' }}
       >
-        {Panels.map(({ title, Component }) => (
+        {Panels.map(({ title, label, Component }) => (
           <Fragment key={title}>
             <input
               type="radio"
@@ -40,7 +40,7 @@ const GeneralModelPanel = observer(() => {
                   ? ' [--tab-border-color:var(--fallback-bc,oklch(var(--bc)/0.45))] '
                   : ' [--tab-border-color:transparent] ')
               }
-              aria-label={title}
+              aria-label={label || title}
               checked={title === selectedTab}
               onChange={() => setSelectedTab(title)}
             />

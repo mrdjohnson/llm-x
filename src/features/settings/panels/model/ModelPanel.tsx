@@ -1,22 +1,22 @@
 import { observer } from 'mobx-react-lite'
-import { Fragment, useState } from 'react'
+import { Fragment, JSX, useState } from 'react'
 
-import { settingStore } from '~/models/SettingStore'
+import { ConnectionTypes, settingStore } from '~/models/SettingStore'
 
 import OllamaModelPanel from '~/features/settings/panels/model/OllamaModelPanel'
 import A1111ModelPanel from '~/features/settings/panels/model/A1111ModelPanel'
 import LmsModelPanel from '~/features/settings/panels/model/lms/LmsModelPanel'
 
-const Panels = [
+const Panels: Array<{ title: ConnectionTypes; label?: string; Component: () => JSX.Element }> = [
   { title: 'Ollama', Component: OllamaModelPanel },
-  { title: 'LMS', Component: LmsModelPanel },
+  { title: 'LMS', label: 'LM Studio', Component: LmsModelPanel },
   { title: 'A1111', Component: A1111ModelPanel },
 ]
 
 const ModelPanel = observer(() => {
-  const { selectedModelType } = settingStore
+  const { modelType: selectedModelType } = settingStore
 
-  const [selectedTab, setSelectedTab] = useState(selectedModelType)
+  const [selectedTab, setSelectedTab] = useState<ConnectionTypes>(selectedModelType)
 
   return (
     <div className="flex w-full flex-col">
@@ -25,7 +25,7 @@ const ModelPanel = observer(() => {
         className="tabs tabs-lifted -tabs-bordered flex-1 overflow-y-hidden"
         style={{ gridTemplateRows: 'max-content auto' }}
       >
-        {Panels.map(({ title, Component }) => (
+        {Panels.map(({ title, label, Component }) => (
           <Fragment key={title}>
             <input
               type="radio"
@@ -37,7 +37,7 @@ const ModelPanel = observer(() => {
                   : ' [--tab-border-color:transparent] ') +
                 (title === selectedModelType ? ' text-primary ' : '  ')
               }
-              aria-label={title}
+              aria-label={label || title}
               checked={title === selectedTab}
               onChange={() => setSelectedTab(title)}
               key={title}
