@@ -6,7 +6,7 @@ import ModelPanel from '~/features/settings/panels/model/ModelPanel'
 
 export type SettingPanelOptionsType = 'general' | 'initial' | 'connection' | 'personas' | 'models'
 export type SettingPanelType = {
-  label: string
+  label?: string
   subtitle?: string
   mobileOnly?: boolean
   Component: () => JSX.Element

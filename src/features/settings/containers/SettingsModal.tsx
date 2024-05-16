@@ -19,7 +19,7 @@ const SettingsSidePanel = ({
   onSectionClick,
 }: {
   selectedPanel?: SettingPanelOptionsType
-  onSectionClick?: (panrelName: SettingPanelOptionsType) => void
+  onSectionClick?: (panelName: SettingPanelOptionsType) => void
 }) => {
   const handleSectionClick = (panelName: SettingPanelOptionsType) => {
     // clicking on self or other will open other
@@ -29,8 +29,8 @@ const SettingsSidePanel = ({
 
   return _.map(
     settingsPanelByName,
-    ({ mobileOnly }: SettingPanelType, panelName: SettingPanelOptionsType) => {
-      if (mobileOnly) return null
+    ({ mobileOnly, label }: SettingPanelType, panelName: SettingPanelOptionsType) => {
+      if (mobileOnly || !label) return <div key={panelName} />
 
       return (
         <button
@@ -40,7 +40,7 @@ const SettingsSidePanel = ({
           }
           onClick={() => handleSectionClick(panelName)}
         >
-          {settingsPanelByName[panelName].label}
+          {label}
         </button>
       )
     },
@@ -82,13 +82,13 @@ const SettingsModal = observer(() => {
     panelName = 'general'
   }
 
-  const { label, subtitle, Component } = useMemo(() => {
-    if (!panelName) return { label: undefined, subtitle: undefined, Component: undefined }
+  const { subtitle, Component } = useMemo<Partial<SettingPanelType>>(() => {
+    if (!panelName) return {}
 
     return settingsPanelByName[panelName]
   }, [panelName, isMobile])
 
-  const isOpen = !!label
+  const isOpen = !!Component
 
   const handleClose = () => {
     settingStore.closeSettingsModal()
@@ -151,7 +151,7 @@ const SettingsModal = observer(() => {
                   href="https://github.com/mrdjohnson/llm-x"
                   className="btn btn-outline btn-neutral mt-auto hidden fill-base-content stroke-base-content hover:fill-primary-content lg:flex"
                   aria-label="LLM-X's Github"
-                  target='__blank'
+                  target="__blank"
                 >
                   <Github />
                 </a>
