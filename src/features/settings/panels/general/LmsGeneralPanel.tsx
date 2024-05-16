@@ -1,10 +1,10 @@
 import { useRef, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { LmsHostInput } from '~/components/HostInput'
+import HostInput from '~/components/HostInput'
 import NumberInput from '~/components/form/NumberInput'
 
-import { settingStore } from '~/models/SettingStore'
+import { DefaultLmsHost, settingStore } from '~/models/SettingStore'
 
 const LmsEnabledCheckbox = observer(() => {
   useEffect(() => {
@@ -96,7 +96,15 @@ const LmsGeneralPanel = observer(() => {
     <div className="flex h-full w-full flex-col gap-4">
       <LmsEnabledCheckbox />
 
-      <LmsHostInput />
+      <HostInput
+        defaultValue={settingStore.lmsHost}
+        hasServer={settingStore.isLmsServerConnected}
+        fetchModels={settingStore.fetchLmsModels}
+        isEnabled={settingStore.lmsEnabled}
+        label="LM Studio Host:"
+        placeHolder={DefaultLmsHost}
+        setHost={settingStore.setLmsHost}
+      />
 
       <TemperatureInput />
     </div>

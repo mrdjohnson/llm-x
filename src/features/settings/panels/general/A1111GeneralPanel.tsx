@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { A1111HostInput } from '~/components/HostInput'
+import HostInput from '~/components/HostInput'
 import NumberInput from '~/components/form/NumberInput'
 
-import { settingStore } from '~/models/SettingStore'
+import { DefaultA1111Host, settingStore } from '~/models/SettingStore'
 
 const A1111EnabledCheckbox = observer(() => {
   useEffect(() => {
@@ -164,7 +164,16 @@ const A1111GeneralPanel = observer(() => {
   return (
     <div className="flex w-full flex-col gap-4">
       <A1111EnabledCheckbox />
-      <A1111HostInput />
+
+      <HostInput
+        defaultValue={settingStore.a1111Host}
+        fetchModels={settingStore.fetchA1111Models}
+        hasServer={settingStore.isA1111ServerConnected}
+        isEnabled={settingStore.a1111Enabled}
+        label="AUTOMATIC1111 Host:"
+        placeHolder={DefaultA1111Host}
+        setHost={settingStore.setA1111Host}
+      />
 
       <A1111SizeSelector />
       <A1111StepsSelector />

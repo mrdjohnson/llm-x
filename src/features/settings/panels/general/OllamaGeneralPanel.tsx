@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite'
 import HostInput from '~/components/HostInput'
 import NumberInput from '~/components/form/NumberInput'
 
-import { settingStore } from '~/models/SettingStore'
+import { DefaultHost, settingStore } from '~/models/SettingStore'
 
 const KeepAliveInput = observer(() => {
   return (
@@ -82,7 +82,15 @@ const TemperatureInput = observer(() => {
 const OllamaGeneralPanel = observer(() => {
   return (
     <div className="flex h-full w-full flex-col gap-4">
-      <HostInput />
+      <HostInput
+        defaultValue={settingStore.host}
+        fetchModels={settingStore.updateModels}
+        hasServer={settingStore.isServerConnected}
+        isEnabled
+        label="Ollama Host:"
+        placeHolder={DefaultHost}
+        setHost={settingStore.setHost}
+      />
 
       <KeepAliveInput />
 
