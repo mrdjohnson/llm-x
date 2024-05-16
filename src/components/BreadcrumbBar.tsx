@@ -21,6 +21,7 @@ const BreadcrumbBar = observer(
             }
             isCurrent={breadcrumb.isSelected}
             onPress={breadcrumb.onClick}
+            key={breadcrumb.label}
           >
             {breadcrumb.label}
           </BreadcrumbItem>
