@@ -24,7 +24,7 @@ Ollama + Firefox: LLM X uses ollama js to update models and show model informati
 
 - Ollama: Download and install [Ollama](https://ollama.com/)
   - Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava` (or use the app)
-- Lm Studio:  Download and install [Lm Studio](https://lmstudio.ai/)
+- LM Studio:  Download and install [LM Studio](https://lmstudio.ai/)
 - AUTOMATIC1111: Git clone [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#installation-and-running) (for image generation)
 
 ## How to use web client (no install):
@@ -34,7 +34,7 @@ Ollama + Firefox: LLM X uses ollama js to update models and show model informati
   - Use [Ollama's FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server) to set `OLLAMA_ORIGINS` = `https://mrdjohnson.github.io`
   - Run this in your terminal `OLLAMA_ORIGINS=https://mrdjohnson.github.io ollama serve`
     - (Powershell users: `$env:OLLAMA_ORIGINS="https://mrdjohnson.github.io"; ollama serve`)
-- Lm Studio:
+- LM Studio:
   - Run this in your terminal: `lms server start --cors=true`
 - A1111: 
   - Run this in the a1111 project folder: `./webui.sh --api --listen --cors-allow-origins "*"` 
@@ -54,7 +54,7 @@ Ollama + Firefox: LLM X uses ollama js to update models and show model informati
 
 ### Prerequisites for local project
 - Ollama: Run this in your terminal `ollama serve`
-- Lm Studio: Run this in your terminal: `lms server start`
+- LM Studio: Run this in your terminal: `lms server start`
 - A1111: Run this in the a1111 project folder: `./webui.sh --api --listen` 
 ---
 
@@ -64,7 +64,7 @@ Ollama + Firefox: LLM X uses ollama js to update models and show model informati
 
 ## Goals / Features
 
-- [x] **Lm Studio integration!**
+- [x] **LM Studio integration!**
 - [x] **Text to Image generation** through AUTOMATIC1111
 - [x] **Image to Text** using Ollama's multi modal abilities
 - [x] **Offline Support** via PWA technology

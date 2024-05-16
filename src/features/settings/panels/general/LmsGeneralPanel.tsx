@@ -15,7 +15,7 @@ const LmsEnabledCheckbox = observer(() => {
 
   return (
     <label className="label w-fit gap-2">
-      <span className="label-text">Text generation through Lm Studio:</span>
+      <span className="label-text">Text generation through LM Studio:</span>
 
       <div className="join">
         {[true, false].map(isEnabled => (

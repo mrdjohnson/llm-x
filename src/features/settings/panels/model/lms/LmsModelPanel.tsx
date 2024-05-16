@@ -29,10 +29,10 @@ const LmsModelPanel = observer(() => {
 
     return (
       <div className="flex w-full flex-col justify-center gap-3">
-        <span className="text-center text-lg font-semibold">Lm Studio is not currently active</span>
+        <span className="text-center text-lg font-semibold">LM Studio is not currently active</span>
 
         <button className="btn btn-active" onClick={openLmsPanel}>
-          Go to Lm Studio settings
+          Go to LM Studio settings
         </button>
       </div>
     )

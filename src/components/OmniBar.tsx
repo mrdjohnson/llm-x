@@ -169,7 +169,7 @@ const useRegisterModelActions = () => {
       if (_.isEmpty(settingStore.lmsEnabled)) {
         nextModelActions.push({
           id: 'model',
-          name: 'No Lm Studio Models to select: Refresh',
+          name: 'No LM Studio Models to select: Refresh',
           keywords: 'model modal open select refresh',
           section: 'Actions',
           priority: Priority.LOW,

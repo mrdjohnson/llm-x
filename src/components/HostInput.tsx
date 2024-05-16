@@ -146,7 +146,7 @@ export const LmsHostInput = observer(() => {
     <form className="form-control" onSubmit={handleFormSubmit}>
       <div className="label pb-1 pt-0">
         <span className="label-text flex flex-row items-center gap-2 text-sm">
-          Lm Studio Host:
+          LM Studio Host:
           <div
             className="cursor-pointer"
             onClick={() => settingStore.openSettingsModal('connection')}
