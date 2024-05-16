@@ -13,16 +13,6 @@ export const toLmsModel = (model: DownloadedModel) => {
       return (model.sizeBytes / 1e9).toFixed(2) + ' GB'
     },
 
-    get labels() {
-      const labelData = model.path.match(/(?<folder>[^/]*)\/(?<name>.*)/)?.groups as
-        | { folder: string; name: string }
-        | undefined
-
-      if (!labelData) return { folder: '', name: model.path }
-
-      return labelData
-    },
-
     get name(): string {
       return labelData.name || model.path
     },
