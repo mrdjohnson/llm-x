@@ -436,7 +436,7 @@ const OmniBar = () => {
       keywords: 'refresh',
       section: 'Actions',
       priority: Priority.LOW,
-      perform: settingStore.updateModels,
+      perform: settingStore.refreshAllModels,
     }),
     createAction({
       name: 'Open settings',
