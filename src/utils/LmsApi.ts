@@ -75,6 +75,8 @@ export class LmsApi {
       throw new Error('Stream ended manually')
     }
 
+    incomingMessageVariant.setExtraDetails(stats)
+
     delete LmsApi.abortControllerById[incomingMessage.uniqId]
   }
 

@@ -112,9 +112,9 @@ export const MessageModel = types
       self.botName = modelName
     },
 
-    setExtraDetails(details: Record<string, unknown>) {
+    setExtraDetails(details: object) {
       // remove any empty values, stringify any non number/strings
-      const formattedDetails: Record<string, number | string> = _.chain(details)
+      const formattedDetails: object = _.chain(details)
         .omitBy(_.isNil)
         .mapValues(value =>
           _.isNumber(value) || _.isString(value) ? value : JSON.stringify(value),
