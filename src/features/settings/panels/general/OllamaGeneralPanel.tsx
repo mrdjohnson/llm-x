@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite'
 
 import HostInput from '~/components/HostInput'
 import NumberInput from '~/components/form/NumberInput'
+import EnabledCheckbox from '~/components/EnabledCheckbox'
 
 import { DefaultHost, settingStore } from '~/models/SettingStore'
 
@@ -82,6 +83,13 @@ const TemperatureInput = observer(() => {
 const OllamaGeneralPanel = observer(() => {
   return (
     <div className="flex h-full w-full flex-col gap-4">
+      <EnabledCheckbox
+        label="Text generation through Ollama:"
+        isEnabled={settingStore.ollamaEnabled}
+        onChange={settingStore.setOllamaEnabled}
+        fetchModels={settingStore.fetchOllamaModels}
+      />
+
       <HostInput
         defaultValue={settingStore.ollamaHost}
         fetchModels={settingStore.fetchOllamaModels}

@@ -31,6 +31,7 @@ export const SettingStore = types
     version: types.optional(types.number, SETTING_STORE_VERSION),
 
     // ollama settings
+    ollamaEnabled: types.optional(types.boolean, true),
     ollamaHost: types.maybe(types.string),
     ollamaKeepAliveTime: types.optional(types.number, 20),
     ollamaTemperature: types.optional(types.number, 0.8),
@@ -180,6 +181,21 @@ export const SettingStore = types
         self.selectedModelName = null
       },
 
+      setOllamaEnabled(ollamaEnabled: boolean) {
+        // if we're turning this off
+        if (!ollamaEnabled) {
+          self._isServerConnected = false
+
+          if (self.modelType === 'LMS') {
+            this.setModelType('LMS')
+          }
+        } else {
+          self.selectedModelType = 'Ollama'
+        }
+
+        self.ollamaEnabled = ollamaEnabled
+      },
+
       setHost(host: string) {
         self.ollamaHost = host
       },
@@ -281,6 +297,8 @@ export const SettingStore = types
       },
 
       fetchOllamaModels: flow(function* fetchOllamaModels() {
+        if(!self.ollamaEnabled) return 
+
         const host = self.ollamaHost || DefaultHost
 
         let data: Array<IOllamaModel> = []
