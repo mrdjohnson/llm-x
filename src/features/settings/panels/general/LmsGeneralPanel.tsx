@@ -1,42 +1,11 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import HostInput from '~/components/HostInput'
 import NumberInput from '~/components/form/NumberInput'
+import EnabledCheckbox from '~/components/EnabledCheckbox'
 
 import { DefaultLmsHost, settingStore } from '~/models/SettingStore'
-
-const LmsEnabledCheckbox = observer(() => {
-  useEffect(() => {
-    if (settingStore.lmsEnabled) {
-      settingStore.fetchLmsModels()
-    }
-  }, [settingStore.lmsEnabled])
-
-  return (
-    <label className="label w-fit gap-2">
-      <span className="label-text">Text generation through LM Studio:</span>
-
-      <div className="join">
-        {[true, false].map(isEnabled => (
-          <button
-            className={
-              'btn join-item btn-sm mr-0 ' +
-              (settingStore.lmsEnabled === isEnabled ? 'btn-active cursor-default ' : 'btn ')
-            }
-            onClick={() => settingStore.setLmsEnabled(isEnabled)}
-            key={isEnabled ? 0 : 1}
-          >
-            <span>
-              {isEnabled ? 'Enable' : 'Disable'}
-              {settingStore.lmsEnabled === isEnabled ? 'd' : '?'}
-            </span>
-          </button>
-        ))}
-      </div>
-    </label>
-  )
-})
 
 const TemperatureInput = observer(() => {
   const rangeRef = useRef<HTMLInputElement>(null)
@@ -94,7 +63,12 @@ const TemperatureInput = observer(() => {
 const LmsGeneralPanel = observer(() => {
   return (
     <div className="flex h-full w-full flex-col gap-4">
-      <LmsEnabledCheckbox />
+      <EnabledCheckbox
+        label="Text generation through LM Studio:"
+        isEnabled={settingStore.lmsEnabled}
+        onChange={settingStore.setLmsEnabled}
+        fetchModels={settingStore.fetchLmsModels}
+      />
 
       <HostInput
         defaultValue={settingStore.lmsHost}

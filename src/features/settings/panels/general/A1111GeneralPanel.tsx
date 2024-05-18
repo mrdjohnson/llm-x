@@ -1,42 +1,10 @@
-import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import HostInput from '~/components/HostInput'
 import NumberInput from '~/components/form/NumberInput'
+import EnabledCheckbox from '~/components/EnabledCheckbox'
 
 import { DefaultA1111Host, settingStore } from '~/models/SettingStore'
-
-const A1111EnabledCheckbox = observer(() => {
-  useEffect(() => {
-    if (settingStore.a1111Enabled) {
-      settingStore.fetchA1111Models()
-    }
-  }, [settingStore.a1111Enabled])
-
-  return (
-    <label className="label w-fit cursor-pointer gap-2">
-      <span className="label-text">Image Generation through AUTOMATIC1111:</span>
-
-      <div className="join">
-        {[true, false].map(isEnabled => (
-          <button
-            className={
-              'btn join-item btn-sm mr-0 ' +
-              (settingStore.a1111Enabled === isEnabled ? 'btn-active cursor-default ' : 'btn ')
-            }
-            onClick={() => settingStore.setA1111Enabled(isEnabled)}
-            key={isEnabled ? 0 : 1}
-          >
-            <span>
-              {isEnabled ? 'Enable' : 'Disable'}
-              {settingStore.a1111Enabled === isEnabled ? 'd' : '?'}
-            </span>
-          </button>
-        ))}
-      </div>
-    </label>
-  )
-})
 
 const A1111SizeSelector = observer(() => {
   const { a1111Width: width, a1111Height: height, a1111Enabled } = settingStore
@@ -163,7 +131,12 @@ const A1111BatchSizeSelector = observer(() => {
 const A1111GeneralPanel = observer(() => {
   return (
     <div className="flex w-full flex-col gap-4">
-      <A1111EnabledCheckbox />
+      <EnabledCheckbox
+        label="Image Generation through AUTOMATIC1111:"
+        isEnabled={settingStore.a1111Enabled}
+        onChange={settingStore.setA1111Enabled}
+        fetchModels={settingStore.fetchA1111Models}
+      />
 
       <HostInput
         defaultValue={settingStore.a1111Host}
