@@ -28,10 +28,11 @@ export const SettingStore = types
     selectedModelType: types.optional(types.string, 'Ollama'),
 
     // ollama settings
-    host: types.maybe(types.string),
-    keepAliveTime: types.optional(types.number, 20),
-    temperature: types.optional(types.number, 0.8),
-    models: types.optional(types.array(OllamaModel), []),
+    ollamaHost: types.maybe(types.string),
+    ollamaKeepAliveTime: types.optional(types.number, 20),
+    ollamaTemperature: types.optional(types.number, 0.8),
+    ollamaModels: types.optional(types.array(OllamaModel), []),
+    
     selectedModelName: types.maybeNull(types.string),
 
     // general settings
@@ -65,10 +66,10 @@ export const SettingStore = types
       return self.selectedModelType as ConnectionTypes
     },
 
-    get selectedModel(): IOllamaModel | undefined {
+    get selectedOllamaModel(): IOllamaModel | undefined {
       if (this.modelType !== 'Ollama') return undefined
 
-      return self.models.find(model => model.name === self.selectedModelName) || self.models[0]
+      return self.ollamaModels.find(model => model.name === self.selectedModelName) || self.ollamaModels[0]
     },
 
     get selectedA1111Model(): IA1111Model | undefined {
@@ -94,7 +95,7 @@ export const SettingStore = types
         return this.selectedLmsModel?.name
       }
 
-      return this.selectedModel?.name
+      return this.selectedOllamaModel?.name
     },
 
     get isServerConnected() {
@@ -138,7 +139,7 @@ export const SettingStore = types
     },
 
     get allModelsEmpty() {
-      return _.isEmpty(self.models) && _.isEmpty(self.a1111Models) && _.isEmpty(this.lmsModels)
+      return _.isEmpty(self.ollamaModels) && _.isEmpty(self.a1111Models) && _.isEmpty(this.lmsModels)
     },
   }))
   .actions(self => {
@@ -172,15 +173,15 @@ export const SettingStore = types
       },
 
       setHost(host: string) {
-        self.host = host
+        self.ollamaHost = host
       },
 
       setKeepAliveTime(keepAliveTime: number) {
-        self.keepAliveTime = keepAliveTime
+        self.ollamaKeepAliveTime = keepAliveTime
       },
 
       setTemperature(temperature: number) {
-        self.temperature = temperature
+        self.ollamaTemperature = temperature
       },
 
       setTheme(theme: string) {
@@ -266,13 +267,13 @@ export const SettingStore = types
       },
 
       refreshAllModels() {
-        this.updateModels()
+        this.fetchOllamaModels()
         this.fetchA1111Models()
         this.fetchLmsModels()
       },
 
-      updateModels: flow(function* updateModels() {
-        const host = self.host || DefaultHost
+      fetchOllamaModels: flow(function* fetchOllamaModels() {
+        const host = self.ollamaHost || DefaultHost
 
         let data: Array<IOllamaModel> = []
 
@@ -290,9 +291,9 @@ export const SettingStore = types
           self._isServerConnected = false
         }
 
-        self.models = cast(data)
+        self.ollamaModels = cast(data)
 
-        self.selectedModelName ||= self.models[0]?.name
+        self.selectedModelName ||= self.ollamaModels[0]?.name
       }),
 
       fetchA1111Models: flow(function* fetchA1111Models() {
@@ -368,7 +369,7 @@ persist('settings', settingStore, {
   ],
 }).then(() => {
   console.log('updated store')
-  settingStore.updateModels()
+  settingStore.fetchOllamaModels()
   settingStore.fetchA1111Models()
   settingStore.fetchLmsModels()
 })

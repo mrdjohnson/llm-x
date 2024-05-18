@@ -28,7 +28,7 @@ const ollamaModelSortTypes: Array<SelectionPanelSortType<IOllamaModel>> = [
 ]
 
 const OllamaModelPanelTable = observer(({ onShowDetails }: { onShowDetails: () => void }) => {
-  const { selectedModelLabel, models } = settingStore
+  const { selectedModelLabel, ollamaModels: models } = settingStore
 
   const [filterText, setFilterText] = useState('')
 
@@ -151,7 +151,7 @@ const OllamaModelPanelTable = observer(({ onShowDetails }: { onShowDetails: () =
 })
 
 const OllamaModelSettings = observer(() => {
-  const { selectedModel } = settingStore
+  const { selectedOllamaModel: selectedModel } = settingStore
 
   const [modelData, setModelData] = useState<CorrectShowResponse | undefined>()
 
@@ -226,7 +226,7 @@ const OllamaModelSettings = observer(() => {
 })
 
 const OllamaModelPanel = observer(() => {
-  const { selectedModel } = settingStore
+  const { selectedOllamaModel: selectedModel } = settingStore
 
   const [tab, setTab] = useState<'all' | 'single'>('all')
 

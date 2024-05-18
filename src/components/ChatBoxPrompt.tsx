@@ -63,7 +63,7 @@ const ChatBoxPrompt = observer(() => {
                 </button>
               </Step>
 
-              <Step isCompleted={!_.isEmpty([...settingStore.models, ...settingStore.lmsModels])}>
+              <Step isCompleted={!_.isEmpty([...settingStore.ollamaModels, ...settingStore.lmsModels])}>
                 {'Download a model from LM Studio home page or '}
                 <a
                   href="https://ollama.com/library"

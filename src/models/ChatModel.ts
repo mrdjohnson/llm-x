@@ -8,7 +8,7 @@ import { toastStore } from '~/models/ToastStore'
 import { incomingMessageStore } from '~/models/IncomingMessageStore'
 
 import base64EncodeImage from '~/utils/base64EncodeImage'
-import { OllmaApi } from '~/utils/OllamaApi'
+import { OllamaApi } from '~/utils/OllamaApi'
 import CachedStorage from '~/utils/CachedStorage'
 
 export const ChatModel = types
@@ -91,7 +91,7 @@ export const ChatModel = types
     },
 
     async beforeDestroy() {
-      OllmaApi.cancelStream()
+      OllamaApi.cancelStream()
     },
 
     setMessageToEdit(message?: IMessageModel, messageVariant?: IMessageModel) {

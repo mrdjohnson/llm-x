@@ -17,7 +17,7 @@ const KeepAliveInput = observer(() => {
       </span>
 
       <NumberInput
-        value={settingStore.keepAliveTime}
+        value={settingStore.ollamaKeepAliveTime}
         max={90}
         step={5}
         min={0}
@@ -46,7 +46,7 @@ const TemperatureInput = observer(() => {
             type="range"
             min={0}
             max={1}
-            value={settingStore.temperature}
+            value={settingStore.ollamaTemperature}
             className="range range-sm"
             step={0.05}
             onChange={e => settingStore.setTemperature(e.target.valueAsNumber)}
@@ -65,7 +65,7 @@ const TemperatureInput = observer(() => {
 
         <div className="flex-shrink-1">
           <NumberInput
-            value={settingStore.temperature}
+            value={settingStore.ollamaTemperature}
             step={0.05}
             min={0}
             precision={2}
@@ -83,8 +83,8 @@ const OllamaGeneralPanel = observer(() => {
   return (
     <div className="flex h-full w-full flex-col gap-4">
       <HostInput
-        defaultValue={settingStore.host}
-        fetchModels={settingStore.updateModels}
+        defaultValue={settingStore.ollamaHost}
+        fetchModels={settingStore.fetchOllamaModels}
         hasServer={settingStore.isServerConnected}
         isEnabled
         label="Ollama Host:"

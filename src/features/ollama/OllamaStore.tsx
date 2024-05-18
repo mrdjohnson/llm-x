@@ -25,7 +25,7 @@ class OllamaStore {
   }
 
   get ollama() {
-    return new Ollama({ host: settingStore.host })
+    return new Ollama({ host: settingStore.ollamaHost })
   }
 
   show(modelName: string) {
@@ -35,7 +35,7 @@ class OllamaStore {
 
   delete(modelName: string) {
     return this.ollama.delete({ model: modelName }).then(() => {
-      return settingStore.updateModels()
+      return settingStore.fetchOllamaModels()
     })
   }
 
@@ -78,7 +78,7 @@ class OllamaStore {
       finishedMessage += ' See more info in the console logs.'
     }
 
-    settingStore.updateModels().then(() => {
+    settingStore.fetchOllamaModels().then(() => {
       toastStore.addToast(finishedMessage, 'info')
     })
   }
@@ -141,7 +141,7 @@ class OllamaStore {
           this.pullProgresses = _.without(this.pullProgresses, progress)
         }, 5_000)
 
-        settingStore.updateModels()
+        settingStore.fetchOllamaModels()
       }
     }
 

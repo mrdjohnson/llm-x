@@ -6,7 +6,7 @@ import { settingStore } from '~/models/SettingStore'
 import { toastStore } from '~/models/ToastStore'
 import { IChatModel } from '~/models/ChatModel'
 
-import { OllmaApi } from '~/utils/OllamaApi'
+import { OllamaApi } from '~/utils/OllamaApi'
 import { A1111Api } from '~/utils/A1111Api'
 import { LmsApi } from '~/utils/LmsApi'
 
@@ -31,7 +31,7 @@ export const IncomingMessageStore = types
   }))
   .actions(self => ({
     async beforeDestroy() {
-      OllmaApi.cancelStream()
+      OllamaApi.cancelStream()
       LmsApi.cancelStream()
     },
 
@@ -58,7 +58,7 @@ export const IncomingMessageStore = types
         } else if (settingStore.modelType === 'LMS') {
           LmsApi.cancelStream(id)
         } else {
-          OllmaApi.cancelStream(id)
+          OllamaApi.cancelStream(id)
         }
 
         return
@@ -74,7 +74,7 @@ export const IncomingMessageStore = types
       } else if (settingStore.modelType === 'LMS') {
         LmsApi.cancelStream()
       } else {
-        OllmaApi.cancelStream()
+        OllamaApi.cancelStream()
       }
     },
 
@@ -129,12 +129,12 @@ export const IncomingMessageStore = types
         return this.generateImage(chat, incomingMessage)
       }
 
-      let streamChat: typeof OllmaApi.streamChat
+      let streamChat: typeof OllamaApi.streamChat
 
       if (settingStore.modelType === 'LMS') {
         streamChat = LmsApi.streamChat
       } else {
-        streamChat = OllmaApi.streamChat
+        streamChat = OllamaApi.streamChat
       }
 
       messageToEdit.setModelName(settingStore.selectedModelLabel)
@@ -166,7 +166,7 @@ export const IncomingMessageStore = types
           messageToEdit.setError(error)
 
           // make sure the server is still connected
-          settingStore.updateModels()
+          settingStore.fetchOllamaModels()
         }
       } finally {
         if (shouldDeleteMessage) {
