@@ -8,9 +8,9 @@
 
 LLM X does not make any external api calls. (go ahead, check your network tab and see the Fetch section). Your chats and image generations are 100% private. This site / app works completely offline.
 
-# Bugs!
+# Issues:
 
-Ollama + Firefox: LLM X uses ollama js to update models and show model information, currently there is a cors issue on firefox when using the app from github that does not allow updating models or seeing model information to work. Advised to use chrome for these or use the CLI until fixed. Apologies. [Github issue](https://github.com/ollama/ollama-js/issues/80)
+LLM X (web app) will not connect to a server that is not secure. This means that you can use LLM X on localhost (considered a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts)) but if you're trying to use llm-x over a network the server needs to be from https or else it will not work.
 
 # Recent additions:
 
