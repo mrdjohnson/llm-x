@@ -23,16 +23,19 @@ export type ConnectionTypes = 'Ollama' | 'A1111' | 'LMS'
 
 interface IA1111Model extends Instance<typeof A1111Model> {}
 
+const SETTING_STORE_VERSION = 1
+
 export const SettingStore = types
   .model({
     selectedModelType: types.optional(types.string, 'Ollama'),
+    version: types.optional(types.number, SETTING_STORE_VERSION),
 
     // ollama settings
     ollamaHost: types.maybe(types.string),
     ollamaKeepAliveTime: types.optional(types.number, 20),
     ollamaTemperature: types.optional(types.number, 0.8),
     ollamaModels: types.optional(types.array(OllamaModel), []),
-    
+
     selectedModelName: types.maybeNull(types.string),
 
     // general settings
@@ -69,7 +72,10 @@ export const SettingStore = types
     get selectedOllamaModel(): IOllamaModel | undefined {
       if (this.modelType !== 'Ollama') return undefined
 
-      return self.ollamaModels.find(model => model.name === self.selectedModelName) || self.ollamaModels[0]
+      return (
+        self.ollamaModels.find(model => model.name === self.selectedModelName) ||
+        self.ollamaModels[0]
+      )
     },
 
     get selectedA1111Model(): IA1111Model | undefined {
@@ -139,7 +145,9 @@ export const SettingStore = types
     },
 
     get allModelsEmpty() {
-      return _.isEmpty(self.ollamaModels) && _.isEmpty(self.a1111Models) && _.isEmpty(this.lmsModels)
+      return (
+        _.isEmpty(self.ollamaModels) && _.isEmpty(self.a1111Models) && _.isEmpty(this.lmsModels)
+      )
     },
   }))
   .actions(self => {
@@ -355,6 +363,42 @@ export const SettingStore = types
   })
 
 export const settingStore = SettingStore.create()
+
+const migrateV1 = (settings: Record<string, unknown>) => {
+  console.log('running v1 migration')
+
+  if (!_.isUndefined(settings.host)) {
+    settings.ollamaHost = settings.host
+  }
+
+  if (!_.isUndefined(settings.keepAliveTime)) {
+    settings.ollamaKeepAliveTime = settings.keepAliveTime
+  }
+
+  if (!_.isUndefined(settings.temperature)) {
+    settings.ollamaTemperature = settings.temperature
+  }
+
+  delete settings.host
+  delete settings.keepAliveTime
+  delete settings.temperature
+}
+
+const runMigrations = () => {
+  const settingsString = localStorage.getItem('settings')
+
+  if (!settingsString) return
+
+  const settings = JSON.parse(settingsString) as Record<string, unknown>
+
+  if (_.gt(SETTING_STORE_VERSION, settingStore.version)) return
+
+  migrateV1(settings)
+
+  localStorage.setItem('settings', JSON.stringify(settings))
+}
+
+runMigrations()
 
 persist('settings', settingStore, {
   blacklist: [
