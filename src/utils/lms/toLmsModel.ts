@@ -1,7 +1,7 @@
 import { DownloadedModel } from '@lmstudio/sdk'
 
 export const toLmsModel = (model: DownloadedModel) => {
-  const labelData = model.path.match(/(?<folder>[^/]*)\/(?<name>.*)/)?.groups || {
+  const labelData = model.path.match(/(?<folder>[^/]*)(?<unused>.*)\/(?<name>.*)/)?.groups || {
     folder: '',
     name: model.path,
   }
