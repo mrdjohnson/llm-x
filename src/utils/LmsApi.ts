@@ -1,9 +1,11 @@
 import { LMStudioClient, type LLMChatHistoryMessage, LLMDynamicHandle } from '@lmstudio/sdk'
+import _ from 'lodash'
 
 import { IMessageModel } from '~/models/MessageModel'
 import { DefaultLmsHost, settingStore } from '~/models/SettingStore'
+
 import { personaStore } from '~/models/PersonaStore'
-import _ from 'lodash'
+import { progressStore } from '~/features/progress/ProgressStore'
 
 const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMessageModel) => {
   const messages: LLMChatHistoryMessage[] = []
@@ -99,8 +101,20 @@ export class LmsApi {
 
     if (!model) {
       console.log('loading lmstudio model', modelPath)
-      
-      model = await client.llm.load(modelPath, { signal: abortController.signal })
+
+      const loadProgress = progressStore.create({ label: '0%', subLabel: `Loading: ${modelPath}` })
+
+      model = await client.llm.load(modelPath, {
+        signal: abortController.signal,
+        onProgress: progress => {
+          const progressPercent = Math.round(progress * 100)
+
+          loadProgress.update({ label: `${progressPercent}%` })
+        },
+      })
+
+      loadProgress.update({ label: '100%' })
+      progressStore.delete(loadProgress, { shouldDelay: true })
     }
 
     return model
