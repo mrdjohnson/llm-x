@@ -39,6 +39,7 @@ const SelectionPanelTable = observer(
     className = '',
     sortTypes,
     primarySortTypeLabel,
+    includeEmptyHeader,
     itemFilter,
     renderRow,
     onFilterChanged,
@@ -157,7 +158,7 @@ const SelectionPanelTable = observer(
                   </th>
                 ))}
 
-                <th className="w-fit" />
+{includeEmptyHeader && <th className="w-fit" />}
               </tr>
               <tr />
             </thead>
