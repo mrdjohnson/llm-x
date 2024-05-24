@@ -139,7 +139,7 @@ const SelectionPanelTable = observer(
                     <span
                       className={
                         'tooltip tooltip-bottom flex w-fit select-none flex-row items-center' +
-                        (sortType.value === undefined ? ' cursor-pointer' : '')
+                        (sortType.value === undefined ? '' : ' cursor-pointer')
                       }
                       onClick={() => handleSortTypeChanged(sortType)}
                       data-tip={sortType.tooltip}
