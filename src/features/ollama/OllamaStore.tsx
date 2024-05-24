@@ -1,25 +1,15 @@
 import { ModelDetails, Ollama, ShowResponse } from 'ollama/browser'
 import { makeAutoObservable } from 'mobx'
-import _ from 'lodash'
 
 import { toastStore } from '~/models/ToastStore'
 import { settingStore } from '~/models/SettingStore'
-
-type PullProgress = {
-  label: string
-  id: string
-  model: string
-  extra?: string
-  status: 'incomplete' | 'complete' | 'error'
-}
+import { progressStore } from '~/features/progress/ProgressStore'
 
 export type CorrectShowResponse = Pick<ShowResponse, 'license' | 'modelfile' | 'template'> & {
   details: ModelDetails
 }
 
 class OllamaStore {
-  pullProgresses: PullProgress[] = []
-
   constructor() {
     makeAutoObservable(this)
   }
@@ -44,14 +34,10 @@ class OllamaStore {
 
     let failedTotal = 0
 
-    const totalProgress: PullProgress = makeAutoObservable({
+    const totalProgress = progressStore.create({
       label: `0% (0/${models.length})`,
-      id: _.uniqueId('ollama-pull-progress-'),
-      model: 'Updating all models',
-      status: 'incomplete',
+      subLabel: 'Updating all models',
     })
-
-    this.pullProgresses.push(totalProgress)
 
     for (let index = 1; index <= models.length; index++) {
       const { name } = models[index - 1]
@@ -60,18 +46,18 @@ class OllamaStore {
 
       const totalPercent = Math.round((index / models.length) * 100)
 
-      totalProgress.label = `${totalPercent}% (${index}/${models.length})`
+      totalProgress.update({ label: `${totalPercent}% (${index}/${models.length})` })
 
       if (progress.status === 'error') {
         failedTotal += 1
 
-        totalProgress.extra = `${failedTotal} failed to update`
+        totalProgress.update({ extra: `${failedTotal} failed to update` })
       }
 
-      this.pullProgresses = _.without(this.pullProgresses, progress)
+      progressStore.delete(progress)
     }
 
-    this.pullProgresses = _.without(this.pullProgresses, totalProgress)
+    progressStore.delete(totalProgress)
 
     let finishedMessage = `Updated ${models.length - failedTotal}/${models.length} models.`
     if (failedTotal > 0) {
@@ -84,14 +70,10 @@ class OllamaStore {
   }
 
   async pull(model: string, { isUpdate }: { isUpdate?: boolean } = {}) {
-    const progress: PullProgress = makeAutoObservable({
+    const progress = progressStore.create({
       label: '0%',
-      id: _.uniqueId('ollama-pull-progress-'),
-      model,
-      status: 'incomplete',
+      subLabel: model,
     })
-
-    this.pullProgresses.push(progress)
 
     try {
       const stream = await this.ollama.pull({ model, stream: true })
@@ -102,14 +84,14 @@ class OllamaStore {
         if (part.completed && part.total) {
           percent = Math.round((part.completed / part.total) * 100)
 
-          progress.label = percent + '%'
+          progress.update({ label: percent + '%' })
         }
 
         if (percent === 100) {
-          progress.status = 'complete'
+          progress.update({ status: 'complete' })
         }
 
-        progress.extra = part.status
+        progress.update({ extra: part.status || '' })
       }
     } catch (e) {
       progress.status = 'error'
@@ -125,21 +107,17 @@ class OllamaStore {
       console.error(`Something went wrong with pulling ${model}`, e)
     } finally {
       if (progress.status == 'incomplete') {
-        progress.label = 'Unable to complete pull.'
+        progress.update({ label: 'Unable to complete pull.' })
       } else if (progress.status === 'complete') {
         if (!isUpdate) {
           toastStore.addToast(`Completed download of ${model}`, 'success')
         }
 
-        progress.extra = 'Finished'
-        progress.label = ''
+        progress.update({ label: '', extra: 'Finished' })
       }
 
       if (!isUpdate) {
-        // remove the progess after 5 seconds
-        setTimeout(() => {
-          this.pullProgresses = _.without(this.pullProgresses, progress)
-        }, 5_000)
+        progressStore.delete(progress, { shouldDelay: true })
 
         settingStore.fetchOllamaModels()
       }

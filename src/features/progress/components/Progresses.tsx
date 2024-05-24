@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react-lite'
 
-import { ollamaStore } from '~/features/ollama/OllamaStore'
+import { progressStore } from '~/features/progress/ProgressStore'
 
-const PullProgresses = observer(() => {
-  const { pullProgresses } = ollamaStore
+const Progresses = observer(() => {
+  const { progresses } = progressStore
 
   const colorCodedProgress = {
     incomplete: 'bg-accent',
@@ -13,7 +13,7 @@ const PullProgresses = observer(() => {
 
   return (
     <div className=" bottom-0 left-0 right-0 flex flex-col">
-      {pullProgresses.map(progress => (
+      {progresses.map(progress => (
         <span
           role="progressbar"
           className="relative mt-2 rounded-md bg-slate-500/45"
@@ -21,7 +21,7 @@ const PullProgresses = observer(() => {
         >
           <span className="absolute inset-0 flex items-center justify-center ">
             <div className="relative font-semibold text-primary-content mix-blend-hard-light">
-              {progress.model}: {progress.label}
+              {progress.subLabel}: {progress.label}
               <div className="absolute inset-y-0 left-[100%] ml-2 line-clamp-1 w-screen">
                 {progress.extra}
               </div>
@@ -38,4 +38,4 @@ const PullProgresses = observer(() => {
   )
 })
 
-export default PullProgresses
+export default Progresses
