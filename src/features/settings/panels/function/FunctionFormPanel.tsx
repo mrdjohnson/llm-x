@@ -1,8 +1,13 @@
 import { observer } from 'mobx-react-lite'
 import { useEffect, useRef } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, FormProvider } from 'react-hook-form'
+import { Input, Textarea } from '@nextui-org/react'
 
-import { ICustomFunctionModel, customFunctionStore } from '~/models/CustomFunctionStore'
+import {
+  ICustomFunctionModel,
+  IFunctionParameterModel,
+  customFunctionStore,
+} from '~/models/CustomFunctionStore'
 
 import Delete from '~/icons/Delete'
 
@@ -12,37 +17,44 @@ type FunctionFormPanelProps = {
   selectedCustomFunction: ICustomFunctionModel
 }
 
-type CustomFunctionFormDataType = {
+export type CustomFunctionFormDataType = {
   name: string
   description: string
   enabled: boolean
+  parameters: IFunctionParameterModel[]
+  deletedParameterNames: string[]
 }
 
 const FunctionFormPanel = observer(({ selectedCustomFunction }: FunctionFormPanelProps) => {
+  const methods = useForm<CustomFunctionFormDataType>({})
+
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { isValid, isDirty },
-  } = useForm<CustomFunctionFormDataType>({})
+    formState: { isDirty, errors },
+  } = methods
 
   const formRef = useRef<HTMLFormElement>(null)
 
   const handleFormSubmit = handleSubmit(formData => {
-    const { name, description, enabled } = formData
+    const { name, description, enabled, parameters } = formData
 
     customFunctionStore.editCustomFunction(selectedCustomFunction, {
       name,
       description,
       enabled,
+      parameters,
     })
 
     reset(formData)
   })
 
   const validateName = (name: string) => {
-    if (name.includes(' ')) return false
+    console.log('validating name: ', name)
+
+    if (name.includes(' ')) return 'Name cannot contain spaces'
 
     return true
   }
@@ -52,65 +64,80 @@ const FunctionFormPanel = observer(({ selectedCustomFunction }: FunctionFormPane
       name: selectedCustomFunction.name,
       description: selectedCustomFunction.description,
       enabled: selectedCustomFunction.enabled,
+      parameters: selectedCustomFunction.parameters,
     })
-  }, [selectedCustomFunction])
+  }, [
+    selectedCustomFunction.name,
+    selectedCustomFunction.description,
+    selectedCustomFunction.enabled,
+    selectedCustomFunction.parameters,
+  ])
 
   return (
     <div className="flex h-full flex-col overflow-y-scroll">
-      <form onSubmit={handleFormSubmit} className="mb-4 mt-2 flex flex-col gap-2" ref={formRef}>
-        <Controller
-          render={({ field }) => (
-            <div className="join">
-              {[true, false].map(isEnabled => (
-                <button
-                  className={
-                    'btn join-item btn-sm mr-0 ' +
-                    (field.value === isEnabled ? 'btn-active cursor-default ' : '')
-                  }
-                  type="button"
-                  onClick={() => field.onChange(!field.value)}
-                  key={isEnabled ? 0 : 1}
-                >
-                  <span>
-                    {isEnabled ? 'Enable' : 'Disable'}
-                    {field.value === isEnabled ? 'd' : '?'}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
-          control={control}
-          name="enabled"
-          defaultValue={undefined}
-        />
+      <FormProvider {...methods}>
+        <form onSubmit={handleFormSubmit} className="mb-4 mt-2 flex flex-col gap-2" ref={formRef}>
+          <Controller
+            render={({ field }) => (
+              <div className="join">
+                {[true, false].map(isEnabled => (
+                  <button
+                    className={
+                      'btn join-item btn-sm mr-0 ' +
+                      (field.value === isEnabled ? 'btn-active cursor-default ' : '')
+                    }
+                    type="button"
+                    onClick={() => field.onChange(!field.value)}
+                    key={isEnabled ? 0 : 1}
+                  >
+                    <span>
+                      {isEnabled ? 'Enable' : 'Disable'}
+                      {field.value === isEnabled ? 'd' : '?'}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+            control={control}
+            name="enabled"
+            defaultValue={undefined}
+          />
 
-        <div>
-          <label className="label-text">Function Name:</label>
-
-          <input
+          <Input
             type="text"
-            className="input input-sm input-bordered ml-2 max-w-full focus:outline-none"
-            minLength={4}
-            placeholder={selectedCustomFunction.name}
-            {...register('name', { required: true, minLength: 4, validate: validateName })}
+            label="Function Name:"
+            variant="bordered"
+            defaultValue={selectedCustomFunction.name}
+            isInvalid={!!errors.name?.message}
+            errorMessage={errors.name?.message}
+            className="max-w-full"
+            classNames={{
+              inputWrapper: '!bg-base-transparent border-base-content/30',
+            }}
+            {...register('name', {
+              required: 'Name is required',
+              minLength: { value: 4, message: 'Name needs to be at least 4 characters' },
+              validate: validateName,
+            })}
           />
-        </div>
 
-        <div className=" flex flex-col">
-          <label className="label-text">Description:</label>
-
-          <textarea
-            rows={2}
-            className="textarea textarea-bordered textarea-sm ml-2 mt-2 max-w-full resize-none focus:outline-none"
-            placeholder="You are a store manager that is eager to help many customers"
-            {...register('description', {})}
+          <Textarea
+            label="Description"
+            placeholder=""
+            minRows={2}
+            maxRows={3}
+            variant="bordered"
+            classNames={{
+              inputWrapper: '!bg-base-transparent border-base-content/30',
+            }}
+            {...register('description')}
           />
-        </div>
-      </form>
 
-      <div className="block">
-        <FunctionParameterTable selectedCustomFunction={selectedCustomFunction} />
-      </div>
+          <div className="block">
+            <FunctionParameterTable />
+          </div>
+        </form>
+      </FormProvider>
 
       <div className="sticky bottom-0 mt-auto flex justify-between gap-4 bg-base-100 pt-4">
         <button
@@ -131,7 +158,7 @@ const FunctionFormPanel = observer(({ selectedCustomFunction }: FunctionFormPane
 
           <button
             className="btn btn-ghost btn-primary btn-sm"
-            disabled={!isValid || !isDirty}
+            disabled={!isDirty}
             onClick={handleFormSubmit}
           >
             Save function

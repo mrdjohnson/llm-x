@@ -12,7 +12,7 @@ export const FunctionParameterModel = types.model({
     types.literal('bigint'),
     types.literal('symbol'),
     types.literal('object'),
-    types.undefined,
+    types.literal('undefined'),
   ),
   required: types.optional(types.boolean, false),
 })

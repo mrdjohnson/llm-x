@@ -1,15 +1,13 @@
 import { observer } from 'mobx-react-lite'
-import { useEffect } from 'react'
 import _ from 'lodash'
-import { useForm, Controller } from 'react-hook-form'
-import { Select, SelectItem } from '@nextui-org/react'
-
-import { ICustomFunctionModel, IFunctionParameterModel } from '~/models/CustomFunctionStore'
+import { Controller, useFormContext, useFieldArray, FieldArrayWithId } from 'react-hook-form'
+import { Input, Select, SelectItem, Textarea } from '@nextui-org/react'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 
-import Check from '~/icons/Check'
 import Delete from '~/icons/Delete'
+
+import { CustomFunctionFormDataType } from '~/features/settings/panels/function/FunctionFormPanel'
 
 type FunctionParameterFormDataType = {
   name: string
@@ -28,193 +26,190 @@ const parameterTypeOptions: Array<FunctionParameterFormDataType['type']> = [
   'object',
 ]
 
-type FunctionParameterRowProps = FunctionParameterTableProps & {
-  parameter: IFunctionParameterModel
+type FunctionParameterRowProps = {
+  parameter: FieldArrayWithId<CustomFunctionFormDataType, 'parameters', 'id'>
+  index: number
 }
 
-const FunctionParameterRow = observer(
-  ({ parameter, selectedCustomFunction }: FunctionParameterRowProps) => {
-    const {
-      register,
-      control,
-      handleSubmit,
-      reset,
-      formState: { isValid, isDirty },
-    } = useForm<FunctionParameterFormDataType>({})
+const FunctionParameterRow = observer(({ parameter, index }: FunctionParameterRowProps) => {
+  const {
+    register,
+    control,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useFormContext<CustomFunctionFormDataType>()
+  const { fields } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: 'parameters', // unique name for your Field Array
+  })
 
-    const handleFormSubmit = handleSubmit(formData => {
-      const { name, description, type, required } = formData
+  const removeParameter = () => {
+    // hack, remove from useValueFields was not working
+    const nextParameters = _.reject(getValues('parameters'), { name: parameter.name })
 
-      selectedCustomFunction.editParameter(parameter, {
-        name,
-        description,
-        type: type === 'undefined' ? undefined : type,
-        required,
-      })
+    setValue('parameters', nextParameters, { shouldDirty: true })
+  }
 
-      reset(formData)
-    })
+  const validateName = (nextName: string) => {
+    console.log('name checking: ', nextName)
 
-    const validateName = (nextName: string) => {
-      console.log('name checking: ', nextName)
-      if (nextName === parameter.name) return true
+    if (nextName.includes(' ')) return 'Name cannot include a space'
 
-      if (nextName.includes(' ')) return 'Name cannot include a space'
+    const otherParameter = _.filter(fields, { name: nextName })
 
-      const otherParameter = _.find(selectedCustomFunction.parameters, { name: nextName })
+    // return true if name does not exist
+    if (otherParameter.length > 1) return 'Parameter names cannot be duplicates'
 
-      // return false if name does not
-      return !!otherParameter
-    }
+    return true
+  }
 
-    useEffect(() => {
-      reset({
-        name: parameter.name,
-        description: parameter.description,
-        required: parameter.required,
-        type: parameter.type || 'undefined',
-      })
-    }, [name, parameter])
+  return (
+    <>
+      <td className="align-top">
+        <Input
+          type="text"
+          variant="bordered"
+          // size="sm"
+          defaultValue={parameter.name}
+          isInvalid={!!errors.parameters?.[index]?.name?.message}
+          errorMessage={errors.parameters?.[index]?.name?.message}
+          className="max-w-52 xl:max-w-80"
+          classNames={{
+            inputWrapper: '!bg-base-transparent border-base-content/30',
+          }}
+          {...register(`parameters.${index}.name`, {
+            required: 'Name is required',
+            validate: validateName,
+          })}
+        />
+      </td>
 
-    return (
-      <>
-        <td className="align-top">
+      <td className="align-top">
+        <Controller
+          render={({ field }) => (
+            <Select
+              className="rounded-md border border-base-content/30 bg-transparent"
+              // size="sm"
+              // variant="bordered"
+              classNames={{
+                value: '!text-base-content min-w-[13ch]',
+                trigger: 'bg-base-100 hover:!bg-base-200 rounded-md',
+                popoverContent: 'text-base-content bg-base-100',
+              }}
+              defaultSelectedKeys={[field.value]}
+              isRequired
+              {...field}
+            >
+              {parameterTypeOptions.map(parameterType => (
+                <SelectItem
+                  key={parameterType}
+                  value={parameterType}
+                  onClick={() => field.onChange(parameterType)}
+                  className={
+                    '!min-w-[13ch] text-base-content ' +
+                    (parameterType === field.value ? 'bg-primary' : '')
+                  }
+                >
+                  {parameterType}
+                </SelectItem>
+              ))}
+            </Select>
+          )}
+          control={control}
+          name={`parameters.${index}.type`}
+          defaultValue={parameter.type}
+        />
+      </td>
+
+      <td className="align-top">
+        <Textarea
+          minRows={1}
+          maxRows={2}
+          variant="bordered"
+          size="sm"
+          defaultValue={parameter.description}
+          className="max-w-52 xl:max-w-80"
+          classNames={{
+            inputWrapper: '!bg-base-transparent border-base-content/30',
+          }}
+          {...register(`parameters.${index}.description`, {
+            required: 'Name is description',
+            maxLength: { value: 100, message: 'Description is too long' },
+          })}
+        />
+      </td>
+
+      <td className="items-center align-top">
+        <div className="flex flex-col gap-2">
           <input
-            defaultValue={parameter.name}
-            className="input input-sm input-bordered block max-w-52 overflow-hidden bg-transparent font-semibold focus:outline-none xl:max-w-80"
-            {...register('name', {
-              required: true,
-              minLength: 4,
-              validate: validateName,
-            })}
+            type="checkbox"
+            className="checkbox checkbox-xs tooltip tooltip-bottom"
+            data-tip="Required?"
+            {...register(`parameters.${index}.required`, {})}
           />
-        </td>
 
-        <td className="align-top">
-          <Controller
-            render={({ field }) => (
-              <Select
-                className="rounded-lg border border-base-content/30 bg-transparent"
-                size="sm"
-                classNames={{
-                  value: '!text-base-content min-w-[10ch]',
-                  trigger: 'bg-base-100 hover:!bg-base-200',
-                  popoverContent: 'text-base-content bg-base-100',
-                }}
-                {...field}
-              >
-                {parameterTypeOptions.map(parameterType => (
-                  <SelectItem
-                    key={parameterType}
-                    value={parameterType}
-                    onClick={() => field.onChange(parameterType)}
-                    className={
-                      'bg-base-100 text-base-content ' + parameterType === field.value
-                        ? 'rounded-md bg-primary'
-                        : 'rounded-md'
-                    }
-                  >
-                    {parameterType}
-                  </SelectItem>
-                ))}
-              </Select>
-            )}
-            control={control}
-            name="type"
-            defaultValue={undefined}
-          />
-        </td>
-
-        <td className="align-top">
-          <input
-            className="input input-sm input-bordered block max-w-52 overflow-hidden bg-transparent font-semibold focus:outline-none xl:max-w-80"
-            maxLength={100}
-            {...register('description', { maxLength: 100 })}
-          />
-        </td>
-
-        <td className="items-center align-top">
-          <div className="flex flex-col gap-2">
-            <input
-              type="checkbox"
-              className="checkbox checkbox-xs tooltip tooltip-bottom"
-              data-tip="Required?"
-              {...register('required', {})}
-            />
-
-            <div className="flex h-full w-full justify-end">
-              <button
-                className="btn btn-ghost btn-sm disabled:opacity-30"
-                disabled={!isDirty || !isValid}
-                onClick={handleFormSubmit}
-              >
-                <Check />
-              </button>
-
-              <button
-                onClick={() => selectedCustomFunction.deleteParameter(parameter.name)}
-                className="btn btn-ghost btn-sm text-error"
-              >
-                <Delete />
-              </button>
-            </div>
+          <div className="mt-auto flex h-full w-full justify-end">
+            <button
+              onClick={removeParameter}
+              type="button"
+              className="btn btn-ghost btn-sm text-error"
+            >
+              <Delete />
+            </button>
           </div>
-        </td>
-      </>
-    )
-  },
-)
-
-type FunctionParameterTableProps = {
-  selectedCustomFunction: ICustomFunctionModel
-}
-
-const FunctionParameterTable = observer(
-  ({ selectedCustomFunction }: FunctionParameterTableProps) => {
-    const addParam = () => {
-      selectedCustomFunction.addParameter({
-        name: 'newParam',
-        description: 'A sample parameter',
-        type: 'string',
-        required: false,
-      })
-    }
-
-    const renderRow = (parameter: IFunctionParameterModel) => (
-      <FunctionParameterRow
-        key={parameter.name}
-        parameter={parameter}
-        selectedCustomFunction={selectedCustomFunction}
-      />
-    )
-
-    return (
-      <SelectionPanelTable
-        className="!h-fit min-h-[60px] !overflow-clip !pt-2"
-        items={selectedCustomFunction.parameters}
-        sortTypes={[
-          { label: 'Name' },
-          { label: 'Type' },
-          { label: 'Description' },
-          { label: 'Required' },
-        ]}
-        renderRow={renderRow}
-        onItemSelected={() => null}
-        getIsItemSelected={() => false}
-        getItemKey={parameter => parameter.name}
-      >
-        <div className="flex justify-end">
-          <button
-            onClick={addParam}
-            className="btn btn-primary btn-sm"
-            disabled={selectedCustomFunction.hasUnnamedCustomParameter}
-          >
-            Add a new param
-          </button>
         </div>
-      </SelectionPanelTable>
-    )
-  },
-)
+      </td>
+    </>
+  )
+})
+
+const FunctionParameterTable = observer(() => {
+  const { control } = useFormContext<CustomFunctionFormDataType>()
+
+  const { fields, append } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: 'parameters', // unique name for your Field Array
+  })
+
+  const addParam = () => {
+    append({
+      name: 'newParam',
+      description: 'A sample parameter',
+      type: 'string',
+      required: false,
+    })
+  }
+
+  const renderRow = (
+    parameter: FieldArrayWithId<CustomFunctionFormDataType, 'parameters', 'id'>,
+    index: number,
+  ) => {
+    return <FunctionParameterRow key={parameter.name} parameter={parameter} index={index} />
+  }
+
+  return (
+    <SelectionPanelTable
+      className="!h-fit min-h-[60px] !overflow-clip !pt-2"
+      items={fields}
+      sortTypes={[
+        { label: 'Name' },
+        { label: 'Type' },
+        { label: 'Description' },
+        { label: 'Required' },
+      ]}
+      renderRow={renderRow}
+      onItemSelected={() => null}
+      getIsItemSelected={() => false}
+      getItemKey={(_field, index) => index}
+    >
+      <div className="flex justify-end">
+        <button onClick={addParam} type="button" className="btn btn-primary btn-sm">
+          Add a new param
+        </button>
+      </div>
+    </SelectionPanelTable>
+  )
+})
 
 export default FunctionParameterTable
