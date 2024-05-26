@@ -1,4 +1,4 @@
-import { useMemo, type PropsWithChildren } from 'react'
+import { useEffect, useMemo, type PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 import useMedia from 'use-media'
 
@@ -13,6 +13,10 @@ const DaisyUiThemeProvider = observer(({ children }: PropsWithChildren) => {
 
     return prefersDarkMode ? 'dark' : 'garden'
   }, [selectedTheme, prefersDarkMode])
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme)
+  }, [theme])
 
   return (
     <div className="contents" data-theme={theme}>
