@@ -65,8 +65,9 @@ const FunctionFormPanel = observer(({ selectedCustomFunction }: FunctionFormPane
                 <button
                   className={
                     'btn join-item btn-sm mr-0 ' +
-                    (field.value === isEnabled ? 'btn-active cursor-default ' : 'btn ')
+                    (field.value === isEnabled ? 'btn-active cursor-default ' : '')
                   }
+                  type="button"
                   onClick={() => field.onChange(!field.value)}
                   key={isEnabled ? 0 : 1}
                 >
