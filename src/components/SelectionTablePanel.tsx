@@ -158,7 +158,7 @@ const SelectionPanelTable = observer(
                   </th>
                 ))}
 
-{includeEmptyHeader && <th className="w-fit" />}
+                {includeEmptyHeader && <th className="w-fit" />}
               </tr>
               <tr />
             </thead>
