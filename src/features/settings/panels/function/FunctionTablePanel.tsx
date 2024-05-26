@@ -24,13 +24,14 @@ const FunctionTablePanel = observer(({ onShowDetails }: { onShowDetails: () => v
   const createCustomFunction = async () => {
     const customFunction = customFunctionStore.createCustomFunction({
       description: 'A sample function',
-      parameters: {
-        newParam: {
+      parameters: [
+        {
+          name: 'newParam',
           description: 'A sample parameter',
           type: 'string',
           required: false,
         },
-      },
+      ],
     })
 
     customFunctionStore.setSelectedCustomFunction(customFunction)

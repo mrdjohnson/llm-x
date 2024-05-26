@@ -1,8 +1,9 @@
 import _ from 'lodash'
-import { Instance, SnapshotIn, destroy, getSnapshot, types } from 'mobx-state-tree'
+import { Instance, SnapshotIn, cast, destroy, getSnapshot, types } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
 
 export const FunctionParameterModel = types.model({
+  name: types.string,
   description: types.optional(types.string, ''),
   type: types.union(
     types.literal('number'),
@@ -23,40 +24,31 @@ export const CustomFunctionModel = types
     id: types.identifierNumber,
     name: types.string,
     description: types.optional(types.string, ''),
-    parameters: types.map(FunctionParameterModel),
+    parameters: types.array(FunctionParameterModel),
     enabled: types.optional(types.boolean, true),
     requiredPhrases: types.array(types.string),
     code: types.optional(types.string, ''),
   })
   .views(self => ({
     get hasUnnamedCustomParameter() {
-      return !!self.parameters.get('newParam')
+      return !!_.find(self.parameters, { name: 'newParam' })
     },
   }))
   .actions(self => ({
-    addParameter(name: string, parameter: SnapshotIn<IFunctionParameterModel>) {
-      self.parameters.set(name, { ...parameter })
+    addParameter(parameter: SnapshotIn<IFunctionParameterModel>) {
+      self.parameters.push(parameter)
     },
 
-    deleteParameter(parameter: IFunctionParameterModel) {
+    deleteParameter(name: string) {
+      const parameter = _.find(self.parameters, { name })
+
       destroy(parameter)
     },
 
-    editParameter(
-      parameter: IFunctionParameterModel,
-      nextName: string,
-      oldName: string,
-      values: IFunctionParameterModel,
-    ) {
-      if (nextName !== oldName) {
-        this.deleteParameter(parameter)
-        this.addParameter(nextName, values)
-
-        return
-      }
-
+    editParameter(parameter: IFunctionParameterModel, values: IFunctionParameterModel) {
       _.merge(parameter, values)
 
+      // incase of undefined
       parameter.type = values.type
     },
   }))
@@ -76,10 +68,10 @@ const CustomFunctionStore = types
   }))
   .actions(self => {
     return {
-      createCustomFunction(parameters: Omit<SnapshotIn<ICustomFunctionModel>, 'id' | 'name'>) {
+      createCustomFunction(fields: Omit<SnapshotIn<ICustomFunctionModel>, 'id' | 'name'>) {
         const customFunction = CustomFunctionModel.create({
           name: 'newFunction',
-          ...parameters,
+          ...fields,
           id: Date.now(),
         })
 
@@ -112,10 +104,11 @@ const CustomFunctionStore = types
 
       editCustomFunction(
         customFunction: ICustomFunctionModel,
-        values: Partial<SnapshotIn<ICustomFunctionModel>>,
+        fields: Partial<SnapshotIn<ICustomFunctionModel>>,
       ) {
-        _.merge(customFunction, values)
-
+        _.merge(customFunction, fields)
+        customFunction.parameters = cast(fields.parameters)
+        
         self.customFunctionToEdit = undefined
       },
     }
@@ -123,7 +116,7 @@ const CustomFunctionStore = types
 
 export const customFunctionStore = CustomFunctionStore.create()
 
-persist('customFunctionStore', customFunctionStore).then(() => {
+persist('custom-function-store', customFunctionStore).then(() => {
   console.log('updated customFunction store')
 
   if (!customFunctionStore.selectedCustomFunction) {

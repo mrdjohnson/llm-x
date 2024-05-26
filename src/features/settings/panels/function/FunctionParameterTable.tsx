@@ -6,15 +6,13 @@ import { Select, SelectItem } from '@nextui-org/react'
 
 import { ICustomFunctionModel, IFunctionParameterModel } from '~/models/CustomFunctionStore'
 
-import SelectionPanelTable, {
-  SortType as SelectionPanelSortType,
-} from '~/components/SelectionTablePanel'
+import SelectionPanelTable from '~/components/SelectionTablePanel'
 
 import Check from '~/icons/Check'
 import Delete from '~/icons/Delete'
 
 type FunctionParameterFormDataType = {
-  nextName: string
+  name: string
   description: string
   type: 'undefined' | 'number' | 'string' | 'boolean' | 'bigint' | 'symbol' | 'object'
   required: boolean
@@ -31,12 +29,11 @@ const parameterTypeOptions: Array<FunctionParameterFormDataType['type']> = [
 ]
 
 type FunctionParameterRowProps = FunctionParameterTableProps & {
-  name: string
   parameter: IFunctionParameterModel
 }
 
 const FunctionParameterRow = observer(
-  ({ name, parameter, selectedCustomFunction }: FunctionParameterRowProps) => {
+  ({ parameter, selectedCustomFunction }: FunctionParameterRowProps) => {
     const {
       register,
       control,
@@ -46,9 +43,10 @@ const FunctionParameterRow = observer(
     } = useForm<FunctionParameterFormDataType>({})
 
     const handleFormSubmit = handleSubmit(formData => {
-      const { nextName, description, type, required } = formData
+      const { name, description, type, required } = formData
 
-      selectedCustomFunction.editParameter(parameter, nextName, name, {
+      selectedCustomFunction.editParameter(parameter, {
+        name,
         description,
         type: type === 'undefined' ? undefined : type,
         required,
@@ -59,17 +57,19 @@ const FunctionParameterRow = observer(
 
     const validateName = (nextName: string) => {
       console.log('name checking: ', nextName)
-      if (nextName === name) return true
+      if (nextName === parameter.name) return true
 
-      if (nextName.includes(' ')) return false
+      if (nextName.includes(' ')) return 'Name cannot include a space'
 
-      // does name already exist?
-      return _.isUndefined(selectedCustomFunction.parameters.get(nextName))
+      const otherParameter = _.find(selectedCustomFunction.parameters, { name: nextName })
+
+      // return false if name does not
+      return !!otherParameter
     }
 
     useEffect(() => {
       reset({
-        nextName: name,
+        name: parameter.name,
         description: parameter.description,
         required: parameter.required,
         type: parameter.type || 'undefined',
@@ -80,9 +80,9 @@ const FunctionParameterRow = observer(
       <>
         <td className="align-top">
           <input
-            defaultValue={name}
+            defaultValue={parameter.name}
             className="input input-sm input-bordered block max-w-52 overflow-hidden bg-transparent font-semibold focus:outline-none xl:max-w-80"
-            {...register('nextName', {
+            {...register('name', {
               required: true,
               minLength: 4,
               validate: validateName,
@@ -152,7 +152,7 @@ const FunctionParameterRow = observer(
               </button>
 
               <button
-                onClick={() => selectedCustomFunction.deleteParameter(parameter)}
+                onClick={() => selectedCustomFunction.deleteParameter(parameter.name)}
                 className="btn btn-ghost btn-sm text-error"
               >
                 <Delete />
@@ -165,9 +165,6 @@ const FunctionParameterRow = observer(
   },
 )
 
-const functionParameterSortTypes: Array<SelectionPanelSortType<[string, IFunctionParameterModel]>> =
-  [{ label: 'Name' }, { label: 'Type' }, { label: 'Description' }, { label: 'Required' }]
-
 type FunctionParameterTableProps = {
   selectedCustomFunction: ICustomFunctionModel
 }
@@ -175,21 +172,17 @@ type FunctionParameterTableProps = {
 const FunctionParameterTable = observer(
   ({ selectedCustomFunction }: FunctionParameterTableProps) => {
     const addParam = () => {
-      selectedCustomFunction?.addParameter('newParam', {
+      selectedCustomFunction.addParameter({
+        name: 'newParam',
         description: 'A sample parameter',
         type: 'string',
         required: false,
       })
     }
 
-    const entries: Array<[string, IFunctionParameterModel]> = _.entries(
-      selectedCustomFunction.parameters,
-    )
-
-    const renderRow = ([name, parameter]: [string, IFunctionParameterModel]) => (
+    const renderRow = (parameter: IFunctionParameterModel) => (
       <FunctionParameterRow
-        key={name}
-        name={name}
+        key={parameter.name}
         parameter={parameter}
         selectedCustomFunction={selectedCustomFunction}
       />
@@ -198,12 +191,17 @@ const FunctionParameterTable = observer(
     return (
       <SelectionPanelTable
         className="!h-fit min-h-[60px] !overflow-clip !pt-2"
-        items={entries}
-        sortTypes={functionParameterSortTypes}
+        items={selectedCustomFunction.parameters}
+        sortTypes={[
+          { label: 'Name' },
+          { label: 'Type' },
+          { label: 'Description' },
+          { label: 'Required' },
+        ]}
         renderRow={renderRow}
         onItemSelected={() => null}
         getIsItemSelected={() => false}
-        getItemKey={([name]) => name}
+        getItemKey={parameter => parameter.name}
       >
         <div className="flex justify-end">
           <button
