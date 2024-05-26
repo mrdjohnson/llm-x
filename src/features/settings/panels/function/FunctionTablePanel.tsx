@@ -38,46 +38,56 @@ const FunctionTablePanel = observer(({ onShowDetails }: { onShowDetails: () => v
 
   const renderRow = (customFunction: ICustomFunctionModel) => (
     <>
-      <td>{customFunction.name}</td>
+      <td className="align-top">{customFunction.name}</td>
 
-      <td>
-        <input
-          type="checkbox"
-          defaultChecked={customFunction.enabled}
-          className="checkbox checkbox-xs tooltip tooltip-bottom"
-          onClick={e => e.preventDefault()}
-        />
+      <td className="align-top">
+        <div className="flex flex-col gap-2">
+          <input
+            type="checkbox"
+            defaultChecked={customFunction.enabled}
+            className="checkbox checkbox-xs tooltip tooltip-bottom"
+            onClick={e => e.preventDefault()}
+          />
+          <p />
+        </div>
       </td>
 
-      <td>{customFunction.description}</td>
+      <td className="max-w-80 align-top">
+        <div className="flex flex-col gap-2">
+          <p className=" line-clamp-2 whitespace-pre-wrap">{customFunction.description}</p>
 
-      <td className="w-fit">
-        <button
-          className="align-center flex opacity-30 transition-opacity duration-200 ease-in-out hover:opacity-100"
-          onClick={onShowDetails}
-        >
-          <Edit />
-        </button>
+          <div className="flex h-full w-full justify-end">
+            <button
+              className="group btn btn-square btn-ghost btn-xs opacity-30 transition-opacity duration-200 ease-in-out hover:scale-125 hover:opacity-100 "
+              onClick={onShowDetails}
+            >
+              <Edit />
+            </button>
+          </div>
+        </div>
       </td>
     </>
   )
 
   return (
-    <SelectionPanelTable
-      items={customFunctions}
-      sortTypes={customFunctionSortTypes}
-      primarySortTypeLabel="name"
-      itemFilter={(customFunction: ICustomFunctionModel, filterText: string) =>
-        [customFunction.name.toLowerCase(), customFunction.description.toLowerCase()].includes(
-          filterText.toLowerCase(),
-        )
-      }
-      renderRow={renderRow}
-      getItemKey={customFunction => customFunction.id}
-      onItemSelected={handleCustomFunctionSelected}
-      getIsItemSelected={customFunction => customFunction === selectedCustomFunction}
-      filterInputPlaceholder="Filter by name or description..."
-    >
+    <>
+      <SelectionPanelTable
+        items={customFunctions}
+        sortTypes={customFunctionSortTypes}
+        primarySortTypeLabel="name"
+        itemFilter={(customFunction: ICustomFunctionModel, filterText: string) =>
+          [customFunction.name.toLowerCase(), customFunction.description.toLowerCase()].includes(
+            filterText.toLowerCase(),
+          )
+        }
+        renderRow={renderRow}
+        getItemKey={customFunction => customFunction.id}
+        onItemSelected={handleCustomFunctionSelected}
+        getIsItemSelected={customFunction => customFunction === selectedCustomFunction}
+        filterInputPlaceholder="Filter by name or description..."
+      />
+
+      <div className="mt-auto" />
       <div className="mt-4 flex justify-end gap-4">
         <button
           className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 text-error"
@@ -95,7 +105,7 @@ const FunctionTablePanel = observer(({ onShowDetails }: { onShowDetails: () => v
           Add New Function
         </button>
       </div>
-    </SelectionPanelTable>
+    </>
   )
 })
 

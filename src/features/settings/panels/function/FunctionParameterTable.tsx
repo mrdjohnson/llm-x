@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import _ from 'lodash'
 import { useForm, Controller } from 'react-hook-form'
+import { Select, SelectItem } from '@nextui-org/react'
 
 import { ICustomFunctionModel, IFunctionParameterModel } from '~/models/CustomFunctionStore'
 
@@ -9,7 +10,6 @@ import SelectionPanelTable, {
   SortType as SelectionPanelSortType,
 } from '~/components/SelectionTablePanel'
 
-import ChevronDown from '~/icons/ChevronDown'
 import Check from '~/icons/Check'
 import Delete from '~/icons/Delete'
 
@@ -78,7 +78,7 @@ const FunctionParameterRow = observer(
 
     return (
       <>
-        <td>
+        <td className="align-top">
           <input
             defaultValue={name}
             className="input input-sm input-bordered block max-w-52 overflow-hidden bg-transparent font-semibold focus:outline-none xl:max-w-80"
@@ -90,38 +90,34 @@ const FunctionParameterRow = observer(
           />
         </td>
 
-        <td>
+        <td className="align-top">
           <Controller
             render={({ field }) => (
-              <div className="dropdown">
-                <div
-                  tabIndex={0}
-                  role="button"
-                  className="btn btn-sm m-1 flex min-w-[15ch] flex-row gap-2"
-                >
-                  {field.value} <ChevronDown className="ml-auto" />
-                </div>
-
-                <ul
-                  tabIndex={0}
-                  className="menu dropdown-content z-[1] min-w-[15ch] rounded-box bg-base-100 p-2 shadow"
-                  role="select"
-                  {...field}
-                >
-                  {parameterTypeOptions.map(parameterType => (
-                    <li
-                      key={parameterType}
-                      value={parameterType}
-                      onClick={() => field.onChange(parameterType)}
-                      className={
-                        parameterType === field.value ? 'rounded-md bg-primary' : 'rounded-md'
-                      }
-                    >
-                      <a>{parameterType}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Select
+                className="rounded-lg border border-base-content/30 bg-transparent"
+                size="sm"
+                classNames={{
+                  value: '!text-base-content min-w-[10ch]',
+                  trigger: 'bg-base-100 hover:!bg-base-200',
+                  popoverContent: 'text-base-content bg-base-100',
+                }}
+                {...field}
+              >
+                {parameterTypeOptions.map(parameterType => (
+                  <SelectItem
+                    key={parameterType}
+                    value={parameterType}
+                    onClick={() => field.onChange(parameterType)}
+                    className={
+                      'bg-base-100 text-base-content ' + parameterType === field.value
+                        ? 'rounded-md bg-primary'
+                        : 'rounded-md'
+                    }
+                  >
+                    {parameterType}
+                  </SelectItem>
+                ))}
+              </Select>
             )}
             control={control}
             name="type"
@@ -129,7 +125,7 @@ const FunctionParameterRow = observer(
           />
         </td>
 
-        <td>
+        <td className="align-top">
           <input
             className="input input-sm input-bordered block max-w-52 overflow-hidden bg-transparent font-semibold focus:outline-none xl:max-w-80"
             maxLength={100}
@@ -137,30 +133,32 @@ const FunctionParameterRow = observer(
           />
         </td>
 
-        <td className=" items-center">
-          <input
-            type="checkbox"
-            className="checkbox checkbox-xs tooltip tooltip-bottom mx-auto"
-            data-tip="Required?"
-            {...register('required', {})}
-          />
-        </td>
+        <td className="items-center align-top">
+          <div className="flex flex-col gap-2">
+            <input
+              type="checkbox"
+              className="checkbox checkbox-xs tooltip tooltip-bottom"
+              data-tip="Required?"
+              {...register('required', {})}
+            />
 
-        <td>
-          <button
-            className="btn btn-ghost btn-sm disabled:opacity-30"
-            disabled={!isDirty || !isValid}
-            onClick={handleFormSubmit}
-          >
-            <Check />
-          </button>
+            <div className="flex h-full w-full justify-end">
+              <button
+                className="btn btn-ghost btn-sm disabled:opacity-30"
+                disabled={!isDirty || !isValid}
+                onClick={handleFormSubmit}
+              >
+                <Check />
+              </button>
 
-          <button
-            onClick={() => selectedCustomFunction.deleteParameter(parameter)}
-            className="btn btn-ghost btn-sm text-error"
-          >
-            <Delete />
-          </button>
+              <button
+                onClick={() => selectedCustomFunction.deleteParameter(parameter)}
+                className="btn btn-ghost btn-sm text-error"
+              >
+                <Delete />
+              </button>
+            </div>
+          </div>
         </td>
       </>
     )
@@ -206,7 +204,6 @@ const FunctionParameterTable = observer(
         onItemSelected={() => null}
         getIsItemSelected={() => false}
         getItemKey={([name]) => name}
-        includeEmptyHeader
       >
         <div className="flex justify-end">
           <button
