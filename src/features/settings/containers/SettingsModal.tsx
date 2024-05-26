@@ -2,8 +2,11 @@ import { useEffect, useMemo, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import useMedia from 'use-media'
+import { Modal, ModalContent, ModalBody } from '@nextui-org/react'
 
 import { settingStore } from '~/models/SettingStore'
+
+import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 
 import Github from '~/icons/Github'
 import Back from '~/icons/Back'
@@ -105,15 +108,28 @@ const SettingsModal = observer(() => {
   }, [isOpen])
 
   return (
-    <dialog ref={modalRef} id="settings-modal" className="modal modal-middle" onClose={handleClose}>
-      <div className="modal-box-container mt-0 h-full max-h-[700px] overflow-hidden bg-transparent lg:p-3 ">
-        <div className="container flex h-full flex-col rounded-md bg-base-100 p-2">
-          <div className=" navbar flex h-auto min-h-0 max-w-full ">
+    <Modal
+      backdrop="opaque"
+      isOpen={isOpen}
+      onClose={handleClose}
+      size={isMobile ? 'full' : undefined}
+      classNames={{
+        base: isMobile ? '' : '!container',
+        body: 'px-2 text-base-content overflow-hidden',
+        backdrop:
+          'bg-gradient-to-t from-base-200 from-25% to-base-200/20 backdrop-opacity-20 !cursor-pointer',
+        closeButton: 'hover:bg-base-content/30 hover:text-base-content',
+      }}
+      hideCloseButton
+    >
+      <DaisyUiThemeProvider>
+        <ModalContent className="bg-base-100">
+          <div className="navbar flex h-auto min-h-0 max-w-full text-base-content">
             <div className="ml-auto justify-end">
               <button
                 className={
                   'btn btn-circle btn-ghost btn-sm !text-lg opacity-70 ' +
-                  (shouldShowBackButton ? ' z-0 ' : ' -z-20') // hack to hide the button but keep spacing
+                  (shouldShowBackButton ? '' : ' pointer-events-none !opacity-0') // hack to hide the button but keep spacing
                 }
                 onClick={() => settingStore.openSettingsModal('initial')}
               >
@@ -135,43 +151,42 @@ const SettingsModal = observer(() => {
             </div>
           </div>
 
-          <div className="flex h-full flex-grow-0 flex-col justify-stretch gap-2 overflow-y-scroll lg:h-[700px] lg:flex-row">
-            <div
-              className="w-full lg:w-[260px] lg:min-w-[260px] lg:max-w-[260px]"
-              role="complementary"
-            >
-              <div className="flex w-full flex-col gap-2 rounded-md bg-base-200 lg:h-full lg:p-2 ">
-                {isMobile ? (
-                  <MobileSettingsSidePanel selectedPanel={panelName} />
-                ) : (
-                  <SettingsSidePanel selectedPanel={panelName} />
-                )}
-
-                <a
-                  href="https://github.com/mrdjohnson/llm-x"
-                  className="btn btn-outline btn-neutral mt-auto hidden fill-base-content stroke-base-content hover:fill-primary-content lg:flex"
-                  aria-label="LLM-X's Github"
-                  target="__blank"
+          <ModalBody>
+            <div className="flex h-full flex-col rounded-md bg-base-100 p-2">
+              <div className="flex h-full flex-grow-0 flex-col justify-stretch gap-2 overflow-y-scroll lg:h-[700px] lg:flex-row">
+                <div
+                  className="w-full lg:w-[260px] lg:min-w-[260px] lg:max-w-[260px]"
+                  role="complementary"
                 >
-                  <Github />
-                </a>
+                  <div className="flex w-full flex-col gap-2 rounded-md bg-base-200 lg:h-full lg:p-2 ">
+                    {isMobile ? (
+                      <MobileSettingsSidePanel selectedPanel={panelName} />
+                    ) : (
+                      <SettingsSidePanel selectedPanel={panelName} />
+                    )}
+
+                    <a
+                      href="https://github.com/mrdjohnson/llm-x"
+                      className="btn btn-outline btn-neutral mt-auto hidden fill-base-content stroke-base-content hover:fill-primary-content lg:flex"
+                      aria-label="LLM-X's Github"
+                      target="__blank"
+                    >
+                      <Github />
+                    </a>
+                  </div>
+
+                  <div className="divider mb-0 mt-2 lg:hidden" />
+                </div>
+
+                <section className="flex h-full w-full flex-1 justify-stretch overflow-x-auto overflow-y-scroll">
+                  {Component && <Component />}
+                </section>
               </div>
-
-              <div className="divider mb-0 mt-2 lg:hidden" />
             </div>
-
-            <section className="flex h-full w-full flex-1 justify-stretch overflow-x-auto overflow-y-scroll">
-              {Component && <Component />}
-            </section>
-          </div>
-        </div>
-      </div>
-
-      <form method="dialog" className="modal-backdrop">
-        {/* close button */}
-        <button />
-      </form>
-    </dialog>
+          </ModalBody>
+        </ModalContent>
+      </DaisyUiThemeProvider>
+    </Modal>
   )
 })
 
