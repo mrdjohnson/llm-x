@@ -23,9 +23,9 @@ type SelectionPanelTableProps<T> = PropsWithChildren<{
   className?: string
   sortTypes: Array<SortType<T>>
   onItemSelected: (item: T) => void
-  renderRow: (item: T) => ReactNode
+  renderRow: (item: T, index: number) => ReactNode
   getIsItemSelected: (item: T) => boolean
-  getItemKey: (item: T) => string | number
+  getItemKey: (item: T, index: number) => string | number
   filterInputPlaceholder?: string
   onFilterChanged?: (text: string) => void
   itemFilter?: (item: T, filter: string) => boolean
@@ -164,7 +164,7 @@ const SelectionPanelTable = observer(
             </thead>
 
             <tbody className="-mt-4 gap-2 px-2">
-              {filteredItems?.map(item => (
+              {filteredItems?.map((item, index) => (
                 <tr
                   className={
                     'cursor-pointer ' +
@@ -173,9 +173,9 @@ const SelectionPanelTable = observer(
                       : ' hover:!bg-primary/30')
                   }
                   onClick={() => onItemSelected(item)}
-                  key={getItemKey(item)}
+                  key={getItemKey(item, index)}
                 >
-                  {renderRow(item)}
+                  {renderRow(item, index)}
                 </tr>
               ))}
             </tbody>
