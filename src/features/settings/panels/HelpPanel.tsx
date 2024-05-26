@@ -12,7 +12,7 @@ const HelpPanel = observer(() => {
     <div className="w-full pl-2">
       <h3 className="-ml-2 mt-5 pb-3 text-lg font-bold">
         How to connect to
-        <a href="https://lmstudio.ai/" target="__blank" className="link text-lg">
+        <a href="https://lmstudio.ai/" target="__blank" className="link text-lg text-primary">
           LM Studio
         </a>
         :
@@ -30,7 +30,13 @@ const HelpPanel = observer(() => {
 
       <div className="divider" />
 
-      <h3 className="-ml-2 pb-3 text-lg font-bold">How to connect to Ollama Server:</h3>
+      <h3 className="-ml-2 pb-3 text-lg font-bold">
+        How to connect to
+        <a href="https://ollama.com/" target="__blank" className="link text-lg text-primary">
+          Ollama
+        </a>
+        Server:
+      </h3>
 
       <div className="flex flex-col gap-2">
         <p>
@@ -104,7 +110,7 @@ const HelpPanel = observer(() => {
         <a
           href="https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#stable-diffusion-web-ui"
           target="__blank"
-          className="link"
+          className="link text-lg text-primary"
         >
           AUTOMATIC1111
         </a>
