@@ -12,18 +12,14 @@ import {
 import Delete from '~/icons/Delete'
 
 import FunctionParameterTable from '~/features/settings/panels/function//FunctionParameterTable'
+import { SnapshotIn, getSnapshot } from 'mobx-state-tree'
+import _ from 'lodash'
 
 type FunctionFormPanelProps = {
   selectedCustomFunction: ICustomFunctionModel
 }
 
-export type CustomFunctionFormDataType = {
-  name: string
-  description: string
-  enabled: boolean
-  parameters: IFunctionParameterModel[]
-  deletedParameterNames: string[]
-}
+export type CustomFunctionFormDataType = SnapshotIn<ICustomFunctionModel>
 
 const FunctionFormPanel = observer(({ selectedCustomFunction }: FunctionFormPanelProps) => {
   const methods = useForm<CustomFunctionFormDataType>({})
@@ -60,18 +56,8 @@ const FunctionFormPanel = observer(({ selectedCustomFunction }: FunctionFormPane
   }
 
   useEffect(() => {
-    reset({
-      name: selectedCustomFunction.name,
-      description: selectedCustomFunction.description,
-      enabled: selectedCustomFunction.enabled,
-      parameters: selectedCustomFunction.parameters,
-    })
-  }, [
-    selectedCustomFunction.name,
-    selectedCustomFunction.description,
-    selectedCustomFunction.enabled,
-    selectedCustomFunction.parameters,
-  ])
+    reset(getSnapshot(selectedCustomFunction))
+  }, [selectedCustomFunction])
 
   return (
     <div className="flex h-full flex-col overflow-y-scroll">
@@ -123,6 +109,7 @@ const FunctionFormPanel = observer(({ selectedCustomFunction }: FunctionFormPane
 
           <Textarea
             label="Description"
+            defaultValue={selectedCustomFunction.description}
             placeholder=""
             minRows={2}
             maxRows={3}
