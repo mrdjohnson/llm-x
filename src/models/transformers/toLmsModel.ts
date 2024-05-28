@@ -9,6 +9,8 @@ export const toLmsModel = (model: DownloadedModel) => {
   return {
     ...model,
 
+    type: 'LMS' as const,
+
     get gbSize() {
       return (model.sizeBytes / 1e9).toFixed(2) + ' GB'
     },

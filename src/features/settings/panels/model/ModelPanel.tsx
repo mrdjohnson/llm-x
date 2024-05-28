@@ -1,57 +1,85 @@
 import { observer } from 'mobx-react-lite'
-import { Fragment, JSX, useState } from 'react'
-
-import { ConnectionTypes, settingStore } from '~/models/SettingStore'
+import { useMemo, useState } from 'react'
+import _ from 'lodash'
+import { ScrollShadow, Tab, Tabs } from '@nextui-org/react'
 
 import OllamaModelPanel from '~/features/settings/panels/model/OllamaModelPanel'
 import A1111ModelPanel from '~/features/settings/panels/model/A1111ModelPanel'
-import LmsModelPanel from '~/features/settings/panels/model/lms/LmsModelPanel'
+import LmsModelPanel from '~/features/settings/panels/model/LmsModelPanel'
 
-const Panels: Array<{ title: ConnectionTypes; label?: string; Component: () => JSX.Element }> = [
-  { title: 'Ollama', Component: OllamaModelPanel },
-  { title: 'LMS', label: 'LM Studio', Component: LmsModelPanel },
-  { title: 'A1111', Component: A1111ModelPanel },
-]
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+
+import { settingStore } from '~/models/SettingStore'
 
 const ModelPanel = observer(() => {
-  const { modelType: selectedModelType } = settingStore
+  const { selectedConnectionModelId, connections , } = connectionModelStore
 
-  const [selectedTab, setSelectedTab] = useState<ConnectionTypes>(selectedModelType)
+  const [selectedTabId, setSelectedTabId] = useState<string | undefined>(
+    selectedConnectionModelId ?? connections[0]?.id,
+  )
+
+  const selectedConnection = useMemo(() => {
+    return connectionModelStore.getConnectionById(selectedTabId)
+  }, [selectedTabId, connections])
 
   return (
     <div className="flex w-full flex-col">
-      <div
-        role="tablist"
-        className="tabs tabs-lifted -tabs-bordered flex-1 overflow-y-hidden"
-        style={{ gridTemplateRows: 'max-content auto' }}
-      >
-        {Panels.map(({ title, label, Component }) => (
-          <Fragment key={title}>
-            <input
-              type="radio"
-              role="tab"
-              className={
-                'tab h-fit gap-2 border-base-content/45 ' +
-                (title === selectedTab
-                  ? ' [--tab-border-color:var(--fallback-bc,oklch(var(--bc)/0.45))] '
-                  : ' [--tab-border-color:transparent] ') +
-                (title === selectedModelType ? ' text-primary ' : '  ')
-              }
-              aria-label={label || title}
-              checked={title === selectedTab}
-              onChange={() => setSelectedTab(title)}
-              key={title}
-            />
-
-            <div
-              role="tabpanel"
-              className="tab-content h-full self-stretch overflow-scroll rounded-md border-base-content/45 bg-base-100 p-2"
+      {selectedTabId && (
+        <>
+          <ScrollShadow orientation="horizontal" className="border-b border-divider">
+            <Tabs
+              aria-label="Options"
+              variant="underlined"
+              selectedKey={selectedTabId}
+              onSelectionChange={key => setSelectedTabId(_.toString(key))}
+              classNames={{
+                tab: 'overflow-hidden flex-shrink-0 w-fit',
+                tabList:
+                  'gap-3 w-full flex max-w-full relative rounded-none p-0 overflow-x-scroll flex-shrink-0',
+                cursor: 'group-data-[selected=true]:bg-primary w-full bg-base-content',
+                tabContent:
+                  'group-data-[selected=true]:text-primary group-data-[selected=true]:border-b-primary flex-shrink-0 group-[.is-active-parent]:text-primary/60',
+              }}
             >
-              <Component />
+              {_.map(connections, connection => (
+                <Tab
+                  key={connection.id}
+                  title={connection.label}
+                  className={connection.id === selectedConnectionModelId ? 'is-active-parent' : ''}
+                />
+              ))}
+            </Tabs>
+          </ScrollShadow>
+
+          {selectedConnection && (
+            <div className="flex-1 overflow-y-hidden pt-2">
+              <ScrollShadow className="max-h-full pb-7">
+                {selectedConnection.type === 'LMS' && (
+                  <LmsModelPanel connection={selectedConnection} />
+                )}
+                {selectedConnection.type === 'A1111' && (
+                  <A1111ModelPanel connection={selectedConnection} />
+                )}
+                {selectedConnection.type === 'Ollama' && (
+                  <OllamaModelPanel connection={selectedConnection} />
+                )}
+              </ScrollShadow>
             </div>
-          </Fragment>
-        ))}
-      </div>
+          )}
+        </>
+      )}
+
+      {!selectedTabId && (
+        <div className="w-full text-center text-lg">
+          <span className="text-lg">Add a connection in the</span>
+          <button
+            className="link text-lg text-primary"
+            onClick={() => settingStore.openSettingsModal('general')}
+          >
+            General tab
+          </button>
+        </div>
+      )}
     </div>
   )
 })

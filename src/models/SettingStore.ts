@@ -1,41 +1,19 @@
-import { types, cast, flow, Instance } from 'mobx-state-tree'
+import { types } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
-import camelcaseKeys from 'camelcase-keys'
-import { LMStudioClient, type DownloadedModel } from '@lmstudio/sdk'
 
-import { toastStore } from '~/models/ToastStore'
-import { IOllamaModel, OllamaModel } from '~/models/OllamaModel'
 import { type SettingPanelOptionsType } from '~/features/settings/settingsPanels'
 import _ from 'lodash'
-import axios, { AxiosError } from 'axios'
-import { lmsStore } from '~/features/lmstudio/LmsStore'
 
-export const DefaultHost = 'http://localhost:11434'
-export const DefaultA1111Host = 'http://127.0.0.1:7860'
-export const DefaultLmsHost = 'ws://127.0.0.1:1234'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import LmsServerConnection from '~/features/connections/servers/LmsServerConnection'
+import A1111ServerConnection from '~/features/connections/servers/A1111ServerConnection'
+import OllamaServerConnection from '~/features/connections/servers/OllamaServerConnection'
 
-const A1111Model = types.model({
-  title: types.string,
-  modelName: types.string,
-})
-
-export type ConnectionTypes = 'Ollama' | 'A1111' | 'LMS'
-
-interface IA1111Model extends Instance<typeof A1111Model> {}
-
-const SETTING_STORE_VERSION = 1
+const SETTING_STORE_VERSION = 2
 
 export const SettingStore = types
   .model({
-    selectedModelType: types.optional(types.string, 'Ollama'),
     version: types.optional(types.number, SETTING_STORE_VERSION),
-
-    // ollama settings
-    ollamaEnabled: types.optional(types.boolean, true),
-    ollamaHost: types.maybe(types.string),
-    ollamaKeepAliveTime: types.optional(types.number, 20),
-    ollamaTemperature: types.optional(types.number, 0.8),
-    ollamaModels: types.optional(types.array(OllamaModel), []),
 
     selectedModelName: types.maybeNull(types.string),
 
@@ -44,111 +22,18 @@ export const SettingStore = types
     pwaNeedsUpdate: types.optional(types.boolean, false),
     isSidebarOpen: types.optional(types.boolean, true),
 
-    // image generation settings
-    a1111Enabled: types.optional(types.boolean, false),
-    a1111Host: types.maybe(types.string),
-    a1111Models: types.array(A1111Model),
-    _isA1111ServerConnected: types.maybe(types.boolean),
-    a1111Width: types.maybe(types.number),
-    a1111Height: types.maybe(types.number),
-    a1111Steps: types.maybe(types.number),
-    a1111BatchSize: types.optional(types.number, 1),
-
-    // lms generation settings
-    lmsEnabled: types.optional(types.boolean, false),
-    lmsHost: types.maybe(types.string),
-    _isLmsServerConnected: types.optional(types.boolean, false),
-    lmsTemperature: types.optional(types.number, 0.8),
-
     // app settings
     _settingsPanelName: types.maybe(types.string),
     _isServerConnected: types.maybe(types.boolean),
     _funTitle: types.maybe(types.string),
   })
   .views(self => ({
-    get modelType(): ConnectionTypes {
-      return self.selectedModelType as ConnectionTypes
-    },
-
-    get selectedOllamaModel(): IOllamaModel | undefined {
-      if (this.modelType !== 'Ollama') return undefined
-
-      return (
-        self.ollamaModels.find(model => model.name === self.selectedModelName) ||
-        self.ollamaModels[0]
-      )
-    },
-
-    get selectedA1111Model(): IA1111Model | undefined {
-      if (this.modelType !== 'A1111') return undefined
-
-      const modelName = self.selectedModelName || undefined
-
-      return _.find(self.a1111Models, { modelName }) || self.a1111Models[0]
-    },
-
-    get selectedLmsModel() {
-      if (this.modelType !== 'LMS') return undefined
-
-      const path = self.selectedModelName || undefined
-
-      return _.find(this.lmsModels, { path }) || this.lmsModels[0]
-    },
-
-    get selectedModelLabel() {
-      if (this.modelType === 'A1111') {
-        return this.selectedA1111Model?.modelName
-      } else if (this.modelType === 'LMS') {
-        return this.selectedLmsModel?.name
-      }
-
-      return this.selectedOllamaModel?.name
-    },
-
-    get isServerConnected() {
-      return self._isServerConnected
-    },
-
-    get isA1111ServerConnected() {
-      return self._isA1111ServerConnected
-    },
-
-    get a1111ImageSize() {
-      if (self.a1111Width === undefined || self.a1111Height === undefined) {
-        return { width: undefined, height: undefined }
-      }
-
-      return { width: self.a1111Width, height: self.a1111Height }
-    },
-
-    get isLmsServerConnected() {
-      return self._isLmsServerConnected
-    },
-
-    get isAnyServerConnected() {
-      return this.isA1111ServerConnected || this.isServerConnected || this.isLmsServerConnected
-    },
-
     get funTitle() {
       return self._funTitle
     },
 
     get settingsPanelName() {
       return self._settingsPanelName as SettingPanelOptionsType | undefined
-    },
-
-    get isImageGenerationMode() {
-      return this.modelType === 'A1111'
-    },
-
-    get lmsModels() {
-      return lmsStore.lmsModels
-    },
-
-    get allModelsEmpty() {
-      return (
-        _.isEmpty(self.ollamaModels) && _.isEmpty(self.a1111Models) && _.isEmpty(this.lmsModels)
-      )
     },
   }))
   .actions(self => {
@@ -167,47 +52,6 @@ export const SettingStore = types
         self._settingsPanelName = undefined
       },
 
-      selectModel(name: string, modelType: ConnectionTypes = 'Ollama') {
-        console.log('selecting: ', name, modelType)
-
-        this.setModelType(modelType)
-
-        self.selectedModelName = name
-      },
-
-      setModelType(modelType: ConnectionTypes = 'Ollama') {
-        self.selectedModelType = modelType
-
-        self.selectedModelName = null
-      },
-
-      setOllamaEnabled(ollamaEnabled: boolean) {
-        // if we're turning this off
-        if (!ollamaEnabled) {
-          self._isServerConnected = false
-
-          if (self.modelType === 'LMS') {
-            this.setModelType('LMS')
-          }
-        } else {
-          self.selectedModelType = 'Ollama'
-        }
-
-        self.ollamaEnabled = ollamaEnabled
-      },
-
-      setHost(host: string) {
-        self.ollamaHost = host
-      },
-
-      setKeepAliveTime(keepAliveTime: number) {
-        self.ollamaKeepAliveTime = keepAliveTime
-      },
-
-      setTemperature(temperature: number) {
-        self.ollamaTemperature = temperature
-      },
-
       setTheme(theme: string) {
         self.theme = theme
       },
@@ -221,162 +65,9 @@ export const SettingStore = types
         self._funTitle = funTitle
       },
 
-      setA1111Enabled(a1111Enabled: boolean) {
-        // if we're turning this off
-        if (!a1111Enabled) {
-          self._isA1111ServerConnected = false
-
-          if (self.modelType === 'A1111') {
-            this.setModelType('Ollama')
-          }
-        } else {
-          self.selectedModelType = 'A1111'
-        }
-
-        self.a1111Enabled = a1111Enabled
-      },
-
-      setA1111Host(a1111Host: string) {
-        self.a1111Host = a1111Host
-      },
-
-      setA1111Size(width?: number, height?: number) {
-        const constrain = (size?: number) => {
-          if (size === undefined) return size
-
-          if (size <= 0) return 512
-
-          if (size > 99999) return 99999
-
-          return size
-        }
-
-        self.a1111Width = constrain(width)
-        self.a1111Height = constrain(height)
-      },
-
-      setA1111Steps(steps?: number) {
-        self.a1111Steps = steps
-      },
-
-      setA1111BatchSize(batchSize: number = 0) {
-        self.a1111BatchSize = batchSize
-      },
-
-      setLmsEnabled(lmsEnabled: boolean) {
-        // if we're turning this off
-        if (!lmsEnabled) {
-          self._isLmsServerConnected = false
-
-          if (self.modelType === 'LMS') {
-            this.setModelType('Ollama')
-          }
-        } else {
-          this.setModelType('LMS')
-        }
-
-        self.lmsEnabled = lmsEnabled
-      },
-
-      setLmsHost(host?: string) {
-        self.lmsHost = host
-      },
-
-      setLmsTemperature(temperature: number) {
-        self.lmsTemperature = temperature
-      },
-
       getUpdateServiceWorker() {
         return updateServiceWorker
       },
-
-      refreshAllModels() {
-        this.fetchOllamaModels()
-        this.fetchA1111Models()
-        this.fetchLmsModels()
-      },
-
-      fetchOllamaModels: flow(function* fetchOllamaModels() {
-        if(!self.ollamaEnabled) return 
-
-        const host = self.ollamaHost || DefaultHost
-
-        let data: Array<IOllamaModel> = []
-
-        try {
-          const response = yield axios.get(`${host}/api/tags`)
-
-          data = camelcaseKeys(response.data?.models, { deep: true }) as IOllamaModel[]
-
-          self._isServerConnected = true
-        } catch (e) {
-          const status = (e instanceof AxiosError && e.status) || ''
-
-          toastStore.addToast(status + ' Failed to fetch models for host: ' + host, 'error')
-
-          self._isServerConnected = false
-        }
-
-        self.ollamaModels = cast(data)
-
-        self.selectedModelName ||= self.ollamaModels[0]?.name
-      }),
-
-      fetchA1111Models: flow(function* fetchA1111Models() {
-        if (!self.a1111Enabled) return
-
-        const a1111Host = self.a1111Host || DefaultA1111Host
-
-        let data: Array<IA1111Model> = []
-
-        try {
-          const response = yield axios.get(`${a1111Host}/sdapi/v1/sd-models`)
-
-          data = camelcaseKeys(response.data) as IA1111Model[]
-
-          self._isA1111ServerConnected = true
-        } catch (e) {
-          const status = (e instanceof AxiosError && e.status) || ''
-
-          toastStore.addToast(
-            status + ' Failed to fetch models for a1111 host: ' + a1111Host,
-            'error',
-          )
-
-          self._isA1111ServerConnected = false
-        }
-
-        self.a1111Models = cast(data)
-
-        self.selectedModelName ||= self.a1111Models[0]?.title
-      }),
-
-      fetchLmsModels: flow(function* fetchA1111Models() {
-        if (!self.lmsEnabled) return
-
-        const lmsHost = self.lmsHost || DefaultLmsHost
-
-        const client = new LMStudioClient({ baseUrl: lmsHost })
-
-        try {
-          const response: DownloadedModel[] = yield client.system.listDownloadedModels()
-
-          lmsStore.setLmsModels(_.filter(response, { type: 'llm' }))
-
-          self._isLmsServerConnected = true
-        } catch (e) {
-          const status = (e instanceof AxiosError && e.status) || ''
-
-          toastStore.addToast(
-            status + ' Failed to fetch models for lm studio host: ' + lmsHost,
-            'error',
-          )
-
-          self._isLmsServerConnected = false
-        }
-
-        self.selectedModelName ||= self.lmsModels[0]?.path
-      }),
     }
   })
 
@@ -402,6 +93,81 @@ const migrateV1 = (settings: Record<string, unknown>) => {
   delete settings.temperature
 }
 
+const migrateV2 = (settings: Record<string, unknown>) => {
+  console.log('running v2 migration')
+
+  if (settings.lmsEnabled) {
+    const lmsSnapshot = _.cloneDeep(LmsServerConnection.getSnapshot())
+    lmsSnapshot.host = settings.lmsHost as string
+    ;[['temperature', 'lmsTemperature']].forEach(([field, oldField]) => {
+      const parameterIndex = _.findIndex(lmsSnapshot.parameters, { field })
+
+      if (lmsSnapshot.parameters?.[parameterIndex]) {
+        lmsSnapshot.parameters[parameterIndex].value = _.toString(settings[oldField])
+      }
+    })
+
+    connectionModelStore.dataStore.addConnection('LMS', lmsSnapshot)
+  }
+
+  if (settings.a1111Enabled) {
+    const a1111Snapshot = _.cloneDeep(A1111ServerConnection.getSnapshot())
+    a1111Snapshot.host = settings.a1111Host as string
+    ;[
+      ['width', 'a1111Width'],
+      ['height', 'a1111Height'],
+      ['steps', 'a1111Steps'],
+      ['batch_size', 'a1111BatchSize'],
+    ].forEach(([field, oldField]) => {
+      const parameterIndex = _.findIndex(a1111Snapshot.parameters, { field })
+
+      if (a1111Snapshot.parameters?.[parameterIndex]) {
+        a1111Snapshot.parameters[parameterIndex].value = _.toString(settings[oldField])
+      }
+    })
+
+    connectionModelStore.dataStore.addConnection('A1111', a1111Snapshot)
+  }
+
+  // it was enabled if it was true or undefined
+  if (settings.ollamaEnabled !== false) {
+    const ollamaSnapshot = _.cloneDeep(OllamaServerConnection.getSnapshot())
+    ollamaSnapshot.host = settings.ollamaHost as string
+    ;[
+      ['keep_alive', 'ollamaKeepAliveTime'],
+      ['temperature', 'ollamaTemperature'],
+    ].forEach(([field, oldField]) => {
+      const parameterIndex = _.findIndex(ollamaSnapshot.parameters, { field })
+
+      if (ollamaSnapshot.parameters?.[parameterIndex]) {
+        ollamaSnapshot.parameters[parameterIndex].value = _.toString(settings[oldField])
+      }
+    })
+
+    connectionModelStore.dataStore.addConnection('Ollama', ollamaSnapshot)
+  }
+
+  delete settings.ollamaEnabled
+  delete settings.ollamaHost
+  delete settings.ollamaKeepAliveTime
+  delete settings.ollamaTemperature
+  delete settings.ollamaModels
+
+  delete settings.a1111Enabled
+  delete settings.a1111Host
+  delete settings.a1111Models
+  delete settings._isA1111ServerConnected
+  delete settings.a1111Width
+  delete settings.a1111Height
+  delete settings.a1111Steps
+  delete settings.a1111BatchSize
+
+  delete settings.lmsEnabled
+  delete settings.lmsHost
+  delete settings._isLmsServerConnected
+  delete settings.lmsTemperature
+}
+
 const runMigrations = () => {
   const settingsString = localStorage.getItem('settings')
 
@@ -412,6 +178,9 @@ const runMigrations = () => {
   if (_.gt(SETTING_STORE_VERSION, settingStore.version)) return
 
   migrateV1(settings)
+  migrateV2(settings)
+
+  settings.version = SETTING_STORE_VERSION
 
   localStorage.setItem('settings', JSON.stringify(settings))
 }
@@ -430,8 +199,5 @@ persist('settings', settingStore, {
     '_settingsPanelName',
   ],
 }).then(() => {
-  console.log('updated store')
-  settingStore.fetchOllamaModels()
-  settingStore.fetchA1111Models()
-  settingStore.fetchLmsModels()
+  console.log('updated settings store')
 })

@@ -3,13 +3,14 @@ import { types, Instance, cast, destroy, flow } from 'mobx-state-tree'
 import moment from 'moment'
 
 import { IMessageModel, MessageModel } from '~/models/MessageModel'
-import { settingStore } from '~/models/SettingStore'
 import { toastStore } from '~/models/ToastStore'
 import { incomingMessageStore } from '~/models/IncomingMessageStore'
 
 import base64EncodeImage from '~/utils/base64EncodeImage'
-import { OllamaApi } from '~/utils/OllamaApi'
 import CachedStorage from '~/utils/CachedStorage'
+
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import BaseApi from '~/features/connections/api/BaseApi'
 
 export const ChatModel = types
   .model({
@@ -91,7 +92,7 @@ export const ChatModel = types
     },
 
     async beforeDestroy() {
-      OllamaApi.cancelStream()
+      BaseApi.cancelGeneration()
     },
 
     setMessageToEdit(message?: IMessageModel, messageVariant?: IMessageModel) {
@@ -230,8 +231,8 @@ export const ChatModel = types
 
       const incomingMessage = MessageModel.create({
         fromBot: true,
-        botName: settingStore.selectedModelLabel,
-        modelType: settingStore.selectedModelType,
+        botName: connectionModelStore.selectedModelName,
+        modelType: connectionModelStore.selectedConnection?.type,
         uniqId,
         content: '',
       })

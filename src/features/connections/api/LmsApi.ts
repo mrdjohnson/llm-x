@@ -2,10 +2,11 @@ import { LMStudioClient, type LLMChatHistoryMessage, LLMDynamicHandle } from '@l
 import _ from 'lodash'
 
 import { IMessageModel } from '~/models/MessageModel'
-import { DefaultLmsHost, settingStore } from '~/models/SettingStore'
-
 import { personaStore } from '~/models/PersonaStore'
 import { progressStore } from '~/features/progress/ProgressStore'
+
+import BaseApi from '~/features/connections/api/BaseApi'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMessageModel) => {
   const messages: LLMChatHistoryMessage[] = []
@@ -40,33 +41,33 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
   return messages
 }
 
-export class LmsApi {
-  private static abortControllerById: Record<string, () => Promise<void>> = {}
-
-  static async *streamChat(
+export class LmsApi extends BaseApi {
+  async *generateChat(
     chatMessages: IMessageModel[],
     incomingMessage: IMessageModel,
     incomingMessageVariant: IMessageModel,
   ) {
-    const modelName = settingStore.selectedLmsModel?.path
-    if (!modelName) return
+    const connection = connectionModelStore.selectedConnection
+    const host = connection?.host || connection?.DefaultHost
+
+    const modelName = connectionModelStore.selectedModelName
+    if (!connection || !host || !modelName) return
 
     const messages = await getMessages(chatMessages, incomingMessage)
 
     const abortController = new AbortController()
 
-    LmsApi.abortControllerById[incomingMessageVariant.uniqId] = async () => abortController.abort()
-    const model = await LmsApi.getOrLoadModel(modelName, abortController)
+    BaseApi.abortControllerById[incomingMessageVariant.uniqId] = async () => abortController.abort()
+    const model = await this.getOrLoadModel(host, modelName, abortController)
 
     if (!model) {
       throw new Error('unable to find requested model: ' + modelName)
     }
 
-    const prediction = model.respond(messages, {
-      temperature: settingStore.lmsTemperature,
-    })
+    const prediction = model.respond(messages, connection.parsedParameters)
+    incomingMessageVariant.setExtraDetails({ sentWith: connection.parsedParameters })
 
-    LmsApi.abortControllerById[incomingMessageVariant.uniqId] = () => prediction.cancel()
+    BaseApi.abortControllerById[incomingMessageVariant.uniqId] = () => prediction.cancel()
 
     for await (const text of prediction) {
       yield text
@@ -77,13 +78,16 @@ export class LmsApi {
       throw new Error('Stream ended manually')
     }
 
-    incomingMessageVariant.setExtraDetails(stats)
+    incomingMessageVariant.setExtraDetails({
+      sentWith: connection.parsedParameters,
+      returnedWith: stats,
+    })
 
-    delete LmsApi.abortControllerById[incomingMessage.uniqId]
+    delete BaseApi.abortControllerById[incomingMessage.uniqId]
   }
 
-  static async getOrLoadModel(modelPath: string, abortController: AbortController) {
-    const lmsHost = settingStore.lmsHost || DefaultLmsHost
+  async getOrLoadModel(host: string, modelPath: string, abortController: AbortController) {
+    const lmsHost = host
     const client = new LMStudioClient({ baseUrl: lmsHost })
 
     let model: LLMDynamicHandle | undefined = undefined
@@ -120,19 +124,11 @@ export class LmsApi {
     return model
   }
 
-  static cancelStream(id?: string) {
-    if (id) {
-      if (!LmsApi.abortControllerById[id]) return
-
-      LmsApi.abortControllerById[id]?.().then(() => {
-        delete LmsApi.abortControllerById[id]
-      })
-    } else {
-      for (const id in LmsApi.abortControllerById) {
-        LmsApi.abortControllerById[id]?.()
-      }
-
-      LmsApi.abortControllerById = {}
-    }
+  generateImages(): Promise<string[]> {
+    throw 'unsupported'
   }
 }
+
+const lmsApi = new LmsApi()
+
+export default lmsApi

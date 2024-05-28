@@ -2,14 +2,14 @@ import { observer } from 'mobx-react-lite'
 import { Breadcrumbs, BreadcrumbItem } from '@nextui-org/react'
 import _ from 'lodash'
 
-type BreadcrumbType = {
+export type BreadcrumbType = {
   isSelected: boolean
   label: string
   onClick: () => void
 }
 
 const BreadcrumbBar = observer(
-  ({ breadcrumbs }: { breadcrumbs: Array<BreadcrumbType | undefined> }) => {
+  ({ breadcrumbs }: { breadcrumbs: Array<BreadcrumbType | undefined | false> }) => {
     return (
       <Breadcrumbs className="mb-2">
         {_.compact(breadcrumbs).map(breadcrumb => (

@@ -15,9 +15,9 @@ import { TransferHandler } from '~/utils/transfer/TransferHandler'
 
 import Paperclip from '~/icons/Paperclip'
 import ChevronDown from '~/icons/ChevronDown'
-import Edit from '~/icons/Edit'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 const ChatBoxInputRow = observer(
   ({
@@ -81,7 +81,7 @@ const ChatBoxInputRow = observer(
       }
     }
 
-    const noModelSelected = !settingStore.selectedModelLabel
+    const noModelSelected = !connectionModelStore.selectedModelName
     const inputDisabled =
       incomingMessageStore.isGettingData || noModelSelected || !!lightboxStore.lightboxMessage
 
@@ -106,7 +106,9 @@ const ChatBoxInputRow = observer(
           (noModelSelected && 'tooltip cursor-not-allowed')
         }
         data-tip={
-          settingStore.isAnyServerConnected ? 'No Models Selected' : 'Server is not connected'
+          connectionModelStore.isAnyServerConnected
+            ? 'No Models Selected'
+            : 'Server is not connected'
         }
       >
         <div
@@ -169,7 +171,8 @@ const ChatBoxInputRow = observer(
           />
         </div>
 
-        {settingStore.isImageGenerationMode && (
+        {/* TODO, this will be moot in the coming updates */}
+        {/* {connectionModelStore.isImageGenerationMode && (
           <div className=" px-2 pb-2">
             <div className="divider my-0" />
 
@@ -190,7 +193,7 @@ const ChatBoxInputRow = observer(
               </span>
             </div>
           </div>
-        )}
+        )} */}
 
         <form
           className={' h-full min-h-fit w-full ' + (inputDisabled ? 'bg-base-200' : '')}
@@ -201,7 +204,7 @@ const ChatBoxInputRow = observer(
               tabIndex={0}
               type="button"
               className="btn btn-active rounded-none rounded-bl-md"
-              disabled={inputDisabled || settingStore.isImageGenerationMode}
+              disabled={inputDisabled || connectionModelStore.isImageGenerationMode}
               onClick={() => settingStore.openSettingsModal('personas')}
             >
               {personaStore.selectedPersona?.name || 'No personas selected'}
