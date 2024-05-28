@@ -21,6 +21,7 @@ import { chatStore } from '~/models/ChatStore'
 import type { IMessageModel } from '~/models/MessageModel'
 
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -34,8 +35,8 @@ const isSelected = ({ parent, id }: ActionImpl) => {
   }
 
   if (parent === 'model') {
-    console.log('model: ', id, settingStore.selectedModelName)
-    return id === settingStore.selectedModelName
+    console.log('model: ', id, connectionModelStore.selectedModelName)
+    return id === connectionModelStore.selectedModelName
   }
 
   if (parent === 'chat') {
@@ -144,89 +145,47 @@ const useRegisterModelActions = () => {
     autorun(() => {
       const nextModelActions: Action[] = []
 
-      if (_.isEmpty(settingStore.ollamaModels)) {
-        nextModelActions.push({
-          id: 'model',
-          name: 'No Ollama Models to select: Refresh',
-          keywords: 'model modal ollama open select refresh',
-          section: 'Actions',
-          priority: Priority.LOW,
-          perform: settingStore.fetchOllamaModels,
-        })
-      }
-
-      if (_.isEmpty(settingStore.a1111Models)) {
-        nextModelActions.push({
-          id: 'model',
-          name: 'No A1111 Models to select: Refresh',
-          keywords: 'model modal a1111 automatic 1111 open select refresh',
-          section: 'Actions',
-          priority: Priority.LOW,
-          perform: settingStore.fetchA1111Models,
-        })
-      }
-
-      if (_.isEmpty(settingStore.lmsEnabled)) {
-        nextModelActions.push({
-          id: 'model',
-          name: 'No LM Studio Models to select: Refresh',
-          keywords: 'model modal open lmstudio lm studio select refresh',
-          section: 'Actions',
-          priority: Priority.LOW,
-          perform: settingStore.fetchLmsModels,
-        })
-      }
-
-      if (!settingStore.allModelsEmpty) {
-        nextModelActions.push({
-          id: 'model',
-          name: 'Select Model',
-          keywords: 'model modal open select',
-          section: 'Preferences',
-          priority: Priority.HIGH,
-        })
-
-        nextModelActions.push({
-          id: 'model_modal',
-          name: 'Open Model Selector',
-          keywords: 'model modal open select',
-          section: 'Actions',
-          priority: Priority.LOW,
-          perform: () => settingStore.openSettingsModal('models'),
-        })
-      }
-
-      settingStore.ollamaModels.forEach(model => {
-        nextModelActions.push({
-          id: model.name,
-          name: model.name,
-          keywords: `${model.name} model ${model.details.parameterSize}`,
-          section: 'Ollama Models',
-          perform: () => settingStore.selectModel(model.name),
-          parent: 'model',
-        })
+      nextModelActions.push({
+        id: 'model',
+        name: 'Select Model',
+        keywords: 'model modal open select',
+        section: 'Preferences',
+        priority: Priority.HIGH,
       })
 
-      settingStore.a1111Models.forEach(model => {
-        nextModelActions.push({
-          id: model.modelName,
-          name: model.modelName,
-          keywords: `${model.modelName} model`,
-          section: 'A1111 Models',
-          perform: () => settingStore.selectModel(model.modelName, 'A1111'),
-          parent: 'model',
-        })
-      })
+      for (const connection of connectionModelStore.connections) {
+        if (!connection.enabled) continue
 
-      settingStore.lmsModels.forEach(model => {
+        const typeAndLabel = `${connection.type} ${connection.label}`
+
         nextModelActions.push({
-          id: model.path,
-          name: model.name,
-          keywords: `${model.path} model`,
-          section: 'LM Studio Models',
-          perform: () => settingStore.selectModel(model.path, 'LMS'),
-          parent: 'model',
+          id: 'refresh' + connection.id,
+          name: `Refresh models for ${connection.label}: (${connection.models.length} found)`,
+          keywords: `model refresh ` + typeAndLabel,
+          section: 'Actions',
+          priority: Priority.LOW,
+          perform: () => connection.fetchLmModels(),
         })
+
+        connection.models.forEach(model => {
+          nextModelActions.push({
+            id: connection.id + model.modelName,
+            name: 'Select: ' + model.modelName,
+            keywords: `${model.modelName} model ` + typeAndLabel,
+            section: connection.label + ' Models',
+            perform: () =>
+              connectionModelStore.dataStore.setSelectedModel(model, connection.id),
+          })
+        })
+      }
+
+      nextModelActions.push({
+        id: 'model_modal',
+        name: 'Open Model Selector',
+        keywords: 'model modal open select',
+        section: 'Actions',
+        priority: Priority.LOW,
+        perform: () => settingStore.openSettingsModal('models'),
       })
 
       setModelActions(nextModelActions)
@@ -436,7 +395,7 @@ const OmniBar = () => {
       keywords: 'refresh',
       section: 'Actions',
       priority: Priority.LOW,
-      perform: settingStore.refreshAllModels,
+      perform: connectionModelStore.refreshModels,
     }),
     createAction({
       name: 'Open settings',

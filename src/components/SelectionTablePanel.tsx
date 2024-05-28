@@ -4,9 +4,9 @@ import _ from 'lodash'
 
 import ChevronDown from '~/icons/ChevronDown'
 
-export type SortType<T> = {
+export type SortType<SelectorType> = {
   label: ReactNode
-  value?: keyof T
+  value?: keyof SelectorType
   invertOrder?: boolean
   tooltip?: string
 }
@@ -18,23 +18,23 @@ const EmptySortType = {
   tooltip: undefined,
 }
 
-type SelectionPanelTableProps<T> = PropsWithChildren<{
-  items: T[]
+export type SelectionPanelTableProps<SelectorType> = PropsWithChildren<{
+  items: SelectorType[]
   className?: string
-  sortTypes: Array<SortType<T>>
-  onItemSelected: (item: T) => void
-  renderRow: (item: T, index: number) => ReactNode
-  getIsItemSelected: (item: T) => boolean
-  getItemKey: (item: T, index: number) => string | number
+  sortTypes: SortType<SelectorType>[]
+  onItemSelected: (item: SelectorType) => void
+  renderRow: (item: SelectorType, index: number) => ReactNode
+  getIsItemSelected: (item: SelectorType) => boolean
+  getItemKey: (item: SelectorType, index: number) => string | number
   filterInputPlaceholder?: string
   onFilterChanged?: (text: string) => void
-  itemFilter?: (item: T, filter: string) => boolean
-  primarySortTypeLabel?: string
+  itemFilter?: (item: SelectorType, filter: string) => boolean
+  primarySortTypeLabel?: keyof SelectorType
   includeEmptyHeader?: boolean
 }>
 
 const SelectionPanelTable = observer(
-  <T,>({
+  <SelectorType,>({
     items,
     className = '',
     sortTypes,
@@ -48,16 +48,16 @@ const SelectionPanelTable = observer(
     getItemKey,
     filterInputPlaceholder,
     children,
-  }: SelectionPanelTableProps<T>) => {
+  }: SelectionPanelTableProps<SelectorType>) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const [activeSortType, setActiveSortType] = useState<SortType<T> | typeof EmptySortType>(
+    const [activeSortType, setActiveSortType] = useState<SortType<SelectorType> | typeof EmptySortType>(
       EmptySortType,
     )
     const [ascendingSort, setAscendingSort] = useState(true)
     const [filterText, setFilterText] = useState('')
 
-    const sortedItems: T[] = useMemo(() => {
+    const sortedItems: SelectorType[] = useMemo(() => {
       if (!activeSortType.value) return items
 
       let direction: 'asc' | 'desc'
@@ -77,7 +77,7 @@ const SelectionPanelTable = observer(
       return sortedItems.filter(item => itemFilter(item, filterText))
     }, [filterText, sortedItems])
 
-    const handleSortTypeChanged = (nextSortType: SortType<T>) => {
+    const handleSortTypeChanged = (nextSortType: SortType<SelectorType>) => {
       if (nextSortType.value === undefined) return
 
       if (activeSortType !== nextSortType) {
@@ -91,7 +91,7 @@ const SelectionPanelTable = observer(
       }
     }
 
-    const makeChevron = (sortType: SortType<T>) => {
+    const makeChevron = (sortType: SortType<SelectorType>) => {
       return (
         <span
           className={
@@ -167,7 +167,7 @@ const SelectionPanelTable = observer(
               {filteredItems?.map((item, index) => (
                 <tr
                   className={
-                    'cursor-pointer ' +
+                    '-flex cursor-pointer ' +
                     (getIsItemSelected(item)
                       ? ' !bg-primary text-primary-content'
                       : ' hover:!bg-primary/30')

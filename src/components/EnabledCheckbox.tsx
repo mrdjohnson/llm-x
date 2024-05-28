@@ -1,45 +1,51 @@
-import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
+import { Control, Controller } from 'react-hook-form'
+import { SnapshotIn } from 'mobx-state-tree'
+
+import { IConnectionDataModel } from '~/models/types'
+import { ServerConnectionTypes } from '~/features/connections/servers'
 
 type EnabledCheckboxProps = {
-  label: string
-  isEnabled?: boolean
-  onChange: (isEnabled: boolean) => void
-  fetchModels: () => void
+  connection: ServerConnectionTypes
+  control: Control<SnapshotIn<IConnectionDataModel>>
 }
 
-const EnabledCheckbox = observer(
-  ({ label, isEnabled = false, onChange, fetchModels }: EnabledCheckboxProps) => {
-    useEffect(() => {
-      if (isEnabled) {
-        fetchModels()
-      }
-    }, [isEnabled])
+const EnabledCheckbox = observer(({ control, connection }: EnabledCheckboxProps) => {
+  const { enabled } = connection
 
-    return (
-      <label className="label w-fit cursor-pointer gap-2">
-        <span className="label-text">{label}</span>
+  return (
+    <Controller
+      render={({ field: { value, onChange } }) => {
+        return (
+          <label className="label w-fit gap-2">
+            <span className="label-text">{connection.enabledLabel}</span>
 
-        <div className="join">
-          {[true, false].map(isEnabledOption => (
-            <button
-              className={
-                'btn join-item btn-sm mr-0 ' +
-                (isEnabled === isEnabledOption ? 'btn-active cursor-default ' : 'btn ')
-              }
-              onClick={() => onChange(isEnabledOption)}
-              key={isEnabledOption ? 0 : 1}
-            >
-              <span>
-                {isEnabledOption ? 'Enable' : 'Disable'}
-                {isEnabled === isEnabledOption ? 'd' : '?'}
-              </span>
-            </button>
-          ))}
-        </div>
-      </label>
-    )
-  },
-)
+            <div className="join">
+              {[true, false].map((isEnabledOption, index) => (
+                <button
+                  type="button"
+                  className={
+                    'btn join-item btn-sm mr-0 ' +
+                    (value === isEnabledOption ? 'btn-active cursor-default' : 'btn')
+                  }
+                  onClick={() => onChange(isEnabledOption)}
+                  key={index}
+                >
+                  <span>
+                    {isEnabledOption ? 'Enable' : 'Disable'}
+                    {value === isEnabledOption ? 'd' : '?'}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </label>
+        )
+      }}
+      control={control}
+      name="enabled"
+      defaultValue={enabled}
+    />
+  )
+})
 
 export default EnabledCheckbox

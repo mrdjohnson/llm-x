@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
@@ -9,6 +9,7 @@ import { personaStore } from '~/models/PersonaStore'
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import FunTitle from '~/components/FunTitle'
 import ToolTip from '~/components/Tooltip'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
 
@@ -29,6 +30,23 @@ const Step = ({
 }
 
 const ChatBoxPrompt = observer(() => {
+  const activeConnectionTypes = useMemo(() => {
+    const connectionsTypes = _.chain(connectionModelStore.connections)
+      .filter('isConnected')
+      .map('type')
+      .value()
+
+    return new Set(connectionsTypes)
+  }, [connectionModelStore.connections])
+
+  const anyConnectionHasModels = useMemo(() => {
+    for (const connection of connectionModelStore.connections) {
+      if (!_.isEmpty(connection.models)) {
+        return true
+      }
+    }
+    return false
+  }, [connectionModelStore.connections])
   return (
     <div className="hero my-auto">
       <div className="hero-content w-fit text-center">
@@ -41,7 +59,11 @@ const ChatBoxPrompt = observer(() => {
 
           <div className="text-2xl">
             <ul className="steps steps-vertical list-inside list-disc py-6 text-left *:text-lg [&_a]:text-lg [&_span]:text-lg">
-              <Step isCompleted={settingStore.isServerConnected || settingStore.isLmsServerConnected}>
+              <Step
+                isCompleted={
+                  activeConnectionTypes.has('LMS') || activeConnectionTypes.has('Ollama')
+                }
+              >
                 {'Tell LM Studio or Ollama that '}
                 <span className="text-primary">we're cool:</span>
                 <button
@@ -52,7 +74,7 @@ const ChatBoxPrompt = observer(() => {
                 </button>
               </Step>
 
-              <Step type="primary" isCompleted={settingStore.isA1111ServerConnected}>
+              <Step type="primary" isCompleted={activeConnectionTypes.has('A1111')}>
                 {'Befriend AUTOMATIC1111 for '}
                 <span className="font-semibold text-primary">image generation:</span>
                 <button
@@ -63,7 +85,7 @@ const ChatBoxPrompt = observer(() => {
                 </button>
               </Step>
 
-              <Step isCompleted={!_.isEmpty([...settingStore.ollamaModels, ...settingStore.lmsModels])}>
+              <Step isCompleted={anyConnectionHasModels}>
                 {'Download a model from LM Studio home page or '}
                 <a
                   href="https://ollama.com/library"

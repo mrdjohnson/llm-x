@@ -11,10 +11,11 @@ import { StringOutputParser } from '@langchain/core/output_parsers'
 import _ from 'lodash'
 
 import { IMessageModel } from '~/models/MessageModel'
-import { DefaultHost, settingStore } from '~/models/SettingStore'
 import { personaStore } from '~/models/PersonaStore'
 
 import CachedStorage from '~/utils/CachedStorage'
+import BaseApi from '~/features/connections/api/BaseApi'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 const createHumanMessage = async (message: IMessageModel): Promise<HumanMessage> => {
   if (!_.isEmpty(message.imageUrls)) {
@@ -69,30 +70,31 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
   return messages
 }
 
-export class OllamaApi {
-  private static abortControllerById: Record<string, AbortController> = {}
-
-  static async *streamChat(
+export class OllamaApi extends BaseApi {
+  async *generateChat(
     chatMessages: IMessageModel[],
     incomingMessage: IMessageModel,
     incomingMessageVariant: IMessageModel,
-  ) {
-    const model = settingStore.selectedOllamaModel?.name
-    if (!model) return
+  ): AsyncGenerator<string> {
+    const connection = connectionModelStore.selectedConnection
+    const host = connection?.host || connection?.DefaultHost
 
-    const host = settingStore.ollamaHost || DefaultHost
+    const model = connectionModelStore.selectedModelName
+    if (!connection || !host || !model) return
 
     const abortController = new AbortController()
 
-    OllamaApi.abortControllerById[incomingMessageVariant.uniqId] = abortController
+    BaseApi.abortControllerById[incomingMessageVariant.uniqId] = async () => abortController.abort()
 
     const messages = await getMessages(chatMessages, incomingMessage)
+    const parameters = connection.parsedParameters
+    incomingMessageVariant.setExtraDetails({ sentWith: parameters })
 
     const chatOllama = new ChatOllama({
       baseUrl: host,
       model,
-      keepAlive: settingStore.ollamaKeepAliveTime + 'm',
-      temperature: settingStore.ollamaTemperature,
+      ...parameters,
+      
       callbacks: [
         {
           handleLLMEnd(output) {
@@ -100,7 +102,10 @@ export class OllamaApi {
               _.get(output, 'generations[0][0].generationInfo') || {}
 
             if (!_.isEmpty(generationInfo)) {
-              incomingMessageVariant.setExtraDetails(generationInfo)
+              incomingMessageVariant.setExtraDetails({
+                sentWith: parameters,
+                returnedWith: generationInfo,
+              })
             }
           },
         },
@@ -117,22 +122,14 @@ export class OllamaApi {
       yield chunk
     }
 
-    delete OllamaApi.abortControllerById[incomingMessage.uniqId]
+    delete BaseApi.abortControllerById[incomingMessage.uniqId]
   }
 
-  static cancelStream(id?: string) {
-    if (id) {
-      if (!OllamaApi.abortControllerById[id]) return
-
-      OllamaApi.abortControllerById[id].abort('Stream ended manually')
-
-      delete OllamaApi.abortControllerById[id]
-    } else {
-      for (const id in OllamaApi.abortControllerById) {
-        OllamaApi.abortControllerById[id].abort('Stream ended manually')
-      }
-
-      OllamaApi.abortControllerById = {}
-    }
+  generateImages(): Promise<string[]> {
+    throw 'unsupported'
   }
 }
+
+const ollamaApi = new OllamaApi()
+
+export default ollamaApi

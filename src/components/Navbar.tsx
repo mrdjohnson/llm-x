@@ -6,6 +6,7 @@ import ModelRefreshButton from '~/components/ModelRefreshButton'
 import FunTitle from '~/components/FunTitle'
 
 import { settingStore } from '~/models/SettingStore'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 import Warning from '~/icons/Warning'
 import Bars3 from '~/icons/Bars3'
@@ -16,7 +17,7 @@ import AppSettings from '~/icons/AppSettings'
 const Navbar = observer(() => {
   const { query } = useKBar()
 
-  const noServer = !settingStore.isAnyServerConnected
+  const noServer = !connectionModelStore.isAnyServerConnected
 
   const handlePwaUpdate = () => {
     settingStore.getUpdateServiceWorker()?.()

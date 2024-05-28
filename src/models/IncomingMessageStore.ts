@@ -2,13 +2,11 @@ import _ from 'lodash'
 import { types } from 'mobx-state-tree'
 
 import { IMessageModel, MessageModel } from '~/models/MessageModel'
-import { settingStore } from '~/models/SettingStore'
 import { toastStore } from '~/models/ToastStore'
 import { IChatModel } from '~/models/ChatModel'
 
-import { OllamaApi } from '~/utils/OllamaApi'
-import { A1111Api } from '~/utils/A1111Api'
-import { LmsApi } from '~/utils/LmsApi'
+import BaseApi from '~/features/connections/api/BaseApi'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 const IncomingMessageAbortedModel = types.model({
   id: types.identifier,
@@ -31,8 +29,7 @@ export const IncomingMessageStore = types
   }))
   .actions(self => ({
     async beforeDestroy() {
-      OllamaApi.cancelStream()
-      LmsApi.cancelStream()
+      BaseApi.cancelGeneration()
     },
 
     deleteMessage(message: IMessageModel) {
@@ -52,14 +49,7 @@ export const IncomingMessageStore = types
 
         self.messageAbortedById.put({ id, abortedManually: true })
 
-        // error prone by quick switching during generation
-        if (settingStore.modelType === 'A1111') {
-          A1111Api.cancelStream(id)
-        } else if (settingStore.modelType === 'LMS') {
-          LmsApi.cancelStream(id)
-        } else {
-          OllamaApi.cancelStream(id)
-        }
+        BaseApi.cancelGeneration(id)
 
         return
       }
@@ -68,17 +58,10 @@ export const IncomingMessageStore = types
         self.messageAbortedById.put({ id: message, abortedManually: true })
       }
 
-      // error prone by quick switching during generation
-      if (settingStore.modelType === 'A1111') {
-        A1111Api.cancelStream()
-      } else if (settingStore.modelType === 'LMS') {
-        LmsApi.cancelStream()
-      } else {
-        OllamaApi.cancelStream()
-      }
+      BaseApi.cancelGeneration()
     },
 
-    async generateImage(chat: IChatModel, incomingMessage: IMessageModel) {
+    async generateImage(chat: IChatModel, incomingMessage: IMessageModel, api: BaseApi) {
       const incomingIndex = _.findIndex(chat.messages, { uniqId: incomingMessage.uniqId })
       const prompt = _.findLast(chat.messages, { fromBot: false }, incomingIndex)?.content
 
@@ -96,12 +79,12 @@ export const IncomingMessageStore = types
 
       const messageToEdit = incomingMessage.selectedVariation
 
-      messageToEdit.setModelName(settingStore.selectedModelLabel)
+      messageToEdit.setModelName(connectionModelStore.selectedModelName!)
 
       console.log(prompt)
 
       await this.handleIncomingMessage(incomingMessage, async () => {
-        const images = await A1111Api.generateImage(prompt, messageToEdit)
+        const images = await api.generateImages(prompt, messageToEdit)
 
         await messageToEdit.addImages(
           chat.id,
@@ -125,22 +108,20 @@ export const IncomingMessageStore = types
 
       self.messageById.put(messageToEdit)
 
-      if (settingStore.modelType === 'A1111') {
-        return this.generateImage(chat, incomingMessage)
+      const connection = connectionModelStore.selectedConnection
+
+      if(!connection) throw 'Unknown server'
+
+      if (connectionModelStore.isImageGenerationMode) {
+        return this.generateImage(chat, incomingMessage, connection.api)
       }
 
-      let streamChat: typeof OllamaApi.streamChat
+      const api: BaseApi | undefined = connection.api
 
-      if (settingStore.modelType === 'LMS') {
-        streamChat = LmsApi.streamChat
-      } else {
-        streamChat = OllamaApi.streamChat
-      }
-
-      messageToEdit.setModelName(settingStore.selectedModelLabel)
+      messageToEdit.setModelName(connectionModelStore.selectedModelName!)
 
       await this.handleIncomingMessage(incomingMessage, async () => {
-        for await (const contentChunk of streamChat(
+        for await (const contentChunk of api.generateChat(
           chat.messages,
           incomingMessage,
           messageToEdit,
@@ -166,7 +147,7 @@ export const IncomingMessageStore = types
           messageToEdit.setError(error)
 
           // make sure the server is still connected
-          settingStore.fetchOllamaModels()
+          connectionModelStore.selectedConnection?.fetchLmModels()
         }
       } finally {
         if (shouldDeleteMessage) {

@@ -1,15 +1,13 @@
 import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
+import _ from 'lodash'
 
 import ChevronDown from '~/icons/ChevronDown'
 import { settingStore } from '~/models/SettingStore'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 const ModelSelector = observer(() => {
-  const {
-    selectedModelLabel,
-    isAnyServerConnected,
-    modelType,
-  } = settingStore
+  const { selectedModelLabel, isAnyServerConnected, selectedConnection } = connectionModelStore
   const noServer = !isAnyServerConnected
 
   const label = useMemo(() => {
@@ -17,18 +15,24 @@ const ModelSelector = observer(() => {
       return 'No Servers connected'
     }
 
-    if(selectedModelLabel) return selectedModelLabel
+    if (selectedModelLabel) return selectedModelLabel
 
-    if (modelType === 'A1111' ) {
-      return 'No A1111 models available'
+    if (!selectedConnection) return 'Add a connection here'
+
+    if (_.isEmpty(selectedConnection.models)) {
+      return `No ${selectedConnection.label} models available`
     }
 
-    if (modelType === 'LMS') {
-      return 'No Lm studio models available'
-    }
+    return `No ${selectedConnection.label} models selected`
+  }, [noServer, selectedConnection?.models, selectedModelLabel])
 
-    return 'No Ollama models available'
-  }, [noServer, modelType, selectedModelLabel])
+  const handleClick = () => {
+    if (!selectedConnection) {
+      settingStore.openSettingsModal('general')
+    } else {
+      settingStore.openSettingsModal('models')
+    }
+  }
 
   return (
     <button
@@ -36,7 +40,7 @@ const ModelSelector = observer(() => {
       role="button"
       className="btn btn-active flex-1"
       disabled={noServer}
-      onClick={() => settingStore.openSettingsModal('models')}
+      onClick={handleClick}
     >
       {label}
       <ChevronDown />

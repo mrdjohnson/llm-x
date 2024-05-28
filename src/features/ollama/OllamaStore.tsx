@@ -2,20 +2,20 @@ import { ModelDetails, Ollama, ShowResponse } from 'ollama/browser'
 import { makeAutoObservable } from 'mobx'
 
 import { toastStore } from '~/models/ToastStore'
-import { settingStore } from '~/models/SettingStore'
 import { progressStore } from '~/features/progress/ProgressStore'
+import OllamaServerConnection from '~/features/connections/servers/OllamaServerConnection'
 
 export type CorrectShowResponse = Pick<ShowResponse, 'license' | 'modelfile' | 'template'> & {
   details: ModelDetails
 }
 
 class OllamaStore {
-  constructor() {
+  constructor(private connection: OllamaServerConnection) {
     makeAutoObservable(this)
   }
 
   get ollama() {
-    return new Ollama({ host: settingStore.ollamaHost })
+    return new Ollama({ host: this.connection.host || this.connection.DefaultHost })
   }
 
   show(modelName: string) {
@@ -25,7 +25,7 @@ class OllamaStore {
 
   delete(modelName: string) {
     return this.ollama.delete({ model: modelName }).then(() => {
-      return settingStore.fetchOllamaModels()
+      return this.connection.fetchLmModels()
     })
   }
 
@@ -64,7 +64,7 @@ class OllamaStore {
       finishedMessage += ' See more info in the console logs.'
     }
 
-    settingStore.fetchOllamaModels().then(() => {
+    this.connection.fetchLmModels().then(() => {
       toastStore.addToast(finishedMessage, 'info')
     })
   }
@@ -119,7 +119,7 @@ class OllamaStore {
       if (!isUpdate) {
         progressStore.delete(progress, { shouldDelay: true })
 
-        settingStore.fetchOllamaModels()
+        this.connection.fetchLmModels()
       }
     }
 
@@ -127,4 +127,4 @@ class OllamaStore {
   }
 }
 
-export const ollamaStore = new OllamaStore()
+export default OllamaStore

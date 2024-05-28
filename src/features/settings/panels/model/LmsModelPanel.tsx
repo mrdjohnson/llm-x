@@ -1,19 +1,30 @@
 import { observer } from 'mobx-react-lite'
 
-import { LanguageModelType } from '~/models/LanguageModel'
-import A1111ServerConnection from '~/features/connections/servers/A1111ServerConnection'
+import LmsServerConnection from '~/features/connections/servers/LmsServerConnection'
 import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
-import { IA1111Model } from '~/models/types'
+import { LmsLanguageModel } from '~/models/types'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnectedPanelSection'
 
-const A1111ModelPanel = observer(({ connection }: { connection: A1111ServerConnection }) => {
-  const renderRow = (model: LanguageModelType<IA1111Model>) => (
+const LmsModelPanel = observer(({ connection }: { connection: LmsServerConnection }) => {
+  const renderRow = (model: LmsLanguageModel) => (
     <>
-      <td>{model.modelName}</td>
-      <td>{model.title}</td>
+      <td>
+        <button
+          className="block max-w-80 overflow-hidden font-semibold xl:max-w-full"
+          title={model.path}
+        >
+          {model.name}
+        </button>
+      </td>
+
+      <td>{model.gbSize}</td>
+
+      <td>{model.architecture}</td>
+
+      <td>{model.folder}</td>
     </>
   )
 
@@ -43,4 +54,4 @@ const A1111ModelPanel = observer(({ connection }: { connection: A1111ServerConne
   )
 })
 
-export default A1111ModelPanel
+export default LmsModelPanel
