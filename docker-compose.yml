@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - react-app

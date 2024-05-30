@@ -1,23 +1,40 @@
-# Use the official Node.js image as the base image
-FROM node:21-bullseye
+# Stage 1: Build the React application
+FROM node:21-bullseye AS build
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
 # Copy the entire project
 COPY . .
 
-# Set the yarn version to be that defined as packageManager
+# Set Yarn version and install dependencies
 RUN yarn set version 4.1.1
-
-# Install the dependencies
 RUN yarn install --immutable
 
-# Build the Vite app with the base path
-RUN yarn run build 
+# Build the Vite app
+RUN yarn run build
 
-# Expose the port on which the app will run 
-EXPOSE 5173
+# Stage 2: Serve the React app with Nginx
+FROM nginx:latest
 
-# Start the app with dist directory
-CMD ["yarn", "preview", "--host", "--port", "5173"]
+# Copy the build output to Nginx's html directory
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy SSL certificates
+COPY certs/cert.pem /etc/nginx/certs/cert.pem
+COPY certs/key.pem /etc/nginx/certs/key.pem
+
+# Remove the default Nginx configuration file
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy custom Nginx configuration
+# COPY nginx.conf /etc/nginx/conf.d
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose port 5173
+# EXPOSE 5173
+EXPOSE 80 443
+
+# Start Nginx server
+CMD ["nginx", "-g", "daemon off;"]
