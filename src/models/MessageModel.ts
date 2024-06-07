@@ -27,7 +27,9 @@ const MessageExtrasModel = types
       if (self.detailString) {
         const details = JSON.parse(self.detailString)
 
-        return _.mapValues(details, (value, key) => {
+        return _.cloneDeepWith(details, (value, key) => {
+          if (_.isNumber(key) || _.isNil(key)) return value
+
           if (key.includes('duration') && _.isNumber(value)) {
             const milliseconds = Math.round(value / 10000) / 100
 
@@ -113,13 +115,8 @@ export const MessageModel = types
     },
 
     setExtraDetails(details: object) {
-      // remove any empty values, stringify any non number/strings
-      const formattedDetails: object = _.chain(details)
-        .omitBy(_.isNil)
-        .mapValues(value =>
-          _.isNumber(value) || _.isString(value) ? value : JSON.stringify(value),
-        )
-        .value()
+      // remove any empty values
+      const formattedDetails: object = _.omitBy(details, _.isNil)
 
       if (!self.extras) {
         self.extras = MessageExtrasModel.create()

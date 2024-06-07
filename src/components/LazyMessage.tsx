@@ -23,6 +23,7 @@ import CopyButton from '~/components/CopyButton'
 import CachedImage from '~/components/CachedImage'
 import ToolTip from '~/components/Tooltip'
 import MessageVariationSelectionRow from '~/components/message/MessageVariationSelectionRow'
+import { Badge, ScrollShadow } from '@nextui-org/react'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
 
@@ -35,14 +36,25 @@ const DelayedCustomCodeBlock = (props: PropsWithChildren) => {
 }
 
 const DetailsToolTip = observer(({ message }: { message: IMessageModel }) => {
+  const details = JSON.stringify(message.extras!.details, null, 2)
+
   return (
-    <div className="flex max-w-[50ch] flex-col gap-1 ">
-      {_.entries(message.extras!.details).map(([key, value]) => (
-        <p key={key} className="text-sm">
-          <span className="text-sm text-base-content">{key}:</span>
-          <span className="ml-2 scale-90 text-sm text-base-content/70">{value}</span>
-        </p>
-      ))}
+    <div className="flex flex-col gap-1 overflow-scroll pt-1">
+      <Badge
+        content={
+          <CopyButton
+            className="text-base-content/30 hover:scale-125 hover:text-base-content"
+            text={details}
+          />
+        }
+        classNames={{
+          badge: 'bg-transparent border-none',
+        }}
+      >
+        <ScrollShadow className="w-fit max-w-[80vw]" orientation="horizontal">
+          <pre className="text-sm">{details}</pre>
+        </ScrollShadow>
+      </Badge>
     </div>
   )
 })
