@@ -9410,7 +9410,7 @@ __metadata:
     react-dropzone: "npm:^14.2.3"
     react-hook-form: "npm:^7.51.0"
     react-markdown: "npm:^9.0.1"
-    react-scrollable-feed: "npm:^2.0.1"
+    react-scrollable-feed: "npm:^2.0.2"
     react-textarea-autosize: "npm:^8.5.3"
     remark-gfm: "npm:^4.0.0"
     tailwindcss: "npm:^3.4.1"
@@ -11602,14 +11602,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-scrollable-feed@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "react-scrollable-feed@npm:2.0.1"
+"react-scrollable-feed@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "react-scrollable-feed@npm:2.0.2"
   peerDependencies:
     prop-types: ^15.7.2
     react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
     react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/1a833e49c0d3e7f7dde6dbde56022f1f61dcaf4844e549074fbebfb78d511bd9323693c9d03a3291987891991d5a06add83e33fac99d8522f43f3f3a4f629adb
+  checksum: 10c0/b585e739201d8a79923fdab8008cc36b126374793cc209430bf26a6a92d44fda7968bb34c4b117ba2010443a99c11fa1a80c1fd82c17d7b1d4e2bde583757dc0
   languageName: node
   linkType: hard
 
