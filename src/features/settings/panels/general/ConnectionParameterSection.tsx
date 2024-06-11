@@ -306,6 +306,7 @@ const ConnectionDataParameterSection = () => {
           value={filterText}
           placeholder="Filter parameters by field or label..."
           classNames={{
+            input: '!text-base-content',
             innerWrapper: 'pb-0',
             inputWrapper: '!bg-base-transparent border-base-content/30',
           }}
