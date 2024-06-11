@@ -5,8 +5,10 @@ import {
   IA1111Model,
   ILmsModel,
   IOllamaModel,
+  IOpenAiModel,
   LmsLanguageModel,
   OllamaLanguageModel,
+  OpenAiLanguageModel,
 } from '~/models/types'
 
 export type BaseLanguageModel = {
@@ -54,6 +56,14 @@ class LanguageModel {
       type: 'Ollama',
       label: model.name,
       modelName: model.name,
+    })
+  }
+
+  static fromIOpenAiModel(model: IOpenAiModel): OpenAiLanguageModel {
+    return LanguageModel.toSharedLanguageModel(model, {
+      type: 'OpenAi',
+      label: model._id,
+      modelName: model._id,
     })
   }
 }

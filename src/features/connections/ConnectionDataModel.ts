@@ -1,6 +1,5 @@
 import { Instance, types } from 'mobx-state-tree'
 import { createId } from '@paralleldrive/cuid2'
-import _ from 'lodash'
 
 export const ConnectionParameterModel = types
   .model({
@@ -38,7 +37,12 @@ export const ConnectionDataModel = types.model({
   id: types.optional(types.identifier, createId),
 
   label: types.string,
-  type: types.union(types.literal('LMS'), types.literal('A1111'), types.literal('Ollama')),
+  type: types.union(
+    types.literal('LMS'),
+    types.literal('A1111'),
+    types.literal('Ollama'),
+    types.literal('OpenAi'),
+  ),
 
   host: types.maybe(types.string),
   enabled: types.optional(types.boolean, true),
