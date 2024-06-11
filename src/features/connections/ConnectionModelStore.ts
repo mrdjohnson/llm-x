@@ -7,6 +7,7 @@ import { ConnectionDataModel } from '~/features/connections/ConnectionDataModel'
 import LmsServerConnection from '~/features/connections/servers/LmsServerConnection'
 import A1111ServerConnection from '~/features/connections/servers/A1111ServerConnection'
 import OllamaServerConnection from '~/features/connections/servers/OllamaServerConnection'
+import OpenAiServerConnection from '~/features/connections/servers/OpenAiServerConnection'
 import { ServerConnectionTypes, serverConnectionByType } from '~/features/connections/servers'
 
 import { ConnectionTypes, IConnectionDataModel, BaseLanguageModel } from '~/models/types'
@@ -70,10 +71,12 @@ const classMap: Record<
   | typeof LmsServerConnection
   | typeof A1111ServerConnection
   | typeof OllamaServerConnection
+  | typeof OpenAiServerConnection
 > = {
   LMS: LmsServerConnection,
   A1111: A1111ServerConnection,
   Ollama: OllamaServerConnection,
+  OpenAi: OpenAiServerConnection,
 }
 class ConnectionModelStore {
   dataStore = connectionDataModelStore

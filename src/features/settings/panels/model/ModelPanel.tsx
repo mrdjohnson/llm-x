@@ -6,6 +6,7 @@ import { ScrollShadow, Tab, Tabs } from '@nextui-org/react'
 import OllamaModelPanel from '~/features/settings/panels/model/OllamaModelPanel'
 import A1111ModelPanel from '~/features/settings/panels/model/A1111ModelPanel'
 import LmsModelPanel from '~/features/settings/panels/model/LmsModelPanel'
+import OpenAiModelPanel from '~/features/settings/panels/model/OpenAiModelPanel'
 
 import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
@@ -62,6 +63,9 @@ const ModelPanel = observer(() => {
                 )}
                 {selectedConnection.type === 'Ollama' && (
                   <OllamaModelPanel connection={selectedConnection} />
+                )}
+                {selectedConnection.type === 'OpenAi' && (
+                  <OpenAiModelPanel connection={selectedConnection} />
                 )}
               </ScrollShadow>
             </div>

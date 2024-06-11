@@ -14,7 +14,9 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 # Recent additions:
 
-- Text generation through lm studio is here! 
+- Users can connect to open ai compatible servers
+- Users can connect to multiple of the same server at the same time
+- Text generation through LM Studio is here! 
 - Regenerating a bot message adds it to a message variation list
 - Message headers and footers are sticky with the message, useful for long messages
 
@@ -66,10 +68,12 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 - [x] **LM Studio integration!**
 - [x] **Text to Image generation** through AUTOMATIC1111
+- [x] **Open AI server support!** 
 - [x] **Image to Text** using Ollama's multi modal abilities
 - [x] **Offline Support** via PWA technology
 - [x] **Code highlighting** with Highlight.js (only handles common languages for now)
 - [x] **Search/Command bar** provides quick access to app features through kbar
+- [x] Allow users to have as many connections as they way!
 - [x] Text Entry and Response to Ollama
 - [x] Auto saved Chat history
 - [x] Manage multiple chats
