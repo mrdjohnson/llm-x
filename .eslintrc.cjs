@@ -24,7 +24,7 @@ module.exports = {
     'import/no-unresolved': 'error',
     'import/no-relative-packages': 'error',
     'import/no-self-import': 'error',
-    'import/newline-after-import': ['error', { count: 1, exactCount: true }],
+    'import/newline-after-import': ['error', { count: 1, exactCount: true, considerComments: true }],
     'import/no-duplicates': 'error',
 
     'no-restricted-imports': 'off',
