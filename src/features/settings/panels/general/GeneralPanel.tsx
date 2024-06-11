@@ -38,7 +38,7 @@ const GeneralModelPanel = observer(() => {
 
   return (
     <div className="flex w-full flex-col">
-      <ScrollShadow orientation="horizontal" className="border-b border-divider">
+      <ScrollShadow orientation="horizontal" className="border-b border-base-content/30">
         <Tabs
           aria-label="Options"
           variant="underlined"
