@@ -98,7 +98,7 @@ const migrateV2 = (settings: Record<string, unknown>) => {
 
   if (settings.lmsEnabled) {
     const lmsSnapshot = _.cloneDeep(LmsServerConnection.getSnapshot())
-    lmsSnapshot.host = settings.lmsHost as string
+    lmsSnapshot.host = (settings.lmsHost as string) || lmsSnapshot.host
     ;[['temperature', 'lmsTemperature']].forEach(([field, oldField]) => {
       const parameterIndex = _.findIndex(lmsSnapshot.parameters, { field })
 
@@ -112,7 +112,7 @@ const migrateV2 = (settings: Record<string, unknown>) => {
 
   if (settings.a1111Enabled) {
     const a1111Snapshot = _.cloneDeep(A1111ServerConnection.getSnapshot())
-    a1111Snapshot.host = settings.a1111Host as string
+    a1111Snapshot.host = (settings.a1111Host as string) || a1111Snapshot.host
     ;[
       ['width', 'a1111Width'],
       ['height', 'a1111Height'],
@@ -132,7 +132,7 @@ const migrateV2 = (settings: Record<string, unknown>) => {
   // it was enabled if it was true or undefined
   if (settings.ollamaEnabled !== false) {
     const ollamaSnapshot = _.cloneDeep(OllamaServerConnection.getSnapshot())
-    ollamaSnapshot.host = settings.ollamaHost as string
+    ollamaSnapshot.host = (settings.ollamaHost as string) || ollamaSnapshot.host
     ;[
       ['keep_alive', 'ollamaKeepAliveTime'],
       ['temperature', 'ollamaTemperature'],
