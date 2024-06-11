@@ -1,4 +1,4 @@
-import { SnapshotIn, applySnapshot, destroy, types } from 'mobx-state-tree'
+import { SnapshotIn, applySnapshot, destroy, getSnapshot, types } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
 import _ from 'lodash'
 import { makeAutoObservable } from 'mobx'
@@ -111,12 +111,22 @@ class ConnectionModelStore {
     this.dataStore.deleteConnection(id)
   }
 
-  addConnection(type: ConnectionTypes) {
-    const connection = this.dataStore.addConnection(type)
+  addConnection(type: ConnectionTypes, snapshot?: SnapshotIn<IConnectionDataModel>) {
+    const connection = this.dataStore.addConnection(type, snapshot)
 
     const serverConnection = this.createServerConnection(connection)
 
     serverConnection.fetchLmModels()
+  }
+
+  duplicateConnection(id: string) {
+    const connection = _.find(this.dataStore.connections, { id })
+
+    if (!connection) throw 'Cannot find connection'
+
+    const snapshot = getSnapshot(connection)
+
+    this.addConnection(snapshot.type, _.omit(snapshot, 'id'))
   }
 
   updateDataModel(snapshot: SnapshotIn<IConnectionDataModel>, isHostChanged: boolean) {

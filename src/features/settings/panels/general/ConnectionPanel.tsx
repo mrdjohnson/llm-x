@@ -13,6 +13,7 @@ import HostInput from '~/components/HostInput'
 import EnabledCheckbox from '~/components/EnabledCheckbox'
 
 import { IConnectionDataModel } from '~/models/types'
+import Copy from '~/icons/Copy'
 
 export type ConnectionFormDataType = SnapshotIn<IConnectionDataModel>
 
@@ -99,6 +100,17 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
                 onClick={() => connectionModelStore.deleteConnection(connection.id)}
               >
                 Delete Connection
+              </button>
+            </div>
+
+            <div>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm mx-4"
+                onClick={() => connectionModelStore.duplicateConnection(connection.id)}
+                disabled={isDirty}
+              >
+                Duplicate <Copy />
               </button>
             </div>
 
