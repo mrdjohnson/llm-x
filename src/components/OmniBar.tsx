@@ -153,6 +153,23 @@ const useRegisterModelActions = () => {
         priority: Priority.HIGH,
       })
 
+      nextModelActions.push({
+        id: 'refresh_models',
+        name: 'Refresh models',
+        keywords: 'refresh',
+        section: 'Actions',
+        priority: Priority.LOW,
+      })
+
+      nextModelActions.push({
+        id: 'refresh_all_models',
+        name: 'Refresh all models',
+        keywords: 'refresh',
+        priority: Priority.LOW,
+        parent: 'refresh_models',
+        perform: connectionModelStore.refreshModels,
+      })
+
       for (const connection of connectionModelStore.connections) {
         if (!connection.enabled) continue
 
@@ -162,19 +179,19 @@ const useRegisterModelActions = () => {
           id: 'refresh' + connection.id,
           name: `Refresh models for ${connection.label}: (${connection.models.length} found)`,
           keywords: `model refresh ` + typeAndLabel,
-          section: 'Actions',
           priority: Priority.LOW,
           perform: () => connection.fetchLmModels(),
+          parent:'refresh_models'
         })
 
         connection.models.forEach(model => {
           nextModelActions.push({
             id: connection.id + model.modelName,
-            name: 'Select: ' + model.modelName,
+            name: model.modelName,
             keywords: `${model.modelName} model ` + typeAndLabel,
             section: connection.label + ' Models',
-            perform: () =>
-              connectionModelStore.dataStore.setSelectedModel(model, connection.id),
+            parent: 'model',
+            perform: () => connectionModelStore.dataStore.setSelectedModel(model, connection.id),
           })
         })
       }
