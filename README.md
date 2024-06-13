@@ -52,15 +52,22 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 - Go offline! (optional)
 - Start chatting!
 
-## How to use from project:
+## How to use from project source:
 
-### Prerequisites for local project
+### Prerequisites for project source
 - Ollama: Run this in your terminal `ollama serve`
 - LM Studio: Run this in your terminal: `lms server start`
 - A1111: Run this in the a1111 project folder: `./webui.sh --api --listen` 
 ---
 
-- Pull down this project; `yarn install`, `yarn dev`
+### Vite preview mode
+- Pull down this project; `yarn install`, `yarn preview`
+- Go offline! (optional)
+- Start chatting!
+
+### Docker
+- Run this in your terminal: `docker compose up -d`
+- Open http://localhost:3030
 - Go offline! (optional)
 - Start chatting!
 
