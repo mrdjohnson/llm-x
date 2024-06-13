@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import useMedia from 'use-media'
 import { Modal, ModalContent, ModalBody } from '@nextui-org/react'
+import { useKBar } from 'kbar'
 
 import { settingStore } from '~/models/SettingStore'
 
@@ -79,6 +80,7 @@ const MobileSettingsSidePanel = observer(
 const SettingsModal = observer(() => {
   const modalRef = useRef<HTMLDialogElement>(null)
   const isMobile = useMedia('(max-width: 1024px)')
+  const { query } = useKBar()
 
   let panelName = settingStore.settingsPanelName
   if (panelName === 'initial' && !isMobile) {
@@ -102,8 +104,10 @@ const SettingsModal = observer(() => {
   useEffect(() => {
     if (isOpen) {
       modalRef.current?.showModal()
+      query.disable(true)
     } else {
       modalRef.current?.close()
+      query.disable(false)
     }
   }, [isOpen])
 
