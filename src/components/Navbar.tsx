@@ -1,9 +1,11 @@
 import { observer } from 'mobx-react-lite'
 import { useKBar } from 'kbar'
+import { Kbd } from '@nextui-org/react'
 
 import ModelSelector from '~/components/ModelSelector'
 import ModelRefreshButton from '~/components/ModelRefreshButton'
 import FunTitle from '~/components/FunTitle'
+import ToolTip from '~/components/Tooltip'
 
 import { settingStore } from '~/models/SettingStore'
 import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
@@ -13,6 +15,19 @@ import Bars3 from '~/icons/Bars3'
 import CloudDown from '~/icons/CloudDown'
 import Search from '~/icons/Search'
 import AppSettings from '~/icons/AppSettings'
+import { PropsWithChildren } from 'react'
+
+const KeyboardTooltip = ({ command, children }: PropsWithChildren<{ command: string }>) => (
+  <ToolTip
+    label={
+      <Kbd keys={['command']} className="border-none bg-transparent text-base-content shadow-none">
+        {command}
+      </Kbd>
+    }
+  >
+    {children}
+  </ToolTip>
+)
 
 const Navbar = observer(() => {
   const { query } = useKBar()
@@ -32,7 +47,7 @@ const Navbar = observer(() => {
         <FunTitle className="md:text-xl" />
       </div>
 
-      <div className="hidden flex-1 max-w-[600px] flex-row gap-2 md:flex">
+      <div className="hidden max-w-[600px] flex-1 flex-row gap-2 md:flex">
         <ModelSelector />
         <ModelRefreshButton />
       </div>
@@ -48,33 +63,37 @@ const Navbar = observer(() => {
           </button>
         )}
 
-        <button className="btn btn-square btn-ghost btn-md hidden md:flex" onClick={query.toggle}>
-          <Search />
-        </button>
+        <KeyboardTooltip command="K">
+          <button className="btn btn-square btn-ghost btn-md hidden md:flex" onClick={query.toggle}>
+            <Search />
+          </button>
+        </KeyboardTooltip>
 
-        <label
-          htmlFor="app-drawer"
-          className="btn btn-square btn-ghost btn-sm md:btn-md "
-          onClick={() => settingStore.openSettingsModal()}
-        >
-          <div className="indicator p-1">
-            <div className="swap lg:swap-active">
-              <div className="swap-on align-middle">
-                <AppSettings />
+        <KeyboardTooltip command="/">
+          <label
+            htmlFor="app-drawer"
+            className="btn btn-square btn-ghost btn-sm md:btn-md "
+            onClick={() => settingStore.openSettingsModal()}
+          >
+            <div className="indicator p-1">
+              <div className="swap lg:swap-active">
+                <div className="swap-on align-middle">
+                  <AppSettings />
+                </div>
+
+                <div className="swap-off">
+                  <Bars3 />
+                </div>
               </div>
 
-              <div className="swap-off">
-                <Bars3 />
-              </div>
+              {noServer && (
+                <span className="indicator-item">
+                  <Warning />
+                </span>
+              )}
             </div>
-
-            {noServer && (
-              <span className="indicator-item">
-                <Warning />
-              </span>
-            )}
-          </div>
-        </label>
+          </label>
+        </KeyboardTooltip>
       </div>
     </nav>
   )
