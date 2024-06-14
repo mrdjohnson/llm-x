@@ -106,7 +106,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
             <div>
               <button
                 type="button"
-                className="btn btn-ghost btn-sm mx-4"
+                className="btn btn-ghost btn-sm mx-4 text-base-content/60 hover:text-base-content"
                 onClick={() => connectionModelStore.duplicateConnection(connection.id)}
                 disabled={isDirty}
               >
