@@ -155,8 +155,8 @@ const SettingsModal = observer(() => {
             </div>
           </div>
 
-          <ModalBody>
-            <div className="flex h-full flex-col rounded-md bg-base-100 p-2">
+          <ModalBody className='pt-0'>
+            <div className="flex h-full flex-col rounded-md bg-base-100 p-2 pt-0">
               <div className="flex h-full flex-grow-0 flex-col justify-stretch gap-2 overflow-y-scroll lg:h-[700px] lg:flex-row">
                 <div
                   className="w-full lg:w-[260px] lg:min-w-[260px] lg:max-w-[260px]"

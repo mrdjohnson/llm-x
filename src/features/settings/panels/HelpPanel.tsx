@@ -12,7 +12,7 @@ const HelpPanel = observer(() => {
   return (
     <ScrollShadow>
       <div className="w-full pl-2">
-        <h3 className="-ml-2 mt-5 pb-3 text-lg font-bold">
+        <h3 className="-ml-2 pb-3 text-lg font-bold">
           How to connect to
           <a href="https://lmstudio.ai/" target="__blank" className="link text-lg text-primary">
             LM Studio
