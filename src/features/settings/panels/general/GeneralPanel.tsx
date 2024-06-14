@@ -1,40 +1,20 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { ScrollShadow, Tab, Tabs } from '@nextui-org/react'
 import _ from 'lodash'
 
 import AppGeneralPanel from '~/features/settings/panels/general/AppGeneralPanel'
-import NewConnectionPanel from '~/features/settings/panels/general/NewConnectionPanel'
-
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
-import ConnectionPanel from '~/features/settings/panels/general/ConnectionPanel'
 
 const GeneralModelPanel = observer(() => {
-  const { selectedConnectionModelId, connections } = connectionModelStore
-
-  const [selectedTabId, setSelectedTabId] = useState<string>(selectedConnectionModelId ?? 'App')
-
-  useEffect(() => {
-    setSelectedTabId(selectedConnectionModelId ?? 'App')
-  }, [selectedConnectionModelId])
+  const [selectedTabId, setSelectedTabId] = useState<string>('App')
 
   const selectedPanel = useMemo(() => {
     if (selectedTabId === 'App') {
       return <AppGeneralPanel />
-    } else if (selectedTabId === 'new_connection') {
-      return <NewConnectionPanel />
     }
-
-    const connection = connectionModelStore.getConnectionById(selectedTabId)
-
-    if (connection) {
-      return <ConnectionPanel connection={connection} />
-    }
-
-    setSelectedTabId('App')
 
     return null
-  }, [selectedTabId, connections])
+  }, [selectedTabId])
 
   return (
     <div className="flex w-full flex-col">
@@ -56,21 +36,7 @@ const GeneralModelPanel = observer(() => {
           <Tab
             key="App"
             title="App"
-            className={selectedConnectionModelId === 'App' ? 'is-active-parent' : ''}
-          />
-
-          {_.map(connections, connection => (
-            <Tab
-              key={connection.id}
-              title={connection.label}
-              className={connection.id === selectedConnectionModelId ? 'is-active-parent' : ''}
-            />
-          ))}
-
-          <Tab
-            key="new_connection"
-            title="New Connection +"
-            className={selectedConnectionModelId === 'new_connection' ? 'is-active-parent' : ''}
+            className={selectedTabId === 'App' ? 'is-active-parent' : ''}
           />
         </Tabs>
       </ScrollShadow>

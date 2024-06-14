@@ -6,7 +6,7 @@ import _ from 'lodash'
 import { Input, ScrollShadow } from '@nextui-org/react'
 
 import { ServerConnectionTypes } from '~/features/connections/servers'
-import ConnectionDataParameterSection from '~/features/settings/panels/general/ConnectionParameterSection'
+import ConnectionDataParameterSection from '~/features/settings/panels/connections/ConnectionParameterSection'
 import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 import HostInput from '~/components/HostInput'

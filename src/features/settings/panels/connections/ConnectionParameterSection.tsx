@@ -6,7 +6,7 @@ import { Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
 import Delete from '~/icons/Delete'
 import Back from '~/icons/Back'
 
-import { ConnectionFormDataType } from '~/features/settings/panels/general/ConnectionPanel'
+import { ConnectionFormDataType } from '~/features/settings/panels/connections/ConnectionPanel'
 import ToolTip from '~/components/Tooltip'
 
 type ParameterOptionsType = 'system' | 'valueRequired' | 'fieldRequired'
