@@ -10,6 +10,7 @@ import DocumentArrowUp from '~/icons/DocumentArrowUp'
 
 import { personaStore } from '~/models/PersonaStore'
 import { settingStore } from '~/models/SettingStore'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
 
@@ -21,6 +22,7 @@ const DownlodSelector = () => {
       chatStore: await ChatStoreSnapshotHandler.formatChatStoreToExport({ includeImages }),
       personaStore: getSnapshot(personaStore),
       settingStore: getSnapshot(settingStore),
+      connectionStore: getSnapshot(connectionModelStore.dataStore)
     })
 
     const link = document.createElement('a')

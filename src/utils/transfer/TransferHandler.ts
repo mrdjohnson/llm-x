@@ -8,6 +8,7 @@ import { settingStore } from '~/models/SettingStore'
 import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
 import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
 import _ from 'lodash'
+import { connectionModelStore } from '../../features/connections/ConnectionModelStore'
 
 export type DownloadOptions = {
   includeImages?: boolean
@@ -46,6 +47,9 @@ export class TransferHandler {
           applySnapshot(chatStore, importedChatStore)
           applySnapshot(personaStore, data.personaStore)
           applySnapshot(settingStore, data.settingStore)
+          applySnapshot(connectionModelStore.dataStore, data.connectionStore)
+
+          connectionModelStore.refreshModels()
         }
       } catch (e) {
         toastStore.addToast('Unable to read file, check the console for error information', 'error')
