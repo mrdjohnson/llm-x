@@ -39,7 +39,7 @@ const FunctionParameterRow = observer(({ parameter, index }: FunctionParameterRo
     getValues,
     formState: { errors },
   } = useFormContext<CustomFunctionFormDataType>()
-  const { fields } = useFieldArray({
+  const { fields: parameters } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormProvider)
     name: 'parameters', // unique name for your Field Array
   })
@@ -56,7 +56,7 @@ const FunctionParameterRow = observer(({ parameter, index }: FunctionParameterRo
 
     if (nextName.includes(' ')) return 'Name cannot include a space'
 
-    const otherParameter = _.filter(fields, { name: nextName })
+    const otherParameter = _.filter(parameters, { name: nextName })
 
     // return true if name does not exist
     if (otherParameter.length > 1) return 'Parameter names cannot be duplicates'
