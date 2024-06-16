@@ -5,7 +5,7 @@ import _ from 'lodash'
 export type BreadcrumbType = {
   isSelected: boolean
   label: string
-  onClick: () => void
+  onClick?: () => void
 }
 
 const BreadcrumbBar = observer(
