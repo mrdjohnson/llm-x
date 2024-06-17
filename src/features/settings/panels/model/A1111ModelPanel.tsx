@@ -29,7 +29,10 @@ const A1111ModelPanel = observer(({ connection }: { connection: A1111ServerConne
         connectionModelStore.dataStore.setSelectedModel(model, connection.id)
       }
       itemFilter={(model, filterText) => {
-        return model.modelName.toLowerCase().includes(filterText.toLowerCase())
+        return (
+          model.modelName.toLowerCase().includes(filterText.toLowerCase()) ||
+          model.label.toLowerCase().includes(filterText.toLowerCase())
+        )
       }}
       primarySortTypeLabel={connection.primaryHeader}
       renderRow={renderRow}
@@ -38,7 +41,7 @@ const A1111ModelPanel = observer(({ connection }: { connection: A1111ServerConne
         model.modelName === connectionModelStore.selectedModelName
       }
       getItemKey={model => model.id}
-      filterInputPlaceholder="Filter by name or folder..."
+      filterInputPlaceholder="Filter by title or name..."
     />
   )
 })

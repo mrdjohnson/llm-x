@@ -38,7 +38,10 @@ const OpenAiModelPanel = observer(({ connection }: { connection: OpenAiServerCon
         connectionModelStore.dataStore.setSelectedModel(model, connection.id)
       }
       itemFilter={(model, filterText) => {
-        return model.modelName.toLowerCase().includes(filterText.toLowerCase())
+        return (
+          model.modelName.toLowerCase().includes(filterText.toLowerCase()) ||
+          model.ownedBy.toLowerCase().includes(filterText.toLowerCase())
+        )
       }}
       primarySortTypeLabel={connection.primaryHeader}
       renderRow={renderRow}
@@ -47,7 +50,7 @@ const OpenAiModelPanel = observer(({ connection }: { connection: OpenAiServerCon
         model.modelName === connectionModelStore.selectedModelName
       }
       getItemKey={model => model.id}
-      filterInputPlaceholder="Filter by name or folder..."
+      filterInputPlaceholder="Filter by id or owned by..."
     />
   )
 })
