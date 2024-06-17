@@ -116,7 +116,7 @@ const SelectionPanelTable = observer(
 
     return (
       <>
-        {onFilterChanged && (
+        {itemFilter && (
           <label className="flex w-full flex-row gap-2">
             <input
               type="text"
