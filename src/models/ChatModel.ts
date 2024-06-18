@@ -11,12 +11,14 @@ import CachedStorage from '~/utils/CachedStorage'
 
 import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 import BaseApi from '~/features/connections/api/BaseApi'
+import { actorStore } from '~/models/actor/ActorStore'
 
 export const ChatModel = types
   .model({
     id: types.optional(types.identifierNumber, Date.now),
     name: types.optional(types.string, ''),
     messages: types.array(MessageModel),
+    actorIds: types.array(types.string),
     _messageToEditId: types.maybe(types.string), // user message to edit
     _messageVariantToEditId: types.maybe(types.string),
     _previewImageUrls: types.array(types.string),
@@ -81,6 +83,10 @@ export const ChatModel = types
     get previewImageUrls() {
       return self._previewImageUrls
     },
+
+    get actors() {
+      return _.compact(self.actorIds.map(actorStore.getActorById))
+    }
   }))
   .actions(self => ({
     afterCreate() {
@@ -180,7 +186,7 @@ export const ChatModel = types
       destroy(message)
     },
 
-    findAndRegenerateResponse() {
+    findAndRegenerateResponse(chat: IChatModel) {
       const messageToEditIndex = _.indexOf(self.messages, self.messageToEdit)
       const messageAfterEditedMessage: IMessageModel = self.messages[messageToEditIndex + 1]
 
@@ -202,7 +208,7 @@ export const ChatModel = types
       }
 
       self._messageToEditId = undefined
-      incomingMessageStore.generateVariation(cast(self), botMessageToEdit)
+      incomingMessageStore.generateVariation(chat, botMessageToEdit)
     },
 
     findAndEditPreviousMessage() {

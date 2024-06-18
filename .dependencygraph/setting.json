@@ -1,0 +1,15 @@
+{
+  "alias": {
+    "~/*": "./src/*"
+  },
+  "resolveExtensions": [
+    ".js",
+    ".jsx",
+    ".ts",
+    ".tsx",
+    ".vue",
+    ".scss",
+    ".less"
+  ],
+  "entryFilePath": "/src/main.tsx"
+}

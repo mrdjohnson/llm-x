@@ -67,6 +67,8 @@ export interface IChatStore extends Instance<typeof ChatStore> {}
 export const chatStore = ChatStore.create()
 
 persist('chat-store', chatStore).then(() => {
+  console.log('updated chat store')
+  
   if (!chatStore.selectedChat) {
     if (chatStore.chats.length > 0) {
       chatStore.selectChat(chatStore.orderedChats[0])

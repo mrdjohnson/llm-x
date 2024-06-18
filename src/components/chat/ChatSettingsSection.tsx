@@ -2,8 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { Controller, useForm } from 'react-hook-form'
+import { Input, Select, SelectItem } from '@nextui-org/react'
+import { SnapshotIn } from 'mobx-state-tree'
 
 import { chatStore } from '~/models/ChatStore'
+import { actorStore } from '~/models/actor/ActorStore'
+import { IChatModel } from '~/models/ChatModel'
 
 import Check from '~/icons/Check'
 import Delete from '~/icons/Delete'
@@ -15,13 +19,15 @@ import FormInput from '~/components/form/FormInput'
 
 import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
 
+type ChatFormType = SnapshotIn<IChatModel>
+
 export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked: () => void }) => {
   const {
     handleSubmit,
     reset,
     control,
     formState: { isDirty, errors },
-  } = useForm<{ name: string }>()
+  } = useForm<ChatFormType>()
 
   const [isExportOpen, setIsExportOpen] = useState(false)
 
@@ -123,6 +129,69 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
                   }}
                 />
               </form>
+              {chat.actors.map(actor => (
+                <div>
+                  {actor.name}
+                  <br />
+                  Connection(s):{' '}
+                  {actor.connections.map(connection => (
+                    <div>
+                      {connection.label}
+                      <br />
+                      {/* {connection.} */}
+                    </div>
+                  ))}
+                </div>
+              ))}
+
+              <Controller
+                render={({ field }) => (
+                  <Select
+                    selectionMode="multiple"
+                    size="sm"
+                    className="w-full min-w-[20ch] rounded-md bg-transparent"
+                    classNames={{
+                      value: '!text-base-content min-w-[20ch]',
+                      trigger:
+                        'bg-transparent rounded-md border border-base-content/30 hover:!bg-base-100',
+                      popoverContent: 'text-base-content bg-base-100 rounded-md',
+                      description: 'text-base-content/45',
+                    }}
+                    onSelectionChange={selection => field.onChange(_.toArray(selection))}
+                    label="Actors"
+                    description={
+                      'More than one selected actor, or actors with multiple selections will result in multiple data calls'
+                    }
+                    {...field}
+                    onChange={undefined}
+                    value={undefined}
+                    defaultSelectedKeys={field.value}
+                    selectedKeys={field.value}
+                  >
+                    {actorStore.actors.map(actor => (
+                      <SelectItem
+                        key={actor.id}
+                        textValue={actor.name}
+                        description={actor.description}
+                        className={'w-full !min-w-[13ch] text-base-content'}
+                        classNames={{
+                          description: 'text',
+                        }}
+                      >
+                        <span>{actor.name}</span>
+                        {actor.personas.length > 1 && (
+                          <span className="ml-2 text-base-content/60">: {actor.personas.length} personas</span>
+                        )}
+                        {actor.connections.length > 1 && (
+                          <span className="ml-2 text-base-content/60">: {actor.connections.length} connections</span>
+                        )}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )}
+                control={control}
+                name="actorIds"
+              />
             </div>
           </div>
 
