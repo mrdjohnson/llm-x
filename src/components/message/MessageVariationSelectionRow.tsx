@@ -45,7 +45,7 @@ const MessageVariationSelectionRow = observer(
         {message.hasPreviousVariation && !disableEditing && (
           <ToolTip label="Delete variation" placement="top">
             <button
-              className="rounded-md text-error/30 opacity-0 hover:scale-125 hover:text-error group-hover:opacity-100"
+              className="rounded-md text-error/60 opacity-0 hover:scale-125 hover:text-error group-hover:opacity-100"
               onClick={() => message.removeVariation(message.selectedVariation)}
             >
               <Delete />

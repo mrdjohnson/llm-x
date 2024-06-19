@@ -252,7 +252,7 @@ const LazyMessage = observer(
                 className="group/error collapse join-item transition-all duration-300 ease-in-out"
                 tabIndex={0}
               >
-                <div className="collapse-title line-clamp-1 flex max-h-8 min-h-0 flex-row flex-nowrap bg-error/30 p-2 text-xs font-medium">
+                <div className="collapse-title line-clamp-1 flex max-h-8 min-h-0 flex-row flex-nowrap bg-error/60 p-2 text-xs font-medium">
                   {error.message}
 
                   <span className="ml-2 scale-90 transition-all duration-300 ease-in-out group-focus/error:rotate-180">
@@ -278,7 +278,7 @@ const LazyMessage = observer(
         >
           {onDestroy && (
             <button
-              className="rounded-md text-error/30 hover:scale-125 hover:text-error"
+              className="rounded-md text-error/60 hover:scale-125 hover:text-error"
               onClick={onDestroy}
               title={customDeleteIcon ? 'Stop' : 'Delete'}
             >
