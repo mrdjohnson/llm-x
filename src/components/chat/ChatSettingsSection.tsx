@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { chatStore } from '~/models/ChatStore'
 
@@ -11,17 +11,17 @@ import DocumentArrowDown from '~/icons/DocumentArrowDown'
 import Back from '~/icons/Back'
 
 import Tooltip from '~/components/Tooltip'
+import FormInput from '~/components/form/FormInput'
 
 import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
 
 export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked: () => void }) => {
   const {
-    register,
-    setValue,
     handleSubmit,
     reset,
-    formState: { isDirty },
-  } = useForm<{ name: string }>({})
+    control,
+    formState: { isDirty, errors },
+  } = useForm<{ name: string }>()
 
   const [isExportOpen, setIsExportOpen] = useState(false)
 
@@ -43,7 +43,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
 
     chat.setName(name)
 
-    reset()
+    reset(formData)
   })
 
   const exportChat = async (includeImages: boolean) => {
@@ -60,10 +60,8 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
   }
 
   useEffect(() => {
-    setValue('name', chat.name, { shouldDirty: false })
-
-    reset()
-  }, [chat.name])
+    reset({ name: chat.name || 'new chat' })
+  }, [chat])
 
   useEffect(() => {
     if (isExportOpen) {
@@ -72,6 +70,12 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
       modalRef.current?.close()
     }
   }, [isExportOpen])
+
+  const validateName = (name: string) => {
+    if (name.length < 2 || name.length > 30) return 'Name length must be 2-30 chars'
+
+    return true
+  }
 
   if (!selectedChat) return null
 
@@ -92,29 +96,32 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
           <div className="no-scrollbar flex h-full flex-1 flex-col overflow-y-scroll rounded-md">
             <div className="flex flex-col gap-2 rounded-box bg-base-300 text-base-content">
               <form className="flex w-full flex-row gap-2" onSubmit={handleFormSubmit}>
-                <div className="form-control w-full">
-                  <div className="label pb-1 pt-0">
-                    <span className="label-text text-sm">Name:</span>
-                  </div>
-
-                  <div className="flex flex-row items-center gap-2">
-                    <input
-                      type="text"
-                      id="name"
-                      className="input input-bordered w-full flex-1 focus:outline-none"
-                      defaultValue={chat.name || 'new chat'}
-                      minLength={2}
-                      maxLength={30}
-                      {...register('name', { required: true, minLength: 2, maxLength: 30 })}
+                <Controller
+                  render={({field}) => (
+                    <FormInput
+                      id={chat.id + ''}
+                      label="Name:"
+                      errorMessage={errors.name?.message}
+                      endContent={
+                        isDirty && (
+                          <button
+                            className="btn btn-ghost btn-sm px-2"
+                            disabled={!!errors.name?.message}
+                          >
+                            <Check />
+                          </button>
+                        )
+                      }
+                      {...field}
                     />
-
-                    {isDirty && (
-                      <button className="btn btn-neutral">
-                        <Check />
-                      </button>
-                    )}
-                  </div>
-                </div>
+                  )}
+                  control={control}
+                  name="name"
+                  defaultValue={chat.name || 'new chat'}
+                  rules={{
+                    validate: validateName,
+                  }}
+                />
               </form>
             </div>
           </div>
