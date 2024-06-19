@@ -165,7 +165,7 @@ const LazyMessage = observer(
         {(botName || isVariationGroupView || hasVarations) && (
           <div
             className={
-              'group sticky z-10 mb-2 flex flex-row items-baseline gap-2 bg-base-100 opacity-100 ' +
+              'group sticky z-10 mb-2 flex flex-row gap-2 bg-base-100 opacity-100 align-middle ' +
               (isVariationGroupView ? ' top-7' : ' top-0')
             }
           >
