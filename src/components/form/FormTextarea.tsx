@@ -18,7 +18,7 @@ const FormTextarea = forwardRef((textareaProps: FormTextareaProps) => {
         classNames={{
           label: isInvalid ? '!text-error' : '!text-base-content/45',
           inputWrapper:
-            '!bg-base-transparent border-base-content/30' +
+            '!bg-base-transparent border rounded-md border-base-content/30' +
             (isInvalid ? ' !border-error' : '') +
             (isDisabled ? ' opacity-30 hover:!border-base-content/30' : ''),
         }}
