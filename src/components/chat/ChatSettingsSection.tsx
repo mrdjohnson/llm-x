@@ -100,7 +100,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
                   render={({field}) => (
                     <FormInput
                       id={chat.id + ''}
-                      label="Name:"
+                      label="Name"
                       errorMessage={errors.name?.message}
                       endContent={
                         isDirty && (

@@ -1,13 +1,14 @@
 import { MouseEventHandler, useCallback, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { Controller, useFormContext, useFieldArray } from 'react-hook-form'
-import { Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
+import { Checkbox, Select, SelectItem } from '@nextui-org/react'
 
 import Delete from '~/icons/Delete'
 import Back from '~/icons/Back'
 
 import { ConnectionFormDataType } from '~/features/settings/panels/connections/ConnectionPanel'
 import ToolTip from '~/components/Tooltip'
+import FormInput from '~/components/form/FormInput'
 
 type ParameterOptionsType = 'system' | 'valueRequired' | 'fieldRequired'
 
@@ -81,64 +82,63 @@ const ParameterForm = ({ index, onRemove }: ConnectionDataParameterRowProps) => 
     return true
   }
 
-  console.log('field: ', getValues(`parameters.${index}.field`), currentParameter.field)
+  console.log('field: ', getValues(`parameters.${index}.label`), currentParameter.label)
   console.log('parameter types: ', currentParameter.types)
   console.log('valueRequired: ', valueRequired)
 
   return (
     <div className="m-2 ml-0 flex w-full flex-col gap-3 overflow-y-scroll rounded-md bg-base-100 p-2">
-      <Input
-        type="text"
-        variant="bordered"
-        size="sm"
-        label="Field Name"
+      <Controller
+        render={({ field }) => (
+          <FormInput
+            label="Field Name"
+            defaultValue={parameter.field}
+            errorMessage={errors.parameters?.[index]?.field?.message}
+            isRequired
+            {...field}
+          />
+        )}
+        control={control}
+        name={`parameters.${index}.field`}
         defaultValue={parameter.field}
-        isInvalid={!!errors.parameters?.[index]?.field?.message}
-        errorMessage={errors.parameters?.[index]?.field?.message}
-        classNames={{
-          label: '!text-base-content/45',
-          inputWrapper: '!bg-base-transparent border-base-content/30',
-        }}
-        isRequired
-        {...register(`parameters.${index}.field`, {
-          required: 'Field is required',
+        rules={{
           validate: validateUniqueField,
-        })}
+        }}
       />
 
       <div className="flex flex-row gap-2">
-        <Input
-          type="text"
-          variant="bordered"
-          size="sm"
-          label="Value"
+        <Controller
+          render={({ field }) => (
+            <FormInput
+              label="Value"
+              defaultValue={parameter.value}
+              errorMessage={errors.parameters?.[index]?.value?.message}
+              {...field}
+            />
+          )}
+          control={control}
+          name={`parameters.${index}.value`}
           defaultValue={parameter.value}
-          isInvalid={!!errors.parameters?.[index]?.value?.message}
-          errorMessage={errors.parameters?.[index]?.value?.message}
-          classNames={{
-            label: '!text-base-content/45',
-            inputWrapper: '!bg-base-transparent border-base-content/30',
-          }}
-          {...register(`parameters.${index}.value`, {
+          rules={{
             validate: validateValue,
-          })}
+          }}
         />
 
-        <Input
-          type="text"
-          variant="bordered"
-          size="sm"
-          label="Default Value"
+        <Controller
+          render={({ field }) => (
+            <FormInput
+              label="Default Value"
+              defaultValue={parameter.defaultValue}
+              errorMessage={errors.parameters?.[index]?.defaultValue?.message}
+              {...field}
+            />
+          )}
+          control={control}
+          name={`parameters.${index}.defaultValue`}
           defaultValue={parameter.defaultValue}
-          isInvalid={!!errors.parameters?.[index]?.defaultValue?.message}
-          errorMessage={errors.parameters?.[index]?.defaultValue?.message}
-          classNames={{
-            label: '!text-base-content/45',
-            inputWrapper: '!bg-base-transparent border-base-content/30',
-          }}
-          {...register(`parameters.${index}.defaultValue`, {
+          rules={{
             validate: validateDefaultValue,
-          })}
+          }}
         />
       </div>
 
@@ -157,30 +157,26 @@ const ParameterForm = ({ index, onRemove }: ConnectionDataParameterRowProps) => 
         </Checkbox>
       </div>
 
-      <Input
-        type="text"
-        variant="bordered"
-        size="sm"
-        label="Display Name"
+      <Controller
+        render={({ field }) => (
+          <FormInput label="Display Name" defaultValue={parameter.label} {...field} />
+        )}
+        control={control}
+        name={`parameters.${index}.label`}
         defaultValue={parameter.label}
-        classNames={{
-          label: '!text-base-content/45',
-          inputWrapper: '!bg-base-transparent border-base-content/30',
-        }}
-        {...register(`parameters.${index}.label`)}
       />
 
-      <Input
-        type="text"
-        variant="bordered"
-        size="sm"
-        label="Help text: What is this field for?"
+      <Controller
+        render={({ field }) => (
+          <FormInput
+            label="Help text: What is this field for?"
+            defaultValue={parameter.helpText}
+            {...field}
+          />
+        )}
+        control={control}
+        name={`parameters.${index}.helpText`}
         defaultValue={parameter.helpText}
-        classNames={{
-          label: '!text-base-content/45',
-          inputWrapper: '!bg-base-transparent border-base-content/30',
-        }}
-        {...register(`parameters.${index}.helpText`)}
       />
 
       <Controller
@@ -300,16 +296,9 @@ const ConnectionDataParameterSection = () => {
           </button>
         )}
         <span className="content-center">Parameters:</span>
-        <Input
-          type="text"
-          variant="underlined"
+        <FormInput
           value={filterText}
           placeholder="Filter parameters by field or label..."
-          classNames={{
-            input: '!text-base-content',
-            innerWrapper: 'pb-0',
-            inputWrapper: '!bg-base-transparent border-base-content/30',
-          }}
           onChange={e => setFilterText(e.target.value)}
         />
       </div>

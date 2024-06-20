@@ -3,6 +3,7 @@ import { PropsWithChildren, ReactNode, useEffect, useMemo, useRef, useState } fr
 import _ from 'lodash'
 
 import ChevronDown from '~/icons/ChevronDown'
+import FormInput from '~/components/form/FormInput'
 
 export type SortType<SelectorType> = {
   label: ReactNode
@@ -118,10 +119,9 @@ const SelectionPanelTable = observer(
       <>
         {itemFilter && (
           <label className="flex w-full flex-row gap-2">
-            <input
+            <FormInput
               type="text"
               placeholder={filterInputPlaceholder}
-              className="input input-sm input-bordered sticky w-full focus:outline-none"
               onChange={e => handleFilterChanged(e.target.value)}
               value={filterText}
               ref={inputRef}

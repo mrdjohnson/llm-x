@@ -1,8 +1,10 @@
 import { observer } from 'mobx-react-lite'
 import { useEffect, useRef, MouseEvent } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { IPersonaModel, personaStore } from '~/models/PersonaStore'
+import FormInput from '~/components/form/FormInput'
+import FormTextarea from '~/components/form/FormTextarea'
 
 import Delete from '~/icons/Delete'
 import Copy from '~/icons/Copy'
@@ -84,12 +86,11 @@ type PersonaFormDataType = {
 
 const PersonaForm = observer(() => {
   const {
-    register,
-    setValue,
+    control,
     handleSubmit,
     reset,
-    formState: { isValid },
-  } = useForm<PersonaFormDataType>({})
+    formState: { errors },
+  } = useForm<PersonaFormDataType>()
 
   const { personaToEdit } = personaStore
 
@@ -107,9 +108,16 @@ const PersonaForm = observer(() => {
     reset()
   })
 
+  const validateName = (name: string) => {
+    if (name.length < 2 || name.length > 30) return 'Name length must be 2-30 chars'
+
+    return true
+  }
+
   useEffect(() => {
-    setValue('name', personaToEdit?.name || '')
-    setValue('description', personaToEdit?.description || '')
+    const { name = '', description = '' } = personaToEdit || {}
+
+    reset({ name, description })
 
     if (personaToEdit && formRef.current) {
       formRef.current.focus()
@@ -119,30 +127,41 @@ const PersonaForm = observer(() => {
 
   return (
     <form onSubmit={handleFormSubmit} className="mt-auto flex flex-col gap-2" ref={formRef}>
-      <div>
-        <label className="label-text">Name:</label>
+      <Controller
+        render={({ field }) => (
+          <FormInput
+            label="Name"
+            errorMessage={errors.name?.message}
+            placeholder="Store Manager"
+            {...field}
+          />
+        )}
+        control={control}
+        name="name"
+        rules={{
+          validate: validateName,
+        }}
+      />
 
-        <input
-          type="text"
-          className="input input-sm input-bordered ml-2 max-w-full focus:outline-none"
-          maxLength={30}
-          minLength={2}
-          placeholder="Store manager"
-          {...register('name', { required: true, minLength: 2, maxLength: 30 })}
-        />
-      </div>
-
-      <div className=" flex flex-col">
-        <label className="label-text">Description:</label>
-
-        <textarea
-          rows={3}
-          className="textarea textarea-bordered textarea-sm ml-2 mt-2 max-w-full resize-none focus:outline-none"
-          placeholder="You are a store manager that is eager to help many customers"
-          {...register('description', { required: true })}
-        />
-      </div>
-
+      <Controller
+        render={({ field }) => (
+          <FormTextarea
+            rows={3}
+            label="System Prompt"
+            variant="bordered"
+            labelPlacement="inside"
+            placeholder="You are a store manager that is eager to help many customers"
+            errorMessage={errors.description?.message}
+            isMultiline
+            {...field}
+          />
+        )}
+        control={control}
+        name="description"
+        rules={{
+          required: 'Please add a System Prompt',
+        }}
+      />
       <div className="mt-2 flex justify-end gap-2">
         {personaToEdit && (
           <button
@@ -153,7 +172,7 @@ const PersonaForm = observer(() => {
           </button>
         )}
 
-        <button className="btn btn-primary btn-sm" type="submit" disabled={!isValid}>
+        <button className="btn btn-primary btn-sm" type="submit">
           {personaToEdit ? 'Edit Persona' : 'Create Persona'}
         </button>
       </div>

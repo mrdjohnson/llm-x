@@ -3,7 +3,7 @@ import { SnapshotIn, getSnapshot } from 'mobx-state-tree'
 import { useEffect, useMemo, useRef } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import _ from 'lodash'
-import { Input, ScrollShadow } from '@nextui-org/react'
+import { ScrollShadow } from '@nextui-org/react'
 
 import { ServerConnectionTypes } from '~/features/connections/servers'
 import ConnectionDataParameterSection from '~/features/settings/panels/connections/ConnectionParameterSection'
@@ -11,6 +11,7 @@ import { connectionModelStore } from '~/features/connections/ConnectionModelStor
 
 import HostInput from '~/components/HostInput'
 import EnabledCheckbox from '~/components/EnabledCheckbox'
+import FormInput from '~/components/form/FormInput'
 
 import { IConnectionDataModel } from '~/models/types'
 import Copy from '~/icons/Copy'
@@ -48,6 +49,12 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
 
   const resetToSnapshot = () => reset(connectionDataSnapshot, { keepDirty: false })
 
+  const validateLabel = (label: string): boolean | string => {
+    if (label.length < 2 || label.length > 30) return 'Label must be 2-30 chars'
+
+    return true
+  }
+
   useEffect(() => {
     resetToSnapshot()
   }, [connection])
@@ -62,28 +69,21 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
 
               <Controller
                 render={({ field }) => (
-                  <Input
+                  <FormInput
                     id={connection.id}
-                    type="text"
-                    variant="bordered"
-                    size="sm"
                     label="Connection display name"
                     disabled={!isEnabled}
                     placeholder={connection.label}
-                    isInvalid={!!errors.label?.message}
                     errorMessage={errors.label?.message}
-                    classNames={{
-                      label: '!text-base-content/45',
-                      inputWrapper:
-                        '!bg-base-transparent border-base-content/30' +
-                        (isEnabled ? '' : ' opacity-30 hover:!border-base-content/30'),
-                    }}
                     {...field}
                   />
                 )}
                 control={control}
                 name="label"
                 defaultValue={connection.label}
+                rules={{
+                  validate: (label: string) => validateLabel(label),
+                }}
               />
 
               <HostInput connection={connection} isEnabled={isEnabled} />

@@ -1,12 +1,13 @@
 import { observer } from 'mobx-react-lite'
 import { SnapshotIn } from 'mobx-state-tree'
 import { Controller, useFormContext } from 'react-hook-form'
-import { Input } from '@nextui-org/react'
 
 import { settingStore } from '~/models/SettingStore'
 
 import Question from '~/icons/Question'
 import Refresh from '~/icons/Refresh'
+
+import FormInput from '~/components/form/FormInput'
 import { ServerConnectionTypes } from '~/features/connections/servers'
 import { IConnectionDataModel } from '~/models/types'
 
@@ -23,19 +24,11 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
   return (
     <Controller
       render={({ field }) => (
-        <Input
-          type="text"
-          variant="bordered"
+        <FormInput
           label={connection.hostLabel}
           defaultValue={connection.DefaultHost}
           disabled={!isEnabled}
           placeholder={host}
-          classNames={{
-            label: '!text-base-content/45',
-            inputWrapper:
-              '!bg-base-transparent border-base-content/30' +
-              (isEnabled ? '' : ' opacity-30 hover:!border-base-content/30'),
-          }}
           description={
             <span className="flex gap-2 align-baseline text-sm">
               See connection instructions here:
