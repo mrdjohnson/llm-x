@@ -77,7 +77,7 @@ export class OllamaApi extends BaseApi {
     incomingMessageVariant: IMessageModel,
   ): AsyncGenerator<string> {
     const connection = connectionModelStore.selectedConnection
-    const host = connection?.host || connection?.DefaultHost
+    const host = connection?.formattedHost
 
     const model = connectionModelStore.selectedModelName
     if (!connection || !host || !model) return

@@ -58,6 +58,14 @@ abstract class ServerConnection<
     this.isConnected = isConnected
   }
 
+  get formattedHost() {
+    const host = this.host || this.DefaultHost
+
+    if (host.endsWith('/')) return host.trim().substring(0, host.length - 1)
+
+    return host.trim()
+  }
+
   protected abstract _fetchLmModels(host: string): Promise<Array<LanguageModelType<BaseModelType>>>
 
   async fetchLmModels() {

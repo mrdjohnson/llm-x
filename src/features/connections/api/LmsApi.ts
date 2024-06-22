@@ -48,7 +48,7 @@ export class LmsApi extends BaseApi {
     incomingMessageVariant: IMessageModel,
   ) {
     const connection = connectionModelStore.selectedConnection
-    const host = connection?.host || connection?.DefaultHost
+    const host = connection?.formattedHost
 
     const modelName = connectionModelStore.selectedModelName
     if (!connection || !host || !modelName) return

@@ -7,7 +7,7 @@ import { connectionModelStore } from '~/features/connections/ConnectionModelStor
 class A1111Api extends BaseApi {
   async generateImages(prompt: string, incomingMessageVariant: IMessageModel): Promise<string[]> {
     const connection = connectionModelStore.selectedConnection
-    const host = connection?.host || connection?.DefaultHost
+    const host = connection?.formattedHost
 
     if (!connection || !host) return []
 

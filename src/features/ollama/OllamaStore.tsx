@@ -15,7 +15,7 @@ class OllamaStore {
   }
 
   get ollama() {
-    return new Ollama({ host: this.connection.host || this.connection.DefaultHost })
+    return new Ollama({ host: this.connection.formattedHost })
   }
 
   show(modelName: string) {

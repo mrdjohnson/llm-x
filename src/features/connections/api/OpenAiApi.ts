@@ -81,7 +81,7 @@ export class OpenAiApi extends BaseApi {
     incomingMessageVariant: IMessageModel,
   ): AsyncGenerator<string> {
     const connection = connectionModelStore.selectedConnection
-    const host = connection?.host || connection?.DefaultHost
+    const host = connection?.formattedHost
 
     const model = connectionModelStore.selectedModelName
     if (!connection || !model) return
