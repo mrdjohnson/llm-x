@@ -5,9 +5,7 @@ import { DownloadedModel, LMStudioClient } from '@lmstudio/sdk'
 import { IObservableArray, makeObservable, observable } from 'mobx'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import ServerConnection, {
-  ServerConnectionMobxMappings,
-} from '~/features/connections/servers/ServerConnection'
+import ServerConnection from '~/features/connections/servers/ServerConnection'
 import lmsApi from '~/features/connections/api/LmsApi'
 
 import LanguageModel from '~/models/LanguageModel'
@@ -39,7 +37,7 @@ class LmsServerConnection extends ServerConnection<ILmsModel> {
   constructor(public connectionModel: IConnectionDataModel) {
     super(connectionModel)
 
-    makeObservable(this, ServerConnectionMobxMappings)
+    makeObservable(this, ServerConnection.MOBX_MAPPINGS)
   }
 
   readonly hostLabel = 'LM Studio Host:'

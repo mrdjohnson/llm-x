@@ -5,9 +5,7 @@ import camelcaseKeys from 'camelcase-keys'
 import { IObservableArray, makeObservable, observable } from 'mobx'
 import axios from 'axios'
 
-import ServerConnection, {
-  ServerConnectionMobxMappings,
-} from '~/features/connections/servers/ServerConnection'
+import ServerConnection from '~/features/connections/servers/ServerConnection'
 import a1111Api from '~/features/connections/api/A1111Api'
 
 import LanguageModel, { LanguageModelType } from '~/models/LanguageModel'
@@ -35,7 +33,7 @@ class A1111ServerConnection extends ServerConnection<IA1111Model> {
   constructor(public connectionModel: IConnectionDataModel) {
     super(connectionModel)
 
-    makeObservable(this, ServerConnectionMobxMappings)
+    makeObservable(this, ServerConnection.MOBX_MAPPINGS)
   }
 
   readonly hostLabel = 'AUTOMATIC1111 Host:'

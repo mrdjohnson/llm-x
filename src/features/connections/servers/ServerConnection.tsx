@@ -12,13 +12,6 @@ import { LanguageModelType } from '~/models/LanguageModel'
 import { ConnectionTypes, IConnectionDataModel } from '~/models/types'
 import { toastStore } from '~/models/ToastStore'
 
-export const ServerConnectionMobxMappings = {
-  models: observable,
-  parsedParameters: computed,
-  isConnected: observable,
-  fetchLmModels: action,
-}
-
 export type ServerConnectionModelPanel<BaseModel, T = ServerConnection<BaseModel>> = (props: {
   connection: T
 }) => React.JSX.Element
@@ -43,6 +36,13 @@ abstract class ServerConnection<
 
   static getSnapshot(): SnapshotIn<IConnectionDataModel> {
     throw 'not implemented'
+  }
+
+  static MOBX_MAPPINGS = {
+    models: observable,
+    parsedParameters: computed,
+    isConnected: observable,
+    fetchLmModels: action,
   }
 
   get parsedParameters() {

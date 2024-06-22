@@ -4,9 +4,7 @@ import { SortType as SelectionPanelSortType } from '~/components/SelectionTableP
 
 import LanguageModel, { LanguageModelType } from '~/models/LanguageModel'
 import { IObservableArray, makeObservable, observable } from 'mobx'
-import ServerConnection, {
-  ServerConnectionMobxMappings,
-} from '~/features/connections/servers/ServerConnection'
+import ServerConnection from '~/features/connections/servers/ServerConnection'
 import ollamaApi from '~/features/connections/api/OllamaApi'
 
 import Image from '~/icons/Image'
@@ -40,7 +38,7 @@ class OllamaServerConnection extends ServerConnection<IOllamaModel> {
   constructor(public connectionModel: IConnectionDataModel) {
     super(connectionModel)
 
-    makeObservable(this, ServerConnectionMobxMappings)
+    makeObservable(this, ServerConnection.MOBX_MAPPINGS)
   }
 
   readonly hostLabel = 'Ollama Studio Host:'

@@ -5,9 +5,7 @@ import axios from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import ServerConnection, {
-  ServerConnectionMobxMappings,
-} from '~/features/connections/servers/ServerConnection'
+import ServerConnection from '~/features/connections/servers/ServerConnection'
 import openAiApi from '~/features/connections/api/OpenAiApi'
 
 import LanguageModel from '~/models/LanguageModel'
@@ -37,7 +35,7 @@ class OpenAiServerConnection extends ServerConnection<IOpenAiModel> {
   constructor(public connectionModel: IConnectionDataModel) {
     super(connectionModel)
 
-    makeObservable(this, ServerConnectionMobxMappings)
+    makeObservable(this, ServerConnection.MOBX_MAPPINGS)
   }
 
   readonly hostLabel: string = 'Open AI Host:'
