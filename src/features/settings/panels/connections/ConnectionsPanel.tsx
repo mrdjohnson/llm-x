@@ -50,12 +50,6 @@ const ConnectionsPanel = observer(() => {
               'group-data-[selected=true]:text-primary group-data-[selected=true]:border-b-primary flex-shrink-0 group-[.is-active-parent]:text-primary/60',
           }}
         >
-          <Tab
-            key="App"
-            title="App"
-            className={selectedConnectionModelId === 'App' ? 'is-active-parent' : ''}
-          />
-
           {_.map(connections, connection => (
             <Tab
               key={connection.id}
