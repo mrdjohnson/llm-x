@@ -14,10 +14,10 @@ type MessageGroupType = PropsWithChildren<{
 const MessageGroup = observer(({ message, children }: MessageGroupType) => {
   return (
     <div className="relative flex w-fit flex-col" key={message.uniqId}>
-      <div className="sticky top-0 z-20 mr-4 flex w-full flex-row gap-2 bg-base-100 pb-2 pl-4">
+      <div className="sticky top-0 z-20 mr-4 flex w-full flex-row gap-2 bg-base-100 pb-2">
         <ToolTip label="Close variations group" placement="top" delay={400}>
           <button
-            className={'bg-base-100 text-base-content/30 hover:scale-125 hover:text-base-content'}
+            className="text-sm opacity-30 hover:scale-105 hover:opacity-100"
             onClick={() => message.setShowVariations(false)}
           >
             <WindowClose />
