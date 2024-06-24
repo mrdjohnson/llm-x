@@ -102,8 +102,18 @@ const ChatBox = observer(() => {
     const variations: IMessageModel[] = message.variations
     const allVariations = [message, ...variations]
 
+    const handleAddMoreVariations = () => {
+      _.times(3, () => {
+        incomingMessageStore.generateVariation(chat, message)
+      })
+    }
+
     return (
-      <MessageGroup message={message} key={message.uniqId + '_group'}>
+      <MessageGroup
+        message={message}
+        key={message.uniqId + '_group'}
+        onAddMoreVariations={handleAddMoreVariations}
+      >
         {allVariations.map((variant, index) => renderMessage(message, variant, index))}
       </MessageGroup>
     )
