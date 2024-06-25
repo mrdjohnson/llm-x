@@ -3,6 +3,7 @@ import { SnapshotIn } from 'mobx-state-tree'
 import { IObservableArray, makeObservable, observable } from 'mobx'
 import axios from 'axios'
 import camelcaseKeys from 'camelcase-keys'
+import _ from 'lodash'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 import ServerConnection from '~/features/connections/servers/ServerConnection'
@@ -65,9 +66,11 @@ class OpenAiServerConnection extends ServerConnection<IOpenAiModel> {
   })
 
   async _fetchLmModels(host: string): Promise<OpenAiLanguageModel[]> {
+    const apiKey = _.find(this.parameters, { field: 'apiKey' })?.parsedValue() || 'not-needed'
+
     const {
       data: { data },
-    } = await axios.get(`${host}/models`)
+    } = await axios.get(`${host}/models`, { headers: { Authorization: `Bearer ${apiKey}` } })
 
     type IOpenAiModelResponse = Omit<IOpenAiModel, '_id' | 'owned_by'> & {
       id: string
