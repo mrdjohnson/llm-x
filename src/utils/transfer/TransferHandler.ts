@@ -1,4 +1,5 @@
 import { applySnapshot } from 'mobx-state-tree'
+import _ from 'lodash'
 
 import { chatStore } from '~/models/ChatStore'
 import { toastStore } from '~/models/ToastStore'
@@ -7,8 +8,7 @@ import { settingStore } from '~/models/SettingStore'
 
 import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
 import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
-import _ from 'lodash'
-import { connectionModelStore } from '../../features/connections/ConnectionModelStore'
+import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 export type DownloadOptions = {
   includeImages?: boolean
