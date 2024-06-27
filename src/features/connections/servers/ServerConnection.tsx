@@ -69,7 +69,7 @@ abstract class ServerConnection<
   protected abstract _fetchLmModels(host: string): Promise<Array<LanguageModelType<BaseModelType>>>
 
   async fetchLmModels() {
-    const host = this.host
+    const host = this.formattedHost
     const enabled = this.enabled
 
     if (!enabled || !host) return []
