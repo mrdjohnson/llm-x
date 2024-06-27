@@ -2,8 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { Controller, useForm } from 'react-hook-form'
+import { Select, SelectItem } from '@nextui-org/react'
+import { SnapshotIn, getSnapshot } from 'mobx-state-tree'
 
 import { chatStore } from '~/models/ChatStore'
+import { actorStore } from '~/models/actor/ActorStore'
+import { IChatModel } from '~/models/ChatModel'
 
 import Check from '~/icons/Check'
 import Delete from '~/icons/Delete'
@@ -15,13 +19,20 @@ import FormInput from '~/components/form/FormInput'
 
 import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
 
+type ChatFormDataType = SnapshotIn<IChatModel>
+
+const pluralize = (text: string, count: number) => {
+  if (count > 1) return text + 's'
+  return text
+}
+
 export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked: () => void }) => {
   const {
     handleSubmit,
     reset,
     control,
     formState: { isDirty, errors },
-  } = useForm<{ name: string }>()
+  } = useForm<ChatFormDataType>()
 
   const [isExportOpen, setIsExportOpen] = useState(false)
 
@@ -60,7 +71,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
   }
 
   useEffect(() => {
-    reset({ name: chat.name || 'new chat' })
+    reset(getSnapshot(chat))
   }, [chat])
 
   useEffect(() => {
@@ -71,8 +82,8 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
     }
   }, [isExportOpen])
 
-  const validateName = (name: string) => {
-    if (name.length < 2 || name.length > 30) return 'Name length must be 2-30 chars'
+  const validateName = (name?: string) => {
+    if (!name || name.length < 2 || name.length > 30) return 'Name length must be 2-30 chars'
 
     return true
   }
@@ -97,7 +108,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
             <div className="flex flex-col gap-2 rounded-box bg-base-300 text-base-content">
               <form className="flex w-full flex-row gap-2" onSubmit={handleFormSubmit}>
                 <Controller
-                  render={({field}) => (
+                  render={({ field }) => (
                     <FormInput
                       id={chat.id + ''}
                       label="Name"
@@ -123,6 +134,65 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
                   }}
                 />
               </form>
+
+              {/* {connection.} */}
+              {/* {chat.actors.map(actor => (
+                <div>
+                  {actor.name}
+                  <br />
+                  Connection(s):{' '}
+                  {actor.connections.map(connection => (
+                    <div>
+                      {connection.label}
+                      <br />
+                    </div>
+                  ))}
+                </div>
+              ))} */}
+
+              {/* note, do not put select in a controller */}
+              <Select
+                selectionMode="multiple"
+                size="sm"
+                className="w-full min-w-[20ch] rounded-md bg-transparent"
+                classNames={{
+                  value: '!text-base-content min-w-[20ch]',
+                  trigger:
+                    '!bg-transparent rounded-md border border-base-content/30 hover:!bg-base-100',
+                  popoverContent: 'text-base-content bg-base-100 rounded-md ',
+                  listboxWrapper: 'max-h-[500px]',
+                  description: 'text-base-content/45',
+                }}
+                label="Actors"
+                description="More than one selected actor, or actors with multiple selections will result in multiple data calls"
+                // hack to get select component to update
+                selectedKeys={[...chat.actorIds]}
+              >
+                {actorStore.actors.map(actor => (
+                  <SelectItem
+                    key={actor.id}
+                    textValue={actor.name}
+                    className="flex w-full !min-w-[13ch] flex-row !text-base-content hover:!bg-base-content/10 focus:!bg-base-content/10"
+                    onClick={() => chat.addOrRemoveActor(actor)}
+                  >
+                    <div>{actor.name}</div>
+
+                    <div className="ml-2 flex flex-col text-sm text-base-content/60">
+                      {actor.personas[0] && (
+                        <div>
+                          {actor.personas.length} {pluralize('persona', actor.personas.length)}
+                        </div>
+                      )}
+                      {actor.connections[0] && (
+                        <div>
+                          {actor.connections.length}{' '}
+                          {pluralize('connection', actor.personas.length)}
+                        </div>
+                      )}
+                    </div>
+                  </SelectItem>
+                ))}
+              </Select>
             </div>
           </div>
 

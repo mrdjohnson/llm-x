@@ -12,7 +12,7 @@ import { ServerConnectionTypes, serverConnectionByType } from '~/features/connec
 
 import { ConnectionTypes, IConnectionDataModel, BaseLanguageModel } from '~/models/types'
 
-const ConnectionDataModelStore = types
+export const ConnectionDataModelStore = types
   .model({
     connections: types.array(ConnectionDataModel),
     selectedConnection: types.safeReference(ConnectionDataModel),
@@ -78,13 +78,21 @@ const classMap: Record<
   Ollama: OllamaServerConnection,
   OpenAi: OpenAiServerConnection,
 }
+
+let globalIndex = 0
 class ConnectionModelStore {
   dataStore = connectionDataModelStore
 
   private connectionMapById: Record<string, ServerConnectionTypes> = {}
 
+  index: number
+
   constructor() {
+    // debugger
     makeAutoObservable(this)
+
+    this.index = globalIndex
+    globalIndex += 1
   }
 
   get selectedModelName() {
@@ -99,7 +107,7 @@ class ConnectionModelStore {
     return this.dataStore.selectedConnection?.id
   }
 
-  getConnectionById(id?: string) {
+  getConnectionById = (id?: string) => {
     if (!id) return
 
     return this.connectionMapById[id]
@@ -181,5 +189,7 @@ class ConnectionModelStore {
 export const connectionModelStore = new ConnectionModelStore()
 
 persist('connection-store', connectionDataModelStore).then(() => {
+  console.log('updated connection-store')
+
   connectionModelStore.refreshModels()
 })

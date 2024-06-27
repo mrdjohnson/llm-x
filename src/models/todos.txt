@@ -1,0 +1,3 @@
+- opening persona or model selector when there is an actor selected should go to that actor
+- personas and models should show how many actors are currently using it 
+- actors should be visible in omnibar

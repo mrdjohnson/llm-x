@@ -79,7 +79,8 @@ const MobileSettingsSidePanel = observer(
 
 const SettingsModal = observer(() => {
   const modalRef = useRef<HTMLDialogElement>(null)
-  const isMobile = useMedia('(max-width: 1024px)')
+  const isMobile = useMedia('(max-width: 768px)')
+  const isTablet = useMedia('(max-width: 1024px)')
   const { query } = useKBar()
 
   let panelName = settingStore.settingsPanelName
@@ -157,12 +158,12 @@ const SettingsModal = observer(() => {
 
           <ModalBody className='pt-0'>
             <div className="flex h-full flex-col rounded-md bg-base-100 p-2 pt-0">
-              <div className="flex h-full flex-grow-0 flex-col justify-stretch gap-2 overflow-y-scroll lg:h-[700px] lg:flex-row">
+              <div className="flex h-full flex-grow-0 flex-col justify-stretch gap-2 overflow-y-scroll lg:h-[700px] md:flex-row">
                 <div
-                  className="w-full lg:w-[260px] lg:min-w-[260px] lg:max-w-[260px]"
+                  className="w-full md:w-[260px] md:min-w-[260px] md:max-w-[260px]"
                   role="complementary"
                 >
-                  <div className="flex w-full flex-col gap-2 rounded-md bg-base-200 lg:h-full lg:p-2 ">
+                  <div className="flex w-full flex-col gap-2 rounded-md bg-base-200 md:h-full md:p-2 ">
                     {isMobile ? (
                       <MobileSettingsSidePanel selectedPanel={panelName} />
                     ) : (

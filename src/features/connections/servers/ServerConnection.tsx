@@ -113,6 +113,12 @@ abstract class ServerConnection<
   modelFilter(model: LanguageModelType<BaseModelType>, filterText: string) {
     return model.modelName.toLowerCase().includes(filterText.toLowerCase())
   }
+
+  filteredModels(filterText: string) {
+    if (!filterText) return this.models
+
+    return this.models.filter(model => this.modelFilter(model, filterText))
+  }
 }
 
 export default ServerConnection

@@ -66,6 +66,10 @@ const PersonaStore = types
 
         self.personaToEdit = undefined
       },
+
+      getPersonaById(id?: number | string): IPersonaModel | undefined {
+        return _.find(self.personas, { id: _.toNumber(id) })
+      },
     }
   })
 

@@ -5,6 +5,8 @@ import moment from 'moment'
 import { IMessageModel, MessageModel } from '~/models/MessageModel'
 import { toastStore } from '~/models/ToastStore'
 import { incomingMessageStore } from '~/models/IncomingMessageStore'
+import { IActorModel } from '~/models/actor/ActorModel'
+import { actorStore } from '~/models/actor/ActorStore'
 
 import base64EncodeImage from '~/utils/base64EncodeImage'
 import CachedStorage from '~/utils/CachedStorage'
@@ -17,6 +19,7 @@ export const ChatModel = types
     id: types.optional(types.identifierNumber, Date.now),
     name: types.optional(types.string, ''),
     messages: types.array(MessageModel),
+    actorIds: types.array(types.string),
     _messageToEditId: types.maybe(types.string), // user message to edit
     _messageVariantToEditId: types.maybe(types.string),
     _previewImageUrls: types.array(types.string),
@@ -81,6 +84,14 @@ export const ChatModel = types
     get previewImageUrls() {
       return self._previewImageUrls
     },
+
+    get actors() {
+      return _.compact(self.actorIds.map(actorStore.getActorById))
+    },
+
+    get personaCount() {
+      return _.sum(this.actors.map(actor => actor.personaIds.length))
+    }
   }))
   .actions(self => ({
     afterCreate() {
@@ -180,7 +191,7 @@ export const ChatModel = types
       destroy(message)
     },
 
-    findAndRegenerateResponse() {
+    findAndRegenerateResponse(chat: IChatModel) {
       const messageToEditIndex = _.indexOf(self.messages, self.messageToEdit)
       const messageAfterEditedMessage: IMessageModel = self.messages[messageToEditIndex + 1]
 
@@ -202,7 +213,7 @@ export const ChatModel = types
       }
 
       self._messageToEditId = undefined
-      incomingMessageStore.generateVariation(cast(self), botMessageToEdit)
+      incomingMessageStore.generateVariation(chat, botMessageToEdit)
     },
 
     findAndEditPreviousMessage() {
@@ -265,6 +276,12 @@ export const ChatModel = types
 
       message.addImageUrls(self.id, imageUrls)
     },
+
+    addOrRemoveActor(actor: IActorModel) {
+      self.actorIds = cast(_.xor(self.actorIds, [actor.id]))
+
+      console.log('new actor ids', self.actorIds)
+    }
   }))
 
-export interface IChatModel extends Instance<typeof ChatModel> {}
+export interface IChatModel extends Instance<typeof ChatModel> { }
