@@ -65,6 +65,13 @@ class A1111ServerConnection extends ServerConnection<IA1111Model> {
 
     return camelcaseKeys<IA1111Model[]>(response.data).map(LanguageModel.fromIA1111Model)
   }
+
+  override modelFilter(model: A1111LanguageModel, filterText: string) {
+    return (
+      model.modelName.toLowerCase().includes(filterText.toLowerCase()) ||
+      model.label.toLowerCase().includes(filterText.toLowerCase())
+    )
+  }
 }
 
 export default A1111ServerConnection

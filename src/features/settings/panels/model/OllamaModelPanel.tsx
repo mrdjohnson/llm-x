@@ -85,9 +85,7 @@ const OllamaModelPanelTable = observer(
         items={connection.models}
         sortTypes={connection.modelTableHeaders}
         primarySortTypeLabel="name"
-        itemFilter={(model: IOllamaModel, filterText: string) =>
-          model.name.toLowerCase().includes(filterText.toLowerCase())
-        }
+        itemFilter={connection.modelFilter}
         renderRow={renderRow}
         getItemKey={model => model.name}
         onItemSelected={model =>

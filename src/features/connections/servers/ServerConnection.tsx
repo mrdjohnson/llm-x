@@ -105,6 +105,10 @@ abstract class ServerConnection<
   ) => ReactNode
 
   abstract api: BaseApi
+
+  modelFilter(model: LanguageModelType<BaseModelType>, filterText: string) {
+    return model.modelName.toLowerCase().includes(filterText.toLowerCase())
+  }
 }
 
 export default ServerConnection

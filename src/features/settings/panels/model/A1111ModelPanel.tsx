@@ -28,12 +28,7 @@ const A1111ModelPanel = observer(({ connection }: { connection: A1111ServerConne
       onItemSelected={model =>
         connectionModelStore.dataStore.setSelectedModel(model, connection.id)
       }
-      itemFilter={(model, filterText) => {
-        return (
-          model.modelName.toLowerCase().includes(filterText.toLowerCase()) ||
-          model.label.toLowerCase().includes(filterText.toLowerCase())
-        )
-      }}
+      itemFilter={connection.modelFilter}
       primarySortTypeLabel={connection.primaryHeader}
       renderRow={renderRow}
       getIsItemSelected={model =>

@@ -83,6 +83,13 @@ class OpenAiServerConnection extends ServerConnection<IOpenAiModel> {
 
     return trueResponse.map(model => LanguageModel.fromIOpenAiModel(model))
   }
+
+  override modelFilter(model: OpenAiLanguageModel, filterText: string) {
+    return (
+      model.modelName.toLowerCase().includes(filterText.toLowerCase()) ||
+      model.ownedBy.toLowerCase().includes(filterText.toLowerCase())
+    )
+  }
 }
 
 export default OpenAiServerConnection
