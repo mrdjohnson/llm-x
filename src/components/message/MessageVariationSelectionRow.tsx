@@ -30,7 +30,7 @@ const MessageVariationSelectionRow = observer(
           <ChevronDown className="!h-3 !w-3 rotate-90" />
         </button>
 
-        <span className="text-sm opacity-30">
+        <span className="text-sm opacity-30 whitespace-nowrap">
           {selectedVariationIndex + 1} / {variations.length + 1}
         </span>
 
