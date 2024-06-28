@@ -175,7 +175,7 @@ const runMigrations = () => {
 
   const settings = JSON.parse(settingsString) as Record<string, unknown>
 
-  if (_.gt(SETTING_STORE_VERSION, settingStore.version)) return
+  if (_.isEqual(SETTING_STORE_VERSION, settings.version)) return
 
   migrateV1(settings)
   migrateV2(settings)
