@@ -173,7 +173,7 @@ class ConnectionModelStore {
     return this.selectedConnection?.type === 'A1111'
   }
 
-  refreshModels() {
+  refreshModels = () => {
     this.connections.map(connection => connection.fetchLmModels())
   }
 }
