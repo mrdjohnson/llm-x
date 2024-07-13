@@ -19,7 +19,16 @@ type HostInputProps = {
 const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
   const { host } = connection
 
-  const { control } = useFormContext<SnapshotIn<IConnectionDataModel>>()
+  const {
+    control,
+    formState: { dirtyFields },
+  } = useFormContext<SnapshotIn<IConnectionDataModel>>()
+
+  const isDirty = dirtyFields.host
+
+  const modelsFoundLabel = isDirty
+    ? 'Save to see model length'
+    : `${connection.models.length} models found`
 
   return (
     <Controller
@@ -39,6 +48,7 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
               >
                 <Question />
               </button>
+              <span className="ml-auto pl-2">{modelsFoundLabel}</span>
             </span>
           }
           endContent={
@@ -48,6 +58,7 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
                 type="button"
                 title="Refresh models"
                 onClick={() => connection.fetchLmModels()}
+                disabled={isDirty}
               >
                 <Refresh />
               </button>
