@@ -41,7 +41,7 @@ class OllamaServerConnection extends ServerConnection<IOllamaModel> {
     makeObservable(this, ServerConnection.MOBX_MAPPINGS)
   }
 
-  readonly hostLabel = 'Ollama Studio Host:'
+  readonly hostLabel = 'Ollama Host:'
   readonly enabledLabel = 'Text generation through Ollama:'
 
   static readonly getSnapshot = (): SnapshotIn<IConnectionDataModel> => ({
