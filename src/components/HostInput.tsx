@@ -26,9 +26,13 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
 
   const isDirty = dirtyFields.host
 
-  const modelsFoundLabel = isDirty
-    ? 'Save to see model length'
-    : `${connection.models.length} models found`
+  const modelsFoundLabel = isDirty ? (
+    'Save to see model length'
+  ) : (
+    <button className="link" onClick={() => settingStore.openSettingsModal('models')}>
+      {connection.models.length} models found
+    </button>
+  )
 
   return (
     <Controller
@@ -48,7 +52,7 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
               >
                 <Question />
               </button>
-              <span className="ml-auto pl-2">{modelsFoundLabel}</span>
+              <span className="ml-auto pl-2 text-sm">{modelsFoundLabel}</span>
             </span>
           }
           endContent={
