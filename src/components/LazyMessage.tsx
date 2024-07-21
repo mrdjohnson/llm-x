@@ -214,7 +214,7 @@ const LazyMessage = observer(
               <div
                 className={'flex w-fit flex-row gap-2 ' + (fromBot ? '' : 'justify-end self-end')}
               >
-                <span className="text-sm opacity-30">{`${variationIndex + 1}/${variations.length + 1}`}</span>
+                <span className="text-sm opacity-30 flex items-center">{`${variationIndex + 1}/${variations.length + 1}`}</span>
 
                 <ToolTip
                   label={
