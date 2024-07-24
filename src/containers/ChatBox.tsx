@@ -11,6 +11,7 @@ import ChatBoxInputRow from '~/components/ChatBoxInputRow'
 import ChatBoxPrompt from '~/components/ChatBoxPrompt'
 import { IncomingMessage, Message, MessageToEdit } from '~/components/Message'
 import MessageGroup from '~/components/message/MessageGroup'
+import ToastCenter from '~/components/ToastCenter'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 
@@ -131,6 +132,8 @@ const ChatBox = observer(() => {
       >
         {chat.messages.length > 0 ? chat.messages.map(renderMessageOrGroup) : <ChatBoxPrompt />}
       </ScrollableFeed>
+
+      <ToastCenter />
 
       <ChatBoxInputRow onSend={handleMessageToSend}>
         {isGettingData && (

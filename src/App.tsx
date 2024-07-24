@@ -5,7 +5,6 @@ import SettingsModal from '~/features/settings/containers/SettingsModal'
 import Progresses from '~/features/progress/components/Progresses'
 
 import Navbar from '~/components/Navbar'
-import ToastCenter from '~/components/ToastCenter'
 import PwaReloadPrompt from '~/components/PwaReloadPrompt'
 import OmniBar from '~/components/OmniBar'
 import Lightbox from '~/features/lightbox/components/Lightbox'
@@ -19,8 +18,6 @@ function App() {
         <SettingsModal />
 
         <Lightbox />
-
-        <ToastCenter />
 
         <PwaReloadPrompt />
 

@@ -32,17 +32,17 @@ const ToastCenter = observer(() => {
   })
 
   return (
-    <dialog
-      className="toast toast-center z-30 bg-transparent"
+    <div
+      className="z-30 bg-transparent w-full gap-3"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       {toasts.map(toast => (
         <div
-          className={`alert alert-${toast.type} max-w-10/12 relative rounded-md border border-base-content/30 px-4 text-xl font-bold`}
+          className={`alert alert-${toast.type} relative rounded-md border border-base-content/30 px-4 text-xl font-bold`}
           key={toast.id}
         >
-          <span className="cursor-default">{toast.message}</span>
+          <span className="cursor-default break-words whitespace-pre-wrap">{toast.message}</span>
 
           <div
             className="btn btn-xs absolute right-1 top-1 text-sm font-bold opacity-50"
@@ -52,7 +52,7 @@ const ToastCenter = observer(() => {
           </div>
         </div>
       ))}
-    </dialog>
+    </div>
   )
 })
 
