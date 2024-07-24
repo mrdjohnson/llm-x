@@ -12,7 +12,7 @@ import Lightbox from '~/features/lightbox/components/Lightbox'
 function App() {
   return (
     <Dropzone>
-      <div className="container drawer drawer-end mx-auto flex !max-h-dvh flex-col place-self-center p-3 text-base-content">
+      <div className="container drawer drawer-end mx-auto flex !h-dvh !max-h-dvh flex-col place-self-center p-3 text-base-content">
         <Navbar />
 
         <SettingsModal />
@@ -23,7 +23,7 @@ function App() {
 
         <OmniBar />
 
-        <section className="drawer-content flex h-dvh max-h-full w-full flex-grow flex-row gap-4 overflow-hidden text-xl">
+        <section className="drawer-content flex h-full max-h-full w-full flex-grow flex-row gap-4 overflow-hidden text-xl">
           <aside className="hidden lg:block" role="complementary">
             <SideBar />
           </aside>
