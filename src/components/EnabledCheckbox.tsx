@@ -17,10 +17,10 @@ const EnabledCheckbox = observer(({ control, connection }: EnabledCheckboxProps)
     <Controller
       render={({ field: { value, onChange } }) => {
         return (
-          <label className="label w-fit gap-2">
-            <span className="label-text">{connection.enabledLabel}</span>
+          <label className="label w-full md:w-fit gap-2 flex flex-col md:flex-row">
+            <span className="label-text text-lg md:text-medium text-center">{connection.enabledLabel}</span>
 
-            <div className="join">
+            <div className="join mx-auto">
               {[true, false].map((isEnabledOption, index) => (
                 <button
                   type="button"

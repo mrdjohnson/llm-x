@@ -43,16 +43,19 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
           disabled={!isEnabled}
           placeholder={host}
           description={
-            <span className="flex gap-2 align-baseline text-sm">
-              See connection instructions here:
-              <button
-                onClick={() => settingStore.openSettingsModal('connection')}
-                className="hover:text-base-content"
-                type="button"
-              >
-                <Question />
-              </button>
-              <span className="ml-auto pl-2 text-sm">{modelsFoundLabel}</span>
+            <span className="flex flex-col gap-2 align-baseline text-sm md:flex-row">
+              <span className='flex align-baseline'>
+                See connection instructions here:
+                <button
+                  onClick={() => settingStore.openSettingsModal('connection')}
+                  className="hover:text-base-content ml-2 align-baseline"
+                  type="button"
+                >
+                  <Question />
+                </button>
+              </span>
+
+              <span className="md:ml-auto md:pl-2 text-sm">{modelsFoundLabel}</span>
             </span>
           }
           endContent={

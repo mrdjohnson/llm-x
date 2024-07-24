@@ -92,11 +92,11 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
             </div>
           </ScrollShadow>
 
-          <div className="mt-auto flex justify-between py-2">
+          <div className="mt-auto flex flex-col justify-between gap-3 md:flex-row pt-2 md:pb-2">
             <div>
               <button
                 type="button"
-                className="btn btn-ghost btn-sm mr-8 text-error"
+                className="btn btn-outline btn-sm mr-8 w-full text-error md:btn-ghost md:text-error"
                 onClick={() => connectionModelStore.deleteConnection(connection.id)}
               >
                 Delete Connection
@@ -106,7 +106,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
             <div>
               <button
                 type="button"
-                className="btn btn-ghost btn-sm mx-4 text-base-content/60 hover:text-base-content"
+                className="btn btn-outline w-full text-base-content/60 md:btn-ghost md:btn-sm hover:text-base-content md:mx-4 md:text-base-content/60"
                 onClick={() => connectionModelStore.duplicateConnection(connection.id)}
                 disabled={isDirty}
               >
@@ -114,10 +114,10 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
               </button>
             </div>
 
-            <div>
+            <div className="flex flex-row justify-between">
               <button
                 type="button"
-                className="btn btn-ghost btn-sm mx-4"
+                className="btn btn-outline md:btn-ghost md:btn-sm md:mx-4"
                 onClick={() => reset()}
                 disabled={!isDirty}
               >
@@ -126,7 +126,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
 
               <button
                 type="submit"
-                className="btn btn-primary btn-sm"
+                className="btn btn-primary md:btn-sm"
                 onClick={handleFormSubmit}
                 disabled={!isDirty && _.isEmpty(errors)}
               >
