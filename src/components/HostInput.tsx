@@ -42,6 +42,7 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
           defaultValue={connection.DefaultHost}
           disabled={!isEnabled}
           placeholder={host}
+          type='url'
           description={
             <span className="flex flex-col gap-2 align-baseline text-sm md:flex-row">
               <span className='flex align-baseline'>
