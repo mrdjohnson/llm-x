@@ -14,11 +14,10 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 # Recent additions:
 
+- LaTex support!
 - Users can connect to open ai compatible servers
 - Users can connect to multiple of the same server at the same time
 - Text generation through LM Studio is here! 
-- Regenerating a bot message adds it to a message variation list
-- Message headers and footers are sticky with the message, useful for long messages
 
 # How To Use:
 
@@ -80,6 +79,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 - [x] **Offline Support** via PWA technology
 - [x] **Code highlighting** with Highlight.js (only handles common languages for now)
 - [x] **Search/Command bar** provides quick access to app features through kbar
+- [x] **LaTex support**
 - [x] Allow users to have as many connections as they way!
 - [x] Text Entry and Response to Ollama
 - [x] Auto saved Chat history
@@ -113,6 +113,10 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 | Responding about a cat                                                                                    |
 | --------------------------------------------------------------------------------------------------------- |
 | ![Cat screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-cat.png) |
+
+| LaTex support!                                                                                   |
+| --------------------------------------------------------------------------------------------------------- |
+| ![Latex screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-latex.png) |
 
 | Another logo response                                                                                           |
 | --------------------------------------------------------------------------------------------------------------- |

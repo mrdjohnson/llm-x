@@ -1,6 +1,8 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
 import { type PropsWithChildren } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
@@ -165,7 +167,7 @@ const LazyMessage = observer(
         {(botName || isVariationGroupView || hasVarations) && (
           <div
             className={
-              'group sticky z-10 mb-2 flex flex-row gap-2 bg-base-100 opacity-100 align-middle ' +
+              'group sticky z-10 mb-2 flex flex-row gap-2 bg-base-100 align-middle opacity-100 ' +
               (isVariationGroupView ? ' top-7' : ' top-0')
             }
           >
@@ -237,7 +239,8 @@ const LazyMessage = observer(
               }
             >
               <Markdown
-                remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
+                remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkMath]}
+                rehypePlugins={[[rehypeKatex, { output: 'mathml' }]]}
                 className="prose-spacing prose flex w-full flex-wrap overflow-x-hidden overscroll-none prose-p:w-full"
                 components={{
                   code: DelayedCustomCodeBlock,
