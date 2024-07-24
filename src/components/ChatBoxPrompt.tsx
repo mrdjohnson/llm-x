@@ -58,13 +58,9 @@ const ChatBoxPrompt = observer(() => {
           </h1>
 
           <div className="text-2xl">
-            <ul className="steps steps-vertical list-inside list-disc py-6 text-left *:text-lg [&_a]:text-lg [&_span]:text-lg">
-              <Step
-                isCompleted={
-                  activeConnectionTypes.has('LMS') || activeConnectionTypes.has('Ollama')
-                }
-              >
-                {'Tell LM Studio or Ollama that '}
+            <ul className="steps steps-vertical list-inside list-disc gap-3 py-6 text-left *:text-lg [&_a]:text-lg [&_span]:text-lg">
+              <Step isCompleted={!_.isEmpty(activeConnectionTypes)}>
+                {'Tell LM Studio, Ollama, AUTOMATIC1111, or Open AI that '}
                 <span className="text-primary">we're cool:</span>
                 <button
                   className="link decoration-primary"
@@ -74,19 +70,17 @@ const ChatBoxPrompt = observer(() => {
                 </button>
               </Step>
 
-              <Step type="primary" isCompleted={activeConnectionTypes.has('A1111')}>
-                {'Befriend AUTOMATIC1111 for '}
-                <span className="font-semibold text-primary">image generation:</span>
-                <button
-                  className="link decoration-primary"
-                  onClick={() => settingStore.openSettingsModal('connection')}
-                >
-                  How to connect
-                </button>
-              </Step>
-
               <Step isCompleted={anyConnectionHasModels}>
-                {'Download a model from LM Studio home page or '}
+                {'Download a model from '}
+                <a
+                  href="https://huggingface.co/lmstudio-ai"
+                  className="link decoration-primary"
+                  target="__blank"
+                  title="Open LM Studio's hugging face account in new tab"
+                >
+                  LM Studio's Hugging face
+                </a>
+                {' or '}
                 <a
                   href="https://ollama.com/library"
                   className="link decoration-primary"
@@ -100,14 +94,12 @@ const ChatBoxPrompt = observer(() => {
               <Step type="secondary" isCompleted={!_.isEmpty(personaStore.personas)}>
                 {'Create and Select a'}
 
-                <ToolTip label="aka System prompt: How the bot should respond" placement="top">
-                  <button
-                    className="link ml-1 decoration-secondary"
-                    onClick={() => settingStore.openSettingsModal('personas')}
-                  >
-                    Persona
-                  </button>
-                </ToolTip>
+                <button
+                  className="link ml-1 decoration-secondary"
+                  onClick={() => settingStore.openSettingsModal('personas')}
+                >
+                  Persona <span className='text-xs'>(aka System Prompt)</span>
+                </button>
 
                 {'to give your bot some pizzaz'}
               </Step>
