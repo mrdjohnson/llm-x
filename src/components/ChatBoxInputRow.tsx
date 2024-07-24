@@ -199,11 +199,11 @@ const ChatBoxInputRow = observer(
           className={' h-full min-h-fit w-full ' + (inputDisabled ? 'bg-base-200' : '')}
           onSubmit={onFormSubmit}
         >
-          <div className="join-item flex w-full flex-row justify-between gap-2 bg-base-200 align-middle">
+          <div className="join-item flex w-full flex-col md:flex-row justify-between md:gap-2 bg-base-200 align-middle">
             <button
               tabIndex={0}
               type="button"
-              className="btn btn-active rounded-none rounded-bl-md"
+              className="btn hidden md:flex btn-active rounded-none rounded-bl-md"
               disabled={inputDisabled || connectionModelStore.isImageGenerationMode}
               onClick={() => settingStore.openSettingsModal('personas')}
             >
@@ -212,7 +212,7 @@ const ChatBoxInputRow = observer(
             </button>
 
             <div className="flex">
-              <AttachmentWrapper>
+              <AttachmentWrapper className="mr-auto md:mr-0">
                 <button
                   className="btn btn-ghost rounded-none"
                   type="button"

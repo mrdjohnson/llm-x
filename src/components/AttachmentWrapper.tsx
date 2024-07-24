@@ -5,7 +5,8 @@ import { TransferHandler } from '~/utils/transfer/TransferHandler'
 const AttachmentWrapper = ({
   children,
   accept = 'image/*',
-}: PropsWithChildren<{ accept?: string }>) => {
+  className
+}: PropsWithChildren<{ accept?: string; className?: string }>) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +17,7 @@ const AttachmentWrapper = ({
   }
 
   return (
-    <span>
+    <span className={className}>
       {/* hidden file input */}
       <input
         style={{ display: 'none' }}
