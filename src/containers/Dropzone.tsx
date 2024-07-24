@@ -11,7 +11,7 @@ const Dropzone = ({ children }: PropsWithChildren) => {
 
   return (
     <div
-      className="grid !h-dvh bg-base-100"
+      className="grid !h-svh !max-h-svh bg-base-100"
       {...getRootProps()}
       onClick={undefined}
     >
