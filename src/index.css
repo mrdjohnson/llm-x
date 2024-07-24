@@ -102,8 +102,8 @@ body {
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  max-height: 100svh !important;
-  height: 100svh !important;
+  max-height: 100dvh !important;
+  height: 100dvh !important;
 }
 
 code {
