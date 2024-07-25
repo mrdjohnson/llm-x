@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import { getSnapshot } from 'mobx-state-tree'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSpeech, useVoices } from 'react-text-to-speech'
 
 import ThemeSelector from '~/components/ThemeSelector'
@@ -18,7 +18,7 @@ import { connectionModelStore } from '~/features/connections/ConnectionModelStor
 
 import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
 import { Select, SelectItem, Switch } from '@nextui-org/react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 const DownlodSelector = () => {
   const [includeImages, setIncludeImages] = useState(true)
@@ -88,7 +88,7 @@ const SpeechSelector = observer(() => {
   const {
     handleSubmit,
     reset,
-    getValues,
+    watch,
     register,
     formState: { isDirty },
   } = useForm<VoiceFormDataType>()
@@ -106,8 +106,8 @@ const SpeechSelector = observer(() => {
     reset(voice)
   })
 
-  const selectedLanguage = getValues('language')
-  const selectedVoiceUri = getValues('voiceUri')
+  const selectedLanguage = watch('language')
+  const selectedVoiceUri = watch('voiceUri')
 
   useEffect(() => {
     reset({
