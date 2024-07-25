@@ -2,6 +2,8 @@ import { observer } from 'mobx-react-lite'
 import { getSnapshot } from 'mobx-state-tree'
 import { useEffect, useState } from 'react'
 import { useSpeech, useVoices } from 'react-text-to-speech'
+import { Select, SelectItem, Switch } from '@nextui-org/react'
+import { useForm } from 'react-hook-form'
 
 import ThemeSelector from '~/components/ThemeSelector'
 import AttachmentWrapper from '~/components/AttachmentWrapper'
@@ -17,8 +19,6 @@ import { settingStore } from '~/models/SettingStore'
 import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
-import { Select, SelectItem, Switch } from '@nextui-org/react'
-import { useForm } from 'react-hook-form'
 
 const DownlodSelector = () => {
   const [includeImages, setIncludeImages] = useState(true)

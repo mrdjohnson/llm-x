@@ -1,8 +1,8 @@
 import { types } from 'mobx-state-tree'
 import { persist } from 'mst-persist'
+import _ from 'lodash'
 
 import { type SettingPanelOptionsType } from '~/features/settings/settingsPanels'
-import _ from 'lodash'
 
 import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 import LmsServerConnection from '~/features/connections/servers/LmsServerConnection'
