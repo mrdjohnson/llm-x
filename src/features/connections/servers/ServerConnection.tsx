@@ -66,6 +66,10 @@ abstract class ServerConnection<
     return host.trim()
   }
 
+  validateHost(): string | boolean {
+    return true
+  }
+
   protected abstract _fetchLmModels(host: string): Promise<Array<LanguageModelType<BaseModelType>>>
 
   async fetchLmModels() {

@@ -61,6 +61,14 @@ class LmsServerConnection extends ServerConnection<ILmsModel> {
     ],
   })
 
+  validateHost(host?: string) {
+    if(!host) return true
+
+    if(!host.startsWith('ws')) return 'Host needs to start with ws:// or wss://'
+
+    return true
+  }
+
   async _fetchLmModels(host: string): Promise<LmsLanguageModel[]> {
     const client = new LMStudioClient({ baseUrl: host })
 

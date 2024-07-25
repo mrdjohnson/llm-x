@@ -21,7 +21,7 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
 
   const {
     control,
-    formState: { dirtyFields },
+    formState: { dirtyFields, errors },
   } = useFormContext<SnapshotIn<IConnectionDataModel>>()
 
   const isDirty = dirtyFields.host
@@ -43,6 +43,7 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
           disabled={!isEnabled}
           placeholder={host}
           type='url'
+          errorMessage={errors.host?.message}
           description={
             <span className="flex flex-col gap-2 align-baseline text-sm md:flex-row">
               <span className='flex align-baseline'>
@@ -78,6 +79,9 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
       control={control}
       name="host"
       defaultValue={host}
+      rules={{
+        validate: connection.validateHost,
+      }}
     />
   )
 })
