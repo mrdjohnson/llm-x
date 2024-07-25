@@ -44,6 +44,7 @@
     "react-hook-form": "^7.51.0",
     "react-markdown": "^9.0.1",
     "react-scrollable-feed": "^2.0.2",
+    "react-text-to-speech": "^0.16.1",
     "react-textarea-autosize": "^8.5.3",
     "rehype-katex": "^7.0.0",
     "remark-gfm": "^4.0.0",

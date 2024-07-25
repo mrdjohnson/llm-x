@@ -6,6 +6,8 @@ import rehypeKatex from 'rehype-katex'
 import { type PropsWithChildren } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
+import { useSpeech } from 'react-text-to-speech'
+import { Badge, ScrollShadow } from '@nextui-org/react'
 
 import Delete from '~/icons/Delete'
 import Refresh from '~/icons/Refresh'
@@ -13,10 +15,13 @@ import ChevronDown from '~/icons/ChevronDown'
 import Edit from '~/icons/Edit'
 import Warning from '~/icons/Warning'
 import WindowCheck from '~/icons/WindowCheck'
+import PlayPause from '~/icons/PlayPause'
+import Stop from '~/icons/Stop'
 
 import { chatStore } from '~/models/ChatStore'
 import { incomingMessageStore } from '~/models/IncomingMessageStore'
 import { IMessageModel } from '~/models/MessageModel'
+import { settingStore } from '~/models/SettingStore'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 
@@ -25,7 +30,6 @@ import CopyButton from '~/components/CopyButton'
 import CachedImage from '~/components/CachedImage'
 import ToolTip from '~/components/Tooltip'
 import MessageVariationSelectionRow from '~/components/message/MessageVariationSelectionRow'
-import { Badge, ScrollShadow } from '@nextui-org/react'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
 
@@ -83,6 +87,8 @@ const LazyMessage = observer(
     const chat = chatStore.selectedChat!
     const { variations } = baseMessage
 
+    const { voice } = settingStore
+
     const containerRef = useRef<HTMLDivElement>(null)
 
     const handleRegeneration = async () => {
@@ -124,6 +130,33 @@ const LazyMessage = observer(
         </>
       )
     }, [chat, fromBot, disableRegeneration, disableEditing])
+
+    const WrappedContent = useMemo(() => {
+      return (
+        <Markdown
+          remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkMath]}
+          rehypePlugins={[[rehypeKatex, { output: 'mathml' }]]}
+          className="prose-spacing rtts-markdown prose flex w-full flex-wrap overflow-x-hidden overscroll-none prose-p:w-full"
+          components={{
+            code: DelayedCustomCodeBlock,
+          }}
+        >
+          {content.replace(/\n/g, '  \n')}
+        </Markdown>
+      )
+    }, [content])
+
+    const {
+      Text: Content,
+      speechStatus,
+      start,
+      pause,
+      stop,
+    } = useSpeech({
+      text: WrappedContent,
+      lang: voice?.language,
+      voiceURI: voice?.voiceUri,
+    })
 
     // every 300ms try to scroll to the bottom of the component
     // throttling allows the previous animation to try and finish
@@ -238,16 +271,7 @@ const LazyMessage = observer(
                 (error ? 'join-item border-b-0' : 'rounded-md')
               }
             >
-              <Markdown
-                remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkMath]}
-                rehypePlugins={[[rehypeKatex, { output: 'mathml' }]]}
-                className="prose-spacing prose flex w-full flex-wrap overflow-x-hidden overscroll-none prose-p:w-full"
-                components={{
-                  code: DelayedCustomCodeBlock,
-                }}
-              >
-                {content.replace(/\n/g, '  \n')}
-              </Markdown>
+              <Content />
             </div>
 
             {error && (
@@ -308,6 +332,36 @@ const LazyMessage = observer(
               </label>
             </ToolTip>
           )}
+
+          <div
+            className={
+              'flex gap-2 ' +
+              (fromBot ? 'ml-auto flex-row-reverse' : 'mr-auto') +
+              (_.isEmpty(content) ? ' hidden' : '')
+            }
+          >
+            <button
+              className={
+                'h-fit w-fit opacity-30 hover:scale-110 hover:opacity-100 ' +
+                (speechStatus === 'started' ? ' animate-pulse opacity-100' : '')
+              }
+              onClick={speechStatus === 'started' ? pause : start}
+            >
+              <PlayPause />
+            </button>
+
+            <button
+              className={
+                'text-error hover:scale-110' +
+                (speechStatus === 'stopped'
+                  ? ' pointer-events-none opacity-0'
+                  : ' opacity-30  hover:opacity-100 ')
+              }
+              onClick={stop}
+            >
+              <Stop />
+            </button>
+          </div>
         </div>
       </div>
     )

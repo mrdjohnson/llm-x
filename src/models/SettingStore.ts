@@ -9,6 +9,8 @@ import LmsServerConnection from '~/features/connections/servers/LmsServerConnect
 import A1111ServerConnection from '~/features/connections/servers/A1111ServerConnection'
 import OllamaServerConnection from '~/features/connections/servers/OllamaServerConnection'
 
+import { VoiceModel } from '~/models/VoiceModel'
+
 const SETTING_STORE_VERSION = 2
 
 export const SettingStore = types
@@ -16,6 +18,8 @@ export const SettingStore = types
     version: types.optional(types.number, SETTING_STORE_VERSION),
 
     selectedModelName: types.maybeNull(types.string),
+
+    voice: types.maybe(VoiceModel),
 
     // general settings
     theme: types.optional(types.string, '_system'),
@@ -63,6 +67,10 @@ export const SettingStore = types
 
       setFunTitle(funTitle: string) {
         self._funTitle = funTitle
+      },
+
+      setVoice(language: string, voiceUri: string) {
+        self.voice = VoiceModel.create({ language, voiceUri })
       },
 
       getUpdateServiceWorker() {

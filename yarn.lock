@@ -10060,6 +10060,7 @@ __metadata:
     react-hook-form: "npm:^7.51.0"
     react-markdown: "npm:^9.0.1"
     react-scrollable-feed: "npm:^2.0.2"
+    react-text-to-speech: "npm:^0.16.1"
     react-textarea-autosize: "npm:^8.5.3"
     rehype-katex: "npm:^7.0.0"
     remark-gfm: "npm:^4.0.0"
@@ -12317,6 +12318,16 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/6d66f3bdb65e1ec79089f80314da97c9a005087a04ee034255a5de129a4c0d9fd0bf99fa7bf642781ac2dc745ca687aae3de082bd8afdd0d117bc953241e15ad
+  languageName: node
+  linkType: hard
+
+"react-text-to-speech@npm:^0.16.1":
+  version: 0.16.1
+  resolution: "react-text-to-speech@npm:0.16.1"
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0
+    react-dom: ^17.0.0 || ^18.0.0
+  checksum: 10c0/b148e3c0d615629ade260bf15ceced18bd08d51076d531e4a15bb2635a6caec8ace9199abe014705b67afe375ae576a212f2d1cad365106e4ec3c4f58db1c59a
   languageName: node
   linkType: hard
 
