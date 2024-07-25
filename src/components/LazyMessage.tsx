@@ -289,7 +289,7 @@ const LazyMessage = observer(
 
                 {error.stack && (
                   <div className="collapse-content">
-                    <p className="whitespace-pre-line pt-2 text-xs">{error.stack}</p>
+                    <p className="whitespace-pre-line pt-2 text-xs break-all">{error.stack}</p>
                   </div>
                 )}
               </div>
