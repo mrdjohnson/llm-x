@@ -327,7 +327,7 @@ const LazyMessage = observer(
               delay={400}
               placement="bottom-start"
             >
-              <label className=" cursor-context-menu text-base-content/30  hover:text-base-content">
+              <label className=" flex cursor-context-menu  items-center text-base-content/30 hover:text-base-content">
                 <Warning />
               </label>
             </ToolTip>
