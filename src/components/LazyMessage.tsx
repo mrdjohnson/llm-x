@@ -30,6 +30,7 @@ import CopyButton from '~/components/CopyButton'
 import CachedImage from '~/components/CachedImage'
 import ToolTip from '~/components/Tooltip'
 import MessageVariationSelectionRow from '~/components/message/MessageVariationSelectionRow'
+import CustomMathBlock from './CustomMathBlock'
 
 const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
 
@@ -136,9 +137,10 @@ const LazyMessage = observer(
         <Markdown
           remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkMath]}
           rehypePlugins={[[rehypeKatex, { output: 'mathml' }]]}
-          className="prose-spacing rtts-markdown prose flex w-full flex-wrap overflow-x-hidden overscroll-none prose-p:w-full"
+          className="prose-spacing rtts-markdown prose flex w-full flex-wrap overflow-x-hidden overscroll-none prose-p:w-full -[&>*]:w-full"
           components={{
             code: DelayedCustomCodeBlock,
+            math: CustomMathBlock,
           }}
         >
           {content.replace(/\n/g, '  \n')}

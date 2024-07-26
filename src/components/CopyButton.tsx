@@ -3,13 +3,21 @@ import { useState } from 'react'
 import Copy from '~/icons/Copy'
 import CopySuccess from '~/icons/CopySuccess'
 
-const CopyButton = ({ text, className = '' }: { text: string; className?: string }) => {
+type CopyButtonProps = {
+  text?: string
+  className?: string
+  getText?: () => string | undefined
+}
+
+const CopyButton = ({ text, className = '', getText }: CopyButtonProps) => {
   const [copied, setCopied] = useState(false)
 
   const handleClick = () => {
     setCopied(true)
 
-    navigator.clipboard.writeText(text)
+    const content = text || getText?.() || ''
+
+    navigator.clipboard.writeText(content)
 
     setTimeout(() => setCopied(false), 1500)
   }
