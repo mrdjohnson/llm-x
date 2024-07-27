@@ -11,6 +11,7 @@ import {
 import _ from 'lodash'
 import { SnapshotIn, getSnapshot } from 'mobx-state-tree'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { createPortal } from 'react-dom'
 
 import Copy from '~/icons/Copy'
 
@@ -19,11 +20,7 @@ import { actorStore } from '~/models/actor/ActorStore'
 import { personaStore } from '~/models/PersonaStore'
 
 import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
-import { serverConnectionByType, ServerConnectionTypes } from '~/features/connections/servers'
-import LanguageModel, { LanguageModelType } from '../../../../models/LanguageModel'
-import { label } from 'yet-another-react-lightbox'
-import FormInput from '../../../../components/form/FormInput'
-import { createPortal } from 'react-dom'
+import FormInput from '~/components/form/FormInput'
 
 type ActorFormDataType = SnapshotIn<IActorModel>
 
@@ -328,43 +325,3 @@ const ActorFormWrapper = ({ actor }: { actor: IActorModel }) => {
 }
 
 export default ActorFormWrapper
-
-// <Select
-// selectionMode="multiple"
-// size="sm"
-// className="w-full min-w-[20ch] rounded-md bg-transparent hover:!bg-base-200"
-// classNames={{
-//   value: '!text-base-content min-w-[20ch]',
-//   trigger: 'bg-transparent rounded-md border border-base-content/30 hover:!bg-base-100',
-//   popoverContent: 'text-base-content bg-base-100 rounded-md',
-//   description: 'text-base-content/45',
-// }}
-// onSelectionChange={selection => field.onChange(_.toArray(selection))}
-// label="Connections"
-// description={'More than one selected connection will result in multiple data calls'}
-// {...field}
-// onChange={undefined}
-// value={undefined}
-// defaultSelectedKeys={field.value}
-// selectedKeys={field.value}
-// >
-// {connectionModelStore.connections.map(connection => (
-//   <SelectItem
-//     key={connection.id}
-//     value={connection.id}
-//     description={
-//       <>
-//         {connection.host || connection.DefaultHost}
-//         <br />
-//         {serverConnectionByType[connection.type].getSnapshot().label}
-//       </>
-//     }
-//     className={'w-full !min-w-[13ch] text-base-content'}
-//     classNames={{
-//       description: 'text',
-//     }}
-//   >
-//     {connection.label}
-//   </SelectItem>
-// ))}
-// </Select>
