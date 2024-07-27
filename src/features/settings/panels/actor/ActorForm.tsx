@@ -221,11 +221,11 @@ const ConnectionSelect = () => {
                               (selectedModelIds.has(model.id) ? 'hidden' : '')
                             }
                           >
-                            {model.modelName}
+                            {model.label}
 
                             {selectedModelIds.has(model.id) && (
                               <SelectedChip
-                                label={connection.label + ': ' + model.modelName}
+                                label={connection.label + ': ' + model.label}
                                 onClick={() => toggleModelId(model.id)}
                               />
                             )}
