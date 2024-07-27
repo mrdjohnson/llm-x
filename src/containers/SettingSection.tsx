@@ -104,7 +104,7 @@ const SettingSection = observer(
           >
             <ul
               className={
-                'menu !flex flex-col flex-nowrap rounded-box p-0 pt-1 ' +
+                'menu !flex flex-col flex-nowrap rounded-md p-0 pt-1 ' +
                 (isSmallSection ? 'w-fit' : 'w-full')
               }
             >
@@ -121,7 +121,7 @@ const SettingSection = observer(
                   {isSmallSection ? (
                     <span className="max-w-[20ch] justify-center">{item.label}</span>
                   ) : (
-                    <div className="flex flex-row gap-0 px-2 *:text-left">
+                    <div className="flex flex-row gap-0 rounded-md px-2 *:text-left">
                       <div className="flex w-full flex-col self-start text-left">
                         <span
                           className={
