@@ -31,17 +31,13 @@ const ModelPanel = observer(() => {
     data: connection,
   })
 
-  const items: Array<SettingSectionItem<ServerConnectionTypes>> = useMemo(() => {
-    return connections.map(connectionToSectionItem)
-  }, [connections])
-
   const itemFilter = (connection: ServerConnectionTypes, filterText: string) => {
     return connection.label.toLowerCase().includes(filterText)
   }
 
   return (
     <SettingSection
-      items={items}
+      items={connections.map(connectionToSectionItem)}
       filterProps={{
         helpText: 'Filter connections by label...',
         itemFilter,
