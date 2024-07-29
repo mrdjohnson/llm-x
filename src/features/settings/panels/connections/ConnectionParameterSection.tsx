@@ -295,8 +295,9 @@ const ConnectionDataParameterSection = () => {
             <Back />
           </button>
         )}
-        <span className="content-center">Parameters:</span>
+
         <FormInput
+          variant="underlined"
           value={filterText}
           placeholder="Filter parameters by field or label..."
           onChange={e => setFilterText(e.target.value)}

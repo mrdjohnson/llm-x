@@ -17,7 +17,8 @@ const FormInput = forwardRef((inputProps: FormInputProps) => {
         classNames={{
           label: isInvalid ? '!text-error' : '!text-base-content/45',
           inputWrapper:
-            '!bg-base-transparent border rounded-md border-base-content/30' +
+            '!bg-base-transparent rounded-md border-base-content/30' +
+            (inputProps.variant !== 'underlined' ? ' border ' : '') +
             (isInvalid ? ' !border-error' : '') +
             (isDisabled ? ' opacity-30 hover:!border-base-content/30' : ''),
         }}
