@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import { getSnapshot } from 'mobx-state-tree'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSpeech, useVoices } from 'react-text-to-speech'
 import { Select, SelectItem, Switch } from '@nextui-org/react'
 import { useForm } from 'react-hook-form'
@@ -19,6 +19,7 @@ import { settingStore } from '~/models/SettingStore'
 import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
+import _ from 'lodash'
 
 const DownlodSelector = () => {
   const [includeImages, setIncludeImages] = useState(true)
@@ -83,7 +84,7 @@ type VoiceFormDataType = {
 }
 
 const SpeechSelector = observer(() => {
-  const { languages, voices } = useVoices()
+  const { voices } = useVoices()
 
   const {
     handleSubmit,
@@ -108,6 +109,20 @@ const SpeechSelector = observer(() => {
 
   const selectedLanguage = watch('language')
   const selectedVoiceUri = watch('voiceUri')
+
+  const localVoices = useMemo(() => {
+    return _.filter(voices, { localService: true })
+  }, [voices])
+
+  const filteredVoices = useMemo(() => {
+    if (_.isEmpty(selectedLanguage)) return localVoices
+
+    return localVoices.filter(({ lang }) => lang === selectedLanguage)
+  }, [selectedLanguage, localVoices])
+
+  const languages = useMemo(() => {
+    return _.chain(localVoices).map('lang').uniq().value()
+  }, [localVoices])
 
   useEffect(() => {
     reset({
@@ -179,31 +194,18 @@ const SpeechSelector = observer(() => {
         label="Language"
         {...register('language')}
       >
-        {languages
-          .map(language => (
-            <SelectItem
-              key={language}
-              value={language}
-              className="w-full !min-w-[13ch] text-base-content"
-              classNames={{
-                description: ' text',
-              }}
-            >
-              {language}
-            </SelectItem>
-          ))
-          .concat(
-            <SelectItem
-              key={''}
-              value={''}
-              className="w-full !min-w-[13ch] text-base-content"
-              classNames={{
-                description: ' text',
-              }}
-            >
-              {''}
-            </SelectItem>,
-          )}
+        {[''].concat(languages).map(language => (
+          <SelectItem
+            key={language}
+            value={language}
+            className="w-full !min-w-[13ch] text-base-content"
+            classNames={{
+              description: ' text',
+            }}
+          >
+            {language}
+          </SelectItem>
+        ))}
       </Select>
 
       <Select
@@ -218,20 +220,18 @@ const SpeechSelector = observer(() => {
         label="Voice"
         {...register('voiceUri')}
       >
-        {voices
-          .filter(({ lang }) => lang === selectedLanguage)
-          .map(({ voiceURI, name }) => (
-            <SelectItem
-              key={voiceURI}
-              value={voiceURI}
-              className="w-full !min-w-[13ch] text-base-content"
-              classNames={{
-                description: ' text',
-              }}
-            >
-              {name}
-            </SelectItem>
-          ))}
+        {filteredVoices.map(({ voiceURI, name }) => (
+          <SelectItem
+            key={voiceURI}
+            value={voiceURI}
+            className="w-full !min-w-[13ch] text-base-content"
+            classNames={{
+              description: ' text',
+            }}
+          >
+            {name}
+          </SelectItem>
+        ))}
       </Select>
 
       <div className="flex flex-row">
