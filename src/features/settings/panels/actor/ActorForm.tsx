@@ -79,7 +79,11 @@ const ActorForm = ({ actor }: FormProps) => {
 
           <Controller
             render={({ field }) => (
-              <FormInput label="Help text" placeholder={actor.description} {...field} />
+              <FormInput
+                label="Description"
+                description="This is for your eyes only, to help when choosing an actor"
+                {...field}
+              />
             )}
             control={control}
             name="description"
@@ -99,48 +103,95 @@ const ActorForm = ({ actor }: FormProps) => {
 }
 
 const PersonaSelect = () => {
-  const { control } = useFormContext<ActorFormDataType>()
+  const { control, watch, setValue } = useFormContext<ActorFormDataType>()
+
+  const personaEnabled = watch('personaEnabled')
+
+  useEffect(() => {
+    if (!personaEnabled) {
+      setValue('personaIds', [])
+    }
+  }, [personaEnabled])
+
+  // TODO: add default option and specifically no option *
 
   return (
-    <Controller
-      render={({ field }) => (
-        <Select
-          selectionMode="multiple"
-          size="sm"
-          className="w-full min-w-[20ch] rounded-md bg-transparent hover:!bg-base-200"
-          classNames={{
-            value: '!text-base-content min-w-[20ch]',
-            trigger: 'bg-transparent rounded-md border border-base-content/30 hover:!bg-base-100',
-            popoverContent: 'text-base-content bg-base-100 rounded-md',
-            description: 'text-base-content/45',
-          }}
-          onSelectionChange={selection => field.onChange(_.toArray(selection))}
-          label="Personas"
-          description={'More than one selected persona will result in multiple data calls'}
-          {...field}
-          onChange={undefined}
-          value={undefined}
-          defaultSelectedKeys={field.value}
-          selectedKeys={field.value}
-        >
-          {personaStore.personas.map(persona => (
-            <SelectItem
-              key={persona.id}
-              value={persona.id}
-              description={persona.description}
-              className={'w-full !min-w-[13ch] text-base-content'}
-              classNames={{
-                description: 'text',
-              }}
-            >
-              {persona.name}
-            </SelectItem>
-          ))}
-        </Select>
-      )}
-      control={control}
-      name="personaIds"
-    />
+    <div className="rounded-md border border-base-content/30 px-2">
+      <Controller
+        render={({ field: { value = false, onChange } }) => {
+          return (
+            <label className="label flex w-full flex-col gap-2 md:w-fit md:flex-row">
+              <span className="label-text text-center text-lg md:text-medium">Personas:</span>
+
+              <div className="join mx-auto ring-1 ring-base-300">
+                {[true, false].map((isEnabledOption, index) => (
+                  <button
+                    type="button"
+                    className={
+                      'btn join-item btn-xs mr-0 ' +
+                      (value === isEnabledOption ? 'btn-active cursor-default' : 'btn')
+                    }
+                    onClick={() => onChange(isEnabledOption)}
+                    key={index}
+                  >
+                    <span>
+                      {isEnabledOption ? 'Enable' : 'Disable'}
+                      {value === isEnabledOption ? 'd' : '?'}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </label>
+          )
+        }}
+        control={control}
+        name="personaEnabled"
+      />
+
+      <Controller
+        render={({ field }) => (
+          <Select
+            selectionMode="multiple"
+            size="sm"
+            className={
+              'w-full min-w-[20ch] rounded-md bg-transparent hover:!bg-base-200' +
+              (!personaEnabled ? ' !opacity-30' : '')
+            }
+            classNames={{
+              value: '!text-base-content min-w-[20ch]',
+              trigger: 'bg-transparent rounded-md border border-base-content/30 hover:!bg-base-100',
+              popoverContent: 'text-base-content bg-base-100 rounded-md',
+              description: 'text-base-content/45',
+            }}
+            onSelectionChange={selection => field.onChange(_.toArray(selection))}
+            label="Personas"
+            description={'More than one selected persona will result in multiple data calls'}
+            {...field}
+            onChange={undefined}
+            value={undefined}
+            defaultSelectedKeys={field.value}
+            selectedKeys={field.value}
+            isDisabled={!personaEnabled}
+          >
+            {personaStore.personas.map(persona => (
+              <SelectItem
+                key={persona.id}
+                value={persona.id}
+                description={persona.description}
+                className={'w-full !min-w-[13ch] text-base-content'}
+                classNames={{
+                  description: 'text',
+                }}
+              >
+                {persona.name}
+              </SelectItem>
+            ))}
+          </Select>
+        )}
+        control={control}
+        name="personaIds"
+      />
+    </div>
   )
 }
 
@@ -175,71 +226,75 @@ const ConnectionSelect = () => {
   }
 
   return (
-    <Controller
-      render={({ field }) => (
-        <>
-          <label>Selected Models: </label>
-          <div ref={chipGroupRef} className="flex flex-row flex-wrap gap-2" />
-          <FormInput
-            type="text"
-            label="Filter"
-            size="sm"
-            onChange={e => setFilterText(e.target.value)}
-          />
-
-          <div className=" overflow-hidden">
-            <ScrollShadow>
-              {chipGroupRef.current && field.value && (
-                <Listbox>
-                  {modelGroups.map(({ connection, filteredModels }) => {
-                    const selectedModelIds = new Set(field.value![connection.id] || [])
-
-                    const toggleModelId = (modelId: string) => {
-                      field.onChange({
-                        ...(field.value || {}),
-                        [connection.id]: _.xor(_.toArray(selectedModelIds), [modelId]),
-                      })
-                    }
-
-                    return (
-                      <ListboxSection
-                        key={connection.id}
-                        title={connection.label + ` ${selectedModelIds.size} selected`}
-                        
-                        classNames={{ group: 'ml-2' }}
-                        showDivider
-                      >
-                        {filteredModels.map(model => (
-                          <ListboxItem
-                            key={model.id}
-                            onClick={() => toggleModelId(model.id)}
-                            className={
-                              'max-w-[max(30ch, 100%)] ' +
-                              (selectedModelIds.has(model.id) ? 'hidden' : '')
-                            }
-                          >
-                            {model.label}
-
-                            {selectedModelIds.has(model.id) && (
-                              <SelectedChip
-                                label={connection.label + ': ' + model.label}
-                                onClick={() => toggleModelId(model.id)}
-                              />
-                            )}
-                          </ListboxItem>
-                        ))}
-                      </ListboxSection>
-                    )
-                  })}
-                </Listbox>
-              )}
+    <div className="flex flex-col gap-2 rounded-md border border-base-content/30 px-2 pt-2">
+      <Controller
+        render={({ field }) => (
+          <>
+            <label>Selected Models: </label>
+            <ScrollShadow className=" max-h-24">
+              <div ref={chipGroupRef} className="flex flex-row flex-wrap gap-2" />
             </ScrollShadow>
-          </div>
-        </>
-      )}
-      control={control}
-      name="connectionModelPairs"
-    />
+
+            <FormInput
+              type="text"
+              label="Filter"
+              size="sm"
+              onChange={e => setFilterText(e.target.value)}
+            />
+
+            <div className=" overflow-hidden">
+              <ScrollShadow>
+                {chipGroupRef.current && field.value && (
+                  <Listbox>
+                    {modelGroups.map(({ connection, filteredModels }) => {
+                      const selectedModelIds = new Set(field.value![connection.id] || [])
+
+                      const toggleModelId = (modelId: string) => {
+                        field.onChange({
+                          ...(field.value || {}),
+                          [connection.id]: _.xor(_.toArray(selectedModelIds), [modelId]),
+                        })
+                      }
+
+                      return (
+                        <ListboxSection
+                          key={connection.id}
+                          title={connection.label + ` ${selectedModelIds.size} selected`}
+                          classNames={{ group: 'ml-2' }}
+                          showDivider
+                        >
+                          {filteredModels.map(model => (
+                            <ListboxItem
+                              key={model.id}
+                              onClick={() => toggleModelId(model.id)}
+                              className={
+                                'max-w-[max(30ch, 100%)] ' +
+                                (selectedModelIds.has(model.id) ? 'hidden' : '')
+                              }
+                            >
+                              {model.label}
+
+                              {selectedModelIds.has(model.id) && (
+                                <SelectedChip
+                                  label={connection.label + ': ' + model.label}
+                                  onClick={() => toggleModelId(model.id)}
+                                />
+                              )}
+                            </ListboxItem>
+                          ))}
+                        </ListboxSection>
+                      )
+                    })}
+                  </Listbox>
+                )}
+              </ScrollShadow>
+            </div>
+          </>
+        )}
+        control={control}
+        name="connectionModelPairs"
+      />
+    </div>
   )
 }
 

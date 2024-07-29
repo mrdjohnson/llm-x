@@ -11,7 +11,7 @@ import ActorForm from '~/features/settings/panels/actor/ActorForm'
 import SettingSection, { SettingSectionItem } from '~/containers/SettingSection'
 
 const ActorPanel = observer(() => {
-  const { actors } = actorStore
+  const { actors, actorToEdit } = actorStore
 
   const deleteActor = (e: MouseEvent<HTMLButtonElement>, actor: IActorModel) => {
     e.stopPropagation()
@@ -38,17 +38,13 @@ const ActorPanel = observer(() => {
     }
   }
 
-  const items: Array<SettingSectionItem<IActorModel>> = useMemo(() => {
-    return actors.map(actorToSectionItem)
-  }, [actors])
-
   const itemFilter = (actor: IActorModel, filterText: string) => {
     return actor.name.toLowerCase().includes(filterText)
   }
 
   return (
     <SettingSection
-      items={items}
+      items={actors.map(actorToSectionItem)}
       filterProps={{
         helpText: 'Filter actors by name...',
         itemFilter,
@@ -70,6 +66,7 @@ const ActorPanel = observer(() => {
           </button>
         </>
       )}
+      selectedItem={actorToEdit && actorToSectionItem(actorToEdit)}
     />
   )
 })

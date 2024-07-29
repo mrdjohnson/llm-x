@@ -18,12 +18,50 @@ import Tooltip from '~/components/Tooltip'
 import FormInput from '~/components/form/FormInput'
 
 import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
+import { IActorModel } from '../../models/actor/ActorModel'
+import Edit from '../../icons/Edit'
+import { settingStore } from '../../models/SettingStore'
 
 type ChatFormDataType = SnapshotIn<IChatModel>
 
 const pluralize = (text: string, count: number) => {
-  if (count > 1) return text + 's'
-  return text
+  return `${count} ${text}` + (count !== 1 ? 's' : '')
+}
+
+const ChatActorItem = ({ actor }: { actor: IActorModel }) => {
+  let personaLabel = actor.personas[0]?.name
+
+  if (actor.personas.length > 1) {
+    personaLabel = pluralize('persona', actor.personas.length)
+  }
+
+  const handleActorEdit = () => {
+    actorStore.setActorToEdit(actor)
+    settingStore.openSettingsModal('actors')
+  }
+
+  return (
+    <li className="group relative gap-1 rounded-md bg-base-content/10">
+      <div className="flex w-full flex-col items-start gap-0 p-2 !text-base-content cursor-pointer" onClick={handleActorEdit}>
+        <span className="line-clamp-1">{actor.name}</span>
+
+        <div className="ml-2 flex flex-col text-sm text-base-content/60">
+          {personaLabel}
+
+          {/* {actor.connections[0] && (
+            <span>{pluralize('connection', actor.personas.length)}</span>
+          )} */}
+        </div>
+
+        {/* <button
+          className="absolute bottom-0 right-2 top-0 z-20 w-fit opacity-0 transition-opacity duration-300 ease-in-out hover:!opacity-100 group-hover:opacity-30 text-primary"
+          onClick={handleActorEdit}
+        >
+          <Edit />
+        </button> */}
+      </div>
+    </li>
+  )
 }
 
 export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked: () => void }) => {
@@ -136,21 +174,13 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
               </form>
 
               {/* {connection.} */}
-              {/* {chat.actors.map(actor => (
-                <div>
-                  {actor.name}
-                  <br />
-                  Connection(s):{' '}
-                  {actor.connections.map(connection => (
-                    <div>
-                      {connection.label}
-                      <br />
-                    </div>
-                  ))}
-                </div>
-              ))} */}
+              <ul className="-menu p-0">
+                {chat.actors.map(actor => (
+                  <ChatActorItem actor={actor} key={actor.id} />
+                ))}
+              </ul>
 
-              {/* note, do not put select in a controller */}
+              {/* note, do not put select in a controller
               <Select
                 selectionMode="multiple"
                 size="sm"
@@ -192,7 +222,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
                     </div>
                   </SelectItem>
                 ))}
-              </Select>
+              </Select> */}
             </div>
           </div>
 

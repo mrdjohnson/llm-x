@@ -11,8 +11,10 @@ export const ActorModel = types
     id: types.optional(types.identifier, createId),
     name: types.string,
     description: types.optional(types.string, ''),
+    includeForNewChat: types.optional(types.boolean, false),
     // note: nextui does not work well with numerical ids, save these as strings for now
     personaIds: types.array(types.string),
+    personaEnabled: types.optional(types.boolean, true),
     connectionModelPairs: types.map(types.array(types.string)),
   })
   .views(self => ({

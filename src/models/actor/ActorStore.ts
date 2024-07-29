@@ -93,7 +93,7 @@ class ActorStore {
     this.dataStore.deleteActor(actor)
   }
 
-  getActorById(id: string) {
+  getActorById = (id: string) => {
     return _.find(this.actors, { id })
   }
 
