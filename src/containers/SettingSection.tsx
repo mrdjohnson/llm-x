@@ -1,9 +1,10 @@
 import { observer } from 'mobx-react-lite'
 import { useMemo, useState, ReactNode, useEffect } from 'react'
-import { Input, ScrollShadow } from '@nextui-org/react'
+import { ScrollShadow } from '@nextui-org/react'
 import _ from 'lodash'
 
 import Back from '~/icons/Back'
+import FormInput from '~/components/form/FormInput'
 
 export type SettingSectionItem<T> = {
   id: string
@@ -81,18 +82,12 @@ const SettingSection = observer(
               <Back />
             </button>
           )}
-
+          
           {filterProps && (
-            <Input
-              type="text"
+            <FormInput
               variant="underlined"
-              value={filterText}
               placeholder={filterProps.helpText}
-              classNames={{
-                input: '!text-base-content',
-                innerWrapper: 'pb-0',
-                inputWrapper: '!bg-base-transparent border-base-content/30',
-              }}
+              value={filterText}
               onChange={e => setFilterText(e.target.value)}
             />
           )}
@@ -133,8 +128,11 @@ const SettingSection = observer(
                           {item.label}
                         </span>
 
-                        {_.toArray(item.subLabels).map(subLabel => (
-                          <p className="line-clamp-2 self-start text-sm text-base-content/45">
+                        {_.toArray(item.subLabels).map((subLabel, index) => (
+                          <p
+                            className="line-clamp-2 self-start text-sm text-base-content/45"
+                            key={index}
+                          >
                             {subLabel}
                           </p>
                         ))}
@@ -157,7 +155,9 @@ const SettingSection = observer(
               <li className="mt-auto pt-4">
                 <button
                   type="button"
-                  className="btn btn-primary btn-sm mb-1 max-w-[20ch]"
+                  className={
+                    'btn btn-primary btn-sm mb-1 ' + (hasSidePanel ? 'max-w-[20ch]' : 'w-full')
+                  }
                   onClick={handleAddButtonClicked}
                 >
                   {addButtonProps.label}
