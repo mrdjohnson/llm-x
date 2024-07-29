@@ -180,7 +180,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
                 ))}
               </ul>
 
-              {/* note, do not put select in a controller
+              {/* note, do not put select in a controller */}
               <Select
                 selectionMode="multiple"
                 size="sm"
@@ -222,7 +222,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
                     </div>
                   </SelectItem>
                 ))}
-              </Select> */}
+              </Select>
             </div>
           </div>
 

@@ -55,6 +55,7 @@ const ActorForm = ({ actor }: FormProps) => {
 
   return (
     <FormProvider {...methods}>
+      {/* todo, this is repeat code of the wrapper */}
       <form className="contents" onSubmit={handleFormSubmit}>
         <div className="my-2 flex w-full flex-col gap-2 overflow-scroll">
           <Controller
@@ -92,7 +93,9 @@ const ActorForm = ({ actor }: FormProps) => {
 
           <PersonaSelect />
 
-          <ConnectionSelect />
+          <label htmlFor="actor-form-drawer" className="btn btn-primary drawer-button">
+            Open connection select area
+          </label>
         </div>
 
         {/* submit button */}
@@ -327,51 +330,70 @@ const ActorFormWrapper = ({ actor }: { actor: IActorModel }) => {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-1 flex-col rounded-md bg-base-200 px-2">
-        <ScrollShadow className="flex-1">
-          <ActorForm actor={actor} />
-        </ScrollShadow>
+      <div className="drawer drawer-end h-full flex-1 rounded-md">
+        <div className="drawer-content col-span-full flex">
+          <div className="flex flex-1 flex-col rounded-md bg-base-200 px-2">
+            <ScrollShadow className="flex-1">
+              <ActorForm actor={actor} />
+            </ScrollShadow>
 
-        <div className="mt-auto flex flex-shrink-0 justify-between py-2">
-          <div>
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm mr-8 text-error"
-              onClick={() => actorStore.deleteActor(actor)}
-            >
-              Delete Actor
-            </button>
+            <div className="mt-auto flex flex-shrink-0 justify-between py-2">
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm mr-8 text-error"
+                  onClick={() => actorStore.deleteActor(actor)}
+                >
+                  Delete Actor
+                </button>
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm mx-4 text-base-content/60 hover:text-base-content"
+                  onClick={() => actorStore.duplicateActor(actor)}
+                  disabled={isDirty}
+                >
+                  Duplicate <Copy />
+                </button>
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm mx-4"
+                  onClick={() => reset()}
+                  disabled={!isDirty}
+                >
+                  Reset
+                </button>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-sm"
+                  onClick={handleFormSubmit}
+                  disabled={!isDirty && _.isEmpty(errors)}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <div>
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm mx-4 text-base-content/60 hover:text-base-content"
-              onClick={() => actorStore.duplicateActor(actor)}
-              disabled={isDirty}
-            >
-              Duplicate <Copy />
-            </button>
-          </div>
+        <input id="actor-form-drawer" type="checkbox" className="drawer-toggle" />
 
-          <div>
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm mx-4"
-              onClick={() => reset()}
-              disabled={!isDirty}
-            >
-              Reset
-            </button>
+        <div className="drawer-side relative col-span-full col-start-1 h-full rounded-md">
+          <label
+            htmlFor="actor-form-drawer"
+            aria-label="close sidebar"
+            className="drawer-overlay rounded-md"
+          />
 
-            <button
-              type="submit"
-              className="btn btn-primary btn-sm"
-              onClick={handleFormSubmit}
-              disabled={!isDirty && _.isEmpty(errors)}
-            >
-              Save
-            </button>
+          <div className="min-h-full max-h-36 overflow-scroll w-9/12 rounded-md bg-base-200 p-4 text-base-content">
+            {/* Sidebar content here */}
+            <ConnectionSelect />
           </div>
         </div>
       </div>
