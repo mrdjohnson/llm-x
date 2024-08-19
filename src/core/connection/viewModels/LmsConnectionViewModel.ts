@@ -1,20 +1,21 @@
 import { lazy } from 'react'
-import { SnapshotIn } from 'mobx-state-tree'
 import _ from 'lodash'
 import { DownloadedModel, LMStudioClient } from '@lmstudio/sdk'
-import { IObservableArray, makeObservable, observable } from 'mobx'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import BaseConnectionViewModel from '~/core/connection/viewModels/BaseConnectionViewModel'
-import lmsApi from '~/core/connection/api/LmsApi'
-
-import LanguageModel from '~/core/LanguageModel'
-import { IConnectionDataModel, ILmsModel, LmsLanguageModel } from '~/core/types'
 import { toLmsModel } from '~/core/transformers/toLmsModel'
+import LanguageModel from '~/core/LanguageModel'
+
+import { ILmsModel, LmsLanguageModel } from '~/core/connection/types'
+import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnectionViewModel'
+import { ConnectionModel } from '~/core/connection/ConnectionModel'
+import { connectionTable } from '~/core/connection/ConnectionTable'
+import lmsApi from '~/core/connection/api/LmsApi'
 
 const LazyLmsModelPanel = lazy(() => import('~/features/settings/panels/model/LmsModelPanel'))
 
 const DefaultHost = 'ws://127.0.0.1:1234'
+
 class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
   DefaultHost: string = DefaultHost
 
@@ -30,36 +31,33 @@ class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
 
   primaryHeader = this.modelTableHeaders[0].value
 
-  models: IObservableArray<LmsLanguageModel> = observable.array()
-
   type = 'LMS' as const
-
-  constructor(public connectionModel: IConnectionDataModel) {
-    super(connectionModel)
-
-    makeObservable(this, BaseConnectionViewModel.MOBX_MAPPINGS)
-  }
 
   readonly hostLabel = 'LM Studio Host:'
   readonly enabledLabel = 'Text generation through LM Studio:'
 
-  static readonly getSnapshot = (): SnapshotIn<IConnectionDataModel> => ({
-    label: 'LM Studio',
-    type: 'LMS',
+  static toViewModel(connection: ConnectionModel) {
+    return new this(connection)
+  }
 
-    host: DefaultHost,
-    enabled: true,
+  static readonly getSnapshot = (): ConnectionModel =>
+    connectionTable.parse({
+      label: 'LM Studio',
+      type: 'LMS',
 
-    parameters: [
-      {
-        field: 'temperature',
-        types: ['system'],
-        isJson: true,
-        helpText:
-          'Usually between 0 - 1, lower is for more consistent responses, higher is for more creative',
-      },
-    ],
-  })
+      host: DefaultHost,
+      enabled: true,
+
+      parameters: [
+        {
+          field: 'temperature',
+          types: ['system'],
+          isJson: true,
+          helpText:
+            'Usually between 0 - 1, lower is for more consistent responses, higher is for more creative',
+        },
+      ],
+    })
 
   validateHost(host?: string) {
     if (!host) return true
@@ -74,9 +72,11 @@ class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
 
     const response: DownloadedModel[] = await client.system.listDownloadedModels()
 
-    const lmsModel: ILmsModel[] = _.filter(response, { type: 'llm' }).map(toLmsModel)
+    const lmsModels: ILmsModel[] = _.filter(response, { type: 'llm' }).map(toLmsModel)
 
-    const models: LmsLanguageModel[] = lmsModel.map(LanguageModel.fromILmsModel)
+    const models: LmsLanguageModel[] = lmsModels.map(lmsModel =>
+      LanguageModel.fromILmsModel(lmsModel, this.id),
+    )
 
     return models
   }

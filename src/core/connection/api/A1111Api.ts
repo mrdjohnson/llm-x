@@ -1,11 +1,14 @@
 import axios from 'axios'
 
-import { IMessageModel } from '~/core/MessageModel'
+import { MessageViewModel } from '~/core/message/MessageViewModel'
 import BaseApi from '~/core/connection/api/BaseApi'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
 class A1111Api extends BaseApi {
-  async generateImages(prompt: string, incomingMessageVariant: IMessageModel): Promise<string[]> {
+  async generateImages(
+    prompt: string,
+    incomingMessageVariant: MessageViewModel,
+  ): Promise<string[]> {
     const connection = connectionStore.selectedConnection
     const host = connection?.formattedHost
 
@@ -13,10 +16,10 @@ class A1111Api extends BaseApi {
 
     const abortController = new AbortController()
 
-    BaseApi.abortControllerById[incomingMessageVariant.uniqId] = async () => abortController.abort()
+    BaseApi.abortControllerById[incomingMessageVariant.id] = async () => abortController.abort()
 
     const parameters = connection.parsedParameters
-    incomingMessageVariant.setExtraDetails({ sentWith: parameters })
+    await incomingMessageVariant.setExtraDetails({ sentWith: parameters })
 
     const response = await axios.post(
       host + '/sdapi/v1/txt2img',
@@ -36,7 +39,7 @@ class A1111Api extends BaseApi {
       throw new Error('A1111 API failed to return any generated image')
     }
 
-    delete BaseApi.abortControllerById[incomingMessageVariant.uniqId]
+    delete BaseApi.abortControllerById[incomingMessageVariant.id]
 
     return images
   }

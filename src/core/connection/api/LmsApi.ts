@@ -1,14 +1,14 @@
 import { LMStudioClient, type ChatMessageData, LLMDynamicHandle } from '@lmstudio/sdk'
 import _ from 'lodash'
 
-import { IMessageModel } from '~/core/MessageModel'
-import { personaStore } from '~/core/PersonaStore'
 import { progressStore } from '~/features/progress/ProgressStore'
 
 import BaseApi from '~/core/connection/api/BaseApi'
+import { MessageViewModel } from '~/core/message/MessageViewModel'
+import { personaStore } from '~/core/persona/PersonaStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
-const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMessageModel) => {
+const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: string) => {
   const messages: ChatMessageData[] = []
 
   const selectedPersona = personaStore.selectedPersona
@@ -21,11 +21,11 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
   }
 
   for (const message of chatMessages) {
-    if (message.uniqId === incomingMessage.uniqId) break
+    if (message.id === chatMessageId) break
 
     const selectedVariation = message.selectedVariation
 
-    if (message.fromBot) {
+    if (message.source.fromBot) {
       messages.push({
         role: 'assistant',
         content: [{ type: 'text', text: selectedVariation.content }],
@@ -33,8 +33,6 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
     } else {
       messages.push({
         role: 'user',
-        // lm studio sdk supports images now but there is no documentation around it
-        // or easy way to use it
         content: [{ type: 'text', text: selectedVariation.content }],
       })
     }
@@ -44,22 +42,18 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
 }
 
 export class LmsApi extends BaseApi {
-  async *generateChat(
-    chatMessages: IMessageModel[],
-    incomingMessage: IMessageModel,
-    incomingMessageVariant: IMessageModel,
-  ) {
+  async *generateChat(chatMessages: MessageViewModel[], incomingMessageVariant: MessageViewModel) {
     const connection = connectionStore.selectedConnection
     const host = connection?.formattedHost
 
     const modelName = connectionStore.selectedModelName
     if (!connection || !host || !modelName) return
 
-    const messages = await getMessages(chatMessages, incomingMessage)
+    const messages = await getMessages(chatMessages, incomingMessageVariant.rootMessage.id)
 
     const abortController = new AbortController()
 
-    BaseApi.abortControllerById[incomingMessageVariant.uniqId] = async () => abortController.abort()
+    BaseApi.abortControllerById[incomingMessageVariant.id] = async () => abortController.abort()
     const model = await this.getOrLoadModel(host, modelName, abortController)
 
     if (!model) {
@@ -67,9 +61,9 @@ export class LmsApi extends BaseApi {
     }
 
     const prediction = model.respond({ messages }, connection.parsedParameters)
-    incomingMessageVariant.setExtraDetails({ sentWith: connection.parsedParameters })
+    await incomingMessageVariant.setExtraDetails({ sentWith: connection.parsedParameters })
 
-    BaseApi.abortControllerById[incomingMessageVariant.uniqId] = () => prediction.cancel()
+    BaseApi.abortControllerById[incomingMessageVariant.id] = () => prediction.cancel()
 
     for await (const text of prediction) {
       yield text
@@ -80,12 +74,12 @@ export class LmsApi extends BaseApi {
       throw new Error('Stream ended manually')
     }
 
-    incomingMessageVariant.setExtraDetails({
+    await incomingMessageVariant.setExtraDetails({
       sentWith: connection.parsedParameters,
       returnedWith: stats,
     })
 
-    delete BaseApi.abortControllerById[incomingMessage.uniqId]
+    delete BaseApi.abortControllerById[incomingMessageVariant.id]
   }
 
   async getOrLoadModel(host: string, modelPath: string, abortController: AbortController) {

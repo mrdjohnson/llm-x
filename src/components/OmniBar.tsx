@@ -15,32 +15,33 @@ import type { Action, ActionImpl } from 'kbar'
 import { autorun } from 'mobx'
 import _ from 'lodash'
 
-import { settingStore } from '~/core/SettingStore'
-import { personaStore } from '~/core/PersonaStore'
-import { chatStore } from '~/core/ChatStore'
-import type { IMessageModel } from '~/core/MessageModel'
+import { settingStore } from '~/core/setting/SettingStore'
+import { personaStore } from '~/core/persona/PersonaStore'
+import { chatStore } from '~/core/chat/ChatStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
+
+import { chatTable } from '~/core/chat/ChatTable'
+import { messageTable } from '~/core/message/MessageTable'
 
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
-import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
-    return id === settingStore.theme
+    return id === settingStore.setting.theme
   }
 
   if (parent === 'persona') {
     if (!personaStore.selectedPersona) return id === 'no_persona'
 
-    return id === personaStore.selectedPersona.id.toString()
+    return id === settingStore.setting.selectedPersonaId
   }
 
   if (parent === 'model') {
-    console.log('model: ', id, connectionStore.selectedModelName)
-    return id === connectionStore.selectedModelName
+    return id === settingStore.setting.selectedModelId
   }
 
   if (parent === 'chat') {
-    return id === chatStore.selectedChat?.id.toString()
+    return id === settingStore.setting.selectedChatId
   }
 
   return false
@@ -108,7 +109,7 @@ const useRegisterThemeActions = () => {
       name: 'Dark',
       keywords: 'dark theme',
       section: 'Theme',
-      perform: () => settingStore.setTheme('dark'),
+      perform: async () => settingStore.update({ theme: 'dark' }),
       parent: 'theme',
     },
     {
@@ -116,7 +117,7 @@ const useRegisterThemeActions = () => {
       name: 'Dracula',
       keywords: 'dracula theme',
       section: 'Theme',
-      perform: () => settingStore.setTheme('dracula'),
+      perform: async () => settingStore.update({ theme: 'dracula' }),
       parent: 'theme',
     },
     {
@@ -124,7 +125,7 @@ const useRegisterThemeActions = () => {
       name: 'System',
       keywords: 'system theme',
       section: 'Theme',
-      perform: () => settingStore.setTheme('_system'),
+      perform: async () => settingStore.update({ theme: '_system' }),
       parent: 'theme',
     },
     {
@@ -132,7 +133,7 @@ const useRegisterThemeActions = () => {
       name: 'Light',
       keywords: 'light garden theme',
       section: 'Theme',
-      perform: () => settingStore.setTheme('garden'),
+      perform: async () => settingStore.update({ theme: 'garden' }),
       parent: 'theme',
     },
   ])
@@ -167,7 +168,7 @@ const useRegisterModelActions = () => {
         keywords: 'refresh',
         priority: Priority.LOW,
         parent: 'refresh_models',
-        perform: connectionStore.refreshModels,
+        perform: () => connectionStore.refreshModels(),
       })
 
       for (const connection of connectionStore.connections) {
@@ -186,12 +187,12 @@ const useRegisterModelActions = () => {
 
         connection.models.forEach(model => {
           nextModelActions.push({
-            id: connection.id + model.modelName,
+            id: model.id,
             name: model.modelName,
             keywords: `${model.modelName} model ` + typeAndLabel,
             section: connection.label + ' Models',
             parent: 'model',
-            perform: () => connectionStore.dataStore.setSelectedModel(model, connection.id),
+            perform: () => connectionStore.setSelectedModel(model.id, connection.id),
           })
         })
       }
@@ -249,7 +250,7 @@ const useRegisterPersonaActions = () => {
 
       personaStore.personas.forEach(persona => {
         nextPersonaActions.push({
-          id: persona.id.toString(),
+          id: persona.id,
           name: persona.name,
           keywords: `${persona.name} persona`,
           section: 'Personas',
@@ -283,7 +284,7 @@ const useRegisterChatActions = () => {
         const name = chat.name || 'new chat'
 
         return nextChatActions.push({
-          id: chat.id.toString(),
+          id: chat.id,
           name: name,
           keywords: `${name} chat`,
           section: 'Chats',
@@ -306,20 +307,45 @@ const useRegisterMessageActions = () => {
 
   const [messageActions, setMessageActions] = useState<Action[]>([])
 
-  const countMessagesWithText = (messages: IMessageModel[], text: string) => {
-    // if any of the lowercased messages contain the text
-    return _.sumBy(messages, message => {
-      return message.selectedVariation.content.toLowerCase().includes(text) ? 1 : 0
+  const getRootMessageIds = async (text: string) => {
+    const messageIds: string[] = []
+    const rootIdBySelectedId: Record<string, string> = {}
+
+    await messageTable.iterate(message => {
+      // map selected variation to its parent
+      if (message.selectedVariationId) {
+        rootIdBySelectedId[message.selectedVariationId] = message.id
+      }
+
+      // keep track of message that had the content
+      if (message.content.toLowerCase().includes(text)) {
+        messageIds.push(message.id)
+      }
     })
+
+    const rootMessageIds = new Set(
+      messageIds.map(messageId => rootIdBySelectedId[messageId] || messageId),
+    )
+
+    return rootMessageIds
   }
 
-  const searchMessages = (text: string) => {
+  const searchMessages = async (text: string) => {
     if (text.length < 3) return
+
+    const rootMessageIds = await getRootMessageIds(text)
+
+    const countMessagesWithText = (messageIds: string[]) => {
+      // if any of the lowercased messages contain the text
+      return _.sumBy(messageIds, messageId => {
+        return rootMessageIds.has(messageId) ? 1 : 0
+      })
+    }
 
     const nextMessageActions: Action[] = []
 
     chatStore.chats.forEach(chat => {
-      const messageCount = countMessagesWithText(chat.messages, text)
+      const messageCount = countMessagesWithText(chat.messageIds)
 
       if (messageCount > 0) {
         nextMessageActions.push(
@@ -387,7 +413,7 @@ const useNewChatActions = () => {
           name: 'Create New chat',
           keywords: 'create new chat',
           section: 'Actions',
-          perform: chatStore.createChat,
+          perform: () => chatTable.create({}),
         })
       }
 
@@ -412,7 +438,7 @@ const OmniBar = () => {
       keywords: 'refresh',
       section: 'Actions',
       priority: Priority.LOW,
-      perform: connectionStore.refreshModels,
+      perform: () => connectionStore.refreshModels(),
     }),
     createAction({
       name: 'Open settings',

@@ -2,8 +2,8 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 
-import { settingStore } from '~/core/SettingStore'
-import { IOllamaModel } from '~/core/types'
+import { settingStore } from '~/core/setting/SettingStore'
+import { IOllamaModel } from '~/core/connection/types'
 
 import OllamaStore, { CorrectShowResponse } from '~/features/ollama/OllamaStore'
 
@@ -28,6 +28,8 @@ type PanelTableProps = {
 
 const OllamaModelPanelTable = observer(
   ({ onShowDetails, connection, ollamaStore }: PanelTableProps) => {
+    const selectedModelId = settingStore.setting?.selectedModelId
+
     const [filterText, setFilterText] = useState('')
 
     const pullModel = () => {
@@ -88,12 +90,9 @@ const OllamaModelPanelTable = observer(
         itemFilter={connection.modelFilter}
         renderRow={renderRow}
         getItemKey={model => model.name}
-        onItemSelected={model => connectionStore.dataStore.setSelectedModel(model, connection.id)}
+        onItemSelected={model => connection.selectModel(model)}
         onFilterChanged={setFilterText}
-        getIsItemSelected={model =>
-          connection.id === connectionStore.selectedConnection?.id &&
-          model.modelName === connectionStore.selectedModelName
-        }
+        getIsItemSelected={model => selectedModelId === model.id}
         filterInputPlaceholder="Filter by name or pull..."
         includeEmptyHeader
       >
@@ -209,9 +208,15 @@ const OllamaModelSettings = observer(({ ollamaStore }: { ollamaStore: OllamaStor
 })
 
 const OllamaModelPanel = observer(({ connection }: { connection: OllamaConnectionViewModel }) => {
-  const { selectedModelName, selectedConnection } = connectionStore
+  const { selectedModelId, selectedConnectionId } = settingStore.setting
 
   const [tab, setTab] = useState<'all' | 'single'>('all')
+
+  const selectedModel = useMemo(() => {
+    return _.find(connection.models, { id: selectedModelId })
+  }, [connection, selectedModelId])
+
+  const selectedModelName = selectedModel?.name
 
   const ollamaStore = useMemo(() => {
     return new OllamaStore(connection)
@@ -225,7 +230,7 @@ const OllamaModelPanel = observer(({ connection }: { connection: OllamaConnectio
   }, [selectedModelName])
 
   let selectedModelBreadcrumb: BreadcrumbType | undefined = undefined
-  if (selectedModelName && selectedConnection?.id === connection.id) {
+  if (selectedModelName && selectedConnectionId === connection.id) {
     selectedModelBreadcrumb = {
       label: selectedModelName,
       isSelected: tab === 'single',

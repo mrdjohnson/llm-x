@@ -1,5 +1,5 @@
+import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
-import { getSnapshot } from 'mobx-state-tree'
 import { useEffect, useMemo, useState } from 'react'
 import { useSpeech, useVoices } from 'react-text-to-speech'
 import { Select, SelectItem, Switch } from '@nextui-org/react'
@@ -14,23 +14,27 @@ import DocumentArrowUp from '~/icons/DocumentArrowUp'
 import PlayPause from '~/icons/PlayPause'
 import Stop from '~/icons/Stop'
 
-import { personaStore } from '~/core/PersonaStore'
-import { settingStore } from '~/core/SettingStore'
-import { connectionStore } from '~/core/connection/ConnectionStore'
+import { voiceStore } from '~/core/voice/VoiceStore'
+import { VoiceModel } from '~/core/voice/VoiceModel'
 
-import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
-import _ from 'lodash'
+import { DATABASE_TABLES } from '~/utils/db'
+import { CURRENT_DB_TIMESTAMP_MILLISECONDS } from '~/core/setting/SettingModel'
 
-const DownlodSelector = () => {
+const DownloadSelector = () => {
   const [includeImages, setIncludeImages] = useState(true)
 
   const exportAll = async () => {
-    const data = JSON.stringify({
-      chatStore: await ChatStoreSnapshotHandler.formatChatStoreToExport({ includeImages }),
-      personaStore: getSnapshot(personaStore),
-      settingStore: getSnapshot(settingStore),
-      connectionStore: getSnapshot(connectionStore.dataStore),
-    })
+    const dataToExport: Record<string, unknown> = {
+      databaseTimestamp: CURRENT_DB_TIMESTAMP_MILLISECONDS,
+    }
+
+    for (const table of DATABASE_TABLES) {
+      if (table.hasParentExportTable) continue
+
+      dataToExport[table.getTableName()] = await table.exportAll({ includeImages })
+    }
+
+    const data = JSON.stringify(dataToExport, null, 2)
 
     const link = document.createElement('a')
     link.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
@@ -78,37 +82,36 @@ const DownlodSelector = () => {
   )
 }
 
-type VoiceFormDataType = {
-  language: string
-  voiceUri: string
-}
-
 const SpeechSelector = observer(() => {
   const { voices } = useVoices()
 
   const {
+    setValue,
     handleSubmit,
     reset,
     watch,
     register,
     formState: { isDirty },
-  } = useForm<VoiceFormDataType>()
+  } = useForm<VoiceModel>()
 
-  const { voice } = settingStore
+  const voice = voiceStore.selectedVoice
 
   const [exampleText, setExampleText] = useState('This app is amazing!')
-  const [autoPlayVoice, setAutoPlayVoice] = useState(true)
+  const [autoPlayVoice, setAutoPlayVoice] = useState(false)
 
-  const handleFormSubmit = handleSubmit(formData => {
-    const { language, voiceUri } = formData
+  const handleFormSubmit = handleSubmit(async formData => {
+    const nextVoice = await voiceStore.updateVoice(formData)
 
-    settingStore.setVoice(language, voiceUri)
-
-    reset(voice)
+    reset(nextVoice)
   })
 
-  const selectedLanguage = watch('language')
-  const selectedVoiceUri = watch('voiceUri')
+  const clearValues = () => {
+    setValue('language', '')
+    setValue('voiceUri', '')
+  }
+
+  const selectedLanguage = watch('language') || ''
+  const selectedVoiceUri = watch('voiceUri') || ''
 
   const localVoices = useMemo(() => {
     return _.filter(voices, { localService: true })
@@ -247,6 +250,15 @@ const SpeechSelector = observer(() => {
           <button
             type="button"
             className="btn btn-outline md:btn-ghost md:btn-sm md:mx-4"
+            onClick={clearValues}
+            disabled={_.isEmpty(selectedLanguage || selectedVoiceUri)}
+          >
+            Clear
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-outline md:btn-ghost md:btn-sm md:mx-4"
             onClick={() => {
               console.log('resetting')
               return reset()
@@ -275,7 +287,7 @@ const AppGeneralPanel = observer(() => {
     <div className="flex w-full flex-col gap-4">
       <ThemeSelector />
 
-      <DownlodSelector />
+      <DownloadSelector />
 
       <SpeechSelector />
     </div>

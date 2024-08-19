@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { ScrollShadow, Tab, Tabs } from '@nextui-org/react'
 
@@ -9,19 +9,23 @@ import LmsModelPanel from '~/features/settings/panels/model/LmsModelPanel'
 import OpenAiModelPanel from '~/features/settings/panels/model/OpenAiModelPanel'
 
 import { connectionStore } from '~/core/connection/ConnectionStore'
-
-import { settingStore } from '~/core/SettingStore'
+import { settingStore } from '~/core/setting/SettingStore'
 
 const ModelPanel = observer(() => {
-  const { selectedConnectionModelId, connections } = connectionStore
+  const { selectedConnection, connections } = connectionStore
+  const { modelPanelConnectionId } = settingStore
 
   const [selectedTabId, setSelectedTabId] = useState<string | undefined>(
-    selectedConnectionModelId ?? connections[0]?.id,
+    modelPanelConnectionId ?? selectedConnection?.id ?? connections[0]?.id,
   )
 
-  const selectedConnection = useMemo(() => {
+  const connection = useMemo(() => {
     return connectionStore.getConnectionById(selectedTabId)
   }, [selectedTabId, connections])
+
+  useEffect(() => {
+    settingStore.setModelPanelOverride(undefined)
+  }, [])
 
   return (
     <div className="flex w-full flex-col">
@@ -46,27 +50,19 @@ const ModelPanel = observer(() => {
                 <Tab
                   key={connection.id}
                   title={connection.label}
-                  className={connection.id === selectedConnectionModelId ? 'is-active-parent' : ''}
+                  className={connection.id === selectedConnection?.id ? 'is-active-parent' : ''}
                 />
               ))}
             </Tabs>
           </ScrollShadow>
 
-          {selectedConnection && (
+          {connection && (
             <div className="flex-1 overflow-y-hidden pt-2">
               <ScrollShadow className="max-h-full pb-7">
-                {selectedConnection.type === 'LMS' && (
-                  <LmsModelPanel connection={selectedConnection} />
-                )}
-                {selectedConnection.type === 'A1111' && (
-                  <A1111ModelPanel connection={selectedConnection} />
-                )}
-                {selectedConnection.type === 'Ollama' && (
-                  <OllamaModelPanel connection={selectedConnection} />
-                )}
-                {selectedConnection.type === 'OpenAi' && (
-                  <OpenAiModelPanel connection={selectedConnection} />
-                )}
+                {connection.type === 'LMS' && <LmsModelPanel connection={connection} />}
+                {connection.type === 'A1111' && <A1111ModelPanel connection={connection} />}
+                {connection.type === 'Ollama' && <OllamaModelPanel connection={connection} />}
+                {connection.type === 'OpenAi' && <OpenAiModelPanel connection={connection} />}
               </ScrollShadow>
             </div>
           )}

@@ -1,29 +1,28 @@
-import { IMessageModel } from '~/core/MessageModel'
+import { MessageViewModel } from '~/core/message/MessageViewModel'
 
 abstract class BaseApi {
   static abortControllerById: Record<string, () => Promise<void>> = {}
 
   abstract generateImages(
     prompt: string,
-    incomingMessageVariation: IMessageModel,
+    incomingMessageVariation: MessageViewModel,
   ): Promise<string[]>
 
   abstract generateChat(
-    chatMessages: IMessageModel[],
-    incomingMessage: IMessageModel,
-    incomingMessageVariant: IMessageModel,
+    chatMessages: MessageViewModel[],
+    incomingMessage: MessageViewModel,
   ): AsyncGenerator<string>
 
-  static cancelGeneration(id?: string) {
+  static async cancelGeneration(id?: string) {
     if (id) {
       if (!BaseApi.abortControllerById[id]) return
 
-      BaseApi.abortControllerById[id]?.().then(() => {
-        delete BaseApi.abortControllerById[id]
-      })
+      await BaseApi.abortControllerById[id]?.()
+
+      delete BaseApi.abortControllerById[id]
     } else {
       for (const id in BaseApi.abortControllerById) {
-        BaseApi.abortControllerById[id]?.()
+        await BaseApi.abortControllerById[id]?.()
       }
 
       BaseApi.abortControllerById = {}

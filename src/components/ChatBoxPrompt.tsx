@@ -1,15 +1,13 @@
-import { PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
-import { chatStore } from '~/core/ChatStore'
-import { settingStore } from '~/core/SettingStore'
-import { personaStore } from '~/core/PersonaStore'
-
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import FunTitle from '~/components/FunTitle'
-import ToolTip from '~/components/Tooltip'
+import { ChatViewModel } from '~/core/chat/ChatViewModel'
+import { personaTable } from '~/core/persona/PersonaTable'
 import { connectionStore } from '~/core/connection/ConnectionStore'
+import { settingStore } from '~/core/setting/SettingStore'
 
 type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
 
@@ -29,24 +27,39 @@ const Step = ({
   )
 }
 
-const ChatBoxPrompt = observer(() => {
+const ChatBoxPrompt = observer(({ chat }: { chat: ChatViewModel }) => {
+  const [hasCreatedPersonas, setHasCreatedPersonas] = useState(false)
+
+  const connections = connectionStore.connections
+
   const activeConnectionTypes = useMemo(() => {
-    const connectionsTypes = _.chain(connectionStore.connections)
-      .filter('isConnected')
-      .map('type')
-      .value()
+    const connectionsTypes = _.chain(connections).filter('isConnected').map('type').value()
 
     return new Set(connectionsTypes)
-  }, [connectionStore.connections])
+  }, [connections])
 
   const anyConnectionHasModels = useMemo(() => {
-    for (const connection of connectionStore.connections) {
+    for (const connection of connections) {
       if (!_.isEmpty(connection.models)) {
         return true
       }
     }
     return false
-  }, [connectionStore.connections])
+  }, [connections])
+
+  useEffect(() => {
+    if (personaTable.cache.length > 0) {
+      setHasCreatedPersonas(true)
+      return
+    }
+
+    personaTable.length().then(length => {
+      if (length > 0) {
+        setHasCreatedPersonas(true)
+      }
+    })
+  }, [])
+
   return (
     <div className="hero my-auto">
       <div className="hero-content w-fit text-center">
@@ -91,7 +104,7 @@ const ChatBoxPrompt = observer(() => {
                 </a>
               </Step>
 
-              <Step type="secondary" isCompleted={!_.isEmpty(personaStore.personas)}>
+              <Step type="secondary" isCompleted={hasCreatedPersonas}>
                 {'Create and Select a'}
 
                 <button
@@ -114,7 +127,7 @@ const ChatBoxPrompt = observer(() => {
                 {'from a previous session'}
               </Step>
 
-              <Step type="secondary" isCompleted={!!chatStore.selectedChat?.previewImageUrls[0]}>
+              <Step type="secondary" isCompleted={!_.isEmpty(chat?.previewImages)}>
                 {'Drag and Drop, Paste, or'}
 
                 <AttachmentWrapper>

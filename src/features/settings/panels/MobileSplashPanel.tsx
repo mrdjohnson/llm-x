@@ -5,7 +5,7 @@ import Github from '~/icons/Github'
 import Search from '~/icons/Search'
 
 import { SideBar } from '~/containers/SideBar'
-import { settingStore } from '~/core/SettingStore'
+import { settingStore } from '~/core/setting/SettingStore'
 
 const MobileSplashPanel = observer(() => {
   const { query } = useKBar()
