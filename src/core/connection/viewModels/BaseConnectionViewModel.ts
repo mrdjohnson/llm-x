@@ -1,29 +1,26 @@
 import { PropsWithoutRef, ReactNode } from 'react'
-import { SnapshotIn } from 'mobx-state-tree'
 import _ from 'lodash'
 import { AxiosError } from 'axios'
-import { IObservableArray, action, computed, observable } from 'mobx'
+import { observable, computed, action, makeObservable, IObservableArray } from 'mobx'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 import { classFromProps } from '~/utils/classFromProps'
-import BaseApi from '~/core/connection/api/BaseApi'
 
 import { LanguageModelType } from '~/core/LanguageModel'
-import { ConnectionTypes, IConnectionDataModel } from '~/core/types'
 import { toastStore } from '~/core/ToastStore'
 
-export type ConnectionViewModelModelPanel<
-  BaseModel,
-  T = BaseConnectionViewModel<BaseModel>,
-> = (props: { connection: T }) => React.JSX.Element
+import BaseApi from '~/core/connection/api/BaseApi'
+import { ConnectionTypes } from '~/core/connection/types'
+import { ConnectionModel, ConnectionParameterModel } from '~/core/connection/ConnectionModel'
+import { settingTable } from '~/core/setting/SettingTable'
 
 abstract class BaseConnectionViewModel<
   BaseModelType = object,
   SingleModelType = LanguageModelType<BaseModelType>,
-> extends classFromProps<IConnectionDataModel>() {
+> extends classFromProps<ConnectionModel>() {
   abstract DefaultHost: string
 
-  abstract models: IObservableArray<LanguageModelType<BaseModelType>>
+  models: IObservableArray<LanguageModelType<BaseModelType>> = observable.array()
 
   abstract type: ConnectionTypes
 
@@ -35,15 +32,31 @@ abstract class BaseConnectionViewModel<
   abstract readonly hostLabel: string
   abstract readonly enabledLabel: string
 
-  static getSnapshot(): SnapshotIn<IConnectionDataModel> {
+  static getSnapshot(): ConnectionModel {
     throw 'not implemented'
   }
 
-  static MOBX_MAPPINGS = {
-    models: observable,
-    parsedParameters: computed,
-    isConnected: observable,
-    fetchLmModels: action,
+  constructor(public source: ConnectionModel) {
+    super(source)
+
+    makeObservable(this, {
+      models: observable,
+      parsedParameters: computed,
+      isConnected: observable,
+      fetchLmModels: action,
+    })
+
+    this.fetchLmModels()
+  }
+
+  parsedParameterValue<T = string>(parameter: ConnectionParameterModel): T | undefined {
+    const value = parameter.value || parameter.defaultValue
+
+    if (!value) return undefined
+
+    if (!parameter.isJson) return value as T
+
+    return JSON.parse(value) as T
   }
 
   get parsedParameters() {
@@ -51,7 +64,7 @@ abstract class BaseConnectionViewModel<
 
     return _.chain(this.parameters)
       .keyBy('field')
-      .mapValues(parameter => parameter.parsedValue())
+      .mapValues(parameter => this.parsedParameterValue(parameter))
       .value()
   }
 
@@ -80,9 +93,7 @@ abstract class BaseConnectionViewModel<
     if (!enabled || !host) return []
 
     try {
-      const models = await this._fetchLmModels(host)
-
-      this.models = observable.array(models)
+      this.models = observable.array(await this._fetchLmModels(host))
 
       this.setIsConnected(true)
 
@@ -97,7 +108,8 @@ abstract class BaseConnectionViewModel<
         'error',
       )
 
-      this.models = observable.array()
+      // remove all current models
+      this.models.clear()
 
       this.setIsConnected(false)
     }
@@ -114,6 +126,14 @@ abstract class BaseConnectionViewModel<
   modelFilter(model: LanguageModelType<BaseModelType>, filterText: string) {
     return model.modelName.toLowerCase().includes(filterText.toLowerCase())
   }
+
+  async selectModel(model: LanguageModelType<BaseModelType>) {
+    await settingTable.put({ selectedConnectionId: this.id, selectedModelId: model.id })
+  }
 }
 
-export default BaseConnectionViewModel
+export type ConnectionViewModelPanel<BaseModel, T = BaseConnectionViewModel<BaseModel>> = (props: {
+  connection: T
+}) => React.JSX.Element
+
+export { BaseConnectionViewModel }

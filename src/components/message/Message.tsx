@@ -4,9 +4,9 @@ import { observer } from 'mobx-react-lite'
 
 import Stop from '~/icons/Stop'
 
-import { IMessageModel } from '~/core/MessageModel'
-import { chatStore } from '~/core/ChatStore'
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
+import { MessageViewModel } from '~/core/message/MessageViewModel'
+import { chatStore } from '~/core/chat/ChatStore'
 
 const LazyMessage = React.lazy(() => import('~/components/message/LazyMessage'))
 
@@ -15,14 +15,14 @@ const Loading = () => (
 )
 
 type CustomMessageProps = {
-  message: IMessageModel
-  messageVariant: IMessageModel
+  message: MessageViewModel
+  messageVariant: MessageViewModel
 }
 
 export const IncomingMessage = observer(({ message, messageVariant }: CustomMessageProps) => {
   // show an empty loading box when we are getting a message from the server
   // checking for content also tells the observer to re-render
-  if (message?.content === undefined) return null
+  if (messageVariant?.content === undefined) return null
 
   return (
     <Message
@@ -58,8 +58,9 @@ export const MessageToEdit = observer(({ message, messageVariant }: CustomMessag
 })
 
 export type MessageProps = PropsWithChildren<{
-  message: IMessageModel
-  messageVariant?: IMessageModel
+  message: MessageViewModel
+  messageVariant: MessageViewModel
+  variationIdToEdit?: string
   loading?: boolean
   onDestroy?: () => void
   customDeleteIcon?: React.ReactNode
@@ -70,10 +71,10 @@ export type MessageProps = PropsWithChildren<{
   variationIndex?: number
 }>
 
-export const Message = (props: MessageProps) => {
+export const Message = observer((props: MessageProps) => {
   return (
     <Suspense fallback={null}>
       <LazyMessage {...props} />
     </Suspense>
   )
-}
+})

@@ -10,8 +10,8 @@ export type ConnectionViewModelTypes =
   | OpenAiConnectionViewModel
 
 export const connectionViewModelByType = {
-  LMS: LmsConnectionViewModel,
-  A1111: A1111ConnectionViewModel,
-  Ollama: OllamaConnectionViewModel,
-  OpenAi: OpenAiConnectionViewModel,
+  A1111: () => A1111ConnectionViewModel,
+  LMS: () => LmsConnectionViewModel,
+  Ollama: () => OllamaConnectionViewModel,
+  OpenAi: () => OpenAiConnectionViewModel,
 }

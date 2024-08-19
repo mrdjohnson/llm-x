@@ -5,17 +5,17 @@ import _ from 'lodash'
 
 import NewConnectionPanel from '~/features/settings/panels/connections/NewConnectionPanel'
 
-import { connectionStore } from '~/core/connection/ConnectionStore'
 import ConnectionPanel from '~/features/settings/panels/connections/ConnectionPanel'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const ConnectionsPanel = observer(() => {
-  const { selectedConnectionModelId, connections } = connectionStore
+  const { selectedConnection, connections } = connectionStore
 
-  const [selectedTabId, setSelectedTabId] = useState<string>(selectedConnectionModelId ?? 'App')
+  const [selectedTabId, setSelectedTabId] = useState<string>(selectedConnection?.id ?? 'App')
 
   useEffect(() => {
-    setSelectedTabId(selectedConnectionModelId ?? 'App')
-  }, [selectedConnectionModelId])
+    setSelectedTabId(selectedConnection?.id ?? 'App')
+  }, [selectedConnection])
 
   const selectedPanel = useMemo(() => {
     if (selectedTabId === 'new_connection') {
@@ -54,14 +54,14 @@ const ConnectionsPanel = observer(() => {
             <Tab
               key={connection.id}
               title={connection.label}
-              className={connection.id === selectedConnectionModelId ? 'is-active-parent' : ''}
+              className={connection.id === selectedTabId ? 'is-active-parent' : ''}
             />
           ))}
 
           <Tab
             key="new_connection"
             title="New Connection +"
-            className={selectedConnectionModelId === 'new_connection' ? 'is-active-parent' : ''}
+            className={selectedTabId === 'new_connection' ? 'is-active-parent' : ''}
           />
         </Tabs>
       </ScrollShadow>

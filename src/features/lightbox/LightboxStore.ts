@@ -1,71 +1,69 @@
 import _ from 'lodash'
-import { types, Instance } from 'mobx-state-tree'
+import { makeAutoObservable } from 'mobx'
 import { type Slide } from 'yet-another-react-lightbox'
 
-import { IMessageModel } from '~/core/MessageModel'
+import { MessageViewModel } from '~/core/message/MessageViewModel'
+import { chatStore } from '~/core/chat/ChatStore'
 
-import { chatStore } from '~/core/ChatStore'
+class LightboxStore {
+  messageId?: string
+  imageUrl?: string
 
-export const LightboxStore = types
-  .model({
-    messageId: types.maybe(types.string),
-    imageUrl: types.maybe(types.string),
-  })
-  .views(self => ({
-    get chat() {
-      return chatStore.selectedChat
-    },
+  constructor() {
+    makeAutoObservable(this)
+  }
 
-    get lightboxMessage(): IMessageModel | undefined {
-      if (!this.chat) return undefined
+  get chat() {
+    return chatStore.selectedChat
+  }
 
-      return _.find(this.chat.messages, { uniqId: self.messageId })
-    },
+  get lightboxMessage(): MessageViewModel | undefined {
+    if (!this.chat) return undefined
 
-    get lightboxSlides() {
-      if (!this.lightboxMessage) return []
+    return _.find(this.chat.messages, { id: this.messageId })
+  }
 
-      const lightBoxSources: Array<Slide & { baseUniqId: string }> = []
+  get lightboxSlides() {
+    if (!this.lightboxMessage) return []
 
-      let userPrompt: string | undefined
+    const lightBoxSources: Array<Slide & { baseId: string }> = []
 
-      this.chat!.messages.forEach(baseMessage => {
-        const message = baseMessage.selectedVariation
+    let userPrompt: string | undefined
 
-        if (message.fromBot === false) {
-          userPrompt = message.content
-        }
+    this.chat!.messages.forEach(baseMessage => {
+      const { source: message } = baseMessage.selectedVariation
 
-        message.imageUrls.forEach((imageUrl, index) => {
-          lightBoxSources.push({
-            description: userPrompt + ` (${index + 1}/${message.imageUrls.length})`,
-            src: imageUrl,
-            baseUniqId: baseMessage.uniqId,
-          })
+      if (message.fromBot === false) {
+        userPrompt = message.content
+      }
+
+      message.imageUrls.forEach((imageUrl, index) => {
+        lightBoxSources.push({
+          description: userPrompt + ` (${index + 1}/${message.imageUrls.length})`,
+          src: imageUrl,
+          baseId: baseMessage.id,
         })
       })
+    })
 
-      return lightBoxSources
-    },
+    return lightBoxSources
+  }
 
-    get imageUrlIndex() {
-      if (!self.imageUrl) return -1
+  get imageUrlIndex() {
+    if (!this.imageUrl) return -1
 
-      return _.findIndex(this.lightboxSlides, ({ src }) => src === self.imageUrl)
-    },
-  }))
-  .actions(self => ({
-    setLightboxMessageById(baseUniqId: string, imageUrl: string) {
-      self.messageId = baseUniqId
-      self.imageUrl = imageUrl
-    },
+    return _.findIndex(this.lightboxSlides, { src: this.imageUrl })
+  }
 
-    closeLightbox() {
-      self.messageId = undefined
-      self.imageUrl = undefined
-    },
-  }))
+  setLightboxMessageById(baseUniqId: string, imageUrl: string) {
+    this.messageId = baseUniqId
+    this.imageUrl = imageUrl
+  }
 
-export interface ILightboxStore extends Instance<typeof LightboxStore> {}
+  closeLightbox() {
+    this.messageId = undefined
+    this.imageUrl = undefined
+  }
+}
 
-export const lightboxStore = LightboxStore.create()
+export const lightboxStore = new LightboxStore()

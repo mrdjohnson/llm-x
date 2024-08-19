@@ -32,6 +32,15 @@ class CachedStorage {
 
     await cache.delete(path)
   }
+
+  static async move(fromPath: string, toPath: string) {
+    const item = await CachedStorage.get(fromPath)
+
+    if (!item) return
+
+    await CachedStorage.put(toPath, item)
+    await CachedStorage.delete(fromPath)
+  }
 }
 
 export default CachedStorage

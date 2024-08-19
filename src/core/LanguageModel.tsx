@@ -1,4 +1,3 @@
-import { createId } from '@paralleldrive/cuid2'
 import {
   A1111LanguageModel,
   ConnectionTypes,
@@ -9,7 +8,7 @@ import {
   LmsLanguageModel,
   OllamaLanguageModel,
   OpenAiLanguageModel,
-} from '~/core/types'
+} from '~/core/connection/types'
 
 export type BaseLanguageModel = {
   id: string
@@ -22,45 +21,45 @@ export type LanguageModelType<T> = T & BaseLanguageModel
 
 class LanguageModel {
   static toSharedLanguageModel<T>(
+    connectionId: string,
     model: T,
     sharedModel: Omit<BaseLanguageModel, 'id'>,
   ): BaseLanguageModel & T {
-    const id = createId()
-
     return {
       ...model,
 
       ...sharedModel,
-      id,
+
+      id: connectionId + ':' + sharedModel.modelName,
     }
   }
 
-  static fromILmsModel(model: ILmsModel): LmsLanguageModel {
-    return LanguageModel.toSharedLanguageModel(model, {
+  static fromILmsModel(model: ILmsModel, connectionId: string): LmsLanguageModel {
+    return LanguageModel.toSharedLanguageModel(connectionId, model, {
       type: 'LMS',
       label: model.name,
       modelName: model.path,
     })
   }
 
-  static fromIA1111Model(model: IA1111Model): A1111LanguageModel {
-    return LanguageModel.toSharedLanguageModel(model, {
+  static fromIA1111Model(model: IA1111Model, connectionId: string): A1111LanguageModel {
+    return LanguageModel.toSharedLanguageModel(connectionId, model, {
       type: 'A1111',
       label: model.title,
       modelName: model.modelName,
     })
   }
 
-  static fromIOllamaModel(model: IOllamaModel): OllamaLanguageModel {
-    return LanguageModel.toSharedLanguageModel(model, {
+  static fromIOllamaModel(model: IOllamaModel, connectionId: string): OllamaLanguageModel {
+    return LanguageModel.toSharedLanguageModel(connectionId, model, {
       type: 'Ollama',
       label: model.name,
       modelName: model.name,
     })
   }
 
-  static fromIOpenAiModel(model: IOpenAiModel): OpenAiLanguageModel {
-    return LanguageModel.toSharedLanguageModel(model, {
+  static fromIOpenAiModel(model: IOpenAiModel, connectionId: string): OpenAiLanguageModel {
+    return LanguageModel.toSharedLanguageModel(connectionId, model, {
       type: 'OpenAi',
       label: model._id,
       modelName: model._id,

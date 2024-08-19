@@ -1,21 +1,20 @@
-import { observer } from 'mobx-react-lite'
 import { useKBar } from 'kbar'
 import { Kbd } from '@nextui-org/react'
+import { observer } from 'mobx-react-lite'
+import { type PropsWithChildren } from 'react'
 
 import ModelSelector from '~/components/ModelSelector'
 import ModelRefreshButton from '~/components/ModelRefreshButton'
 import FunTitle from '~/components/FunTitle'
 import ToolTip from '~/components/Tooltip'
 
-import { settingStore } from '~/core/SettingStore'
-import { connectionStore } from '~/core/connection/ConnectionStore'
-
 import Warning from '~/icons/Warning'
 import Bars3 from '~/icons/Bars3'
-import CloudDown from '~/icons/CloudDown'
 import Search from '~/icons/Search'
 import AppSettings from '~/icons/AppSettings'
-import { PropsWithChildren } from 'react'
+
+import { settingStore } from '~/core/setting/SettingStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const KeyboardTooltip = ({ command, children }: PropsWithChildren<{ command: string }>) => (
   <ToolTip
@@ -34,11 +33,11 @@ const Navbar = observer(() => {
 
   const noServer = !connectionStore.isAnyServerConnected
 
-  const handlePwaUpdate = () => {
-    settingStore.getUpdateServiceWorker()?.()
+  // const handlePwaUpdate = () => {
+  //   settingStore.getUpdateServiceWorker()?.()
 
-    settingStore.setPwaNeedsUpdate(false)
-  }
+  //   settingStore.setPwaNeedsUpdate(false)
+  // }
 
   return (
     <nav className="navbar mb-2 flex h-auto min-h-0 justify-between gap-4 rounded-md bg-base-300">
@@ -53,7 +52,7 @@ const Navbar = observer(() => {
       </div>
 
       <div className="flex flex-row justify-end gap-2">
-        {settingStore.pwaNeedsUpdate && (
+        {/* {settingStore.pwaNeedsUpdate && (
           <button
             className="btn btn-square btn-ghost btn-sm md:btn-md"
             onClick={handlePwaUpdate}
@@ -61,7 +60,7 @@ const Navbar = observer(() => {
           >
             <CloudDown />
           </button>
-        )}
+        )} */}
 
         <KeyboardTooltip command="K">
           <button className="btn btn-square btn-ghost btn-md hidden md:flex" onClick={query.toggle}>

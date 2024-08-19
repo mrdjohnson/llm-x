@@ -1,85 +1,30 @@
-import { types } from 'mobx-state-tree'
-import { persist } from 'mst-persist'
 import _ from 'lodash'
+import { z } from 'zod'
 
-import { type SettingPanelOptionsType } from '~/features/settings/settingsPanels'
+import { connectionTable } from '~/core/connection/ConnectionTable'
+import { voiceTable } from '~/core/voice/VoiceTable'
+import { settingTable } from '~/core/setting/SettingTable'
 
-import { connectionStore } from '~/core/connection/ConnectionStore'
+import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import LmsConnectionViewModel from '~/core/connection/viewModels/LmsConnectionViewModel'
 import A1111ConnectionViewModel from '~/core/connection/viewModels/A1111ConnectionViewModel'
 import OllamaConnectionViewModel from '~/core/connection/viewModels/OllamaConnectionViewModel'
 
-import { VoiceModel } from '~/core/VoiceModel'
+const OLD_SETTING_STORE_VERSION = 2
 
-const SETTING_STORE_VERSION = 2
+const LegacyVoice = z.object({
+  id: z.string(),
+  language: z.string(),
+  voiceUri: z.string(),
+})
 
-export const SettingStore = types
-  .model({
-    version: types.optional(types.number, SETTING_STORE_VERSION),
-
-    selectedModelName: types.maybeNull(types.string),
-
-    voice: types.maybe(VoiceModel),
-
-    // general settings
-    theme: types.optional(types.string, '_system'),
-    pwaNeedsUpdate: types.optional(types.boolean, false),
-    isSidebarOpen: types.optional(types.boolean, true),
-
-    // app settings
-    _settingsPanelName: types.maybe(types.string),
-    _isServerConnected: types.maybe(types.boolean),
-    _funTitle: types.maybe(types.string),
-  })
-  .views(self => ({
-    get funTitle() {
-      return self._funTitle
-    },
-
-    get settingsPanelName() {
-      return self._settingsPanelName as SettingPanelOptionsType | undefined
-    },
-  }))
-  .actions(self => {
-    let updateServiceWorker: undefined | (() => void)
-
-    return {
-      toggleSidebar() {
-        self.isSidebarOpen = !self.isSidebarOpen
-      },
-
-      openSettingsModal(panelName: SettingPanelOptionsType | 'initial' = 'initial') {
-        self._settingsPanelName = panelName
-      },
-
-      closeSettingsModal() {
-        self._settingsPanelName = undefined
-      },
-
-      setTheme(theme: string) {
-        self.theme = theme
-      },
-
-      setPwaNeedsUpdate(pwaNeedsUpdate: boolean, nextUpdateServiceWorker?: () => void) {
-        self.pwaNeedsUpdate = pwaNeedsUpdate
-        updateServiceWorker = nextUpdateServiceWorker
-      },
-
-      setFunTitle(funTitle: string) {
-        self._funTitle = funTitle
-      },
-
-      setVoice(language: string, voiceUri: string) {
-        self.voice = VoiceModel.create({ language, voiceUri })
-      },
-
-      getUpdateServiceWorker() {
-        return updateServiceWorker
-      },
-    }
-  })
-
-export const settingStore = SettingStore.create()
+const LegacySettingStore = z.object({
+  version: z.number().optional(),
+  selectedModelName: z.string().nullable(),
+  voice: LegacyVoice.optional(),
+  theme: z.string().optional(),
+  isSidebarOpen: z.boolean().optional(),
+})
 
 const migrateV1 = (settings: Record<string, unknown>) => {
   console.log('running v1 migration')
@@ -101,8 +46,10 @@ const migrateV1 = (settings: Record<string, unknown>) => {
   delete settings.temperature
 }
 
-const migrateV2 = (settings: Record<string, unknown>) => {
+const migrateV2 = async (settings: Record<string, unknown>) => {
   console.log('running v2 migration')
+
+  const connectionSeeds: ConnectionModel[] = []
 
   if (settings.lmsEnabled) {
     const lmsSnapshot = _.cloneDeep(LmsConnectionViewModel.getSnapshot())
@@ -115,7 +62,7 @@ const migrateV2 = (settings: Record<string, unknown>) => {
       }
     })
 
-    connectionStore.dataStore.addConnection('LMS', lmsSnapshot)
+    connectionSeeds.push(lmsSnapshot)
   }
 
   if (settings.a1111Enabled) {
@@ -134,7 +81,7 @@ const migrateV2 = (settings: Record<string, unknown>) => {
       }
     })
 
-    connectionStore.dataStore.addConnection('A1111', a1111Snapshot)
+    connectionSeeds.push(a1111Snapshot)
   }
 
   // it was enabled if it was true or undefined
@@ -152,8 +99,10 @@ const migrateV2 = (settings: Record<string, unknown>) => {
       }
     })
 
-    connectionStore.dataStore.addConnection('Ollama', ollamaSnapshot)
+    connectionSeeds.push(ollamaSnapshot)
   }
+
+  await connectionTable.bulkInsert(connectionSeeds)
 
   delete settings.ollamaEnabled
   delete settings.ollamaHost
@@ -176,36 +125,45 @@ const migrateV2 = (settings: Record<string, unknown>) => {
   delete settings.lmsTemperature
 }
 
-const runMigrations = () => {
-  const settingsString = localStorage.getItem('settings')
-
-  if (!settingsString) return
-
-  const settings = JSON.parse(settingsString) as Record<string, unknown>
-
-  if (_.isEqual(SETTING_STORE_VERSION, settings.version)) return
+// old old legacy migrations here
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const runOldMigrations = async (settings: any) => {
+  if (_.isEqual(OLD_SETTING_STORE_VERSION, settings.version)) return settings
 
   migrateV1(settings)
-  migrateV2(settings)
+  await migrateV2(settings)
 
-  settings.version = SETTING_STORE_VERSION
+  settings.version = OLD_SETTING_STORE_VERSION
 
-  localStorage.setItem('settings', JSON.stringify(settings))
+  return settings
 }
 
-runMigrations()
+export const importLegacySettingStore = async (entity: unknown) => {
+  const migratedSettings = await runOldMigrations(entity)
 
-persist('settings', settingStore, {
-  blacklist: [
-    'models',
-    'a1111Models',
-    'pwaNeedsUpdate',
-    '_isServerConnected',
-    '_isA111ServerConnected',
-    '_isLmsServerConnected',
-    '_funTitle',
-    '_settingsPanelName',
-  ],
-}).then(() => {
-  console.log('updated settings store')
-})
+  const { data: legacySetting } = LegacySettingStore.safeParse(migratedSettings)
+
+  if (!legacySetting) return undefined
+
+  const oldVoice = legacySetting?.voice
+  let voice
+
+  if (oldVoice) {
+    voice = await voiceTable.create(oldVoice)
+  }
+
+  const setting = settingTable.findCachedById('setting')!
+
+  const seed = settingTable.parse({
+    ...legacySetting,
+    ...setting,
+    selectedVoiceId: voice?.id,
+  })
+
+  // there is only one row here, name it with a constant value
+  seed.id = setting.id
+
+  await settingTable.put(setting)
+
+  return [seed]
+}

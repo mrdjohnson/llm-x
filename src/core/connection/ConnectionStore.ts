@@ -1,168 +1,102 @@
-import { SnapshotIn, applySnapshot, destroy, getSnapshot, types } from 'mobx-state-tree'
-import { persist } from 'mst-persist'
 import _ from 'lodash'
 import { makeAutoObservable } from 'mobx'
 
-import { ConnectionDataModel } from '~/core/connection/ConnectionDataModel'
-import LmsConnectionViewModel from '~/core/connection/viewModels/LmsConnectionViewModel'
-import A1111ConnectionViewModel from '~/core/connection/viewModels/A1111ConnectionViewModel'
-import OllamaConnectionViewModel from '~/core/connection/viewModels/OllamaConnectionViewModel'
-import OpenAiConnectionViewModel from '~/core/connection/viewModels/OpenAiConnectionViewModel'
-import { ConnectionViewModelTypes, connectionViewModelByType } from '~/core/connection/viewModels'
+import EntityCache from '~/utils/EntityCache'
 
-import { ConnectionTypes, IConnectionDataModel, BaseLanguageModel } from '~/core/types'
+import { ConnectionTypes, LanguageModelTypes } from '~/core/connection/types'
+import { connectionTable } from '~/core/connection/ConnectionTable'
+import { ConnectionModel, ConnectionModelInput } from '~/core/connection/ConnectionModel'
+import { connectionViewModelByType, ConnectionViewModelTypes } from '~/core/connection/viewModels'
 
-const ConnectionDataModelStore = types
-  .model({
-    connections: types.array(ConnectionDataModel),
-    selectedConnection: types.safeReference(ConnectionDataModel),
+import { settingStore } from '~/core/setting/SettingStore'
+import { settingTable } from '~/core/setting/SettingTable'
 
-    selectedModelName: types.maybe(types.string),
-    selectedModelLabel: types.maybe(types.string),
-  })
-  .actions(self => ({
-    addConnection(type: ConnectionTypes, snapshot?: SnapshotIn<IConnectionDataModel>) {
-      const connection = ConnectionDataModel.create(
-        snapshot ?? connectionViewModelByType[type].getSnapshot(),
-      )
-
-      self.connections.push(connection)
-      self.selectedConnection = connection
-
-      return connection
-    },
-
-    deleteConnection(id: string) {
-      const connection = _.find(self.connections, { id })
-
-      destroy(connection)
-
-      if (id === self.selectedConnection?.id) {
-        self.selectedConnection = undefined
-      }
-    },
-
-    updateConnection(snapshot: SnapshotIn<IConnectionDataModel>) {
-      const connection = _.find(self.connections, { id: snapshot.id })
-
-      if (!connection) throw 'No connection found by that id'
-
-      applySnapshot(connection, snapshot)
-
-      return connection
-    },
-
-    setSelectedConnectionById(id: string) {
-      self.selectedConnection = _.find(self.connections, { id })
-    },
-
-    setSelectedModel(model: BaseLanguageModel, connectionId: string) {
-      self.selectedModelName = model.modelName
-      self.selectedModelLabel = model.label
-
-      this.setSelectedConnectionById(connectionId)
-    },
-  }))
-
-const connectionDataModelStore = ConnectionDataModelStore.create()
-
-const classMap: Record<
-  ConnectionTypes,
-  | typeof LmsConnectionViewModel
-  | typeof A1111ConnectionViewModel
-  | typeof OllamaConnectionViewModel
-  | typeof OpenAiConnectionViewModel
-> = {
-  LMS: LmsConnectionViewModel,
-  A1111: A1111ConnectionViewModel,
-  Ollama: OllamaConnectionViewModel,
-  OpenAi: OpenAiConnectionViewModel,
-}
 class ConnectionStore {
-  dataStore = connectionDataModelStore
-
-  private connectionMapById: Record<string, ConnectionViewModelTypes> = {}
+  connectionCache = new EntityCache<ConnectionModel, ConnectionViewModelTypes>(connection => {
+    return connectionViewModelByType[connection.type]().toViewModel(connection)
+  })
 
   constructor() {
     makeAutoObservable(this)
   }
 
+  get connections() {
+    return connectionTable.cache.allValues().map(this.connectionCache.getOrPut)
+  }
+
+  get selectedConnection(): ConnectionViewModelTypes | undefined {
+    const connection = connectionTable.findCachedById(settingStore.setting.selectedConnectionId)
+
+    if (!connection) return undefined
+
+    return this.connectionCache.getOrPut(connection)
+  }
+
+  get selectedModel() {
+    const { selectedModelId } = settingStore.setting
+
+    if (!selectedModelId || !this.selectedConnection) return undefined
+
+    return _.find<LanguageModelTypes>(this.selectedConnection.models, { id: selectedModelId })
+  }
+
   get selectedModelName() {
-    return this.dataStore.selectedModelName
+    return this.selectedModel?.modelName
   }
 
   get selectedModelLabel() {
-    return this.dataStore.selectedModelLabel
-  }
-
-  get selectedConnectionModelId() {
-    return this.dataStore.selectedConnection?.id
+    return this.selectedModel?.label
   }
 
   getConnectionById(id?: string) {
     if (!id) return
 
-    return this.connectionMapById[id]
+    return this.connectionCache.get(id)
   }
 
-  deleteConnection(id: string) {
-    delete this.connectionMapById[id]
-
-    this.dataStore.deleteConnection(id)
+  async deleteConnection(connection: ConnectionViewModelTypes) {
+    return await connectionTable.destroy(connection.source)
   }
 
-  addConnection(type: ConnectionTypes, snapshot?: SnapshotIn<IConnectionDataModel>) {
-    const connection = this.dataStore.addConnection(type, snapshot)
+  async addConnection(type: ConnectionTypes, input?: ConnectionModelInput) {
+    const connection = await connectionTable.create(
+      input ?? connectionViewModelByType[type]().getSnapshot(),
+    )
 
-    const connectionViewModel = this.createConnectionViewModel(connection)
-
-    connectionViewModel.fetchLmModels()
+    // it was just created by the table, we have not cached it here yet
+    return this.connectionCache.put(connection, false)
   }
 
-  duplicateConnection(id: string) {
-    const connection = _.find(this.dataStore.connections, { id })
-
-    if (!connection) throw 'Cannot find connection'
-
-    const snapshot = getSnapshot(connection)
-
-    this.addConnection(snapshot.type, _.omit(snapshot, 'id'))
+  async updateConnection(connection: ConnectionModel) {
+    await connectionTable.put(connection)
   }
 
-  updateDataModel(snapshot: SnapshotIn<IConnectionDataModel>, isHostChanged: boolean) {
-    const connection = this.dataStore.updateConnection(snapshot)
+  async duplicateConnection(connection: ConnectionModel) {
+    return this.addConnection(connection.type, connection)
+  }
 
-    const connectionViewModel = this.createConnectionViewModel(connection)
+  async setSelectedConnection(connection: ConnectionViewModelTypes) {
+    await settingTable.put({ selectedConnectionId: connection.id })
+  }
 
-    if (isHostChanged) {
-      connectionViewModel.fetchLmModels()
+  async setSelectedModel(selectedModelId: string, selectedConnectionId: string) {
+    await settingTable.put({ selectedModelId, selectedConnectionId })
+  }
+
+  async refreshModels() {
+    for (const connection of this.connections) {
+      await connection.fetchLmModels()
     }
   }
 
-  createConnectionViewModel(connectionData: IConnectionDataModel) {
-    const ServerClass = classMap[connectionData.type]
+  async updateDataModel(snapshot: ConnectionModel, isHostChanged: boolean) {
+    const connection = await connectionTable.put(snapshot)
 
-    const connectionViewModel = new ServerClass(connectionData)
+    const viewModel = this.connectionCache.getOrPut(connection)
 
-    this.connectionMapById[connectionData.id] = connectionViewModel
-
-    return connectionViewModel
-  }
-
-  get selectedConnection() {
-    if (!this.selectedConnectionModelId) return undefined
-    return this.connectionMapById[this.selectedConnectionModelId]
-  }
-
-  get connections() {
-    return this.dataStore.connections.map(connectionData => {
-      const savedConnection = this.connectionMapById[connectionData.id]
-      if (savedConnection) return savedConnection
-
-      this.createConnectionViewModel(connectionData)
-
-      return this.connectionMapById[connectionData.id]
-    })
+    if (isHostChanged) {
+      viewModel.fetchLmModels()
+    }
   }
 
   get isAnyServerConnected() {
@@ -172,14 +106,6 @@ class ConnectionStore {
   get isImageGenerationMode() {
     return this.selectedConnection?.type === 'A1111'
   }
-
-  refreshModels = () => {
-    this.connections.map(connection => connection.fetchLmModels())
-  }
 }
 
 export const connectionStore = new ConnectionStore()
-
-persist('connection-store', connectionDataModelStore).then(() => {
-  connectionStore.refreshModels()
-})
