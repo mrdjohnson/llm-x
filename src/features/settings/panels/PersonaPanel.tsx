@@ -2,7 +2,6 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useRef, MouseEvent } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import { IPersonaModel, personaStore } from '~/core/PersonaStore'
 import FormInput from '~/components/form/FormInput'
 import FormTextarea from '~/components/form/FormTextarea'
 
@@ -10,24 +9,29 @@ import Delete from '~/icons/Delete'
 import Copy from '~/icons/Copy'
 import Edit from '~/icons/Edit'
 
+import { PersonaModel } from '~/core/persona/PersonaModel'
+import { personaTable } from '~/core/persona/PersonaTable'
+import { personaStore } from '~/core/persona/PersonaStore'
+
 type PersonaItemProps = {
-  persona: IPersonaModel
+  persona: PersonaModel
   isSelectedPersona: boolean
   shouldDimPersona?: boolean
 }
 
 const PersonaItem = observer(
   ({ persona, shouldDimPersona, isSelectedPersona }: PersonaItemProps) => {
-    const deletePersona = (e: MouseEvent<HTMLButtonElement>) => {
+    const deletePersona = async (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
 
-      personaStore.deletePersona(persona)
+      await personaTable.destroy(persona)
     }
 
-    const duplicatePersona = (e: MouseEvent<HTMLButtonElement>) => {
+    const duplicatePersona = async (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
 
-      personaStore.duplicatePersona(persona)
+      const nextPersona = await personaTable.duplicate(persona)
+      await personaStore.setSelectedPersona(nextPersona)
     }
 
     const editPersona = (e: MouseEvent<HTMLButtonElement>) => {
@@ -35,6 +39,7 @@ const PersonaItem = observer(
 
       personaStore.setPersonaToEdit(persona)
     }
+
     return (
       <div
         className={
@@ -92,20 +97,24 @@ const PersonaForm = observer(() => {
     formState: { errors },
   } = useForm<PersonaFormDataType>()
 
-  const { personaToEdit } = personaStore
+  const personaToEdit = personaStore.personaToEdit
 
   const formRef = useRef<HTMLFormElement>(null)
 
-  const handleFormSubmit = handleSubmit(formData => {
+  const handleFormSubmit = handleSubmit(async formData => {
     const { name, description } = formData
 
+    let nextPersonaToEdit: PersonaModel
+
     if (personaToEdit) {
-      personaStore.editPersona(name, description)
+      nextPersonaToEdit = await personaTable.put({ ...personaToEdit, name, description })
     } else {
-      personaStore.createPersona(name, description)
+      nextPersonaToEdit = await personaTable.create({ name, description })
     }
 
-    reset()
+    personaStore.setPersonaToEdit(nextPersonaToEdit)
+
+    reset(nextPersonaToEdit)
   })
 
   const validateName = (name: string) => {
@@ -181,7 +190,7 @@ const PersonaForm = observer(() => {
 })
 
 export const PersonaPanel = observer(() => {
-  const { personas, selectedPersona } = personaStore
+  const { selectedPersona, personas } = personaStore
 
   return (
     <div className="no-scrollbar flex w-full flex-col gap-2">

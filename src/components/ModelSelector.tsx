@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 
 import ChevronDown from '~/icons/ChevronDown'
-import { settingStore } from '~/core/SettingStore'
+import { settingStore } from '~/core/setting/SettingStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const ModelSelector = observer(() => {

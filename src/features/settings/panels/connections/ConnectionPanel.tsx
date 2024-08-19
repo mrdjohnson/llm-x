@@ -1,22 +1,20 @@
 import { observer } from 'mobx-react-lite'
-import { SnapshotIn, getSnapshot } from 'mobx-state-tree'
 import { useEffect, useMemo, useRef } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import _ from 'lodash'
 import { ScrollShadow } from '@nextui-org/react'
 
-import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
-import ConnectionDataParameterSection from '~/features/settings/panels/connections/ConnectionParameterSection'
-import { connectionStore } from '~/core/connection/ConnectionStore'
-
 import HostInput from '~/components/HostInput'
 import EnabledCheckbox from '~/components/EnabledCheckbox'
 import FormInput from '~/components/form/FormInput'
 
-import { IConnectionDataModel } from '~/core/types'
 import Copy from '~/icons/Copy'
+import { ConnectionModel } from '~/core/connection/ConnectionModel'
+import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
+import { connectionStore } from '~/core/connection/ConnectionStore'
+import ConnectionDataParameterSection from '~/features/settings/panels/connections/ConnectionParameterSection'
 
-export type ConnectionFormDataType = SnapshotIn<IConnectionDataModel>
+export type ConnectionFormDataType = ConnectionModel
 
 const ConnectionPanel = observer(({ connection }: { connection: ConnectionViewModelTypes }) => {
   const methods = useForm<ConnectionFormDataType>({})
@@ -44,7 +42,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ConnectionViewMo
   const isEnabled = !!getValues('enabled')
 
   const connectionDataSnapshot = useMemo(() => {
-    return getSnapshot(connection.connectionModel)
+    return _.cloneDeep(connection.source)
   }, [connection])
 
   const resetToSnapshot = () => reset(connectionDataSnapshot, { keepDirty: false })
@@ -97,7 +95,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ConnectionViewMo
               <button
                 type="button"
                 className="btn btn-outline btn-sm mr-8 w-full text-error md:btn-ghost md:text-error"
-                onClick={() => connectionStore.deleteConnection(connection.id)}
+                onClick={() => connectionStore.deleteConnection(connection)}
               >
                 Delete Connection
               </button>
@@ -107,7 +105,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ConnectionViewMo
               <button
                 type="button"
                 className="btn btn-outline w-full text-base-content/60 md:btn-ghost md:btn-sm hover:text-base-content md:mx-4 md:text-base-content/60"
-                onClick={() => connectionStore.duplicateConnection(connection.id)}
+                onClick={() => connectionStore.duplicateConnection(connection)}
                 disabled={isDirty}
               >
                 Duplicate <Copy />

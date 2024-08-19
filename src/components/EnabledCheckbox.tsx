@@ -1,13 +1,11 @@
 import { observer } from 'mobx-react-lite'
 import { Control, Controller } from 'react-hook-form'
-import { SnapshotIn } from 'mobx-state-tree'
-
-import { IConnectionDataModel } from '~/core/types'
 import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
+import { ConnectionModel } from '~/core/connection/ConnectionModel'
 
 type EnabledCheckboxProps = {
   connection: ConnectionViewModelTypes
-  control: Control<SnapshotIn<IConnectionDataModel>>
+  control: Control<ConnectionModel>
 }
 
 const EnabledCheckbox = observer(({ control, connection }: EnabledCheckboxProps) => {

@@ -1,14 +1,14 @@
-import { applySnapshot } from 'mobx-state-tree'
-import _ from 'lodash'
-
-import { chatStore } from '~/core/ChatStore'
 import { toastStore } from '~/core/ToastStore'
-import { personaStore } from '~/core/PersonaStore'
-import { settingStore } from '~/core/SettingStore'
 
-import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
-import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
+import { settingStore } from '~/core/setting/SettingStore'
+import { chatStore } from '~/core/chat/ChatStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
+
+import { DATABASE_TABLES } from '~/utils/db'
+import { chatTable } from '~/core/chat/ChatTable'
+import { settingTable } from '~/core/setting/SettingTable'
+import { connectionTable } from '~/core/connection/ConnectionTable'
+import { personaTable } from '~/core/persona/PersonaTable'
 
 export type DownloadOptions = {
   includeImages?: boolean
@@ -24,30 +24,36 @@ export class TransferHandler {
       }
 
       if (file.type.startsWith('image/')) {
-        await chatStore.selectedChat?.addPreviewImage(file)
+        await chatStore.selectedChat?.previewImageHandler.addPreviewImage(file)
         continue
       }
 
       try {
         const data = JSON.parse(await file.text())
 
-        if (data.messages) {
-          const chat = await ChatSnapshotHandler.formatChatToImport(data)
+        // post localforage export
+        if (data.databaseTimestamp) {
+          if (data._chat) {
+            await chatTable.import(data._chat)
+          } else {
+            for (const table of DATABASE_TABLES) {
+              if (table.hasParentExportTable) continue
 
-          chatStore.importChat(chat)
-        } else {
-          const importedChatStore = await ChatStoreSnapshotHandler.formatChatStoreToImport(
-            data.chatStore,
-          )
-
-          if (importedChatStore) {
-            importedChatStore.selectedChat = _.last(importedChatStore?.chats)?.id
+              await table.importAll(data[table.getTableName()])
+            }
           }
+          // legacy files
+        } else if (data.messages) {
+          const legacyChat = await chatTable.importFromLegacy(data)
 
-          applySnapshot(chatStore, importedChatStore)
-          applySnapshot(personaStore, data.personaStore)
-          applySnapshot(settingStore, data.settingStore)
-          applySnapshot(connectionStore.dataStore, data.connectionStore)
+          if (legacyChat?.length === 1) {
+            await settingStore.update({ selectedChatId: legacyChat[0].id })
+          }
+        } else {
+          await settingTable.importFromLegacy(data.settingStore)
+          await chatTable.importFromLegacy(data.chatStore)
+          await connectionTable.importFromLegacy(data.connectionStore)
+          await personaTable.importFromLegacy(data.personaStore)
 
           connectionStore.refreshModels()
         }

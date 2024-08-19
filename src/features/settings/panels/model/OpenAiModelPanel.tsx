@@ -1,14 +1,16 @@
 import { observer } from 'mobx-react-lite'
 
-import OpenAiConnectionViewModel from '~/core/connection/viewModels/OpenAiConnectionViewModel'
-import { connectionStore } from '~/core/connection/ConnectionStore'
-
-import { OpenAiLanguageModel } from '~/core/types'
+import { OpenAiLanguageModel } from '~/core/connection/types'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnectedPanelSection'
 
+import OpenAiConnectionViewModel from '~/core/connection/viewModels/OpenAiConnectionViewModel'
+import { settingStore } from '~/core/setting/SettingStore'
+
 const OpenAiModelPanel = observer(({ connection }: { connection: OpenAiConnectionViewModel }) => {
+  const selectedModelId = settingStore.setting?.selectedModelId
+
   const renderRow = (model: OpenAiLanguageModel) => (
     <>
       <td>
@@ -34,14 +36,11 @@ const OpenAiModelPanel = observer(({ connection }: { connection: OpenAiConnectio
     <SelectionPanelTable
       items={connection.models}
       sortTypes={connection.modelTableHeaders}
-      onItemSelected={model => connectionStore.dataStore.setSelectedModel(model, connection.id)}
+      onItemSelected={model => connection.selectModel(model)}
       itemFilter={connection.modelFilter}
       primarySortTypeLabel={connection.primaryHeader}
       renderRow={renderRow}
-      getIsItemSelected={model =>
-        connection.id === connectionStore.selectedConnection?.id &&
-        model.modelName === connectionStore.selectedModelName
-      }
+      getIsItemSelected={model => selectedModelId === model.id}
       getItemKey={model => model.id}
       filterInputPlaceholder="Filter by id or owned by..."
     />

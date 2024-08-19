@@ -8,12 +8,15 @@ import Tooltip from '~/components/Tooltip'
 import DocumentArrowUp from '~/icons/DocumentArrowUp'
 import Edit from '~/icons/Edit'
 
-import { IChatModel } from '~/core/ChatModel'
-import { chatStore } from '~/core/ChatStore'
+import { chatStore } from '~/core/chat/ChatStore'
+import { ChatModel } from '~/core/chat/ChatModel'
+import { chatTable } from '~/core/chat/ChatTable'
 
 export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: () => void }) => {
-  const handleChatSelected = (chat: IChatModel) => {
-    chatStore.selectChat(chat)
+  const { dateLabelToChatPairs } = chatStore
+
+  const handleChatSelected = async (chat: ChatModel) => {
+    await chatStore.selectChat(chat)
 
     onChatSelected()
   }
@@ -23,7 +26,7 @@ export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: (
       <div className="join join-horizontal flex w-full">
         <button
           className="btn join-item btn-neutral mb-2 flex flex-1 flex-row items-center justify-center gap-2 p-2"
-          onClick={chatStore.createChat}
+          onClick={() => chatTable.create({})}
           disabled={!!chatStore.emptyChat}
         >
           New Chat
@@ -41,7 +44,7 @@ export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: (
 
       <div className=" flex w-full flex-1 flex-col overflow-y-scroll text-base-content">
         <div className="no-scrollbar relative flex h-full w-full flex-1 flex-col gap-2 overflow-y-auto overflow-x-clip rounded-md">
-          {_.map(chatStore.dateLabelToChatPairs, ([dateLabel, chats]) => (
+          {_.map(dateLabelToChatPairs, ([dateLabel, chats]) => (
             <Fragment key={dateLabel}>
               <span
                 className="sticky top-0 bg-base-300 text-sm font-semibold text-base-content/30"

@@ -1,20 +1,22 @@
 import { lazy } from 'react'
-import { SnapshotIn } from 'mobx-state-tree'
-import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 
 import LanguageModel, { LanguageModelType } from '~/core/LanguageModel'
-import { IObservableArray, makeObservable, observable } from 'mobx'
-import BaseConnectionViewModel from '~/core/connection/viewModels/BaseConnectionViewModel'
-import ollamaApi from '~/core/connection/api/OllamaApi'
+import { toOllamaModel } from '~/core/transformers/toOllamaModel'
 
+import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 import Image from '~/icons/Image'
 import { Ollama } from 'ollama/browser'
-import { toOllamaModel } from '~/core/transformers/toOllamaModel'
-import { IOllamaModel, OllamaLanguageModel, IConnectionDataModel } from '~/core/types'
+
+import { IOllamaModel, OllamaLanguageModel } from '~/core/connection/types'
+import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnectionViewModel'
+import { ConnectionModel } from '~/core/connection/ConnectionModel'
+import { connectionTable } from '~/core/connection/ConnectionTable'
+import ollamaApi from '~/core/connection/api/OllamaApi'
 
 const LazyOllamaModelPanel = lazy(() => import('~/features/settings/panels/model/OllamaModelPanel'))
 
 const DefaultHost = 'http://localhost:11434'
+
 class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
   DefaultHost: string = DefaultHost
 
@@ -31,44 +33,43 @@ class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
 
   primaryHeader = this.modelTableHeaders[0].value
 
-  models: IObservableArray<OllamaLanguageModel> = observable.array()
-
   type = 'Ollama' as const
-
-  constructor(public connectionModel: IConnectionDataModel) {
-    super(connectionModel)
-
-    makeObservable(this, BaseConnectionViewModel.MOBX_MAPPINGS)
-  }
 
   readonly hostLabel = 'Ollama Host:'
   readonly enabledLabel = 'Text generation through Ollama:'
 
-  static readonly getSnapshot = (): SnapshotIn<IConnectionDataModel> => ({
-    label: 'Ollama',
-    type: 'Ollama',
+  static toViewModel(connection: ConnectionModel) {
+    return new this(connection)
+  }
 
-    host: DefaultHost,
-    enabled: true,
+  static readonly getSnapshot = (): ConnectionModel =>
+    connectionTable.parse({
+      label: 'Ollama',
+      type: 'Ollama',
 
-    parameters: [
-      { field: 'keep_alive', types: ['system'], label: 'Keep Alive', defaultValue: '20m' },
-      {
-        field: 'temperature',
-        types: ['system'],
-        isJson: true,
-        helpText:
-          'Usually between 0 - 1, lower is for more consistent responses, higher is for more creative',
-      },
-    ],
-  })
+      host: DefaultHost,
+      enabled: true,
+
+      parameters: [
+        { field: 'keep_alive', types: ['system'], label: 'Keep Alive', defaultValue: '20m' },
+        {
+          field: 'temperature',
+          types: ['system'],
+          isJson: true,
+          helpText:
+            'Usually between 0 - 1, lower is for more consistent responses, higher is for more creative',
+        },
+      ],
+    })
 
   async _fetchLmModels(host: string): Promise<OllamaLanguageModel[]> {
     const ollama = new Ollama({ host })
 
     const { models } = await ollama.list()
 
-    return models.map(toOllamaModel).map(LanguageModel.fromIOllamaModel)
+    return models
+      .map(toOllamaModel)
+      .map(ollamaModel => LanguageModel.fromIOllamaModel(ollamaModel, this.id))
   }
 }
 

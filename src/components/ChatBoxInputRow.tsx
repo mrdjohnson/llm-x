@@ -3,9 +3,10 @@ import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import TextareaAutosize from 'react-textarea-autosize'
 
-import { chatStore } from '~/core/ChatStore'
-import { settingStore } from '~/core/SettingStore'
-import { personaStore } from '~/core/PersonaStore'
+import { ChatViewModel } from '~/core/chat/ChatViewModel'
+import { settingStore } from '~/core/setting/SettingStore'
+import { personaStore } from '~/core/persona/PersonaStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
@@ -17,19 +18,18 @@ import Paperclip from '~/icons/Paperclip'
 import ChevronDown from '~/icons/ChevronDown'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
-import { connectionStore } from '~/core/connection/ConnectionStore'
 
 type ChatBoxInputRowProps = PropsWithChildren<{
+  chat: ChatViewModel
   onSend: (message: string, imageUrls?: string[]) => void
 }>
 
-const ChatBoxInputRow = observer(({ onSend, children }: ChatBoxInputRowProps) => {
+const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const [messageContent, setMessageContent] = useState('')
 
-  const chat = chatStore.selectedChat!
-  const { previewImageUrls, messageToEdit } = chat
+  const { messageToEdit, previewImageHandler } = chat
 
   const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -42,19 +42,17 @@ const ChatBoxInputRow = observer(({ onSend, children }: ChatBoxInputRowProps) =>
 
     const messageToSend = textareaRef.current.value || ''
 
-    onSend(messageToSend, previewImageUrls)
+    await onSend(messageToSend)
 
     setMessageContent('')
     textareaRef.current.focus()
-
-    await chat.clearImagePreviews()
   }
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.shiftKey || !textareaRef.current) return
 
     if (e.key === 'Enter' && messageContent) {
-      sendMessage()
+      await sendMessage()
 
       textareaRef.current.blur()
 
@@ -67,15 +65,15 @@ const ChatBoxInputRow = observer(({ onSend, children }: ChatBoxInputRowProps) =>
     if (selectionStart !== selectionEnd) return
 
     if (e.key === 'ArrowUp' && selectionStart === 0) {
-      chat.findAndEditPreviousMessage()
+      await chat.findAndEditPreviousMessage()
     }
 
     if (e.key === 'ArrowDown' && selectionStart === messageContent.length) {
-      chat.findAndEditNextMessage()
+      await chat.findAndEditNextMessage()
     }
 
     if (e.key === 'Escape') {
-      chat.setMessageToEdit(undefined)
+      await chat.setMessageToEdit(undefined)
 
       e.preventDefault()
     }
@@ -115,38 +113,38 @@ const ChatBoxInputRow = observer(({ onSend, children }: ChatBoxInputRowProps) =>
           (inputDisabled ? ' bg-base-200' : '')
         }
       >
-        {previewImageUrls[0] && (
+        {previewImageHandler.previewImages[0] && (
           <div className="relative">
             <div className="flex max-h-[200px] flex-row flex-wrap gap-2 overflow-hidden overflow-y-scroll pb-0">
-              {previewImageUrls.map(previewImageUrl => (
+              {previewImageHandler.list.map(previewImage => (
                 <div
                   className="group relative h-24 place-content-center overflow-hidden rounded-sm border border-base-content/30 bg-base-content/30"
-                  key={previewImageUrl}
+                  key={previewImage.url}
                 >
                   <button
                     className="btn btn-circle btn-neutral btn-xs absolute right-0 top-0 z-20 scale-75 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
-                    onClick={() => chat.removePreviewImageUrls([previewImageUrl])}
+                    onClick={() => previewImageHandler.removePreviewImage(previewImage)}
                     role="button"
                   >
                     ✕
                   </button>
 
                   <CachedImage
-                    src={previewImageUrl}
+                    src={previewImage.url}
                     className="max-h-24 min-w-16 max-w-24 rounded-sm object-contain object-center"
                   />
                 </div>
               ))}
             </div>
 
-            {previewImageUrls.length >= 5 && (
+            {previewImageHandler.list.length >= 5 && (
               <div className="absolute inset-x-0 -bottom-1 flex justify-around">
                 <button
                   className="btn btn-neutral btn-xs"
                   role="button"
-                  onClick={() => chat.removePreviewImageUrls(chat.previewImageUrls)}
+                  onClick={() => previewImageHandler.removePreviewImages(chat.previewImages)}
                 >
-                  Clear {previewImageUrls.length} images
+                  Clear {previewImageHandler.list.length} images
                 </button>
               </div>
             )}
@@ -170,7 +168,7 @@ const ChatBoxInputRow = observer(({ onSend, children }: ChatBoxInputRowProps) =>
       </div>
 
       {/* TODO, this will be moot in the coming updates */}
-      {/* {connectionModelStore.isImageGenerationMode && (
+      {/* {connectionStore.isImageGenerationMode && (
           <div className=" px-2 pb-2">
             <div className="divider my-0" />
 
@@ -220,7 +218,6 @@ const ChatBoxInputRow = observer(({ onSend, children }: ChatBoxInputRowProps) =>
               <button
                 className="btn btn-ghost rounded-none text-error/50 hover:text-error"
                 type="button"
-                disabled={noModelSelected}
                 onClick={() => chat.setMessageToEdit(undefined)}
               >
                 Cancel

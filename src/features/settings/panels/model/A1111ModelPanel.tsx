@@ -1,16 +1,17 @@
 import { observer } from 'mobx-react-lite'
 
-import { LanguageModelType } from '~/core/LanguageModel'
-import A1111ConnectionViewModel from '~/core/connection/viewModels/A1111ConnectionViewModel'
-import { connectionStore } from '~/core/connection/ConnectionStore'
-
-import { IA1111Model } from '~/core/types'
+import { A1111LanguageModel } from '~/core/connection/types'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnectedPanelSection'
 
+import  A1111ConnectionViewModel  from '~/core/connection/viewModels/A1111ConnectionViewModel'
+import { settingStore } from '~/core/setting/SettingStore'
+
 const A1111ModelPanel = observer(({ connection }: { connection: A1111ConnectionViewModel }) => {
-  const renderRow = (model: LanguageModelType<IA1111Model>) => (
+  const selectedModelId = settingStore.setting?.selectedModelId
+
+  const renderRow = (model: A1111LanguageModel) => (
     <>
       <td>{model.modelName}</td>
       <td>{model.title}</td>
@@ -25,14 +26,11 @@ const A1111ModelPanel = observer(({ connection }: { connection: A1111ConnectionV
     <SelectionPanelTable
       items={connection.models}
       sortTypes={connection.modelTableHeaders}
-      onItemSelected={model => connectionStore.dataStore.setSelectedModel(model, connection.id)}
+      onItemSelected={model => connection.selectModel(model)}
       itemFilter={connection.modelFilter}
       primarySortTypeLabel={connection.primaryHeader}
       renderRow={renderRow}
-      getIsItemSelected={model =>
-        connection.id === connectionStore.selectedConnection?.id &&
-        model.modelName === connectionStore.selectedModelName
-      }
+      getIsItemSelected={model => selectedModelId === model.id}
       getItemKey={model => model.id}
       filterInputPlaceholder="Filter by title or name..."
     />
