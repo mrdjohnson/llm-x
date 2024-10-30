@@ -1,4 +1,4 @@
-import { LMStudioClient, type LLMChatHistoryMessage, LLMDynamicHandle } from '@lmstudio/sdk'
+import { LMStudioClient, type ChatMessageData, LLMDynamicHandle } from '@lmstudio/sdk'
 import _ from 'lodash'
 
 import { IMessageModel } from '~/models/MessageModel'
@@ -9,14 +9,14 @@ import BaseApi from '~/features/connections/api/BaseApi'
 import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
 
 const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMessageModel) => {
-  const messages: LLMChatHistoryMessage[] = []
+  const messages: ChatMessageData[] = []
 
   const selectedPersona = personaStore.selectedPersona
 
   if (selectedPersona) {
     messages.push({
       role: 'system',
-      content: selectedPersona.description,
+      content: [{ type: 'text', text: selectedPersona.description }],
     })
   }
 
@@ -28,12 +28,14 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
     if (message.fromBot) {
       messages.push({
         role: 'assistant',
-        content: selectedVariation.content,
+        content: [{ type: 'text', text: selectedVariation.content }],
       })
     } else {
       messages.push({
         role: 'user',
-        content: message.content,
+        // lm studio sdk supports images now but there is no documentation around it
+        // or easy way to use it
+        content: [{ type: 'text', text: selectedVariation.content }],
       })
     }
   }
@@ -64,7 +66,7 @@ export class LmsApi extends BaseApi {
       throw new Error('unable to find requested model: ' + modelName)
     }
 
-    const prediction = model.respond(messages, connection.parsedParameters)
+    const prediction = model.respond({ messages }, connection.parsedParameters)
     incomingMessageVariant.setExtraDetails({ sentWith: connection.parsedParameters })
 
     BaseApi.abortControllerById[incomingMessageVariant.uniqId] = () => prediction.cancel()

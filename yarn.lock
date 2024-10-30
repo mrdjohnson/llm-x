@@ -2385,13 +2385,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lmstudio/sdk@npm:^0.0.12":
-  version: 0.0.12
-  resolution: "@lmstudio/sdk@npm:0.0.12"
+"@lmstudio/sdk@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@lmstudio/sdk@npm:0.2.0"
   dependencies:
     "@lmstudio/lms-isomorphic": "npm:^0.3.2"
     chalk: "npm:^4.1.2"
-  checksum: 10c0/3852939d1d09097df7967a9d28cd0d160db9c08fcaad5c466d23fc5c109181e912bc170c23f0074839896fbb3b556f9a74617e8891c93ee2c2bced89b0eec834
+  checksum: 10c0/68ccb57ce19eba41a8bcd32ec9f340923f1e8e6b415af849498343736df894130fee296294bf08cd3f7a91df1e7c15216149ae2e1c61fe4ffc5653d5f24b191b
   languageName: node
   linkType: hard
 
@@ -10008,7 +10008,7 @@ __metadata:
   dependencies:
     "@faker-js/faker": "npm:^8.4.1"
     "@langchain/community": "npm:^0.0.36"
-    "@lmstudio/sdk": "npm:^0.0.12"
+    "@lmstudio/sdk": "npm:^0.2.0"
     "@nextui-org/react": "npm:^2.4.1"
     "@paralleldrive/cuid2": "npm:^2.2.2"
     "@playwright/test": "npm:^1.42.1"
