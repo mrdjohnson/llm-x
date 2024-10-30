@@ -8,7 +8,7 @@ import { IMessageModel } from '~/models/MessageModel'
 import { chatStore } from '~/models/ChatStore'
 import { incomingMessageStore } from '~/models/IncomingMessageStore'
 
-const LazyMessage = React.lazy(() => import('~/components/LazyMessage'))
+const LazyMessage = React.lazy(() => import('~/components/message/LazyMessage'))
 
 const Loading = () => (
   <span className="indicator-item loading loading-dots loading-sm indicator-start ml-4 opacity-65" />

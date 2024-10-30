@@ -30,9 +30,9 @@ import CopyButton from '~/components/CopyButton'
 import CachedImage from '~/components/CachedImage'
 import ToolTip from '~/components/Tooltip'
 import MessageVariationSelectionRow from '~/components/message/MessageVariationSelectionRow'
-import CustomMathBlock from './CustomMathBlock'
+import CustomMathBlock from '~/components/message/CustomMathBlock'
 
-const CustomCodeBlock = React.lazy(() => import('./CustomCodeBlock'))
+const CustomCodeBlock = React.lazy(() => import('~/components/message/CustomCodeBlock'))
 
 const DelayedCustomCodeBlock = (props: PropsWithChildren) => {
   return (
