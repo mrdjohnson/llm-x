@@ -2,15 +2,15 @@ import _ from 'lodash'
 import { types, Instance, cast, destroy, flow } from 'mobx-state-tree'
 import moment from 'moment'
 
-import { IMessageModel, MessageModel } from '~/models/MessageModel'
-import { toastStore } from '~/models/ToastStore'
-import { incomingMessageStore } from '~/models/IncomingMessageStore'
+import { IMessageModel, MessageModel } from '~/core/MessageModel'
+import { toastStore } from '~/core/ToastStore'
+import { incomingMessageStore } from '~/core/IncomingMessageStore'
 
 import base64EncodeImage from '~/utils/base64EncodeImage'
 import CachedStorage from '~/utils/CachedStorage'
 
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
-import BaseApi from '~/features/connections/api/BaseApi'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import BaseApi from '~/core/connections/api/BaseApi'
 
 export const ChatModel = types
   .model({

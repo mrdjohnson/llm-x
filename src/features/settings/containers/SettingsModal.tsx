@@ -5,7 +5,7 @@ import useMedia from 'use-media'
 import { Modal, ModalContent, ModalBody } from '@nextui-org/react'
 import { useKBar } from 'kbar'
 
-import { settingStore } from '~/models/SettingStore'
+import { settingStore } from '~/core/SettingStore'
 
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 
@@ -155,7 +155,7 @@ const SettingsModal = observer(() => {
             </div>
           </div>
 
-          <ModalBody className='pt-0'>
+          <ModalBody className="pt-0">
             <div className="flex h-full flex-col rounded-md bg-base-100 p-2 pt-0">
               <div className="flex h-full flex-grow-0 flex-col justify-stretch gap-2 overflow-y-scroll lg:h-[700px] lg:flex-row">
                 <div

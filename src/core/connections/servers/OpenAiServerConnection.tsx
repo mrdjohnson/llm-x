@@ -6,11 +6,11 @@ import camelcaseKeys from 'camelcase-keys'
 import _ from 'lodash'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import ServerConnection from '~/features/connections/servers/ServerConnection'
-import openAiApi from '~/features/connections/api/OpenAiApi'
+import ServerConnection from '~/core/connections/servers/ServerConnection'
+import openAiApi from '~/core/connections/api/OpenAiApi'
 
-import LanguageModel from '~/models/LanguageModel'
-import { IConnectionDataModel, IOpenAiModel, OpenAiLanguageModel } from '~/models/types'
+import LanguageModel from '~/core/LanguageModel'
+import { IConnectionDataModel, IOpenAiModel, OpenAiLanguageModel } from '~/core/types'
 
 const LazyOpenAiModelPanel = lazy(() => import('~/features/settings/panels/model/OpenAiModelPanel'))
 

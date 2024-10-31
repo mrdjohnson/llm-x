@@ -4,12 +4,12 @@ import _ from 'lodash'
 
 import { type SettingPanelOptionsType } from '~/features/settings/settingsPanels'
 
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
-import LmsServerConnection from '~/features/connections/servers/LmsServerConnection'
-import A1111ServerConnection from '~/features/connections/servers/A1111ServerConnection'
-import OllamaServerConnection from '~/features/connections/servers/OllamaServerConnection'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import LmsServerConnection from '~/core/connections/servers/LmsServerConnection'
+import A1111ServerConnection from '~/core/connections/servers/A1111ServerConnection'
+import OllamaServerConnection from '~/core/connections/servers/OllamaServerConnection'
 
-import { VoiceModel } from '~/models/VoiceModel'
+import { VoiceModel } from '~/core/VoiceModel'
 
 const SETTING_STORE_VERSION = 2
 

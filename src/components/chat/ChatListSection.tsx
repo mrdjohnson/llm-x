@@ -8,8 +8,8 @@ import Tooltip from '~/components/Tooltip'
 import DocumentArrowUp from '~/icons/DocumentArrowUp'
 import Edit from '~/icons/Edit'
 
-import { IChatModel } from '~/models/ChatModel'
-import { chatStore } from '~/models/ChatStore'
+import { IChatModel } from '~/core/ChatModel'
+import { chatStore } from '~/core/ChatStore'
 
 export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: () => void }) => {
   const handleChatSelected = (chat: IChatModel) => {

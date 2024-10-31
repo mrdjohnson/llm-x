@@ -1,6 +1,6 @@
 import { types } from 'mobx-state-tree'
-import { ChatStore, chatStore } from '~/models/ChatStore'
-import { IncomingMessageStore, incomingMessageStore } from '~/models/IncomingMessageStore'
+import { ChatStore, chatStore } from '~/core/ChatStore'
+import { IncomingMessageStore, incomingMessageStore } from '~/core/IncomingMessageStore'
 
 export const RootStore = types.model({
   chatStore: ChatStore,

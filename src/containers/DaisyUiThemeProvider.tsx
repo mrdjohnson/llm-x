@@ -2,7 +2,7 @@ import { useEffect, useMemo, type PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 import useMedia from 'use-media'
 
-import { settingStore } from '~/models/SettingStore'
+import { settingStore } from '~/core/SettingStore'
 
 const DaisyUiThemeProvider = observer(({ children }: PropsWithChildren) => {
   const selectedTheme = settingStore.theme

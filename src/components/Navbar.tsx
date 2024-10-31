@@ -7,8 +7,8 @@ import ModelRefreshButton from '~/components/ModelRefreshButton'
 import FunTitle from '~/components/FunTitle'
 import ToolTip from '~/components/Tooltip'
 
-import { settingStore } from '~/models/SettingStore'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { settingStore } from '~/core/SettingStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 import Warning from '~/icons/Warning'
 import Bars3 from '~/icons/Bars3'

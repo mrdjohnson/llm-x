@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useRef, MouseEvent } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import { IPersonaModel, personaStore } from '~/models/PersonaStore'
+import { IPersonaModel, personaStore } from '~/core/PersonaStore'
 import FormInput from '~/components/form/FormInput'
 import FormTextarea from '~/components/form/FormTextarea'
 

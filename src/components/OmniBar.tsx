@@ -15,13 +15,13 @@ import type { Action, ActionImpl } from 'kbar'
 import { autorun } from 'mobx'
 import _ from 'lodash'
 
-import { settingStore } from '~/models/SettingStore'
-import { personaStore } from '~/models/PersonaStore'
-import { chatStore } from '~/models/ChatStore'
-import type { IMessageModel } from '~/models/MessageModel'
+import { settingStore } from '~/core/SettingStore'
+import { personaStore } from '~/core/PersonaStore'
+import { chatStore } from '~/core/ChatStore'
+import type { IMessageModel } from '~/core/MessageModel'
 
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -181,7 +181,7 @@ const useRegisterModelActions = () => {
           keywords: `model refresh ` + typeAndLabel,
           priority: Priority.LOW,
           perform: () => connection.fetchLmModels(),
-          parent:'refresh_models'
+          parent: 'refresh_models',
         })
 
         connection.models.forEach(model => {

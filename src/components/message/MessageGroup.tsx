@@ -5,7 +5,7 @@ import WindowClose from '~/icons/WindowClose'
 import WindowPlus from '~/icons/WindowPlus'
 import Delete from '~/icons/Delete'
 
-import { IMessageModel } from '~/models/MessageModel'
+import { IMessageModel } from '~/core/MessageModel'
 import ToolTip from '~/components/Tooltip'
 
 type MessageGroupType = PropsWithChildren<{
@@ -41,7 +41,7 @@ const MessageGroup = observer(({ message, children, onAddMoreVariations }: Messa
 
         <ToolTip label="Add 3 more variations" placement="top" delay={400}>
           <button
-            className="text-sm opacity-30 hover:scale-105 hover:opacity-100 ml-auto"
+            className="ml-auto text-sm opacity-30 hover:scale-105 hover:opacity-100"
             onClick={onAddMoreVariations}
           >
             <WindowPlus />

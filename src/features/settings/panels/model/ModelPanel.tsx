@@ -8,12 +8,12 @@ import A1111ModelPanel from '~/features/settings/panels/model/A1111ModelPanel'
 import LmsModelPanel from '~/features/settings/panels/model/LmsModelPanel'
 import OpenAiModelPanel from '~/features/settings/panels/model/OpenAiModelPanel'
 
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
-import { settingStore } from '~/models/SettingStore'
+import { settingStore } from '~/core/SettingStore'
 
 const ModelPanel = observer(() => {
-  const { selectedConnectionModelId, connections , } = connectionModelStore
+  const { selectedConnectionModelId, connections } = connectionModelStore
 
   const [selectedTabId, setSelectedTabId] = useState<string | undefined>(
     selectedConnectionModelId ?? connections[0]?.id,

@@ -14,9 +14,9 @@ import DocumentArrowUp from '~/icons/DocumentArrowUp'
 import PlayPause from '~/icons/PlayPause'
 import Stop from '~/icons/Stop'
 
-import { personaStore } from '~/models/PersonaStore'
-import { settingStore } from '~/models/SettingStore'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { personaStore } from '~/core/PersonaStore'
+import { settingStore } from '~/core/SettingStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
 import _ from 'lodash'

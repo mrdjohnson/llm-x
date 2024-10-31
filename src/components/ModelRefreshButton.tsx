@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 
 import Refresh from '~/icons/Refresh'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 const ModelRefreshButton = observer(
   ({ small = false, shouldShow = false }: { small?: boolean; shouldShow?: boolean }) => {

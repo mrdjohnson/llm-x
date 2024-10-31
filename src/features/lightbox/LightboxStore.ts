@@ -2,9 +2,9 @@ import _ from 'lodash'
 import { types, Instance } from 'mobx-state-tree'
 import { type Slide } from 'yet-another-react-lightbox'
 
-import { IMessageModel } from '~/models/MessageModel'
+import { IMessageModel } from '~/core/MessageModel'
 
-import { chatStore } from '~/models/ChatStore'
+import { chatStore } from '~/core/ChatStore'
 
 export const LightboxStore = types
   .model({
@@ -25,7 +25,7 @@ export const LightboxStore = types
     get lightboxSlides() {
       if (!this.lightboxMessage) return []
 
-      const lightBoxSources: Array<Slide & { baseUniqId: string  }> = []
+      const lightBoxSources: Array<Slide & { baseUniqId: string }> = []
 
       let userPrompt: string | undefined
 

@@ -1,10 +1,10 @@
 import { Instance } from 'mobx-state-tree'
 
-import { ConnectionDataModel } from '~/features/connections/ConnectionDataModel'
+import { ConnectionDataModel } from '~/core/connections/ConnectionDataModel'
 
-import { toOllamaModel } from '~/models/transformers/toOllamaModel'
-import { toLmsModel } from '~/models/transformers/toLmsModel'
-import { LanguageModelType } from '~/models/LanguageModel'
+import { toOllamaModel } from '~/core/transformers/toOllamaModel'
+import { toLmsModel } from '~/core/transformers/toLmsModel'
+import { LanguageModelType } from '~/core/LanguageModel'
 
 export type ILmsModel = ReturnType<typeof toLmsModel>
 
@@ -17,9 +17,9 @@ export type IA1111Model = {
 export type IOllamaModel = ReturnType<typeof toOllamaModel>
 
 export type IOpenAiModel = {
-  _id: string,
-  object: string,
-  created: number,
+  _id: string
+  object: string
+  created: number
   ownedBy: string
 }
 
@@ -33,4 +33,4 @@ export type OpenAiLanguageModel = LanguageModelType<IOpenAiModel>
 export interface IConnectionDataModel extends Instance<typeof ConnectionDataModel> {}
 export type ConnectionTypes = IConnectionDataModel['type']
 
-export type { BaseLanguageModel } from '~/models/LanguageModel'
+export type { BaseLanguageModel } from '~/core/LanguageModel'

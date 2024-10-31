@@ -2,14 +2,14 @@ import { PropsWithChildren, useMemo } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
-import { chatStore } from '~/models/ChatStore'
-import { settingStore } from '~/models/SettingStore'
-import { personaStore } from '~/models/PersonaStore'
+import { chatStore } from '~/core/ChatStore'
+import { settingStore } from '~/core/SettingStore'
+import { personaStore } from '~/core/PersonaStore'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import FunTitle from '~/components/FunTitle'
 import ToolTip from '~/components/Tooltip'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
 
@@ -98,7 +98,7 @@ const ChatBoxPrompt = observer(() => {
                   className="link ml-1 decoration-secondary"
                   onClick={() => settingStore.openSettingsModal('personas')}
                 >
-                  Persona <span className='text-xs'>(aka System Prompt)</span>
+                  Persona <span className="text-xs">(aka System Prompt)</span>
                 </button>
 
                 {'to give your bot some pizzaz'}

@@ -10,7 +10,7 @@ import {
 import _ from 'lodash'
 
 import CachedStorage from '~/utils/CachedStorage'
-import { ChatModel } from '~/models/ChatModel'
+import { ChatModel } from '~/core/ChatModel'
 
 const MessageErrorModel = types.model({
   message: types.string,

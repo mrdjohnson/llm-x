@@ -6,11 +6,11 @@ import { IObservableArray, action, computed, observable } from 'mobx'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 import { classFromProps } from '~/utils/classFromProps'
-import BaseApi from '~/features/connections/api/BaseApi'
+import BaseApi from '~/core/connections/api/BaseApi'
 
-import { LanguageModelType } from '~/models/LanguageModel'
-import { ConnectionTypes, IConnectionDataModel } from '~/models/types'
-import { toastStore } from '~/models/ToastStore'
+import { LanguageModelType } from '~/core/LanguageModel'
+import { ConnectionTypes, IConnectionDataModel } from '~/core/types'
+import { toastStore } from '~/core/ToastStore'
 
 export type ServerConnectionModelPanel<BaseModel, T = ServerConnection<BaseModel>> = (props: {
   connection: T

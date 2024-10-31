@@ -1,12 +1,12 @@
 import { LMStudioClient, type ChatMessageData, LLMDynamicHandle } from '@lmstudio/sdk'
 import _ from 'lodash'
 
-import { IMessageModel } from '~/models/MessageModel'
-import { personaStore } from '~/models/PersonaStore'
+import { IMessageModel } from '~/core/MessageModel'
+import { personaStore } from '~/core/PersonaStore'
 import { progressStore } from '~/features/progress/ProgressStore'
 
-import BaseApi from '~/features/connections/api/BaseApi'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import BaseApi from '~/core/connections/api/BaseApi'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMessageModel) => {
   const messages: ChatMessageData[] = []

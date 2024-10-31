@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 
-import { settingStore } from '~/models/SettingStore'
+import { settingStore } from '~/core/SettingStore'
 
 const xWords = [
   'Excellence',

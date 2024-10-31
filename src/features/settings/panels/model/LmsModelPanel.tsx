@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react-lite'
 
-import LmsServerConnection from '~/features/connections/servers/LmsServerConnection'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import LmsServerConnection from '~/core/connections/servers/LmsServerConnection'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
-import { LmsLanguageModel } from '~/models/types'
+import { LmsLanguageModel } from '~/core/types'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnectedPanelSection'

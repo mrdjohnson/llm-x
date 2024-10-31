@@ -1,9 +1,12 @@
-import { IMessageModel } from '~/models/MessageModel'
+import { IMessageModel } from '~/core/MessageModel'
 
 abstract class BaseApi {
   static abortControllerById: Record<string, () => Promise<void>> = {}
-  
-  abstract generateImages(prompt: string, incomingMessageVariation: IMessageModel): Promise<string[]>
+
+  abstract generateImages(
+    prompt: string,
+    incomingMessageVariation: IMessageModel,
+  ): Promise<string[]>
 
   abstract generateChat(
     chatMessages: IMessageModel[],

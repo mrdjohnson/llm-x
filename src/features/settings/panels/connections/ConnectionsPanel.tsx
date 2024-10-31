@@ -5,7 +5,7 @@ import _ from 'lodash'
 
 import NewConnectionPanel from '~/features/settings/panels/connections/NewConnectionPanel'
 
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 import ConnectionPanel from '~/features/settings/panels/connections/ConnectionPanel'
 
 const ConnectionsPanel = observer(() => {

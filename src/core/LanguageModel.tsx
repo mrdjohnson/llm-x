@@ -9,7 +9,7 @@ import {
   LmsLanguageModel,
   OllamaLanguageModel,
   OpenAiLanguageModel,
-} from '~/models/types'
+} from '~/core/types'
 
 export type BaseLanguageModel = {
   id: string

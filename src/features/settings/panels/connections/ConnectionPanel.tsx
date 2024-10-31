@@ -5,15 +5,15 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import _ from 'lodash'
 import { ScrollShadow } from '@nextui-org/react'
 
-import { ServerConnectionTypes } from '~/features/connections/servers'
+import { ServerConnectionTypes } from '~/core/connections/servers'
 import ConnectionDataParameterSection from '~/features/settings/panels/connections/ConnectionParameterSection'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 import HostInput from '~/components/HostInput'
 import EnabledCheckbox from '~/components/EnabledCheckbox'
 import FormInput from '~/components/form/FormInput'
 
-import { IConnectionDataModel } from '~/models/types'
+import { IConnectionDataModel } from '~/core/types'
 import Copy from '~/icons/Copy'
 
 export type ConnectionFormDataType = SnapshotIn<IConnectionDataModel>
@@ -92,7 +92,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
             </div>
           </ScrollShadow>
 
-          <div className="mt-auto flex flex-col justify-between gap-3 md:flex-row pt-2 md:pb-2">
+          <div className="mt-auto flex flex-col justify-between gap-3 pt-2 md:flex-row md:pb-2">
             <div>
               <button
                 type="button"

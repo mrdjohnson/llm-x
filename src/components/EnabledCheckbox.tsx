@@ -2,8 +2,8 @@ import { observer } from 'mobx-react-lite'
 import { Control, Controller } from 'react-hook-form'
 import { SnapshotIn } from 'mobx-state-tree'
 
-import { IConnectionDataModel } from '~/models/types'
-import { ServerConnectionTypes } from '~/features/connections/servers'
+import { IConnectionDataModel } from '~/core/types'
+import { ServerConnectionTypes } from '~/core/connections/servers'
 
 type EnabledCheckboxProps = {
   connection: ServerConnectionTypes
@@ -17,8 +17,10 @@ const EnabledCheckbox = observer(({ control, connection }: EnabledCheckboxProps)
     <Controller
       render={({ field: { value, onChange } }) => {
         return (
-          <label className="label w-full md:w-fit gap-2 flex flex-col md:flex-row">
-            <span className="label-text text-lg md:text-medium text-center">{connection.enabledLabel}</span>
+          <label className="label flex w-full flex-col gap-2 md:w-fit md:flex-row">
+            <span className="label-text text-center text-lg md:text-medium">
+              {connection.enabledLabel}
+            </span>
 
             <div className="join mx-auto">
               {[true, false].map((isEnabledOption, index) => (

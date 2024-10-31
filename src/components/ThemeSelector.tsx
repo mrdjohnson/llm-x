@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
 
 import ChevronDown from '~/icons/ChevronDown'
-import { settingStore } from '~/models/SettingStore'
+import { settingStore } from '~/core/SettingStore'
 
 const themes: Record<string, string> = {
   _system: 'System theme',

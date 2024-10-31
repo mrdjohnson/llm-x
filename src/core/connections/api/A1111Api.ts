@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-import { IMessageModel } from '~/models/MessageModel'
-import BaseApi from '~/features/connections/api/BaseApi'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { IMessageModel } from '~/core/MessageModel'
+import BaseApi from '~/core/connections/api/BaseApi'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 class A1111Api extends BaseApi {
   async generateImages(prompt: string, incomingMessageVariant: IMessageModel): Promise<string[]> {

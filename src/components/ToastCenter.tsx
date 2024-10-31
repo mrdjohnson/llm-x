@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
-import { toastStore } from '~/models/ToastStore'
+import { toastStore } from '~/core/ToastStore'
 
 const ToastCenter = observer(() => {
   const [hovering, setHovering] = useState(false)
@@ -33,7 +33,7 @@ const ToastCenter = observer(() => {
 
   return (
     <div
-      className="z-30 bg-transparent w-full gap-3"
+      className="z-30 w-full gap-3 bg-transparent"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
@@ -42,7 +42,7 @@ const ToastCenter = observer(() => {
           className={`alert alert-${toast.type} relative rounded-md border border-base-content/30 px-4 text-xl font-bold`}
           key={toast.id}
         >
-          <span className="cursor-default break-words whitespace-pre-wrap">{toast.message}</span>
+          <span className="cursor-default whitespace-pre-wrap break-words">{toast.message}</span>
 
           <div
             className="btn btn-xs absolute right-1 top-1 text-sm font-bold opacity-50"

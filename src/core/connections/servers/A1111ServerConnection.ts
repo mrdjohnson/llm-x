@@ -5,11 +5,11 @@ import camelcaseKeys from 'camelcase-keys'
 import { IObservableArray, makeObservable, observable } from 'mobx'
 import axios from 'axios'
 
-import ServerConnection from '~/features/connections/servers/ServerConnection'
-import a1111Api from '~/features/connections/api/A1111Api'
+import ServerConnection from '~/core/connections/servers/ServerConnection'
+import a1111Api from '~/core/connections/api/A1111Api'
 
-import LanguageModel, { LanguageModelType } from '~/models/LanguageModel'
-import { A1111LanguageModel, IA1111Model, IConnectionDataModel } from '~/models/types'
+import LanguageModel, { LanguageModelType } from '~/core/LanguageModel'
+import { A1111LanguageModel, IA1111Model, IConnectionDataModel } from '~/core/types'
 
 const LazyA1111ModelPanel = lazy(() => import('~/features/settings/panels/model/A1111ModelPanel'))
 

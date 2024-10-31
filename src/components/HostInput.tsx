@@ -2,14 +2,14 @@ import { observer } from 'mobx-react-lite'
 import { SnapshotIn } from 'mobx-state-tree'
 import { Controller, useFormContext } from 'react-hook-form'
 
-import { settingStore } from '~/models/SettingStore'
+import { settingStore } from '~/core/SettingStore'
 
 import Question from '~/icons/Question'
 import Refresh from '~/icons/Refresh'
 
 import FormInput from '~/components/form/FormInput'
-import { ServerConnectionTypes } from '~/features/connections/servers'
-import { IConnectionDataModel } from '~/models/types'
+import { ServerConnectionTypes } from '~/core/connections/servers'
+import { IConnectionDataModel } from '~/core/types'
 
 type HostInputProps = {
   connection: ServerConnectionTypes

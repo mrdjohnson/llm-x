@@ -3,14 +3,14 @@ import { persist } from 'mst-persist'
 import _ from 'lodash'
 import { makeAutoObservable } from 'mobx'
 
-import { ConnectionDataModel } from '~/features/connections/ConnectionDataModel'
-import LmsServerConnection from '~/features/connections/servers/LmsServerConnection'
-import A1111ServerConnection from '~/features/connections/servers/A1111ServerConnection'
-import OllamaServerConnection from '~/features/connections/servers/OllamaServerConnection'
-import OpenAiServerConnection from '~/features/connections/servers/OpenAiServerConnection'
-import { ServerConnectionTypes, serverConnectionByType } from '~/features/connections/servers'
+import { ConnectionDataModel } from '~/core/connections/ConnectionDataModel'
+import LmsServerConnection from '~/core/connections/servers/LmsServerConnection'
+import A1111ServerConnection from '~/core/connections/servers/A1111ServerConnection'
+import OllamaServerConnection from '~/core/connections/servers/OllamaServerConnection'
+import OpenAiServerConnection from '~/core/connections/servers/OpenAiServerConnection'
+import { ServerConnectionTypes, serverConnectionByType } from '~/core/connections/servers'
 
-import { ConnectionTypes, IConnectionDataModel, BaseLanguageModel } from '~/models/types'
+import { ConnectionTypes, IConnectionDataModel, BaseLanguageModel } from '~/core/types'
 
 const ConnectionDataModelStore = types
   .model({

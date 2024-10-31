@@ -3,9 +3,9 @@ import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
 import _ from 'lodash'
 
-import { chatStore } from '~/models/ChatStore'
-import { IMessageModel } from '~/models/MessageModel'
-import { incomingMessageStore } from '~/models/IncomingMessageStore'
+import { chatStore } from '~/core/ChatStore'
+import { IMessageModel } from '~/core/MessageModel'
+import { incomingMessageStore } from '~/core/IncomingMessageStore'
 
 import ChatBoxInputRow from '~/components/ChatBoxInputRow'
 import ChatBoxPrompt from '~/components/ChatBoxPrompt'

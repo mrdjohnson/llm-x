@@ -18,10 +18,10 @@ import WindowCheck from '~/icons/WindowCheck'
 import PlayPause from '~/icons/PlayPause'
 import Stop from '~/icons/Stop'
 
-import { chatStore } from '~/models/ChatStore'
-import { incomingMessageStore } from '~/models/IncomingMessageStore'
-import { IMessageModel } from '~/models/MessageModel'
-import { settingStore } from '~/models/SettingStore'
+import { chatStore } from '~/core/ChatStore'
+import { incomingMessageStore } from '~/core/IncomingMessageStore'
+import { IMessageModel } from '~/core/MessageModel'
+import { settingStore } from '~/core/SettingStore'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 
@@ -137,7 +137,7 @@ const LazyMessage = observer(
         <Markdown
           remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkMath]}
           rehypePlugins={[[rehypeKatex, { output: 'mathml' }]]}
-          className="prose-spacing rtts-markdown prose flex w-full flex-wrap overflow-x-hidden overscroll-none prose-p:w-full -[&>*]:w-full"
+          className="prose-spacing rtts-markdown -[&>*]:w-full prose flex w-full flex-wrap overflow-x-hidden overscroll-none prose-p:w-full"
           components={{
             code: DelayedCustomCodeBlock,
             math: CustomMathBlock,
@@ -291,7 +291,7 @@ const LazyMessage = observer(
 
                 {error.stack && (
                   <div className="collapse-content">
-                    <p className="whitespace-pre-line pt-2 text-xs break-all">{error.stack}</p>
+                    <p className="whitespace-pre-line break-all pt-2 text-xs">{error.stack}</p>
                   </div>
                 )}
               </div>

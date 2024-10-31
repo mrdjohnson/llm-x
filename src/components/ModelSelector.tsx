@@ -3,8 +3,8 @@ import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 
 import ChevronDown from '~/icons/ChevronDown'
-import { settingStore } from '~/models/SettingStore'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { settingStore } from '~/core/SettingStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 const ModelSelector = observer(() => {
   const { selectedModelLabel, isAnyServerConnected, selectedConnection } = connectionModelStore

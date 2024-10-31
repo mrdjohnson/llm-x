@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react-lite'
 
-import OpenAiServerConnection from '~/features/connections/servers/OpenAiServerConnection'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import OpenAiServerConnection from '~/core/connections/servers/OpenAiServerConnection'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
-import { OpenAiLanguageModel } from '~/models/types'
+import { OpenAiLanguageModel } from '~/core/types'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnectedPanelSection'

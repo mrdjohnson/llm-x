@@ -3,10 +3,10 @@ import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import TextareaAutosize from 'react-textarea-autosize'
 
-import { chatStore } from '~/models/ChatStore'
-import { settingStore } from '~/models/SettingStore'
-import { personaStore } from '~/models/PersonaStore'
-import { incomingMessageStore } from '~/models/IncomingMessageStore'
+import { chatStore } from '~/core/ChatStore'
+import { settingStore } from '~/core/SettingStore'
+import { personaStore } from '~/core/PersonaStore'
+import { incomingMessageStore } from '~/core/IncomingMessageStore'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import CachedImage from '~/components/CachedImage'
@@ -17,7 +17,7 @@ import Paperclip from '~/icons/Paperclip'
 import ChevronDown from '~/icons/ChevronDown'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 const ChatBoxInputRow = observer(
   ({
@@ -199,11 +199,11 @@ const ChatBoxInputRow = observer(
           className={' h-full min-h-fit w-full ' + (inputDisabled ? 'bg-base-200' : '')}
           onSubmit={onFormSubmit}
         >
-          <div className="join-item flex w-full flex-col md:flex-row justify-between md:gap-2 bg-base-200 align-middle">
+          <div className="join-item flex w-full flex-col justify-between bg-base-200 align-middle md:flex-row md:gap-2">
             <button
               tabIndex={0}
               type="button"
-              className="btn hidden md:flex btn-active rounded-none rounded-bl-md"
+              className="btn btn-active hidden rounded-none rounded-bl-md md:flex"
               disabled={inputDisabled || connectionModelStore.isImageGenerationMode}
               onClick={() => settingStore.openSettingsModal('personas')}
             >

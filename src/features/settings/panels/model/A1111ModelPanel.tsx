@@ -1,10 +1,10 @@
 import { observer } from 'mobx-react-lite'
 
-import { LanguageModelType } from '~/models/LanguageModel'
-import A1111ServerConnection from '~/features/connections/servers/A1111ServerConnection'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { LanguageModelType } from '~/core/LanguageModel'
+import A1111ServerConnection from '~/core/connections/servers/A1111ServerConnection'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
-import { IA1111Model } from '~/models/types'
+import { IA1111Model } from '~/core/types'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnectedPanelSection'

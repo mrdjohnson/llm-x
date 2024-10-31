@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { Controller, useForm } from 'react-hook-form'
 
-import { chatStore } from '~/models/ChatStore'
+import { chatStore } from '~/core/ChatStore'
 
 import Check from '~/icons/Check'
 import Delete from '~/icons/Delete'
@@ -97,7 +97,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
             <div className="flex flex-col gap-2 rounded-box bg-base-300 text-base-content">
               <form className="flex w-full flex-row gap-2" onSubmit={handleFormSubmit}>
                 <Controller
-                  render={({field}) => (
+                  render={({ field }) => (
                     <FormInput
                       id={chat.id + ''}
                       label="Name"

@@ -1,14 +1,14 @@
 import { applySnapshot } from 'mobx-state-tree'
 import _ from 'lodash'
 
-import { chatStore } from '~/models/ChatStore'
-import { toastStore } from '~/models/ToastStore'
-import { personaStore } from '~/models/PersonaStore'
-import { settingStore } from '~/models/SettingStore'
+import { chatStore } from '~/core/ChatStore'
+import { toastStore } from '~/core/ToastStore'
+import { personaStore } from '~/core/PersonaStore'
+import { settingStore } from '~/core/SettingStore'
 
 import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
 import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 export type DownloadOptions = {
   includeImages?: boolean

@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { SnapshotOut, getSnapshot, SnapshotIn } from 'mobx-state-tree'
 
-import { ChatModel, IChatModel } from '~/models/ChatModel'
-import { IMessageModel, MessageModel } from '~/models/MessageModel'
+import { ChatModel, IChatModel } from '~/core/ChatModel'
+import { IMessageModel, MessageModel } from '~/core/MessageModel'
 
 import { DownloadOptions } from '~/utils/transfer/TransferHandler'
 import CachedStorage from '~/utils/CachedStorage'

@@ -1,4 +1,4 @@
-import { ChatOllama } from '@langchain/community/chat_models/ollama'
+import { ChatOpenAI } from '@langchain/openai'
 import {
   AIMessage,
   HumanMessage,
@@ -10,12 +10,12 @@ import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { StringOutputParser } from '@langchain/core/output_parsers'
 import _ from 'lodash'
 
-import { IMessageModel } from '~/models/MessageModel'
-import { personaStore } from '~/models/PersonaStore'
+import { IMessageModel } from '~/core/MessageModel'
+import { personaStore } from '~/core/PersonaStore'
 
 import CachedStorage from '~/utils/CachedStorage'
-import BaseApi from '~/features/connections/api/BaseApi'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import BaseApi from '~/core/connections/api/BaseApi'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 const createHumanMessage = async (message: IMessageModel): Promise<HumanMessage> => {
   if (!_.isEmpty(message.imageUrls)) {
@@ -60,6 +60,9 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
 
     const selectedVariation = message.selectedVariation
 
+    // skip empty chat messages
+    if (!message.content) continue
+
     if (message.fromBot) {
       messages.push(new AIMessage(selectedVariation.content))
     } else {
@@ -70,7 +73,8 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
   return messages
 }
 
-export class OllamaApi extends BaseApi {
+// note; this is just a copy of the code used for ollama; may refactor later
+export class OpenAiApi extends BaseApi {
   async *generateChat(
     chatMessages: IMessageModel[],
     incomingMessage: IMessageModel,
@@ -80,7 +84,7 @@ export class OllamaApi extends BaseApi {
     const host = connection?.formattedHost
 
     const model = connectionModelStore.selectedModelName
-    if (!connection || !host || !model) return
+    if (!connection || !model) return
 
     const abortController = new AbortController()
 
@@ -90,14 +94,18 @@ export class OllamaApi extends BaseApi {
     const parameters = connection.parsedParameters
     incomingMessageVariant.setExtraDetails({ sentWith: parameters })
 
-    const chatOllama = new ChatOllama({
-      baseUrl: host,
-      model,
+    const openAIApiKey =
+      _.find(connection.parameters, { field: 'apiKey' })?.parsedValue() || 'not-needed'
+
+    const chatOpenAi = new ChatOpenAI({
+      configuration: { baseURL: host },
+      modelName: model,
+      openAIApiKey,
       ...parameters,
-      
+
       callbacks: [
         {
-          handleLLMEnd(output) {
+          handleLLMEnd(output: object) {
             const generationInfo: Record<string, unknown> =
               _.get(output, 'generations[0][0].generationInfo') || {}
 
@@ -114,7 +122,7 @@ export class OllamaApi extends BaseApi {
     }).bind({ signal: abortController.signal })
 
     const stream = await ChatPromptTemplate.fromMessages(messages)
-      .pipe(chatOllama)
+      .pipe(chatOpenAi)
       .pipe(new StringOutputParser())
       .stream({})
 
@@ -130,6 +138,6 @@ export class OllamaApi extends BaseApi {
   }
 }
 
-const ollamaApi = new OllamaApi()
+const openAiApi = new OpenAiApi()
 
-export default ollamaApi
+export default openAiApi

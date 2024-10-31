@@ -2,8 +2,8 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 
-import { settingStore } from '~/models/SettingStore'
-import { IOllamaModel } from '~/models/types'
+import { settingStore } from '~/core/SettingStore'
+import { IOllamaModel } from '~/core/types'
 
 import OllamaStore, { CorrectShowResponse } from '~/features/ollama/OllamaStore'
 
@@ -17,8 +17,8 @@ import DownloadTray from '~/icons/DownloadTray'
 import Delete from '~/icons/Delete'
 import Edit from '~/icons/Edit'
 
-import OllamaServerConnection from '~/features/connections/servers/OllamaServerConnection'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import OllamaServerConnection from '~/core/connections/servers/OllamaServerConnection'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 type PanelTableProps = {
   connection: OllamaServerConnection

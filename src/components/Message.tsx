@@ -4,9 +4,9 @@ import { observer } from 'mobx-react-lite'
 
 import Stop from '~/icons/Stop'
 
-import { IMessageModel } from '~/models/MessageModel'
-import { chatStore } from '~/models/ChatStore'
-import { incomingMessageStore } from '~/models/IncomingMessageStore'
+import { IMessageModel } from '~/core/MessageModel'
+import { chatStore } from '~/core/ChatStore'
+import { incomingMessageStore } from '~/core/IncomingMessageStore'
 
 const LazyMessage = React.lazy(() => import('~/components/message/LazyMessage'))
 

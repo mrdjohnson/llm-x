@@ -5,12 +5,12 @@ import { DownloadedModel, LMStudioClient } from '@lmstudio/sdk'
 import { IObservableArray, makeObservable, observable } from 'mobx'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import ServerConnection from '~/features/connections/servers/ServerConnection'
-import lmsApi from '~/features/connections/api/LmsApi'
+import ServerConnection from '~/core/connections/servers/ServerConnection'
+import lmsApi from '~/core/connections/api/LmsApi'
 
-import LanguageModel from '~/models/LanguageModel'
-import { IConnectionDataModel, ILmsModel, LmsLanguageModel } from '~/models/types'
-import { toLmsModel } from '~/models/transformers/toLmsModel'
+import LanguageModel from '~/core/LanguageModel'
+import { IConnectionDataModel, ILmsModel, LmsLanguageModel } from '~/core/types'
+import { toLmsModel } from '~/core/transformers/toLmsModel'
 
 const LazyLmsModelPanel = lazy(() => import('~/features/settings/panels/model/LmsModelPanel'))
 
@@ -62,9 +62,9 @@ class LmsServerConnection extends ServerConnection<ILmsModel> {
   })
 
   validateHost(host?: string) {
-    if(!host) return true
+    if (!host) return true
 
-    if(!host.startsWith('ws')) return 'Host needs to start with ws:// or wss://'
+    if (!host.startsWith('ws')) return 'Host needs to start with ws:// or wss://'
 
     return true
   }

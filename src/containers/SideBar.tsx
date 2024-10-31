@@ -5,8 +5,8 @@ import useMedia from 'use-media'
 import { ChatSettingsSection } from '~/components/chat/ChatSettingsSection'
 import { ChatListSection } from '~/components/chat/ChatListSection'
 
-import { chatStore } from '~/models/ChatStore'
-import { settingStore } from '~/models/SettingStore'
+import { chatStore } from '~/core/ChatStore'
+import { settingStore } from '~/core/SettingStore'
 
 import MediaEject from '~/icons/MediaEject'
 

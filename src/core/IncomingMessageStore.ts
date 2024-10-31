@@ -1,12 +1,12 @@
 import _ from 'lodash'
 import { types } from 'mobx-state-tree'
 
-import { IMessageModel, MessageModel } from '~/models/MessageModel'
-import { toastStore } from '~/models/ToastStore'
-import { IChatModel } from '~/models/ChatModel'
+import { IMessageModel, MessageModel } from '~/core/MessageModel'
+import { toastStore } from '~/core/ToastStore'
+import { IChatModel } from '~/core/ChatModel'
 
-import BaseApi from '~/features/connections/api/BaseApi'
-import { connectionModelStore } from '~/features/connections/ConnectionModelStore'
+import BaseApi from '~/core/connections/api/BaseApi'
+import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
 
 const IncomingMessageAbortedModel = types.model({
   id: types.identifier,
@@ -110,7 +110,7 @@ export const IncomingMessageStore = types
 
       const connection = connectionModelStore.selectedConnection
 
-      if(!connection) throw 'Unknown server'
+      if (!connection) throw 'Unknown server'
 
       if (connectionModelStore.isImageGenerationMode) {
         return this.generateImage(chat, incomingMessage, connection.api)

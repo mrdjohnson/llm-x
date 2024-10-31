@@ -2,15 +2,15 @@ import { lazy } from 'react'
 import { SnapshotIn } from 'mobx-state-tree'
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 
-import LanguageModel, { LanguageModelType } from '~/models/LanguageModel'
+import LanguageModel, { LanguageModelType } from '~/core/LanguageModel'
 import { IObservableArray, makeObservable, observable } from 'mobx'
-import ServerConnection from '~/features/connections/servers/ServerConnection'
-import ollamaApi from '~/features/connections/api/OllamaApi'
+import ServerConnection from '~/core/connections/servers/ServerConnection'
+import ollamaApi from '~/core/connections/api/OllamaApi'
 
 import Image from '~/icons/Image'
 import { Ollama } from 'ollama/browser'
-import { toOllamaModel } from '~/models/transformers/toOllamaModel'
-import { IOllamaModel, OllamaLanguageModel, IConnectionDataModel } from '~/models/types'
+import { toOllamaModel } from '~/core/transformers/toOllamaModel'
+import { IOllamaModel, OllamaLanguageModel, IConnectionDataModel } from '~/core/types'
 
 const LazyOllamaModelPanel = lazy(() => import('~/features/settings/panels/model/OllamaModelPanel'))
 

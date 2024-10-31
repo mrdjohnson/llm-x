@@ -4,7 +4,7 @@ import ChevronDown from '~/icons/ChevronDown'
 import Delete from '~/icons/Delete'
 import WindowView from '~/icons/WindowView'
 
-import { IMessageModel } from '~/models/MessageModel'
+import { IMessageModel } from '~/core/MessageModel'
 import ToolTip from '~/components/Tooltip'
 
 const MessageVariationSelectionRow = observer(
@@ -30,7 +30,7 @@ const MessageVariationSelectionRow = observer(
           <ChevronDown className="!h-3 !w-3 rotate-90" />
         </button>
 
-        <span className="text-sm opacity-30 whitespace-nowrap">
+        <span className="whitespace-nowrap text-sm opacity-30">
           {selectedVariationIndex + 1} / {variations.length + 1}
         </span>
 
