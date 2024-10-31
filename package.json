@@ -13,7 +13,8 @@
     "prepare": "husky install",
     "test": "vite build; vitest",
     "test:ui": "vite build; vitest --ui",
-    "test:watch": "concurrently 'vitest' 'vite build --watch'"
+    "test:watch": "concurrently 'vitest' 'vite build --watch'",
+    "check-circular-deps": "npx madge --circular --extensions ts ."
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,css,md,html,json}": [
