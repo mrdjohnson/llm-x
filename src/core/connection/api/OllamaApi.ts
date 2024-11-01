@@ -10,18 +10,17 @@ import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { StringOutputParser } from '@langchain/core/output_parsers'
 import _ from 'lodash'
 
-import { IMessageModel } from '~/core/MessageModel'
-import { personaStore } from '~/core/PersonaStore'
-
 import CachedStorage from '~/utils/CachedStorage'
 import BaseApi from '~/core/connection/api/BaseApi'
+import { MessageViewModel } from '~/core/message/MessageViewModel'
+import { personaStore } from '~/core/persona/PersonaStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
-const createHumanMessage = async (message: IMessageModel): Promise<HumanMessage> => {
-  if (!_.isEmpty(message.imageUrls)) {
+const createHumanMessage = async (message: MessageViewModel): Promise<HumanMessage> => {
+  if (!_.isEmpty(message.source.imageUrls)) {
     const imageUrls: MessageContentImageUrl[] = []
 
-    for (const cachedImageUrl of message.imageUrls) {
+    for (const cachedImageUrl of message.source.imageUrls) {
       const imageData = await CachedStorage.get(cachedImageUrl)
 
       if (imageData) {
@@ -46,7 +45,7 @@ const createHumanMessage = async (message: IMessageModel): Promise<HumanMessage>
   return new HumanMessage(message.content)
 }
 
-const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMessageModel) => {
+const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: string) => {
   const messages: BaseMessage[] = []
 
   const selectedPersona = personaStore.selectedPersona
@@ -56,11 +55,11 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
   }
 
   for (const message of chatMessages) {
-    if (message.uniqId === incomingMessage.uniqId) break
+    if (message.id === chatMessageId) break
 
     const selectedVariation = message.selectedVariation
 
-    if (message.fromBot) {
+    if (message.source.fromBot) {
       messages.push(new AIMessage(selectedVariation.content))
     } else {
       messages.push(await createHumanMessage(selectedVariation))
@@ -72,9 +71,8 @@ const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMess
 
 export class OllamaApi extends BaseApi {
   async *generateChat(
-    chatMessages: IMessageModel[],
-    incomingMessage: IMessageModel,
-    incomingMessageVariant: IMessageModel,
+    chatMessages: MessageViewModel[],
+    incomingMessageVariant: MessageViewModel,
   ): AsyncGenerator<string> {
     const connection = connectionStore.selectedConnection
     const host = connection?.formattedHost
@@ -84,11 +82,11 @@ export class OllamaApi extends BaseApi {
 
     const abortController = new AbortController()
 
-    BaseApi.abortControllerById[incomingMessageVariant.uniqId] = async () => abortController.abort()
+    BaseApi.abortControllerById[incomingMessageVariant.id] = async () => abortController.abort()
 
-    const messages = await getMessages(chatMessages, incomingMessage)
+    const messages = await getMessages(chatMessages, incomingMessageVariant.rootMessage.id)
     const parameters = connection.parsedParameters
-    incomingMessageVariant.setExtraDetails({ sentWith: parameters })
+    await incomingMessageVariant.setExtraDetails({ sentWith: parameters })
 
     const chatOllama = new ChatOllama({
       baseUrl: host,
@@ -122,7 +120,7 @@ export class OllamaApi extends BaseApi {
       yield chunk
     }
 
-    delete BaseApi.abortControllerById[incomingMessage.uniqId]
+    delete BaseApi.abortControllerById[incomingMessageVariant.id]
   }
 
   generateImages(): Promise<string[]> {

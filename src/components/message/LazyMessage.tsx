@@ -7,30 +7,18 @@ import { type PropsWithChildren } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { useSpeech } from 'react-text-to-speech'
-import { Badge, ScrollShadow } from '@nextui-org/react'
 
-import Delete from '~/icons/Delete'
-import Refresh from '~/icons/Refresh'
 import ChevronDown from '~/icons/ChevronDown'
-import Edit from '~/icons/Edit'
-import Warning from '~/icons/Warning'
-import WindowCheck from '~/icons/WindowCheck'
-import PlayPause from '~/icons/PlayPause'
-import Stop from '~/icons/Stop'
-
-import { chatStore } from '~/core/ChatStore'
-import { incomingMessageStore } from '~/core/IncomingMessageStore'
-import { IMessageModel } from '~/core/MessageModel'
-import { settingStore } from '~/core/SettingStore'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 
-import { MessageProps } from '~/components/Message'
-import CopyButton from '~/components/CopyButton'
+import { MessageProps } from '~/components/message/Message'
+import MessageHeader from '~/components/message/MessageHeader'
+import MessageFooter from '~/components/message/MessageFooter'
+
 import CachedImage from '~/components/CachedImage'
-import ToolTip from '~/components/Tooltip'
-import MessageVariationSelectionRow from '~/components/message/MessageVariationSelectionRow'
 import CustomMathBlock from '~/components/message/CustomMathBlock'
+import { voiceStore } from '~/core/voice/VoiceStore'
 
 const CustomCodeBlock = React.lazy(() => import('~/components/message/CustomCodeBlock'))
 
@@ -41,30 +29,6 @@ const DelayedCustomCodeBlock = (props: PropsWithChildren) => {
     </Suspense>
   )
 }
-
-const DetailsToolTip = observer(({ message }: { message: IMessageModel }) => {
-  const details = JSON.stringify(message.extras!.details, null, 2)
-
-  return (
-    <div className="flex flex-col gap-1 overflow-scroll pt-1">
-      <Badge
-        content={
-          <CopyButton
-            className="text-base-content/30 hover:scale-125 hover:text-base-content"
-            text={details}
-          />
-        }
-        classNames={{
-          badge: 'bg-transparent border-none',
-        }}
-      >
-        <ScrollShadow className="w-fit max-w-[80vw]" orientation="horizontal">
-          <pre className="text-sm">{details}</pre>
-        </ScrollShadow>
-      </Badge>
-    </div>
-  )
-})
 
 const LazyMessage = observer(
   ({
@@ -79,58 +43,15 @@ const LazyMessage = observer(
     shouldScrollIntoView,
     variationIndex,
   }: MessageProps) => {
-    const isVariationGroupView = variationIndex !== undefined
     const message = messageVariant || baseMessage
 
-    const { content, fromBot, uniqId, extras, imageUrls, botName } = message
+    const { fromBot, id, extras, imageUrls } = message.source
+    const content = message.content
     const error = extras?.error
-    const details = extras?.details
-    const chat = chatStore.selectedChat!
-    const { variations } = baseMessage
 
-    const { voice } = settingStore
+    const voice = voiceStore.selectedVoice
 
     const containerRef = useRef<HTMLDivElement>(null)
-
-    const handleRegeneration = async () => {
-      incomingMessageStore.generateVariation(chat, baseMessage)
-    }
-
-    const handleEdit = async () => {
-      if (variationIndex) {
-        baseMessage.setVariationIndex(variationIndex)
-      }
-
-      chatStore.selectedChat!.setMessageToEdit(baseMessage, messageVariant)
-    }
-
-    const extraButtons = useMemo(() => {
-      if (chat.isEditingMessage || incomingMessageStore.isGettingData) return null
-
-      return (
-        <>
-          <button
-            className="rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
-            onClick={handleEdit}
-            disabled={disableEditing}
-            title="Edit message"
-          >
-            <Edit className="h-4 w-4" />
-          </button>
-
-          {fromBot && (
-            <button
-              className="rounded-md text-base-content/30 hover:scale-125 hover:text-base-content disabled:cursor-not-allowed"
-              onClick={handleRegeneration}
-              disabled={disableRegeneration}
-              title={customDeleteIcon ? 'Stop' : 'Generate message variation'}
-            >
-              {customDeleteIcon || <Refresh />}
-            </button>
-          )}
-        </>
-      )
-    }, [chat, fromBot, disableRegeneration, disableEditing])
 
     const WrappedContent = useMemo(() => {
       return (
@@ -186,7 +107,6 @@ const LazyMessage = observer(
     }, [shouldScrollIntoView, content])
 
     const hasInnerContent = children || content || error
-    const hasVarations = !isVariationGroupView && !_.isEmpty(variations)
 
     return (
       <div
@@ -196,53 +116,15 @@ const LazyMessage = observer(
           (shouldDimMessage ? ' opacity-55 ' : '') +
           (children ? ' mt-2 ' : '')
         }
-        key={uniqId}
+        key={id}
         ref={containerRef}
       >
-        {(botName || isVariationGroupView || hasVarations) && (
-          <div
-            className={
-              'group sticky z-10 mb-2 flex flex-row gap-2 bg-base-100 align-middle opacity-100 ' +
-              (isVariationGroupView ? ' top-7' : ' top-0')
-            }
-          >
-            {hasVarations && (
-              <MessageVariationSelectionRow message={baseMessage} disableEditing={disableEditing} />
-            )}
-
-            {isVariationGroupView && (
-              <div
-                className={'flex w-fit flex-row gap-2 ' + (fromBot ? '' : 'justify-end self-end')}
-              >
-                <span className="text-sm opacity-30">{`${variationIndex + 1}/${variations.length + 1}`}</span>
-
-                <ToolTip
-                  label={
-                    baseMessage.selectedVariation === message
-                      ? 'Default Variation'
-                      : 'Set as default variation'
-                  }
-                  placement="top"
-                  delay={400}
-                >
-                  <button
-                    className={
-                      'opacity-30 hover:opacity-100 ' +
-                      (baseMessage.selectedVariation === message
-                        ? '!text-primary !opacity-100'
-                        : '')
-                    }
-                    onClick={() => baseMessage.setVariationIndex(variationIndex)}
-                  >
-                    <WindowCheck />
-                  </button>
-                </ToolTip>
-              </div>
-            )}
-
-            {botName && <span className="opacity-30">{botName}</span>}
-          </div>
-        )}
+        <MessageHeader
+          baseMessage={baseMessage}
+          message={message}
+          disableEditing={disableEditing}
+          variationIndex={variationIndex}
+        />
 
         {imageUrls[0] && (
           <div className="mb-2 flex flex-row flex-wrap place-content-stretch gap-2">
@@ -250,7 +132,7 @@ const LazyMessage = observer(
               <button
                 key={imageUrl}
                 className="h-56 place-content-center overflow-hidden rounded-md border border-base-content/30 bg-base-content/30"
-                onClick={() => lightboxStore.setLightboxMessageById(baseMessage.uniqId, imageUrl)}
+                onClick={() => lightboxStore.setLightboxMessageById(baseMessage.id, imageUrl)}
               >
                 <CachedImage
                   className="max-h-56 min-w-20 max-w-56 rounded-md object-contain object-center"
@@ -299,72 +181,19 @@ const LazyMessage = observer(
           </div>
         )}
 
-        <div
-          className={
-            'sticky bottom-0 z-10 flex w-full gap-2 bg-base-100 px-2 pt-2 opacity-0 group-hover:opacity-100 ' +
-            (fromBot ? 'flex-row' : 'flex-row-reverse self-end')
-          }
-        >
-          {onDestroy && (
-            <button
-              className="rounded-md text-error/60 hover:scale-125 hover:text-error"
-              onClick={onDestroy}
-              title={customDeleteIcon ? 'Stop' : 'Delete'}
-            >
-              {customDeleteIcon || <Delete />}
-            </button>
-          )}
-
-          <CopyButton
-            className="place-items-center rounded-md text-base-content/30 hover:scale-125 hover:text-base-content"
-            text={content}
-          />
-
-          {extraButtons}
-
-          {details && (
-            <ToolTip
-              label={<DetailsToolTip message={message} />}
-              className="rounded-md"
-              delay={400}
-              placement="bottom-start"
-            >
-              <label className=" flex cursor-context-menu  items-center text-base-content/30 hover:text-base-content">
-                <Warning />
-              </label>
-            </ToolTip>
-          )}
-
-          <div
-            className={
-              'flex gap-2 ' +
-              (fromBot ? 'ml-auto flex-row-reverse' : 'mr-auto') +
-              (_.isEmpty(content) ? ' hidden' : '')
-            }
-          >
-            <button
-              className={
-                'h-fit w-fit opacity-30 hover:scale-110 hover:opacity-100 ' +
-                (speechStatus === 'started' ? ' animate-pulse opacity-100' : '')
-              }
-              onClick={speechStatus === 'started' ? pause : start}
-            >
-              <PlayPause />
-            </button>
-
-            <button
-              className={
-                'text-error hover:scale-110' +
-                (speechStatus === 'stopped'
-                  ? ' pointer-events-none opacity-0'
-                  : ' opacity-30  hover:opacity-100 ')
-              }
-              onClick={stop}
-            >
-              <Stop />
-            </button>
-          </div>
-        </div>
+        <MessageFooter
+          baseMessage={baseMessage}
+          message={message}
+          variationIndex={variationIndex}
+          disableEditing={disableEditing}
+          disableRegeneration={disableRegeneration}
+          customDeleteIcon={customDeleteIcon}
+          speechStatus={speechStatus}
+          onDestroy={onDestroy}
+          start={start}
+          pause={pause}
+          stop={stop}
+        />
       </div>
     )
   },

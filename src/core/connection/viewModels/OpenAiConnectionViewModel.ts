@@ -1,20 +1,21 @@
 import { lazy } from 'react'
-import { SnapshotIn } from 'mobx-state-tree'
-import { IObservableArray, makeObservable, observable } from 'mobx'
 import axios from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 import _ from 'lodash'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import BaseConnectionViewModel from '~/core/connection/viewModels/BaseConnectionViewModel'
-import openAiApi from '~/core/connection/api/OpenAiApi'
-
 import LanguageModel from '~/core/LanguageModel'
-import { IConnectionDataModel, IOpenAiModel, OpenAiLanguageModel } from '~/core/types'
+
+import { IOpenAiModel, OpenAiLanguageModel } from '~/core/connection/types'
+import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnectionViewModel'
+import { ConnectionModel } from '~/core/connection/ConnectionModel'
+import { connectionTable } from '~/core/connection/ConnectionTable'
+import openAiApi from '~/core/connection/api/OpenAiApi'
 
 const LazyOpenAiModelPanel = lazy(() => import('~/features/settings/panels/model/OpenAiModelPanel'))
 
 const DefaultHost = 'https://api.openai.com/v1'
+
 class OpenAiConnectionViewModel extends BaseConnectionViewModel<IOpenAiModel> {
   DefaultHost: string = DefaultHost
 
@@ -29,44 +30,41 @@ class OpenAiConnectionViewModel extends BaseConnectionViewModel<IOpenAiModel> {
 
   primaryHeader = this.modelTableHeaders[0].value
 
-  models: IObservableArray<OpenAiLanguageModel> = observable.array()
-
   type = 'OpenAi' as const
-
-  constructor(public connectionModel: IConnectionDataModel) {
-    super(connectionModel)
-
-    makeObservable(this, BaseConnectionViewModel.MOBX_MAPPINGS)
-  }
 
   readonly hostLabel: string = 'Open AI Host:'
   readonly enabledLabel: string = 'Text generation through LM Studio:'
 
-  static readonly getSnapshot = (): SnapshotIn<IConnectionDataModel> => ({
-    label: 'Open AI',
-    type: 'OpenAi',
+  static toViewModel(connection: ConnectionModel) {
+    return new this(connection)
+  }
 
-    host: DefaultHost,
-    enabled: true,
+  static readonly getSnapshot = (): ConnectionModel =>
+    connectionTable.parse({
+      label: 'Open AI',
+      type: 'OpenAi',
 
-    parameters: [
-      {
-        field: 'apiKey',
-        types: ['system', 'fieldRequired'],
-        helpText: 'This can be empty but cannot be removed',
-      },
-      {
-        field: 'temperature',
-        types: ['system'],
-        isJson: true,
-        helpText:
-          'Usually between 0 - 1, lower is for more consistent responses, higher is for more creative',
-      },
-    ],
-  })
+      host: DefaultHost,
+      enabled: true,
+
+      parameters: [
+        {
+          field: 'apiKey',
+          types: ['system', 'fieldRequired'],
+          helpText: 'This can be empty but cannot be removed',
+        },
+        {
+          field: 'temperature',
+          types: ['system'],
+          isJson: true,
+          helpText:
+            'Usually between 0 - 1, lower is for more consistent responses, higher is for more creative',
+        },
+      ],
+    })
 
   async _fetchLmModels(host: string): Promise<OpenAiLanguageModel[]> {
-    const apiKey = _.find(this.parameters, { field: 'apiKey' })?.parsedValue() || 'not-needed'
+    const apiKey = _.find(this.parameters, { field: 'apiKey' })?.value || 'not-needed'
 
     const {
       data: { data },
@@ -77,11 +75,11 @@ class OpenAiConnectionViewModel extends BaseConnectionViewModel<IOpenAiModel> {
       owned_by: string
     }
 
-    const trueResponse: IOpenAiModel[] = camelcaseKeys<IOpenAiModelResponse[]>(data).map(
+    const openAiModels: IOpenAiModel[] = camelcaseKeys<IOpenAiModelResponse[]>(data).map(
       ({ id, ...model }) => ({ ...model, _id: id }),
     )
 
-    return trueResponse.map(model => LanguageModel.fromIOpenAiModel(model))
+    return openAiModels.map(openAiModel => LanguageModel.fromIOpenAiModel(openAiModel, this.id))
   }
 
   override modelFilter(model: OpenAiLanguageModel, filterText: string) {

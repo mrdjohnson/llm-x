@@ -3,9 +3,10 @@ import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
 
 import ChevronDown from '~/icons/ChevronDown'
-import { settingStore } from '~/core/SettingStore'
 
-const themes: Record<string, string> = {
+import { settingStore } from '~/core/setting/SettingStore'
+
+const themes = {
   _system: 'System theme',
   dark: 'Dark',
   dracula: 'Dracula',
@@ -14,7 +15,8 @@ const themes: Record<string, string> = {
 
 const ThemeSelector = observer(() => {
   const [isOpen, setIsOpen] = useState(false)
-  const selectedTheme = settingStore.theme
+
+  const selectedTheme = settingStore.setting.theme
 
   return (
     <div className="form-control">
@@ -42,7 +44,7 @@ const ThemeSelector = observer(() => {
         <ul className="dropdown-content z-[1] mt-1 w-full rounded-box bg-base-300 p-2 shadow-2xl">
           <label className="text-sm text-base-content/60">Select theme</label>
 
-          {_.map(themes, (label, value) => (
+          {_.map(themes, (label: string, value: keyof typeof themes) => (
             <li key={value}>
               <button
                 className={
@@ -50,7 +52,7 @@ const ThemeSelector = observer(() => {
                   (selectedTheme === value ? ' btn-active' : '')
                 }
                 aria-label={label}
-                onClick={() => settingStore.setTheme(value)}
+                onClick={() => settingStore.update({ theme: value })}
               >
                 {label}
               </button>

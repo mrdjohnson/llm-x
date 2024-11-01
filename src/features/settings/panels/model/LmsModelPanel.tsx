@@ -1,14 +1,16 @@
 import { observer } from 'mobx-react-lite'
 
-import LmsConnectionViewModel from '~/core/connection/viewModels/LmsConnectionViewModel'
-import { connectionStore } from '~/core/connection/ConnectionStore'
-
-import { LmsLanguageModel } from '~/core/types'
+import { LmsLanguageModel } from '~/core/connection/types'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnectedPanelSection'
 
+import LmsConnectionViewModel from '~/core/connection/viewModels/LmsConnectionViewModel'
+import { settingStore } from '~/core/setting/SettingStore'
+
 const LmsModelPanel = observer(({ connection }: { connection: LmsConnectionViewModel }) => {
+  const selectedModelId = settingStore.setting?.selectedModelId
+
   const renderRow = (model: LmsLanguageModel) => (
     <>
       <td>
@@ -36,14 +38,11 @@ const LmsModelPanel = observer(({ connection }: { connection: LmsConnectionViewM
     <SelectionPanelTable
       items={connection.models}
       sortTypes={connection.modelTableHeaders}
-      onItemSelected={model => connectionStore.dataStore.setSelectedModel(model, connection.id)}
+      onItemSelected={model => connection.selectModel(model)}
       itemFilter={connection.modelFilter}
       primarySortTypeLabel={connection.primaryHeader}
       renderRow={renderRow}
-      getIsItemSelected={model =>
-        connection.id === connectionStore.selectedConnection?.id &&
-        model.modelName === connectionStore.selectedModelName
-      }
+      getIsItemSelected={model => selectedModelId === model.id}
       getItemKey={model => model.id}
       filterInputPlaceholder="Filter by name or folder..."
     />

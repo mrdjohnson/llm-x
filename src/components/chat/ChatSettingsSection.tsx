@@ -3,8 +3,6 @@ import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { Controller, useForm } from 'react-hook-form'
 
-import { chatStore } from '~/core/ChatStore'
-
 import Check from '~/icons/Check'
 import Delete from '~/icons/Delete'
 import DocumentArrowDown from '~/icons/DocumentArrowDown'
@@ -13,7 +11,10 @@ import Back from '~/icons/Back'
 import Tooltip from '~/components/Tooltip'
 import FormInput from '~/components/form/FormInput'
 
-import { ChatSnapshotHandler } from '~/utils/transfer/ChatSnapshotHandler'
+import { chatStore } from '~/core/chat/ChatStore'
+import { chatTable } from '~/core/chat/ChatTable'
+
+import { CURRENT_DB_TIMESTAMP_MILLISECONDS } from '~/core/setting/SettingModel'
 
 export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked: () => void }) => {
   const {
@@ -27,8 +28,9 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
 
   const modalRef = useRef<HTMLDialogElement>(null)
 
-  const selectedChat = chatStore.selectedChat
   const chat = chatStore.selectedChat!
+
+  const chatModel = chat.source
 
   const onExportClose = () => {
     setIsExportOpen(false)
@@ -38,29 +40,30 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
     setIsExportOpen(true)
   }
 
-  const handleFormSubmit = handleSubmit(formData => {
-    const { name } = formData
-
-    chat.setName(name)
+  const handleFormSubmit = handleSubmit(async formData => {
+    await chatTable.put({ ...chatModel, ...formData })
 
     reset(formData)
   })
 
   const exportChat = async (includeImages: boolean) => {
-    const data = JSON.stringify(
-      await ChatSnapshotHandler.formatChatToExport(chat, { includeImages }),
-    )
+    const dataToExport: Record<string, unknown> = {
+      _chat: await chatTable.export(chat.source, { includeImages }),
+      databaseTimestamp: CURRENT_DB_TIMESTAMP_MILLISECONDS,
+    }
+
+    const data = JSON.stringify(dataToExport, null, 2)
 
     onExportClose()
 
     const link = document.createElement('a')
     link.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
-    link.download = `llm-x-chat-${_.snakeCase(chat.name).replace('_', '-')}.json`
+    link.download = `llm-x-chat-${_.snakeCase(chatModel.name).replace('_', '-')}.json`
     link.click()
   }
 
   useEffect(() => {
-    reset({ name: chat.name || 'new chat' })
+    reset({ name: chatModel.name || 'new chat' })
   }, [chat])
 
   useEffect(() => {
@@ -77,7 +80,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
     return true
   }
 
-  if (!selectedChat) return null
+  if (!chat) return null
 
   return (
     <>
@@ -88,7 +91,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
           </button>
 
           <span className="flex-shrink-1 line-clamp-1 max-w-[85%] flex-1 text-left md:text-lg">
-            {selectedChat?.name || 'new chat'}
+            {chatModel.name || 'new chat'}
           </span>
         </div>
 
@@ -107,6 +110,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
                           <button
                             className="btn btn-ghost btn-sm px-2"
                             disabled={!!errors.name?.message}
+                            onClick={handleFormSubmit}
                           >
                             <Check />
                           </button>
@@ -117,7 +121,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
                   )}
                   control={control}
                   name="name"
-                  defaultValue={chat.name || 'new chat'}
+                  defaultValue={chatModel.name || 'new chat'}
                   rules={{
                     validate: validateName,
                   }}
@@ -139,7 +143,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
 
             <Tooltip label="Delete Chat">
               <button
-                onClick={() => chatStore.deleteChat(chat)}
+                onClick={() => chatStore.destroyChat(chatModel)}
                 className="btn btn-ghost text-error"
               >
                 <Delete className="h-5 w-5" />
@@ -163,12 +167,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
             </div>
 
             <div className="flex flex-col justify-center">
-              <button
-                className="btn btn-neutral"
-                onClick={() => {
-                  exportChat(false)
-                }}
-              >
+              <button className="btn btn-neutral" onClick={() => exportChat(false)}>
                 Without images
               </button>
 

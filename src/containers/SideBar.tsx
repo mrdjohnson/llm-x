@@ -5,8 +5,7 @@ import useMedia from 'use-media'
 import { ChatSettingsSection } from '~/components/chat/ChatSettingsSection'
 import { ChatListSection } from '~/components/chat/ChatListSection'
 
-import { chatStore } from '~/core/ChatStore'
-import { settingStore } from '~/core/SettingStore'
+import { settingStore } from '~/core/setting/SettingStore'
 
 import MediaEject from '~/icons/MediaEject'
 
@@ -20,7 +19,9 @@ export const SideBar = observer(() => {
 
   const isMobile = useMedia('(max-width: 1024px)')
 
-  const { isSidebarOpen } = settingStore
+  const setting = settingStore.setting
+
+  const isSidebarOpen = setting.isSidebarOpen
 
   const width = useMemo(() => {
     if (isMobile) {
@@ -40,17 +41,19 @@ export const SideBar = observer(() => {
 
   useEffect(() => {
     goToChat()
-  }, [chatStore.selectedChat])
+  }, [setting.selectedChatId])
+
+  if (!setting) return <div />
 
   return (
     <div className={'group/sidebar relative h-full ' + width}>
       <div
         className={
           'flex h-full flex-1 flex-col flex-nowrap gap-2 self-stretch rounded-md bg-base-300 p-2 transition-opacity duration-300 ease-in-out' +
-          (settingStore.isSidebarOpen || isMobile ? ' opacity-100' : ' opacity-0')
+          (isSidebarOpen || isMobile ? ' opacity-100' : ' opacity-0')
         }
       >
-        {openSectionType === 'chat' ? (
+        {openSectionType === 'chat' && setting.selectedChatId ? (
           <ChatSettingsSection onBackClicked={goToChatList} />
         ) : (
           <ChatListSection onChatSelected={goToChat} />
@@ -63,7 +66,7 @@ export const SideBar = observer(() => {
           'group absolute top-[45%] z-20 opacity-30 transition-all duration-300 ease-in-out hover:opacity-100 group-hover/sidebar:opacity-100' +
           (isSidebarOpen ? ' -right-4' : ' -right-8')
         }
-        onClick={settingStore.toggleSidebar}
+        onClick={() => settingStore.update({ isSidebarOpen: !isSidebarOpen })}
       >
         <MediaEject className={'h-8 ' + (isSidebarOpen ? '-rotate-90' : 'rotate-90')} />
       </button>

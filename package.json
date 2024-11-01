@@ -32,6 +32,7 @@
     "gh-pages": "^6.1.1",
     "highlight.js": "^11.9.0",
     "kbar": "^0.1.0-beta.45",
+    "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "mobx": "^6.12.0",
     "mobx-react-lite": "^4.0.5",
@@ -53,7 +54,8 @@
     "tailwindcss": "^3.4.1",
     "use-media": "^1.5.0",
     "vite-tsconfig-paths": "^4.3.2",
-    "yet-another-react-lightbox": "^3.17.2"
+    "yet-another-react-lightbox": "^3.17.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",

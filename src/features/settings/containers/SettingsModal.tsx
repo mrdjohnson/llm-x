@@ -5,7 +5,7 @@ import useMedia from 'use-media'
 import { Modal, ModalContent, ModalBody } from '@nextui-org/react'
 import { useKBar } from 'kbar'
 
-import { settingStore } from '~/core/SettingStore'
+import { settingStore } from '~/core/setting/SettingStore'
 
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 
@@ -18,38 +18,40 @@ import {
   settingsPanelByName,
 } from '~/features/settings/settingsPanels'
 
-const SettingsSidePanel = ({
-  selectedPanel,
-  onSectionClick,
-}: {
-  selectedPanel?: SettingPanelOptionsType
-  onSectionClick?: (panelName: SettingPanelOptionsType) => void
-}) => {
-  const handleSectionClick = (panelName: SettingPanelOptionsType) => {
-    // clicking on self or other will open other
-    onSectionClick?.(panelName)
-    settingStore.openSettingsModal(panelName)
-  }
+const SettingsSidePanel = observer(
+  ({
+    selectedPanel,
+    onSectionClick,
+  }: {
+    selectedPanel?: SettingPanelOptionsType
+    onSectionClick?: (panelName: SettingPanelOptionsType) => void
+  }) => {
+    const handleSectionClick = (panelName: SettingPanelOptionsType) => {
+      // clicking on self or other will open other
+      onSectionClick?.(panelName)
+      settingStore.openSettingsModal(panelName)
+    }
 
-  return _.map(
-    settingsPanelByName,
-    ({ mobileOnly, label }: SettingPanelType, panelName: SettingPanelOptionsType) => {
-      if (mobileOnly || !label) return <div key={panelName} />
+    return _.map(
+      settingsPanelByName,
+      ({ mobileOnly, label }: SettingPanelType, panelName: SettingPanelOptionsType) => {
+        if (mobileOnly || !label) return <div key={panelName} />
 
-      return (
-        <button
-          key={panelName}
-          className={
-            'btn w-full justify-start ' + (panelName === selectedPanel ? ' btn-neutral' : '')
-          }
-          onClick={() => handleSectionClick(panelName)}
-        >
-          {label}
-        </button>
-      )
-    },
-  )
-}
+        return (
+          <button
+            key={panelName}
+            className={
+              'btn w-full justify-start ' + (panelName === selectedPanel ? ' btn-neutral' : '')
+            }
+            onClick={() => handleSectionClick(panelName)}
+          >
+            {label}
+          </button>
+        )
+      },
+    )
+  },
+)
 
 const MobileSettingsSidePanel = observer(
   ({ selectedPanel }: { selectedPanel?: SettingPanelOptionsType }) => {
@@ -82,7 +84,7 @@ const SettingsModal = observer(() => {
   const isMobile = useMedia('(max-width: 1024px)')
   const { query } = useKBar()
 
-  let panelName = settingStore.settingsPanelName
+  let panelName = settingStore.settingPanelName
   if (panelName === 'initial' && !isMobile) {
     panelName = 'general'
   }

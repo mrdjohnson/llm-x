@@ -2,14 +2,14 @@ import { observer } from 'mobx-react-lite'
 
 import { progressStore } from '~/features/progress/ProgressStore'
 
+const colorCodedProgress = {
+  incomplete: 'bg-accent',
+  complete: 'bg-success',
+  error: 'bg-error',
+}
+
 const Progresses = observer(() => {
   const { progresses } = progressStore
-
-  const colorCodedProgress = {
-    incomplete: 'bg-accent',
-    complete: 'bg-success',
-    error: 'bg-error',
-  }
 
   return (
     <div className=" bottom-0 left-0 right-0 flex flex-col">

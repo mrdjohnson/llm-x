@@ -1,11 +1,12 @@
 import Refresh from '~/icons/Refresh'
-import { settingStore } from '~/core/SettingStore'
+
+import { settingStore } from '~/core/setting/SettingStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 
 const NotConnectedPanelSection = ({ connection }: { connection: ConnectionViewModelTypes }) => {
   const openConnectionSettings = () => {
-    connectionStore.dataStore.setSelectedConnectionById(connection.id)
+    connectionStore.setSelectedConnection(connection)
     settingStore.openSettingsModal('connections')
   }
 

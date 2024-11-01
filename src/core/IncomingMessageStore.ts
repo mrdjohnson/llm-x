@@ -1,162 +1,159 @@
 import _ from 'lodash'
-import { types } from 'mobx-state-tree'
+import { makeAutoObservable } from 'mobx'
 
-import { IMessageModel, MessageModel } from '~/core/MessageModel'
 import { toastStore } from '~/core/ToastStore'
-import { IChatModel } from '~/core/ChatModel'
 
 import BaseApi from '~/core/connection/api/BaseApi'
+import { ChatViewModel } from '~/core/chat/ChatViewModel'
+import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
-const IncomingMessageAbortedModel = types.model({
-  id: types.identifier,
-  abortedManually: types.maybe(types.boolean),
-})
+export class IncomingMessageStore {
+  messageById: Record<string, MessageViewModel> = {}
+  messageAbortedById: Set<string> = new Set()
 
-export const IncomingMessageStore = types
-  .model({
-    messageById: types.map(types.reference(MessageModel)),
-    messageAbortedById: types.map(IncomingMessageAbortedModel),
-  })
-  .views(self => ({
-    contains(message: IMessageModel): boolean {
-      return !!self.messageById.get(message.uniqId)
-    },
+  constructor() {
+    makeAutoObservable(this)
+  }
 
-    get isGettingData() {
-      return !_.isEmpty(self.messageById)
-    },
-  }))
-  .actions(self => ({
-    async beforeDestroy() {
-      BaseApi.cancelGeneration()
-    },
+  contains(message: MessageViewModel): boolean {
+    return !!this.messageById[message.id]
+  }
 
-    deleteMessage(message: IMessageModel) {
-      this.commitMessage(message)
+  get isGettingData() {
+    return !_.isEmpty(this.messageById)
+  }
 
-      message.selfDestruct()
-    },
+  commitMessage(message: MessageViewModel) {
+    _.unset(this.messageById, message.id)
+    _.unset(this.messageAbortedById, message.id)
+  }
 
-    commitMessage(message: IMessageModel) {
-      self.messageById.delete(message.uniqId)
-      self.messageAbortedById.delete(message.uniqId)
-    },
+  deleteMessage(chat: ChatViewModel, message: MessageViewModel) {
+    this.commitMessage(message)
 
-    abortGeneration(message?: IMessageModel) {
-      if (message) {
-        const id = message.uniqId
+    chat.destroyMessage(message)
+  }
 
-        self.messageAbortedById.put({ id, abortedManually: true })
+  async abortGeneration(message?: MessageViewModel) {
+    if (message) {
+      const id = message.id
 
-        BaseApi.cancelGeneration(id)
+      this.messageAbortedById.add(id)
 
-        return
+      await BaseApi.cancelGeneration(id)
+
+      return
+    }
+
+    for (const messageId of _.keys(this.messageById)) {
+      this.messageAbortedById.add(messageId)
+    }
+
+    await BaseApi.cancelGeneration()
+  }
+
+  async generateImage(chat: ChatViewModel, incomingMessage: MessageViewModel, api: BaseApi) {
+    const incomingIndex = _.findIndex(
+      chat.source.messageIds,
+      id => id === incomingMessage.rootMessage.id,
+    )
+
+    const prompt = _.findLast(
+      chat.messages,
+      messageViewModel => messageViewModel.source.fromBot === false,
+      incomingIndex,
+    )?.content
+
+    if (!prompt) {
+      if (incomingMessage.isBlank()) {
+        await chat.destroyMessage(incomingMessage)
+      } else {
+        this.commitMessage(incomingMessage)
       }
 
-      for (const message of self.messageById.keys()) {
-        self.messageAbortedById.put({ id: message, abortedManually: true })
+      toastStore.addToast('no prompt found to regenerate image from', 'error')
+
+      return
+    }
+
+    const messageToEdit = incomingMessage.selectedVariation
+
+    await messageToEdit.update({ botName: connectionStore.selectedModelName })
+
+    console.log(prompt)
+
+    await this.handleIncomingMessage(chat, incomingMessage, async () => {
+      const images = await api.generateImages(prompt, messageToEdit)
+
+      await messageToEdit.addImages(images.map(image => 'data:image/png;base64,' + image))
+    })
+  }
+
+  async generateVariation(chat: ChatViewModel, incomingMessage: MessageViewModel) {
+    let message = incomingMessage
+
+    if (!incomingMessage.isBlank()) {
+      const variation = await chat.createIncomingMessage()
+
+      message = await incomingMessage.addVariation(variation)
+    }
+
+    return await this.generateMessage(chat, message)
+  }
+
+  async generateMessage(chat: ChatViewModel, incomingMessage: MessageViewModel) {
+    this.messageById[incomingMessage.id] = incomingMessage
+
+    const connection = connectionStore.selectedConnection
+
+    if (!connection) throw 'Unknown server'
+
+    if (connectionStore.isImageGenerationMode) {
+      return this.generateImage(chat, incomingMessage, connection.api)
+    }
+
+    const api: BaseApi | undefined = connection.api
+
+    await incomingMessage.update({ botName: connectionStore.selectedModelName! })
+
+    await this.handleIncomingMessage(chat, incomingMessage, async () => {
+      for await (const contentChunk of api.generateChat(chat.messages, incomingMessage)) {
+        incomingMessage.updateContent(contentChunk)
       }
+    })
+  }
 
-      BaseApi.cancelGeneration()
-    },
+  async handleIncomingMessage(
+    chat: ChatViewModel,
+    incomingMessage: MessageViewModel,
+    callback: () => Promise<void>,
+  ) {
+    let shouldDeleteMessage = false
 
-    async generateImage(chat: IChatModel, incomingMessage: IMessageModel, api: BaseApi) {
-      const incomingIndex = _.findIndex(chat.messages, { uniqId: incomingMessage.uniqId })
-      const prompt = _.findLast(chat.messages, { fromBot: false }, incomingIndex)?.content
+    const messageToEdit = incomingMessage
 
-      if (!prompt) {
-        if (incomingMessage.isBlank()) {
-          this.deleteMessage(incomingMessage)
-        } else {
-          this.commitMessage(incomingMessage)
-        }
+    try {
+      await callback()
+    } catch (error: unknown) {
+      if (this.messageAbortedById.has(messageToEdit.id)) {
+        messageToEdit.setError(new Error('Stream stopped by user'))
 
-        toastStore.addToast('no prompt found to regenerate image from', 'error')
+        shouldDeleteMessage = _.isEmpty(messageToEdit.content)
+      } else if (error instanceof Error) {
+        messageToEdit.setError(error)
 
-        return
+        // make sure the server is still connected
+        connectionStore.selectedConnection?.fetchLmModels()
       }
-
-      const messageToEdit = incomingMessage.selectedVariation
-
-      messageToEdit.setModelName(connectionStore.selectedModelName!)
-
-      console.log(prompt)
-
-      await this.handleIncomingMessage(incomingMessage, async () => {
-        const images = await api.generateImages(prompt, messageToEdit)
-
-        await messageToEdit.addImages(
-          chat.id,
-          images.map(image => 'data:image/png;base64,' + image),
-        )
-      })
-    },
-
-    async generateVariation(chat: IChatModel, incomingMessage: IMessageModel) {
-      if (!incomingMessage.isBlank()) {
-        const variation = chat.createIncomingMessage()
-
-        incomingMessage.addVariation(variation)
+    } finally {
+      if (shouldDeleteMessage) {
+        this.deleteMessage(chat, messageToEdit)
+      } else {
+        this.commitMessage(messageToEdit)
       }
+    }
+  }
+}
 
-      return this.generateMessage(chat, incomingMessage)
-    },
-
-    async generateMessage(chat: IChatModel, incomingMessage: IMessageModel) {
-      const messageToEdit = incomingMessage.selectedVariation
-
-      self.messageById.put(messageToEdit)
-
-      const connection = connectionStore.selectedConnection
-
-      if (!connection) throw 'Unknown server'
-
-      if (connectionStore.isImageGenerationMode) {
-        return this.generateImage(chat, incomingMessage, connection.api)
-      }
-
-      const api: BaseApi | undefined = connection.api
-
-      messageToEdit.setModelName(connectionStore.selectedModelName!)
-
-      await this.handleIncomingMessage(incomingMessage, async () => {
-        for await (const contentChunk of api.generateChat(
-          chat.messages,
-          incomingMessage,
-          messageToEdit,
-        )) {
-          messageToEdit.addContent(contentChunk)
-        }
-      })
-    },
-
-    async handleIncomingMessage(incomingMessage: IMessageModel, callback: () => Promise<void>) {
-      let shouldDeleteMessage = false
-
-      const messageToEdit = incomingMessage.selectedVariation
-
-      try {
-        await callback()
-      } catch (error: unknown) {
-        if (self.messageAbortedById.get(messageToEdit.uniqId)) {
-          messageToEdit.setError(new Error('Stream stopped by user'))
-
-          shouldDeleteMessage = _.isEmpty(messageToEdit.content)
-        } else if (error instanceof Error) {
-          messageToEdit.setError(error)
-
-          // make sure the server is still connected
-          connectionStore.selectedConnection?.fetchLmModels()
-        }
-      } finally {
-        if (shouldDeleteMessage) {
-          this.deleteMessage(messageToEdit)
-        } else {
-          this.commitMessage(messageToEdit)
-        }
-      }
-    },
-  }))
-
-export const incomingMessageStore = IncomingMessageStore.create()
+export const incomingMessageStore = new IncomingMessageStore()

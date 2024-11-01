@@ -15,13 +15,12 @@ import 'yet-another-react-lightbox/plugins/thumbnails.css'
 import 'yet-another-react-lightbox/plugins/captions.css'
 
 const LazyLightbox = observer(() => {
-  const [slides, setSlides] = useState<Array<Slide & { baseUniqId: string }>>([])
-  const { chat, lightboxSlides, imageUrlIndex } = lightboxStore
+  const [slides, setSlides] = useState<Array<Slide & { baseId: string }>>([])
+
+  const { lightboxSlides, imageUrlIndex } = lightboxStore
 
   const getAllSlideImages = async () => {
-    if (!chat) return
-
-    const slides: Array<Slide & { baseUniqId: string }> = []
+    const slides: Array<Slide & { baseId: string }> = []
 
     for (const slide of lightboxSlides) {
       const src = await CachedStorage.get(slide.src)
@@ -39,13 +38,11 @@ const LazyLightbox = observer(() => {
     getAllSlideImages()
   }, [lightboxSlides?.length])
 
-  if (!chat) return null
-
   if (imageUrlIndex === -1 || _.isEmpty(slides)) return null
 
   return (
     <Lightbox
-      close={lightboxStore.closeLightbox}
+      close={() => lightboxStore.closeLightbox()}
       plugins={[Thumbnails, Download, Captions, Zoom]}
       download={{
         download: ({ slide, saveAs }) => {
@@ -62,9 +59,9 @@ const LazyLightbox = observer(() => {
       carousel={{ finite: true }}
       on={{
         view: ({ index }) => {
-          const { src, baseUniqId } = lightboxSlides[index]
+          const { src, baseId } = lightboxSlides[index]
 
-          return lightboxStore.setLightboxMessageById(baseUniqId, src)
+          return lightboxStore.setLightboxMessageById(baseId, src)
         },
       }}
       slides={slides}
