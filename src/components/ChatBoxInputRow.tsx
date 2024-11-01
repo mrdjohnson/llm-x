@@ -19,158 +19,158 @@ import ChevronDown from '~/icons/ChevronDown'
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
-const ChatBoxInputRow = observer(
-  ({
-    onSend,
-    children,
-  }: PropsWithChildren<{ onSend: (message: string, imageUrls?: string[]) => void }>) => {
-    const textareaRef = useRef<HTMLTextAreaElement>(null)
+type ChatBoxInputRowProps = PropsWithChildren<{
+  onSend: (message: string, imageUrls?: string[]) => void
+}>
 
-    const [messageContent, setMessageContent] = useState('')
+const ChatBoxInputRow = observer(({ onSend, children }: ChatBoxInputRowProps) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-    const chat = chatStore.selectedChat!
-    const { previewImageUrls, messageToEdit } = chat
+  const [messageContent, setMessageContent] = useState('')
 
-    const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
+  const chat = chatStore.selectedChat!
+  const { previewImageUrls, messageToEdit } = chat
 
+  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    sendMessage()
+  }
+
+  const sendMessage = async () => {
+    if (!textareaRef.current) return
+
+    const messageToSend = textareaRef.current.value || ''
+
+    onSend(messageToSend, previewImageUrls)
+
+    setMessageContent('')
+    textareaRef.current.focus()
+
+    await chat.clearImagePreviews()
+  }
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.shiftKey || !textareaRef.current) return
+
+    if (e.key === 'Enter' && messageContent) {
       sendMessage()
+
+      textareaRef.current.blur()
+
+      e.preventDefault()
     }
 
-    const sendMessage = async () => {
-      if (!textareaRef.current) return
+    const { selectionStart, selectionEnd } = textareaRef.current
 
-      const messageToSend = textareaRef.current.value || ''
+    // we either want the start, or the end to be the same
+    if (selectionStart !== selectionEnd) return
 
-      onSend(messageToSend, previewImageUrls)
-
-      setMessageContent('')
-      textareaRef.current.focus()
-
-      await chat.clearImagePreviews()
+    if (e.key === 'ArrowUp' && selectionStart === 0) {
+      chat.findAndEditPreviousMessage()
     }
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.shiftKey || !textareaRef.current) return
-
-      if (e.key === 'Enter' && messageContent) {
-        sendMessage()
-
-        textareaRef.current.blur()
-
-        e.preventDefault()
-      }
-
-      const { selectionStart, selectionEnd } = textareaRef.current
-
-      // we either want the start, or the end to be the same
-      if (selectionStart !== selectionEnd) return
-
-      if (e.key === 'ArrowUp' && selectionStart === 0) {
-        chat.findAndEditPreviousMessage()
-      }
-
-      if (e.key === 'ArrowDown' && selectionStart === messageContent.length) {
-        chat.findAndEditNextMessage()
-      }
-
-      if (e.key === 'Escape') {
-        chat.setMessageToEdit(undefined)
-
-        e.preventDefault()
-      }
+    if (e.key === 'ArrowDown' && selectionStart === messageContent.length) {
+      chat.findAndEditNextMessage()
     }
 
-    const noModelSelected = !connectionStore.selectedModelName
-    const inputDisabled =
-      incomingMessageStore.isGettingData || noModelSelected || !!lightboxStore.lightboxMessage
+    if (e.key === 'Escape') {
+      chat.setMessageToEdit(undefined)
 
-    useEffect(() => {
-      if (!textareaRef.current) return
+      e.preventDefault()
+    }
+  }
 
-      setMessageContent(messageToEdit?.selectedVariation?.content || '')
-    }, [messageToEdit])
+  const noModelSelected = !connectionStore.selectedModelName
+  const inputDisabled =
+    incomingMessageStore.isGettingData || noModelSelected || !!lightboxStore.lightboxMessage
 
-    useEffect(() => {
-      if (inputDisabled) {
-        textareaRef.current?.blur()
-      } else {
-        textareaRef.current?.focus()
+  useEffect(() => {
+    if (!textareaRef.current) return
+
+    setMessageContent(messageToEdit?.selectedVariation?.content || '')
+  }, [messageToEdit])
+
+  useEffect(() => {
+    if (inputDisabled) {
+      textareaRef.current?.blur()
+    } else {
+      textareaRef.current?.focus()
+    }
+  }, [inputDisabled, chat, messageToEdit])
+
+  return (
+    <div
+      className={
+        'no-scrollbar join join-vertical relative mt-2 h-fit max-h-[700px] w-full shrink-0 rounded-md border border-base-content/20 ' +
+        (noModelSelected && 'tooltip cursor-not-allowed')
       }
-    }, [inputDisabled, chat, messageToEdit])
-
-    return (
+      data-tip={
+        connectionStore.isAnyServerConnected ? 'No Models Selected' : 'Server is not connected'
+      }
+    >
       <div
         className={
-          'no-scrollbar join join-vertical relative mt-2 h-fit max-h-[700px] w-full shrink-0 rounded-md border border-base-content/20 ' +
-          (noModelSelected && 'tooltip cursor-not-allowed')
-        }
-        data-tip={
-          connectionStore.isAnyServerConnected ? 'No Models Selected' : 'Server is not connected'
+          'join-item max-h-[600px] overflow-y-scroll p-2 pb-0' +
+          (inputDisabled ? ' bg-base-200' : '')
         }
       >
-        <div
-          className={
-            'join-item max-h-[600px] overflow-y-scroll p-2 pb-0' +
-            (inputDisabled ? ' bg-base-200' : '')
-          }
-        >
-          {previewImageUrls[0] && (
-            <div className="relative">
-              <div className="flex max-h-[200px] flex-row flex-wrap gap-2 overflow-hidden overflow-y-scroll pb-0">
-                {previewImageUrls.map(previewImageUrl => (
-                  <div
-                    className="group relative h-24 place-content-center overflow-hidden rounded-sm border border-base-content/30 bg-base-content/30"
-                    key={previewImageUrl}
-                  >
-                    <button
-                      className="btn btn-circle btn-neutral btn-xs absolute right-0 top-0 z-20 scale-75 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
-                      onClick={() => chat.removePreviewImageUrls([previewImageUrl])}
-                      role="button"
-                    >
-                      ✕
-                    </button>
-
-                    <CachedImage
-                      src={previewImageUrl}
-                      className="max-h-24 min-w-16 max-w-24 rounded-sm object-contain object-center"
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {previewImageUrls.length >= 5 && (
-                <div className="absolute inset-x-0 -bottom-1 flex justify-around">
+        {previewImageUrls[0] && (
+          <div className="relative">
+            <div className="flex max-h-[200px] flex-row flex-wrap gap-2 overflow-hidden overflow-y-scroll pb-0">
+              {previewImageUrls.map(previewImageUrl => (
+                <div
+                  className="group relative h-24 place-content-center overflow-hidden rounded-sm border border-base-content/30 bg-base-content/30"
+                  key={previewImageUrl}
+                >
                   <button
-                    className="btn btn-neutral btn-xs"
+                    className="btn btn-circle btn-neutral btn-xs absolute right-0 top-0 z-20 scale-75 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
+                    onClick={() => chat.removePreviewImageUrls([previewImageUrl])}
                     role="button"
-                    onClick={() => chat.removePreviewImageUrls(chat.previewImageUrls)}
                   >
-                    Clear {previewImageUrls.length} images
+                    ✕
                   </button>
+
+                  <CachedImage
+                    src={previewImageUrl}
+                    className="max-h-24 min-w-16 max-w-24 rounded-sm object-contain object-center"
+                  />
                 </div>
-              )}
-
-              <div className="divider my-0" />
+              ))}
             </div>
-          )}
 
-          <TextareaAutosize
-            className="no-scrollbar textarea m-0 min-h-8 w-full resize-none border-0 p-0 text-base focus:outline-none "
-            placeholder="Enter Prompt..."
-            ref={textareaRef}
-            value={messageContent}
-            disabled={inputDisabled}
-            minRows={1}
-            onKeyDown={handleKeyDown}
-            onChange={e => setMessageContent(_.trimStart(e.target.value))}
-            onPaste={e => TransferHandler.handleImport(e.clipboardData.files)}
-            autoFocus
-          />
-        </div>
+            {previewImageUrls.length >= 5 && (
+              <div className="absolute inset-x-0 -bottom-1 flex justify-around">
+                <button
+                  className="btn btn-neutral btn-xs"
+                  role="button"
+                  onClick={() => chat.removePreviewImageUrls(chat.previewImageUrls)}
+                >
+                  Clear {previewImageUrls.length} images
+                </button>
+              </div>
+            )}
 
-        {/* TODO, this will be moot in the coming updates */}
-        {/* {connectionModelStore.isImageGenerationMode && (
+            <div className="divider my-0" />
+          </div>
+        )}
+
+        <TextareaAutosize
+          className="no-scrollbar textarea m-0 min-h-8 w-full resize-none border-0 p-0 text-base focus:outline-none "
+          placeholder="Enter Prompt..."
+          ref={textareaRef}
+          value={messageContent}
+          disabled={inputDisabled}
+          minRows={1}
+          onKeyDown={handleKeyDown}
+          onChange={e => setMessageContent(_.trimStart(e.target.value))}
+          onPaste={e => TransferHandler.handleImport(e.clipboardData.files)}
+          autoFocus
+        />
+      </div>
+
+      {/* TODO, this will be moot in the coming updates */}
+      {/* {connectionModelStore.isImageGenerationMode && (
           <div className=" px-2 pb-2">
             <div className="divider my-0" />
 
@@ -193,58 +193,53 @@ const ChatBoxInputRow = observer(
           </div>
         )} */}
 
-        <form
-          className={' h-full min-h-fit w-full ' + (inputDisabled ? 'bg-base-200' : '')}
-          onSubmit={onFormSubmit}
-        >
-          <div className="join-item flex w-full flex-col justify-between bg-base-200 align-middle md:flex-row md:gap-2">
-            <button
-              tabIndex={0}
-              type="button"
-              className="btn btn-active hidden rounded-none rounded-bl-md md:flex"
-              disabled={inputDisabled || connectionStore.isImageGenerationMode}
-              onClick={() => settingStore.openSettingsModal('personas')}
-            >
-              {personaStore.selectedPersona?.name || 'No personas selected'}
-              <ChevronDown />
-            </button>
+      <form
+        className={' h-full min-h-fit w-full ' + (inputDisabled ? 'bg-base-200' : '')}
+        onSubmit={onFormSubmit}
+      >
+        <div className="join-item flex w-full flex-col justify-between bg-base-200 align-middle md:flex-row md:gap-2">
+          <button
+            tabIndex={0}
+            type="button"
+            className="btn btn-active hidden rounded-none rounded-bl-md md:flex"
+            disabled={inputDisabled || connectionStore.isImageGenerationMode}
+            onClick={() => settingStore.openSettingsModal('personas')}
+          >
+            {personaStore.selectedPersona?.name || 'No personas selected'}
+            <ChevronDown />
+          </button>
 
-            <div className="flex">
-              <AttachmentWrapper className="mr-auto md:mr-0">
-                <button
-                  className="btn btn-ghost rounded-none"
-                  type="button"
-                  disabled={inputDisabled}
-                >
-                  <Paperclip />
-                </button>
-              </AttachmentWrapper>
+          <div className="flex">
+            <AttachmentWrapper className="mr-auto md:mr-0">
+              <button className="btn btn-ghost rounded-none" type="button" disabled={inputDisabled}>
+                <Paperclip />
+              </button>
+            </AttachmentWrapper>
 
-              {chat.isEditingMessage && (
-                <button
-                  className="btn btn-ghost rounded-none text-error/50 hover:text-error"
-                  type="button"
-                  disabled={noModelSelected}
-                  onClick={() => chat.setMessageToEdit(undefined)}
-                >
-                  Cancel
-                </button>
-              )}
+            {chat.isEditingMessage && (
+              <button
+                className="btn btn-ghost rounded-none text-error/50 hover:text-error"
+                type="button"
+                disabled={noModelSelected}
+                onClick={() => chat.setMessageToEdit(undefined)}
+              >
+                Cancel
+              </button>
+            )}
 
-              {children || (
-                <button
-                  className="btn btn-ghost rounded-none rounded-br-md bg-base-100"
-                  disabled={noModelSelected || _.isEmpty(messageContent)}
-                >
-                  Send
-                </button>
-              )}
-            </div>
+            {children || (
+              <button
+                className="btn btn-ghost rounded-none rounded-br-md bg-base-100"
+                disabled={noModelSelected || _.isEmpty(messageContent)}
+              >
+                Send
+              </button>
+            )}
           </div>
-        </form>
-      </div>
-    )
-  },
-)
+        </div>
+      </form>
+    </div>
+  )
+})
 
 export default ChatBoxInputRow
