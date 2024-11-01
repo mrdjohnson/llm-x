@@ -4,10 +4,10 @@ import _ from 'lodash'
 
 import { type SettingPanelOptionsType } from '~/features/settings/settingsPanels'
 
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
-import LmsServerConnection from '~/core/connections/servers/LmsServerConnection'
-import A1111ServerConnection from '~/core/connections/servers/A1111ServerConnection'
-import OllamaServerConnection from '~/core/connections/servers/OllamaServerConnection'
+import { connectionStore } from '~/core/connection/ConnectionStore'
+import LmsConnectionViewModel from '~/core/connection/viewModels/LmsConnectionViewModel'
+import A1111ConnectionViewModel from '~/core/connection/viewModels/A1111ConnectionViewModel'
+import OllamaConnectionViewModel from '~/core/connection/viewModels/OllamaConnectionViewModel'
 
 import { VoiceModel } from '~/core/VoiceModel'
 
@@ -105,7 +105,7 @@ const migrateV2 = (settings: Record<string, unknown>) => {
   console.log('running v2 migration')
 
   if (settings.lmsEnabled) {
-    const lmsSnapshot = _.cloneDeep(LmsServerConnection.getSnapshot())
+    const lmsSnapshot = _.cloneDeep(LmsConnectionViewModel.getSnapshot())
     lmsSnapshot.host = (settings.lmsHost as string) || lmsSnapshot.host
     ;[['temperature', 'lmsTemperature']].forEach(([field, oldField]) => {
       const parameterIndex = _.findIndex(lmsSnapshot.parameters, { field })
@@ -115,11 +115,11 @@ const migrateV2 = (settings: Record<string, unknown>) => {
       }
     })
 
-    connectionModelStore.dataStore.addConnection('LMS', lmsSnapshot)
+    connectionStore.dataStore.addConnection('LMS', lmsSnapshot)
   }
 
   if (settings.a1111Enabled) {
-    const a1111Snapshot = _.cloneDeep(A1111ServerConnection.getSnapshot())
+    const a1111Snapshot = _.cloneDeep(A1111ConnectionViewModel.getSnapshot())
     a1111Snapshot.host = (settings.a1111Host as string) || a1111Snapshot.host
     ;[
       ['width', 'a1111Width'],
@@ -134,12 +134,12 @@ const migrateV2 = (settings: Record<string, unknown>) => {
       }
     })
 
-    connectionModelStore.dataStore.addConnection('A1111', a1111Snapshot)
+    connectionStore.dataStore.addConnection('A1111', a1111Snapshot)
   }
 
   // it was enabled if it was true or undefined
   if (settings.ollamaEnabled !== false) {
-    const ollamaSnapshot = _.cloneDeep(OllamaServerConnection.getSnapshot())
+    const ollamaSnapshot = _.cloneDeep(OllamaConnectionViewModel.getSnapshot())
     ollamaSnapshot.host = (settings.ollamaHost as string) || ollamaSnapshot.host
     ;[
       ['keep_alive', 'ollamaKeepAliveTime'],
@@ -152,7 +152,7 @@ const migrateV2 = (settings: Record<string, unknown>) => {
       }
     })
 
-    connectionModelStore.dataStore.addConnection('Ollama', ollamaSnapshot)
+    connectionStore.dataStore.addConnection('Ollama', ollamaSnapshot)
   }
 
   delete settings.ollamaEnabled

@@ -4,10 +4,10 @@ import _ from 'lodash'
 
 import ChevronDown from '~/icons/ChevronDown'
 import { settingStore } from '~/core/SettingStore'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const ModelSelector = observer(() => {
-  const { selectedModelLabel, isAnyServerConnected, selectedConnection } = connectionModelStore
+  const { selectedModelLabel, isAnyServerConnected, selectedConnection } = connectionStore
   const noServer = !isAnyServerConnected
 
   const label = useMemo(() => {

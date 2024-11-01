@@ -4,8 +4,8 @@ import { SortType as SelectionPanelSortType } from '~/components/SelectionTableP
 
 import LanguageModel, { LanguageModelType } from '~/core/LanguageModel'
 import { IObservableArray, makeObservable, observable } from 'mobx'
-import ServerConnection from '~/core/connections/servers/ServerConnection'
-import ollamaApi from '~/core/connections/api/OllamaApi'
+import BaseConnectionViewModel from '~/core/connection/viewModels/BaseConnectionViewModel'
+import ollamaApi from '~/core/connection/api/OllamaApi'
 
 import Image from '~/icons/Image'
 import { Ollama } from 'ollama/browser'
@@ -15,7 +15,7 @@ import { IOllamaModel, OllamaLanguageModel, IConnectionDataModel } from '~/core/
 const LazyOllamaModelPanel = lazy(() => import('~/features/settings/panels/model/OllamaModelPanel'))
 
 const DefaultHost = 'http://localhost:11434'
-class OllamaServerConnection extends ServerConnection<IOllamaModel> {
+class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
   DefaultHost: string = DefaultHost
 
   api = ollamaApi
@@ -38,7 +38,7 @@ class OllamaServerConnection extends ServerConnection<IOllamaModel> {
   constructor(public connectionModel: IConnectionDataModel) {
     super(connectionModel)
 
-    makeObservable(this, ServerConnection.MOBX_MAPPINGS)
+    makeObservable(this, BaseConnectionViewModel.MOBX_MAPPINGS)
   }
 
   readonly hostLabel = 'Ollama Host:'
@@ -72,4 +72,4 @@ class OllamaServerConnection extends ServerConnection<IOllamaModel> {
   }
 }
 
-export default OllamaServerConnection
+export default OllamaConnectionViewModel

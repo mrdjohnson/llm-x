@@ -3,14 +3,14 @@ import { makeAutoObservable } from 'mobx'
 
 import { toastStore } from '~/core/ToastStore'
 import { progressStore } from '~/features/progress/ProgressStore'
-import OllamaServerConnection from '~/core/connections/servers/OllamaServerConnection'
+import OllamaConnectionViewModel from '~/core/connection/viewModels/OllamaConnectionViewModel'
 
 export type CorrectShowResponse = Pick<ShowResponse, 'license' | 'modelfile' | 'template'> & {
   details: ModelDetails
 }
 
 class OllamaStore {
-  constructor(private connection: OllamaServerConnection) {
+  constructor(private connection: OllamaConnectionViewModel) {
     makeAutoObservable(this)
   }
 

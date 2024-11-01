@@ -5,8 +5,8 @@ import camelcaseKeys from 'camelcase-keys'
 import { IObservableArray, makeObservable, observable } from 'mobx'
 import axios from 'axios'
 
-import ServerConnection from '~/core/connections/servers/ServerConnection'
-import a1111Api from '~/core/connections/api/A1111Api'
+import BaseConnectionViewModel from '~/core/connection/viewModels/BaseConnectionViewModel'
+import a1111Api from '~/core/connection/api/A1111Api'
 
 import LanguageModel, { LanguageModelType } from '~/core/LanguageModel'
 import { A1111LanguageModel, IA1111Model, IConnectionDataModel } from '~/core/types'
@@ -15,7 +15,7 @@ const LazyA1111ModelPanel = lazy(() => import('~/features/settings/panels/model/
 
 const DefaultHost = 'http://127.0.0.1:7860'
 
-class A1111ServerConnection extends ServerConnection<IA1111Model> {
+class A1111ConnectionViewModel extends BaseConnectionViewModel<IA1111Model> {
   DefaultHost: string = DefaultHost
 
   api = a1111Api
@@ -33,7 +33,7 @@ class A1111ServerConnection extends ServerConnection<IA1111Model> {
   constructor(public connectionModel: IConnectionDataModel) {
     super(connectionModel)
 
-    makeObservable(this, ServerConnection.MOBX_MAPPINGS)
+    makeObservable(this, BaseConnectionViewModel.MOBX_MAPPINGS)
   }
 
   readonly hostLabel = 'AUTOMATIC1111 Host:'
@@ -74,4 +74,4 @@ class A1111ServerConnection extends ServerConnection<IA1111Model> {
   }
 }
 
-export default A1111ServerConnection
+export default A1111ConnectionViewModel

@@ -9,7 +9,7 @@ import { personaStore } from '~/core/PersonaStore'
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import FunTitle from '~/components/FunTitle'
 import ToolTip from '~/components/Tooltip'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
 
@@ -31,22 +31,22 @@ const Step = ({
 
 const ChatBoxPrompt = observer(() => {
   const activeConnectionTypes = useMemo(() => {
-    const connectionsTypes = _.chain(connectionModelStore.connections)
+    const connectionsTypes = _.chain(connectionStore.connections)
       .filter('isConnected')
       .map('type')
       .value()
 
     return new Set(connectionsTypes)
-  }, [connectionModelStore.connections])
+  }, [connectionStore.connections])
 
   const anyConnectionHasModels = useMemo(() => {
-    for (const connection of connectionModelStore.connections) {
+    for (const connection of connectionStore.connections) {
       if (!_.isEmpty(connection.models)) {
         return true
       }
     }
     return false
-  }, [connectionModelStore.connections])
+  }, [connectionStore.connections])
   return (
     <div className="hero my-auto">
       <div className="hero-content w-fit text-center">

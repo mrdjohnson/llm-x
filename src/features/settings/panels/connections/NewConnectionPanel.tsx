@@ -2,8 +2,8 @@ import { observer } from 'mobx-react-lite'
 import { Listbox, ListboxItem } from '@nextui-org/listbox'
 import _ from 'lodash'
 
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
-import { serverConnectionByType } from '~/core/connections/servers'
+import { connectionStore } from '~/core/connection/ConnectionStore'
+import { connectionViewModelByType } from '~/core/connection/viewModels'
 
 const NewConnectionPanel = observer(() => {
   return (
@@ -11,9 +11,9 @@ const NewConnectionPanel = observer(() => {
       <span>Select a connection type: </span>
 
       <Listbox>
-        {_.map(serverConnectionByType, connector => connector.getSnapshot()).map(
+        {_.map(connectionViewModelByType, connector => connector.getSnapshot()).map(
           ({ type, label }) => (
-            <ListboxItem key={type} onClick={() => connectionModelStore.addConnection(type)}>
+            <ListboxItem key={type} onClick={() => connectionStore.addConnection(type)}>
               {label}
             </ListboxItem>
           ),

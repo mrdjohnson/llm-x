@@ -3,10 +3,10 @@ import { Control, Controller } from 'react-hook-form'
 import { SnapshotIn } from 'mobx-state-tree'
 
 import { IConnectionDataModel } from '~/core/types'
-import { ServerConnectionTypes } from '~/core/connections/servers'
+import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 
 type EnabledCheckboxProps = {
-  connection: ServerConnectionTypes
+  connection: ConnectionViewModelTypes
   control: Control<SnapshotIn<IConnectionDataModel>>
 }
 

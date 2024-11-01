@@ -17,7 +17,7 @@ import Paperclip from '~/icons/Paperclip'
 import ChevronDown from '~/icons/ChevronDown'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const ChatBoxInputRow = observer(
   ({
@@ -81,7 +81,7 @@ const ChatBoxInputRow = observer(
       }
     }
 
-    const noModelSelected = !connectionModelStore.selectedModelName
+    const noModelSelected = !connectionStore.selectedModelName
     const inputDisabled =
       incomingMessageStore.isGettingData || noModelSelected || !!lightboxStore.lightboxMessage
 
@@ -106,9 +106,7 @@ const ChatBoxInputRow = observer(
           (noModelSelected && 'tooltip cursor-not-allowed')
         }
         data-tip={
-          connectionModelStore.isAnyServerConnected
-            ? 'No Models Selected'
-            : 'Server is not connected'
+          connectionStore.isAnyServerConnected ? 'No Models Selected' : 'Server is not connected'
         }
       >
         <div
@@ -204,7 +202,7 @@ const ChatBoxInputRow = observer(
               tabIndex={0}
               type="button"
               className="btn btn-active hidden rounded-none rounded-bl-md md:flex"
-              disabled={inputDisabled || connectionModelStore.isImageGenerationMode}
+              disabled={inputDisabled || connectionStore.isImageGenerationMode}
               onClick={() => settingStore.openSettingsModal('personas')}
             >
               {personaStore.selectedPersona?.name || 'No personas selected'}

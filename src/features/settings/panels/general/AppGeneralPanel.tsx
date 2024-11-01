@@ -16,7 +16,7 @@ import Stop from '~/icons/Stop'
 
 import { personaStore } from '~/core/PersonaStore'
 import { settingStore } from '~/core/SettingStore'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 import { ChatStoreSnapshotHandler } from '~/utils/transfer/ChatStoreSnapshotHandler'
 import _ from 'lodash'
@@ -29,7 +29,7 @@ const DownlodSelector = () => {
       chatStore: await ChatStoreSnapshotHandler.formatChatStoreToExport({ includeImages }),
       personaStore: getSnapshot(personaStore),
       settingStore: getSnapshot(settingStore),
-      connectionStore: getSnapshot(connectionModelStore.dataStore),
+      connectionStore: getSnapshot(connectionStore.dataStore),
     })
 
     const link = document.createElement('a')

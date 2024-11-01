@@ -9,8 +9,8 @@ import { incomingMessageStore } from '~/core/IncomingMessageStore'
 import base64EncodeImage from '~/utils/base64EncodeImage'
 import CachedStorage from '~/utils/CachedStorage'
 
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
-import BaseApi from '~/core/connections/api/BaseApi'
+import { connectionStore } from '~/core/connection/ConnectionStore'
+import BaseApi from '~/core/connection/api/BaseApi'
 
 export const ChatModel = types
   .model({
@@ -231,8 +231,8 @@ export const ChatModel = types
 
       const incomingMessage = MessageModel.create({
         fromBot: true,
-        botName: connectionModelStore.selectedModelName,
-        modelType: connectionModelStore.selectedConnection?.type,
+        botName: connectionStore.selectedModelName,
+        modelType: connectionStore.selectedConnection?.type,
         uniqId,
         content: '',
       })

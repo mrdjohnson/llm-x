@@ -5,8 +5,8 @@ import { IMessageModel } from '~/core/MessageModel'
 import { personaStore } from '~/core/PersonaStore'
 import { progressStore } from '~/features/progress/ProgressStore'
 
-import BaseApi from '~/core/connections/api/BaseApi'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import BaseApi from '~/core/connection/api/BaseApi'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const getMessages = async (chatMessages: IMessageModel[], incomingMessage: IMessageModel) => {
   const messages: ChatMessageData[] = []
@@ -49,10 +49,10 @@ export class LmsApi extends BaseApi {
     incomingMessage: IMessageModel,
     incomingMessageVariant: IMessageModel,
   ) {
-    const connection = connectionModelStore.selectedConnection
+    const connection = connectionStore.selectedConnection
     const host = connection?.formattedHost
 
-    const modelName = connectionModelStore.selectedModelName
+    const modelName = connectionStore.selectedModelName
     if (!connection || !host || !modelName) return
 
     const messages = await getMessages(chatMessages, incomingMessage)

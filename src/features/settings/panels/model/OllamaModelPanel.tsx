@@ -17,11 +17,11 @@ import DownloadTray from '~/icons/DownloadTray'
 import Delete from '~/icons/Delete'
 import Edit from '~/icons/Edit'
 
-import OllamaServerConnection from '~/core/connections/servers/OllamaServerConnection'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import OllamaConnectionViewModel from '~/core/connection/viewModels/OllamaConnectionViewModel'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 type PanelTableProps = {
-  connection: OllamaServerConnection
+  connection: OllamaConnectionViewModel
   ollamaStore: OllamaStore
   onShowDetails: () => void
 }
@@ -88,13 +88,11 @@ const OllamaModelPanelTable = observer(
         itemFilter={connection.modelFilter}
         renderRow={renderRow}
         getItemKey={model => model.name}
-        onItemSelected={model =>
-          connectionModelStore.dataStore.setSelectedModel(model, connection.id)
-        }
+        onItemSelected={model => connectionStore.dataStore.setSelectedModel(model, connection.id)}
         onFilterChanged={setFilterText}
         getIsItemSelected={model =>
-          connection.id === connectionModelStore.selectedConnection?.id &&
-          model.modelName === connectionModelStore.selectedModelName
+          connection.id === connectionStore.selectedConnection?.id &&
+          model.modelName === connectionStore.selectedModelName
         }
         filterInputPlaceholder="Filter by name or pull..."
         includeEmptyHeader
@@ -136,7 +134,7 @@ const OllamaModelPanelTable = observer(
 )
 
 const OllamaModelSettings = observer(({ ollamaStore }: { ollamaStore: OllamaStore }) => {
-  const { selectedModelName } = connectionModelStore
+  const { selectedModelName } = connectionStore
 
   const [modelData, setModelData] = useState<CorrectShowResponse | undefined>()
 
@@ -210,8 +208,8 @@ const OllamaModelSettings = observer(({ ollamaStore }: { ollamaStore: OllamaStor
   )
 })
 
-const OllamaModelPanel = observer(({ connection }: { connection: OllamaServerConnection }) => {
-  const { selectedModelName, selectedConnection } = connectionModelStore
+const OllamaModelPanel = observer(({ connection }: { connection: OllamaConnectionViewModel }) => {
+  const { selectedModelName, selectedConnection } = connectionStore
 
   const [tab, setTab] = useState<'all' | 'single'>('all')
 

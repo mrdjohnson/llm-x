@@ -3,12 +3,12 @@ import { persist } from 'mst-persist'
 import _ from 'lodash'
 import { makeAutoObservable } from 'mobx'
 
-import { ConnectionDataModel } from '~/core/connections/ConnectionDataModel'
-import LmsServerConnection from '~/core/connections/servers/LmsServerConnection'
-import A1111ServerConnection from '~/core/connections/servers/A1111ServerConnection'
-import OllamaServerConnection from '~/core/connections/servers/OllamaServerConnection'
-import OpenAiServerConnection from '~/core/connections/servers/OpenAiServerConnection'
-import { ServerConnectionTypes, serverConnectionByType } from '~/core/connections/servers'
+import { ConnectionDataModel } from '~/core/connection/ConnectionDataModel'
+import LmsConnectionViewModel from '~/core/connection/viewModels/LmsConnectionViewModel'
+import A1111ConnectionViewModel from '~/core/connection/viewModels/A1111ConnectionViewModel'
+import OllamaConnectionViewModel from '~/core/connection/viewModels/OllamaConnectionViewModel'
+import OpenAiConnectionViewModel from '~/core/connection/viewModels/OpenAiConnectionViewModel'
+import { ConnectionViewModelTypes, connectionViewModelByType } from '~/core/connection/viewModels'
 
 import { ConnectionTypes, IConnectionDataModel, BaseLanguageModel } from '~/core/types'
 
@@ -23,7 +23,7 @@ const ConnectionDataModelStore = types
   .actions(self => ({
     addConnection(type: ConnectionTypes, snapshot?: SnapshotIn<IConnectionDataModel>) {
       const connection = ConnectionDataModel.create(
-        snapshot ?? serverConnectionByType[type].getSnapshot(),
+        snapshot ?? connectionViewModelByType[type].getSnapshot(),
       )
 
       self.connections.push(connection)
@@ -68,20 +68,20 @@ const connectionDataModelStore = ConnectionDataModelStore.create()
 
 const classMap: Record<
   ConnectionTypes,
-  | typeof LmsServerConnection
-  | typeof A1111ServerConnection
-  | typeof OllamaServerConnection
-  | typeof OpenAiServerConnection
+  | typeof LmsConnectionViewModel
+  | typeof A1111ConnectionViewModel
+  | typeof OllamaConnectionViewModel
+  | typeof OpenAiConnectionViewModel
 > = {
-  LMS: LmsServerConnection,
-  A1111: A1111ServerConnection,
-  Ollama: OllamaServerConnection,
-  OpenAi: OpenAiServerConnection,
+  LMS: LmsConnectionViewModel,
+  A1111: A1111ConnectionViewModel,
+  Ollama: OllamaConnectionViewModel,
+  OpenAi: OpenAiConnectionViewModel,
 }
-class ConnectionModelStore {
+class ConnectionStore {
   dataStore = connectionDataModelStore
 
-  private connectionMapById: Record<string, ServerConnectionTypes> = {}
+  private connectionMapById: Record<string, ConnectionViewModelTypes> = {}
 
   constructor() {
     makeAutoObservable(this)
@@ -114,9 +114,9 @@ class ConnectionModelStore {
   addConnection(type: ConnectionTypes, snapshot?: SnapshotIn<IConnectionDataModel>) {
     const connection = this.dataStore.addConnection(type, snapshot)
 
-    const serverConnection = this.createServerConnection(connection)
+    const connectionViewModel = this.createConnectionViewModel(connection)
 
-    serverConnection.fetchLmModels()
+    connectionViewModel.fetchLmModels()
   }
 
   duplicateConnection(id: string) {
@@ -132,21 +132,21 @@ class ConnectionModelStore {
   updateDataModel(snapshot: SnapshotIn<IConnectionDataModel>, isHostChanged: boolean) {
     const connection = this.dataStore.updateConnection(snapshot)
 
-    const serverConnection = this.createServerConnection(connection)
+    const connectionViewModel = this.createConnectionViewModel(connection)
 
     if (isHostChanged) {
-      serverConnection.fetchLmModels()
+      connectionViewModel.fetchLmModels()
     }
   }
 
-  createServerConnection(connectionData: IConnectionDataModel) {
+  createConnectionViewModel(connectionData: IConnectionDataModel) {
     const ServerClass = classMap[connectionData.type]
 
-    const serverConnection = new ServerClass(connectionData)
+    const connectionViewModel = new ServerClass(connectionData)
 
-    this.connectionMapById[connectionData.id] = serverConnection
+    this.connectionMapById[connectionData.id] = connectionViewModel
 
-    return serverConnection
+    return connectionViewModel
   }
 
   get selectedConnection() {
@@ -159,7 +159,7 @@ class ConnectionModelStore {
       const savedConnection = this.connectionMapById[connectionData.id]
       if (savedConnection) return savedConnection
 
-      this.createServerConnection(connectionData)
+      this.createConnectionViewModel(connectionData)
 
       return this.connectionMapById[connectionData.id]
     })
@@ -178,8 +178,8 @@ class ConnectionModelStore {
   }
 }
 
-export const connectionModelStore = new ConnectionModelStore()
+export const connectionStore = new ConnectionStore()
 
 persist('connection-store', connectionDataModelStore).then(() => {
-  connectionModelStore.refreshModels()
+  connectionStore.refreshModels()
 })

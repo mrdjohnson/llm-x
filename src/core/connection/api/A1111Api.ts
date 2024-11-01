@@ -1,12 +1,12 @@
 import axios from 'axios'
 
 import { IMessageModel } from '~/core/MessageModel'
-import BaseApi from '~/core/connections/api/BaseApi'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import BaseApi from '~/core/connection/api/BaseApi'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 class A1111Api extends BaseApi {
   async generateImages(prompt: string, incomingMessageVariant: IMessageModel): Promise<string[]> {
-    const connection = connectionModelStore.selectedConnection
+    const connection = connectionStore.selectedConnection
     const host = connection?.formattedHost
 
     if (!connection || !host) return []
@@ -22,7 +22,7 @@ class A1111Api extends BaseApi {
       host + '/sdapi/v1/txt2img',
       {
         prompt,
-        hr_checkpoint_name: connectionModelStore.selectedModelName,
+        hr_checkpoint_name: connectionStore.selectedModelName,
         ...parameters,
       },
       {

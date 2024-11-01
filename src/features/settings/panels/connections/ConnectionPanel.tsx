@@ -5,9 +5,9 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import _ from 'lodash'
 import { ScrollShadow } from '@nextui-org/react'
 
-import { ServerConnectionTypes } from '~/core/connections/servers'
+import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 import ConnectionDataParameterSection from '~/features/settings/panels/connections/ConnectionParameterSection'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 import HostInput from '~/components/HostInput'
 import EnabledCheckbox from '~/components/EnabledCheckbox'
@@ -18,7 +18,7 @@ import Copy from '~/icons/Copy'
 
 export type ConnectionFormDataType = SnapshotIn<IConnectionDataModel>
 
-const ConnectionPanel = observer(({ connection }: { connection: ServerConnectionTypes }) => {
+const ConnectionPanel = observer(({ connection }: { connection: ConnectionViewModelTypes }) => {
   const methods = useForm<ConnectionFormDataType>({})
 
   const formRef = useRef<HTMLFormElement>(null)
@@ -36,7 +36,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
 
     const isHostChanged = !!dirtyFields.host
 
-    connectionModelStore.updateDataModel(formData, isHostChanged)
+    connectionStore.updateDataModel(formData, isHostChanged)
 
     reset(formData)
   })
@@ -97,7 +97,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
               <button
                 type="button"
                 className="btn btn-outline btn-sm mr-8 w-full text-error md:btn-ghost md:text-error"
-                onClick={() => connectionModelStore.deleteConnection(connection.id)}
+                onClick={() => connectionStore.deleteConnection(connection.id)}
               >
                 Delete Connection
               </button>
@@ -107,7 +107,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ServerConnection
               <button
                 type="button"
                 className="btn btn-outline w-full text-base-content/60 md:btn-ghost md:btn-sm hover:text-base-content md:mx-4 md:text-base-content/60"
-                onClick={() => connectionModelStore.duplicateConnection(connection.id)}
+                onClick={() => connectionStore.duplicateConnection(connection.id)}
                 disabled={isDirty}
               >
                 Duplicate <Copy />

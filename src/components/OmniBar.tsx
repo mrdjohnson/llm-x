@@ -21,7 +21,7 @@ import { chatStore } from '~/core/ChatStore'
 import type { IMessageModel } from '~/core/MessageModel'
 
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -35,8 +35,8 @@ const isSelected = ({ parent, id }: ActionImpl) => {
   }
 
   if (parent === 'model') {
-    console.log('model: ', id, connectionModelStore.selectedModelName)
-    return id === connectionModelStore.selectedModelName
+    console.log('model: ', id, connectionStore.selectedModelName)
+    return id === connectionStore.selectedModelName
   }
 
   if (parent === 'chat') {
@@ -167,10 +167,10 @@ const useRegisterModelActions = () => {
         keywords: 'refresh',
         priority: Priority.LOW,
         parent: 'refresh_models',
-        perform: connectionModelStore.refreshModels,
+        perform: connectionStore.refreshModels,
       })
 
-      for (const connection of connectionModelStore.connections) {
+      for (const connection of connectionStore.connections) {
         if (!connection.enabled) continue
 
         const typeAndLabel = `${connection.type} ${connection.label}`
@@ -191,7 +191,7 @@ const useRegisterModelActions = () => {
             keywords: `${model.modelName} model ` + typeAndLabel,
             section: connection.label + ' Models',
             parent: 'model',
-            perform: () => connectionModelStore.dataStore.setSelectedModel(model, connection.id),
+            perform: () => connectionStore.dataStore.setSelectedModel(model, connection.id),
           })
         })
       }
@@ -412,7 +412,7 @@ const OmniBar = () => {
       keywords: 'refresh',
       section: 'Actions',
       priority: Priority.LOW,
-      perform: connectionModelStore.refreshModels,
+      perform: connectionStore.refreshModels,
     }),
     createAction({
       name: 'Open settings',

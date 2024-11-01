@@ -5,8 +5,8 @@ import { IMessageModel, MessageModel } from '~/core/MessageModel'
 import { toastStore } from '~/core/ToastStore'
 import { IChatModel } from '~/core/ChatModel'
 
-import BaseApi from '~/core/connections/api/BaseApi'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import BaseApi from '~/core/connection/api/BaseApi'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const IncomingMessageAbortedModel = types.model({
   id: types.identifier,
@@ -79,7 +79,7 @@ export const IncomingMessageStore = types
 
       const messageToEdit = incomingMessage.selectedVariation
 
-      messageToEdit.setModelName(connectionModelStore.selectedModelName!)
+      messageToEdit.setModelName(connectionStore.selectedModelName!)
 
       console.log(prompt)
 
@@ -108,17 +108,17 @@ export const IncomingMessageStore = types
 
       self.messageById.put(messageToEdit)
 
-      const connection = connectionModelStore.selectedConnection
+      const connection = connectionStore.selectedConnection
 
       if (!connection) throw 'Unknown server'
 
-      if (connectionModelStore.isImageGenerationMode) {
+      if (connectionStore.isImageGenerationMode) {
         return this.generateImage(chat, incomingMessage, connection.api)
       }
 
       const api: BaseApi | undefined = connection.api
 
-      messageToEdit.setModelName(connectionModelStore.selectedModelName!)
+      messageToEdit.setModelName(connectionStore.selectedModelName!)
 
       await this.handleIncomingMessage(incomingMessage, async () => {
         for await (const contentChunk of api.generateChat(
@@ -147,7 +147,7 @@ export const IncomingMessageStore = types
           messageToEdit.setError(error)
 
           // make sure the server is still connected
-          connectionModelStore.selectedConnection?.fetchLmModels()
+          connectionStore.selectedConnection?.fetchLmModels()
         }
       } finally {
         if (shouldDeleteMessage) {

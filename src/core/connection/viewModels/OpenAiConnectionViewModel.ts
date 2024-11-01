@@ -6,8 +6,8 @@ import camelcaseKeys from 'camelcase-keys'
 import _ from 'lodash'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import ServerConnection from '~/core/connections/servers/ServerConnection'
-import openAiApi from '~/core/connections/api/OpenAiApi'
+import BaseConnectionViewModel from '~/core/connection/viewModels/BaseConnectionViewModel'
+import openAiApi from '~/core/connection/api/OpenAiApi'
 
 import LanguageModel from '~/core/LanguageModel'
 import { IConnectionDataModel, IOpenAiModel, OpenAiLanguageModel } from '~/core/types'
@@ -15,7 +15,7 @@ import { IConnectionDataModel, IOpenAiModel, OpenAiLanguageModel } from '~/core/
 const LazyOpenAiModelPanel = lazy(() => import('~/features/settings/panels/model/OpenAiModelPanel'))
 
 const DefaultHost = 'https://api.openai.com/v1'
-class OpenAiServerConnection extends ServerConnection<IOpenAiModel> {
+class OpenAiConnectionViewModel extends BaseConnectionViewModel<IOpenAiModel> {
   DefaultHost: string = DefaultHost
 
   api = openAiApi
@@ -36,7 +36,7 @@ class OpenAiServerConnection extends ServerConnection<IOpenAiModel> {
   constructor(public connectionModel: IConnectionDataModel) {
     super(connectionModel)
 
-    makeObservable(this, ServerConnection.MOBX_MAPPINGS)
+    makeObservable(this, BaseConnectionViewModel.MOBX_MAPPINGS)
   }
 
   readonly hostLabel: string = 'Open AI Host:'
@@ -92,4 +92,4 @@ class OpenAiServerConnection extends ServerConnection<IOpenAiModel> {
   }
 }
 
-export default OpenAiServerConnection
+export default OpenAiConnectionViewModel

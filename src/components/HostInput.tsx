@@ -8,11 +8,11 @@ import Question from '~/icons/Question'
 import Refresh from '~/icons/Refresh'
 
 import FormInput from '~/components/form/FormInput'
-import { ServerConnectionTypes } from '~/core/connections/servers'
+import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 import { IConnectionDataModel } from '~/core/types'
 
 type HostInputProps = {
-  connection: ServerConnectionTypes
+  connection: ConnectionViewModelTypes
   isEnabled: boolean
 }
 

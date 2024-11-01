@@ -5,8 +5,8 @@ import { DownloadedModel, LMStudioClient } from '@lmstudio/sdk'
 import { IObservableArray, makeObservable, observable } from 'mobx'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import ServerConnection from '~/core/connections/servers/ServerConnection'
-import lmsApi from '~/core/connections/api/LmsApi'
+import BaseConnectionViewModel from '~/core/connection/viewModels/BaseConnectionViewModel'
+import lmsApi from '~/core/connection/api/LmsApi'
 
 import LanguageModel from '~/core/LanguageModel'
 import { IConnectionDataModel, ILmsModel, LmsLanguageModel } from '~/core/types'
@@ -15,7 +15,7 @@ import { toLmsModel } from '~/core/transformers/toLmsModel'
 const LazyLmsModelPanel = lazy(() => import('~/features/settings/panels/model/LmsModelPanel'))
 
 const DefaultHost = 'ws://127.0.0.1:1234'
-class LmsServerConnection extends ServerConnection<ILmsModel> {
+class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
   DefaultHost: string = DefaultHost
 
   api = lmsApi
@@ -37,7 +37,7 @@ class LmsServerConnection extends ServerConnection<ILmsModel> {
   constructor(public connectionModel: IConnectionDataModel) {
     super(connectionModel)
 
-    makeObservable(this, ServerConnection.MOBX_MAPPINGS)
+    makeObservable(this, BaseConnectionViewModel.MOBX_MAPPINGS)
   }
 
   readonly hostLabel = 'LM Studio Host:'
@@ -82,4 +82,4 @@ class LmsServerConnection extends ServerConnection<ILmsModel> {
   }
 }
 
-export default LmsServerConnection
+export default LmsConnectionViewModel

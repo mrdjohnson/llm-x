@@ -1,6 +1,6 @@
 import { Instance } from 'mobx-state-tree'
 
-import { ConnectionDataModel } from '~/core/connections/ConnectionDataModel'
+import { ConnectionDataModel } from '~/core/connection/ConnectionDataModel'
 
 import { toOllamaModel } from '~/core/transformers/toOllamaModel'
 import { toLmsModel } from '~/core/transformers/toLmsModel'

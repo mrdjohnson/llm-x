@@ -8,19 +8,19 @@ import A1111ModelPanel from '~/features/settings/panels/model/A1111ModelPanel'
 import LmsModelPanel from '~/features/settings/panels/model/LmsModelPanel'
 import OpenAiModelPanel from '~/features/settings/panels/model/OpenAiModelPanel'
 
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 import { settingStore } from '~/core/SettingStore'
 
 const ModelPanel = observer(() => {
-  const { selectedConnectionModelId, connections } = connectionModelStore
+  const { selectedConnectionModelId, connections } = connectionStore
 
   const [selectedTabId, setSelectedTabId] = useState<string | undefined>(
     selectedConnectionModelId ?? connections[0]?.id,
   )
 
   const selectedConnection = useMemo(() => {
-    return connectionModelStore.getConnectionById(selectedTabId)
+    return connectionStore.getConnectionById(selectedTabId)
   }, [selectedTabId, connections])
 
   return (

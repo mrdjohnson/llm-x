@@ -1,18 +1,18 @@
 import { observer } from 'mobx-react-lite'
 
 import Refresh from '~/icons/Refresh'
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const ModelRefreshButton = observer(
   ({ small = false, shouldShow = false }: { small?: boolean; shouldShow?: boolean }) => {
-    const noServer = !connectionModelStore.isAnyServerConnected
+    const noServer = !connectionStore.isAnyServerConnected
 
     return (
       (shouldShow || noServer) && (
         <button
           className={'btn btn-ghost align-middle ' + (small && 'px-2')}
           type="button"
-          onClick={() => connectionModelStore.refreshModels()}
+          onClick={() => connectionStore.refreshModels()}
           title="Refresh models"
         >
           <Refresh />

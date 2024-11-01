@@ -5,11 +5,11 @@ import _ from 'lodash'
 
 import NewConnectionPanel from '~/features/settings/panels/connections/NewConnectionPanel'
 
-import { connectionModelStore } from '~/core/connections/ConnectionModelStore'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 import ConnectionPanel from '~/features/settings/panels/connections/ConnectionPanel'
 
 const ConnectionsPanel = observer(() => {
-  const { selectedConnectionModelId, connections } = connectionModelStore
+  const { selectedConnectionModelId, connections } = connectionStore
 
   const [selectedTabId, setSelectedTabId] = useState<string>(selectedConnectionModelId ?? 'App')
 
@@ -22,7 +22,7 @@ const ConnectionsPanel = observer(() => {
       return <NewConnectionPanel />
     }
 
-    const connection = connectionModelStore.getConnectionById(selectedTabId)
+    const connection = connectionStore.getConnectionById(selectedTabId)
 
     if (connection) {
       return <ConnectionPanel connection={connection} />
