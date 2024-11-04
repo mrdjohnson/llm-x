@@ -11,7 +11,9 @@ export type ConnectionViewModelTypes =
 
 export const connectionViewModelByType = {
   A1111: () => A1111ConnectionViewModel,
-  LMS: () => LmsConnectionViewModel,
   Ollama: () => OllamaConnectionViewModel,
   OpenAi: () => OpenAiConnectionViewModel,
+
+  // if we try to connect to LMS and fail, the try catch does not catch the error
+  LMS: () => LmsConnectionViewModel,
 }

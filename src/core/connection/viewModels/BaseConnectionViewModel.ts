@@ -36,7 +36,10 @@ abstract class BaseConnectionViewModel<
     throw 'not implemented'
   }
 
-  constructor(public source: ConnectionModel) {
+  constructor(
+    public source: ConnectionModel,
+    { autoFetch = true } = {},
+  ) {
     super(source)
 
     makeObservable(this, {
@@ -46,7 +49,9 @@ abstract class BaseConnectionViewModel<
       fetchLmModels: action,
     })
 
-    this.fetchLmModels()
+    if (autoFetch) {
+      this.fetchLmModels()
+    }
   }
 
   parsedParameterValue<T = string>(parameter: ConnectionParameterModel): T | undefined {
@@ -86,7 +91,7 @@ abstract class BaseConnectionViewModel<
 
   protected abstract _fetchLmModels(host: string): Promise<Array<LanguageModelType<BaseModelType>>>
 
-  async fetchLmModels() {
+  async fetchLmModels({ skipFailedMessage = false } = {}) {
     const host = this.formattedHost
     const enabled = this.enabled
 
@@ -101,12 +106,15 @@ abstract class BaseConnectionViewModel<
 
       return this.models
     } catch (e) {
+      console.log('failed to fetch: ', this.type)
       const status = (e instanceof AxiosError && e.status) || ''
 
-      toastStore.addToast(
-        `${status}: Failed to fetch ${this.type} models for ${this.label}; host: ${host}`,
-        'error',
-      )
+      if (!skipFailedMessage) {
+        toastStore.addToast(
+          `${status}: Failed to fetch ${this.type} models for ${this.label}; host: ${host}`,
+          'error',
+        )
+      }
 
       // remove all current models
       this.models.clear()
@@ -127,8 +135,8 @@ abstract class BaseConnectionViewModel<
     return model.modelName.toLowerCase().includes(filterText.toLowerCase())
   }
 
-  async selectModel(model: LanguageModelType<BaseModelType>) {
-    await settingTable.put({ selectedConnectionId: this.id, selectedModelId: model.id })
+  async selectModel(model?: LanguageModelType<BaseModelType>) {
+    await settingTable.put({ selectedConnectionId: this.id, selectedModelId: model?.id })
   }
 }
 

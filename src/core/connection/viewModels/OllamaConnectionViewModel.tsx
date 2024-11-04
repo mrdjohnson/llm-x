@@ -38,8 +38,8 @@ class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
   readonly hostLabel = 'Ollama Host:'
   readonly enabledLabel = 'Text generation through Ollama:'
 
-  static toViewModel(connection: ConnectionModel) {
-    return new this(connection)
+  static toViewModel(connection: ConnectionModel, { autoFetch = true } = {}) {
+    return new this(connection, { autoFetch })
   }
 
   static readonly getSnapshot = (): ConnectionModel =>

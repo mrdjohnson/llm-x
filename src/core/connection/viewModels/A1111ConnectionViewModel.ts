@@ -31,8 +31,8 @@ class A1111ConnectionViewModel extends BaseConnectionViewModel<IA1111Model> {
   readonly hostLabel = 'AUTOMATIC1111 Host:'
   readonly enabledLabel = 'Image generation through AUTOMATIC1111:'
 
-  static toViewModel(connection: ConnectionModel) {
-    return new this(connection)
+  static toViewModel(connection: ConnectionModel, { autoFetch = true } = {}) {
+    return new this(connection, { autoFetch })
   }
 
   static getSnapshot = (): ConnectionModel =>

@@ -10,6 +10,7 @@ import { connectionViewModelByType, ConnectionViewModelTypes } from '~/core/conn
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { settingTable } from '~/core/setting/SettingTable'
+import { toastStore } from '~/core/ToastStore'
 
 class ConnectionStore {
   connectionCache = new EntityCache<ConnectionModel, ConnectionViewModelTypes>(connection => {
@@ -18,6 +19,8 @@ class ConnectionStore {
 
   constructor() {
     makeAutoObservable(this)
+
+    this.attemptAutoConnect()
   }
 
   get connections() {
@@ -79,7 +82,7 @@ class ConnectionStore {
     await settingTable.put({ selectedConnectionId: connection.id })
   }
 
-  async setSelectedModel(selectedModelId: string, selectedConnectionId: string) {
+  async setSelectedModel(selectedModelId?: string, selectedConnectionId?: string) {
     await settingTable.put({ selectedModelId, selectedConnectionId })
   }
 
@@ -96,6 +99,31 @@ class ConnectionStore {
 
     if (isHostChanged) {
       viewModel.fetchLmModels()
+    }
+  }
+
+  async attemptAutoConnect() {
+    const connectionCount = await connectionTable.length()
+
+    if (connectionCount > 0) return
+
+    for (const [_key, connectionCreator] of Object.entries(connectionViewModelByType)) {
+      console.log('checking connection: ', _key)
+      const connectionClass = connectionCreator()
+
+      const connectionModel = connectionTable.parse(connectionClass.getSnapshot())
+      const viewModel = connectionClass.toViewModel(connectionModel, { autoFetch: false })
+      await viewModel.fetchLmModels({ skipFailedMessage: true })
+
+      if (viewModel.isConnected) {
+        await connectionTable.put(connectionModel)
+
+        const model = viewModel.models[0]
+
+        await this.setSelectedModel(model?.id, connectionModel.id)
+
+        toastStore.addToast('Found and connected to ' + connectionModel.label, 'info')
+      }
     }
   }
 

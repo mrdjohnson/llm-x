@@ -35,8 +35,8 @@ class OpenAiConnectionViewModel extends BaseConnectionViewModel<IOpenAiModel> {
   readonly hostLabel: string = 'Open AI Host:'
   readonly enabledLabel: string = 'Text generation through LM Studio:'
 
-  static toViewModel(connection: ConnectionModel) {
-    return new this(connection)
+  static toViewModel(connection: ConnectionModel, { autoFetch = true } = {}) {
+    return new this(connection, { autoFetch })
   }
 
   static readonly getSnapshot = (): ConnectionModel =>

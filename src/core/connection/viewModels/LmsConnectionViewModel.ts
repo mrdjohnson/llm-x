@@ -36,8 +36,8 @@ class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
   readonly hostLabel = 'LM Studio Host:'
   readonly enabledLabel = 'Text generation through LM Studio:'
 
-  static toViewModel(connection: ConnectionModel) {
-    return new this(connection)
+  static toViewModel(connection: ConnectionModel, { autoFetch = true } = {}) {
+    return new this(connection, { autoFetch })
   }
 
   static readonly getSnapshot = (): ConnectionModel =>
@@ -70,6 +70,7 @@ class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
   async _fetchLmModels(host: string): Promise<LmsLanguageModel[]> {
     const client = new LMStudioClient({ baseUrl: host })
 
+    // if this fails it breaks downstream, try catches do not work yet
     const response: DownloadedModel[] = await client.system.listDownloadedModels()
 
     const lmsModels: ILmsModel[] = _.filter(response, { type: 'llm' }).map(toLmsModel)
