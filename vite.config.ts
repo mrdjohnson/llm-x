@@ -5,6 +5,7 @@ import mkcert from 'vite-plugin-mkcert'
 import replace from '@rollup/plugin-replace'
 import removeConsole from 'vite-plugin-remove-console'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { comlink } from 'vite-plugin-comlink'
 
 const replaceOptions = { __DATE__: new Date().toISOString(), __RELOAD_SW__: 'false' }
 
@@ -74,11 +75,17 @@ if (selfDestroying) pwaOptions.selfDestroying = selfDestroying
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    
+    comlink(),
     react(),
+   
     makeCert,
     VitePWA(pwaOptions),
+   
     replace(replaceOptions),
+   
     removeConsole(),
+   
     tsconfigPaths(),
   ],
   esbuild: {
@@ -91,5 +98,6 @@ export default defineConfig({
     rollupOptions: {
       logLevel: 'silent',
     },
+    plugins: () => [comlink()],
   },
 })

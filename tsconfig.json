@@ -5,7 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "types": ["vite-plugin-pwa/client", "vite-plugin-pwa/info"],
+    "types": ["vite-plugin-pwa/client", "vite-plugin-pwa/info", "vite-plugin-comlink/client"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",
