@@ -1,45 +1,26 @@
+const cachedImageWorker = new ComlinkWorker<typeof import('./cachedStorage/CachedStorage.worker.ts')>(
+  new URL('./cachedStorage/CachedStorage.worker.ts', import.meta.url),
+  {},
+)
 class CachedStorage {
-  private static getCache() {
-    return caches.open('v1')
-  }
-
-  // TODO: do something with this.
-  // navigator.storage.estimate().then(function (estimate) {
-  //   console.log(`Using ${estimate.usage! / 1e6} out of ${estimate.quota! / 1e6} mb.`)
-  // })
-
   static async put(path: string, data: string) {
-    const response = await fetch(data)
-
-    return CachedStorage.putResponse(path, response.clone())
+    return cachedImageWorker.put(path, data)
   }
 
   static async putResponse(path: string, response: Response) {
-    const cache = await CachedStorage.getCache()
-
-    await cache.put(path, response)
+    return cachedImageWorker.putResponse(path, response)
   }
 
   static async get(path: string) {
-    const cache = await CachedStorage.getCache()
-    const cachedResponse = await cache.match(path)
-
-    return cachedResponse?.url
+    return cachedImageWorker.get(path)
   }
 
   static async delete(path: string) {
-    const cache = await CachedStorage.getCache()
-
-    await cache.delete(path)
+    return cachedImageWorker.destroy(path)
   }
 
   static async move(fromPath: string, toPath: string) {
-    const item = await CachedStorage.get(fromPath)
-
-    if (!item) return
-
-    await CachedStorage.put(toPath, item)
-    await CachedStorage.delete(fromPath)
+    return cachedImageWorker.move(fromPath, toPath)
   }
 }
 
