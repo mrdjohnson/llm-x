@@ -20,4 +20,4 @@ RUN yarn run build
 EXPOSE 5173
 
 # Start the app with dist directory
-CMD ["yarn", "preview", "--host", "--port", "5173"]
+CMD ["yarn", "preview"]

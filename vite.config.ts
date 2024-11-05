@@ -100,4 +100,10 @@ export default defineConfig({
     },
     plugins: () => [comlink()],
   },
+  preview: {
+    port: 5173,
+    strictPort: true,
+    host: true,
+    cors: true,
+  },
 })
