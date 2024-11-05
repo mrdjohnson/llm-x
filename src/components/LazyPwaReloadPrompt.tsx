@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite'
 
 const hour_1 = 60 * 60 * 1000
 
-const PwaReloadPrompt = observer(() => {
+const LazyPwaReloadPrompt = observer(() => {
   // automagically replaced through vite.config.ts
   const reloadSW = '__RELOAD_SW__'
 
@@ -54,4 +54,4 @@ const PwaReloadPrompt = observer(() => {
   return null
 })
 
-export default PwaReloadPrompt
+export default LazyPwaReloadPrompt

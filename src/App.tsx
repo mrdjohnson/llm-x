@@ -1,3 +1,5 @@
+import React, { Suspense } from 'react'
+
 import Dropzone from '~/containers/Dropzone'
 import { SideBar } from '~/containers/SideBar'
 import ChatBox from '~/containers/ChatBox'
@@ -5,9 +7,20 @@ import SettingsModal from '~/features/settings/containers/SettingsModal'
 import Progresses from '~/features/progress/components/Progresses'
 
 import Navbar from '~/components/Navbar'
-import PwaReloadPrompt from '~/components/PwaReloadPrompt'
 import OmniBar from '~/components/OmniBar'
 import Lightbox from '~/features/lightbox/components/Lightbox'
+
+const PwaReloadPrompt = React.lazy(() => import('~/components/LazyPwaReloadPrompt'))
+
+const DelayedPwaReloadPrompt = () => {
+  if (__TARGET__ !== 'pwa') return null
+
+  return (
+    <Suspense fallback={null}>
+      <PwaReloadPrompt />
+    </Suspense>
+  )
+}
 
 function App() {
   return (
@@ -19,7 +32,7 @@ function App() {
 
         <Lightbox />
 
-        <PwaReloadPrompt />
+        <DelayedPwaReloadPrompt />
 
         <OmniBar />
 
