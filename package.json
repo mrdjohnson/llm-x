@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "cross-env DEBUG=vite-plugin-pwa SW_DEV=true vite --force",
     "build": "SW=true vite build",
+    "chrome:dev": "cross-env TARGET=chrome vite --force",
+    "chrome:dev:watch": "cross-env TARGET=chrome vite build --watch --mode development",
+    "chrome:build": "cross-env TARGET=chrome SW=true vite build",
     "build_dev": "lint; SW=true vite build",
     "lint": "tsc; eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -63,10 +66,12 @@
     "@playwright/test": "^1.42.1",
     "@rollup/plugin-replace": "^5.0.5",
     "@tailwindcss/typography": "^0.5.10",
+    "@types/chrome": "^0.0.280",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.11.24",
     "@types/react": "^18.2.62",
     "@types/react-dom": "^18.2.19",
+    "@types/webextension-polyfill": "^0",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "@vite-pwa/assets-generator": "^0.2.4",
@@ -96,7 +101,9 @@
     "vite-plugin-mkcert": "^1.17.4",
     "vite-plugin-pwa": "^0.19.2",
     "vite-plugin-remove-console": "^2.2.0",
-    "vitest": "^1.3.1"
+    "vite-plugin-web-extension": "^4.2.0",
+    "vitest": "^1.3.1",
+    "webextension-polyfill": "^0.12.0"
   },
   "engines": {
     "node": ">=21.0.0",

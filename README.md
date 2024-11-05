@@ -72,6 +72,11 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 - Go offline! (optional)
 - Start chatting!
 
+### Chrome Extension
+- Pull down this project; `yarn chrome:build`
+- Navigate to `chrome://extensions/`
+- Load unpacked (developer mode option) from path: `llm-x/extensions/chrome/dist`
+
 ## Goals / Features
 
 - [x] **COMPLETELY PRIVATE WORKS COMPLETELY OFFLINE** via PWA technology
@@ -97,6 +102,10 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 - [x] **Continuous Deployment!** Merging to the master branch triggers a new github page build/deploy automatically
 
 ## Screenshots:
+
+| Showing Chrome extension mode with Google's on-device  Gemini Nano                                                                |
+| -------------------------------------------------------------------------------------------------------------------------------- |
+| ![Logo convo screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-gemini-in-extension.png) |
 
 | Conversation about logo                                                                                                 |
 | ----------------------------------------------------------------------------------------------------------------------- |

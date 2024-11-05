@@ -8,6 +8,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import { comlink } from 'vite-plugin-comlink'
 
 import { pwaPlugins } from './environments/pwa/pwa.vite'
+import { chromePlugins } from './environments/chrome/chrome.vite'
 
 const replaceOptions = { __DATE__: new Date().toISOString(), __RELOAD_SW__: 'false' }
 
@@ -20,6 +21,8 @@ let targetPlugins: PluginOption[] = []
 
 if (TARGET === 'pwa') {
   targetPlugins = pwaPlugins
+} else if (TARGET === 'chrome') {
+  targetPlugins = chromePlugins()
 }
 
 const reload = process.env.RELOAD_SW === 'true'
@@ -49,6 +52,7 @@ export default defineConfig({
   build: {
     outDir: TARGET_IS_PWA ? './dist' : `./environments/${TARGET}/dist`,
     emptyOutDir: true,
+    rollupOptions: { external: TARGET_IS_PWA ? undefined : ['virtual:pwa-register/react'] },
   },
   base: TARGET_IS_PWA ? '/llm-x/' : undefined,
   worker: {
