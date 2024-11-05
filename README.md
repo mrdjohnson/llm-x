@@ -14,10 +14,11 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 # Recent additions:
 
+- IndexedDB support! All text is now saved in IndexedDB instead of local storage
+- Auto-connect on load. If there is a server thats visible and ready to connect, we connect to it for you
 - LaTex support!
 - Users can connect to open ai compatible servers
 - Users can connect to multiple of the same server at the same time
-- Text generation through LM Studio is here! 
 
 # How To Use:
 
