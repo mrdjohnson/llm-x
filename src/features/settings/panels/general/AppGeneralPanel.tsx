@@ -106,8 +106,8 @@ const SpeechSelector = observer(() => {
   })
 
   const clearValues = () => {
-    setValue('language', '')
-    setValue('voiceUri', '')
+    setValue('language', '', { shouldDirty: voice?.language !== '' })
+    setValue('voiceUri', '', { shouldDirty: voice?.voiceUri !== '' })
   }
 
   const selectedLanguage = watch('language') || ''
@@ -243,7 +243,7 @@ const SpeechSelector = observer(() => {
           onChange={() => setAutoPlayVoice(!autoPlayVoice)}
           size="sm"
         >
-          Auto play voice
+          <span className="text-base-content">Auto play voice (for testing)</span>
         </Switch>
 
         <div className="ml-auto flex w-fit flex-row gap-2">
@@ -251,7 +251,7 @@ const SpeechSelector = observer(() => {
             type="button"
             className="btn btn-outline md:btn-ghost md:btn-sm md:mx-4"
             onClick={clearValues}
-            disabled={_.isEmpty(selectedLanguage || selectedVoiceUri)}
+            disabled={!isDirty && _.isEmpty(selectedLanguage || selectedVoiceUri)}
           >
             Clear
           </button>
