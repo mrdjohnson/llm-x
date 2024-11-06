@@ -79,7 +79,7 @@ class ConnectionStore {
   }
 
   async setSelectedConnection(connection: ConnectionViewModelTypes) {
-    await settingTable.put({ selectedConnectionId: connection.id })
+    await settingTable.put({ selectedModelId: undefined, selectedConnectionId: connection.id  })
   }
 
   async setSelectedModel(selectedModelId?: string, selectedConnectionId?: string) {
