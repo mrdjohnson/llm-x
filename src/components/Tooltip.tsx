@@ -13,10 +13,11 @@ const ToolTip = ({ label, placement, children, className = '', delay }: ToolTipP
     <NextUiTooltip
       content={label}
       className={
-        'rounded-full bg-base-200 p-2 font-semibold text-base-content/80 shadow-none ' + className
+        '-translate-y-[0.5px] rounded-full border border-base-content/10 bg-base-200 p-2 font-semibold text-base-content/80 shadow-none ' +
+        className
       }
       classNames={{
-        base: 'before:bg-base-200 before:mt-1 before:shadow-none',
+        base: 'before:bg-base-200 before:shadow-none before:border before:border-base-content/10 before:z-10  before:border-t-0 before:border-l-0 ',
       }}
       placement={placement}
       delay={delay}
