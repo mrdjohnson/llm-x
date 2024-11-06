@@ -77,12 +77,12 @@ const ChatBox = observer(() => {
         {chat.messages.length > 0 ? (
           chat.messages.map(message => (
             <ChatBoxMessage
-              key={message.id}
+              key={message.selectedVariation.id}
               message={message}
               disableRegeneration={isGettingData}
               disableEditing={isEditingMessage}
               shouldDimMessage={isEditingMessage}
-              shouldScrollIntoView={message.id === lightboxMessageId}
+              shouldScrollIntoView={message.selectedVariation.id === lightboxMessageId}
               variationIdToEdit={variationIdToEdit}
             />
           ))

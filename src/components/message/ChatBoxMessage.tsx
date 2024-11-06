@@ -56,6 +56,7 @@ export const ChatBoxMessage = observer(
     if (!message.showVariations) {
       return (
         <MessageOrEditedMessage
+          key={message.selectedVariation.id}
           message={message}
           {...props}
           messageVariant={message.selectedVariation}

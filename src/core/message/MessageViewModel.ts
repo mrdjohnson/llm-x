@@ -107,7 +107,7 @@ export class MessageViewModel {
   }
 
   async setVariation(variation?: MessageViewModel) {
-    return messageTable.put({ ...this.source, selectedVariationId: variation?.id })
+    return await messageTable.put({ ...this.source, selectedVariationId: variation?.id })
   }
 
   async removeVariation(variation: MessageViewModel) {
@@ -127,14 +127,13 @@ export class MessageViewModel {
   async addVariation(variation: MessageModel) {
     const variationIds = this.source.variationIds.concat(variation.id)
 
-    // add variation
-    await messageTable.put(variation)
+    // add variation to cache
+    const viewModel = this.variationViewModelCache.put(variation)
 
     // update message with variation id
     await messageTable.put({ ...this.source, selectedVariationId: variation.id, variationIds })
 
-    // add variation to cache
-    return this.variationViewModelCache.put(variation)
+    return viewModel
   }
 
   async addImages(imageDatums?: string[]) {
@@ -156,11 +155,11 @@ export class MessageViewModel {
   }
 
   async selectPreviousVariation() {
-    return this.update({ selectedVariationId: this.selectedVariationHandler.previousVariation?.id })
+    return await this.setVariation(this.selectedVariationHandler.previousVariation)
   }
 
   async selectNextVariation() {
     console.log('selecting next variation: ', this.selectedVariationHandler.nextVariation?.id)
-    return this.update({ selectedVariationId: this.selectedVariationHandler.nextVariation?.id })
+    return await this.setVariation(this.selectedVariationHandler.nextVariation)
   }
 }

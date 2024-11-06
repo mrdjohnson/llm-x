@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx'
+import { isObservable, makeAutoObservable } from 'mobx'
 import _ from 'lodash'
 
 import EntityCache from '~/utils/EntityCache'
@@ -28,11 +28,13 @@ export class ChatViewModel {
   }
 
   async fetchMessages() {
-    messageTable
-      .findByIds(this.source.messageIds)
-      .then(loadedMessages =>
-        loadedMessages.forEach(message => this.messageViewModelCache.put(message)),
-      )
+    messageTable.findByIds(this.source.messageIds).then(loadedMessages => {
+      this.messageViewModelCache.clear()
+
+      loadedMessages.forEach(message => {
+        return this.messageViewModelCache.put(message)
+      })
+    })
   }
 
   get id() {
@@ -95,6 +97,8 @@ export class ChatViewModel {
     for (const messageId of this.source.messageIds) {
       messageTable.cache.remove(messageId)
     }
+
+    this.messageViewModelCache.clear()
 
     await this.previewImageHandler.cancelPreviewImages()
   }
