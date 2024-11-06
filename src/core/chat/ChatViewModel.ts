@@ -109,7 +109,7 @@ export class ChatViewModel {
     // const selectedConnectionName
     const incomingMessage = await messageTable.create({ fromBot: true, botName: modelName })
 
-    this.messages.push(new MessageViewModel(incomingMessage))
+    this.messageViewModelCache.put(incomingMessage)
 
     const nextIds = this.source.messageIds.concat(incomingMessage.id)
     await chatTable.put({ ...this.source, messageIds: nextIds })
