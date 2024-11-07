@@ -1,4 +1,4 @@
-import { isObservable, makeAutoObservable } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 import _ from 'lodash'
 
 import EntityCache from '~/utils/EntityCache'
@@ -16,9 +16,10 @@ import { messageTable } from '~/core/message/MessageTable'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
 export class ChatViewModel {
-  messageViewModelCache = new EntityCache<MessageModel, MessageViewModel>(
-    message => new MessageViewModel(message),
-  )
+  messageViewModelCache = new EntityCache<MessageModel, MessageViewModel>({
+    transform: message => new MessageViewModel(message),
+    schema: MessageModel,
+  })
 
   previewImageHandler = new PreviewImageHandler()
   editedMessageHandler = new EditedMessageHandler()

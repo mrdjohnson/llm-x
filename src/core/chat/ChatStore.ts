@@ -11,7 +11,10 @@ import EntityCache from '~/utils/EntityCache'
 import { chatToDateLabel } from '~/utils/chatToDateLabel'
 
 class ChatStore {
-  chatCache = new EntityCache<ChatModel, ChatViewModel>(chat => new ChatViewModel(chat))
+  chatCache = new EntityCache<ChatModel, ChatViewModel>({
+    transform: chat => new ChatViewModel(chat),
+    schema: ChatModel
+  })
 
   constructor() {
     makeAutoObservable(this)

@@ -13,8 +13,10 @@ import { settingTable } from '~/core/setting/SettingTable'
 import { toastStore } from '~/core/ToastStore'
 
 class ConnectionStore {
-  connectionCache = new EntityCache<ConnectionModel, ConnectionViewModelTypes>(connection => {
-    return connectionViewModelByType[connection.type]().toViewModel(connection)
+  connectionCache = new EntityCache<ConnectionModel, ConnectionViewModelTypes>({
+    transform: connection => {
+      return connectionViewModelByType[connection.type]().toViewModel(connection)
+    },
   })
 
   constructor() {
@@ -79,7 +81,7 @@ class ConnectionStore {
   }
 
   async setSelectedConnection(connection: ConnectionViewModelTypes) {
-    await settingTable.put({ selectedModelId: undefined, selectedConnectionId: connection.id  })
+    await settingTable.put({ selectedModelId: undefined, selectedConnectionId: connection.id })
   }
 
   async setSelectedModel(selectedModelId?: string, selectedConnectionId?: string) {

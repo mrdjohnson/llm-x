@@ -12,9 +12,9 @@ import { addImageToCachedStorage } from '~/utils/addImageToCachedStorage'
 export class MessageViewModel {
   contentOverride = ''
 
-  variationViewModelCache = new EntityCache<MessageModel, MessageViewModel>(
-    message => new MessageViewModel(message, this),
-  )
+  variationViewModelCache = new EntityCache<MessageModel, MessageViewModel>({
+    transform: message => new MessageViewModel(message, this),
+  })
 
   selectedVariationHandler: SelectedVariationHandler
 
@@ -107,7 +107,7 @@ export class MessageViewModel {
   }
 
   async setVariation(variation?: MessageViewModel) {
-    return await messageTable.put({ ...this.source, selectedVariationId: variation?.id })
+    return await this.update({ selectedVariationId: variation?.id })
   }
 
   async removeVariation(variation: MessageViewModel) {
@@ -118,7 +118,7 @@ export class MessageViewModel {
       selectedVariationId = undefined
     }
 
-    await messageTable.put({ ...this.source, selectedVariationId, variationIds })
+    await this.update({ selectedVariationId, variationIds })
     await messageTable.destroy(variation.source)
 
     this.variationViewModelCache.remove(variation.id)
@@ -131,7 +131,7 @@ export class MessageViewModel {
     const viewModel = this.variationViewModelCache.put(variation)
 
     // update message with variation id
-    await messageTable.put({ ...this.source, selectedVariationId: variation.id, variationIds })
+    await this.update({ selectedVariationId: variation.id, variationIds })
 
     return viewModel
   }
