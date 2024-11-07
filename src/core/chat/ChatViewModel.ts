@@ -32,7 +32,7 @@ export class ChatViewModel {
       this.messageViewModelCache.clear()
 
       loadedMessages.forEach(message => {
-        return this.messageViewModelCache.put(message)
+        return this.messageViewModelCache.put(message, false)
       })
     })
   }
@@ -94,6 +94,8 @@ export class ChatViewModel {
   }
 
   async dispose() {
+    console.log('disposing previous messages')
+
     for (const messageId of this.source.messageIds) {
       messageTable.cache.remove(messageId)
     }
