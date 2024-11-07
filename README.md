@@ -14,6 +14,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 # Recent additions:
 
+- Gemini Nano support! 
 - IndexedDB support! All text is now saved in IndexedDB instead of local storage
 - Auto-connect on load. If there is a server thats visible and ready to connect, we connect to it for you
 - LaTex support!
@@ -73,16 +74,18 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 ## Goals / Features
 
+- [x] **COMPLETELY PRIVATE WORKS COMPLETELY OFFLINE** via PWA technology
+- [x] **Ollama integration!**
 - [x] **LM Studio integration!**
+- [x] **Open AI server integration!** 
+- [x] **Gemini Nano integration!**
+- [x] **AUTOMATIC1111 integration!**
 - [x] **Text to Image generation** through AUTOMATIC1111
-- [x] **Open AI server support!** 
 - [x] **Image to Text** using Ollama's multi modal abilities
-- [x] **Offline Support** via PWA technology
 - [x] **Code highlighting** with Highlight.js (only handles common languages for now)
 - [x] **Search/Command bar** provides quick access to app features through kbar
 - [x] **LaTex support**
-- [x] Allow users to have as many connections as they way!
-- [x] Text Entry and Response to Ollama
+- [x] Allow users to have as many connections as they want!
 - [x] Auto saved Chat history
 - [x] Manage multiple chats
 - [x] Copy/Edit/Delete messages sent or received
