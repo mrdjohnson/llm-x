@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "LLM-X",
+  "version": "1.0.0",
+  "action": {},
+  "sidebar_action": {
+    "default_panel": "index.html",
+    "default_title": "LLM-X"
+  },
+  "permissions": ["sidePanel"],
+  "icons": {
+    "16": "logo-16x16.png",
+    "32": "logo-32x32.png",
+    "48": "logo-48x48.png",
+    "128": "logo-128x128.png"
+  },
+  "background": {
+    "scripts": ["environments/firefox/firefox.background.ts"]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "mr.demarcus.johnson@gmail.com"
+    }
+  }
+}

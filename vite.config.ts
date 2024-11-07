@@ -9,6 +9,7 @@ import { comlink } from 'vite-plugin-comlink'
 
 import { pwaPlugins } from './environments/pwa/pwa.vite'
 import { chromePlugins } from './environments/chrome/chrome.vite'
+import { firefoxPlugins } from './environments/firefox/firefox.vite'
 
 const replaceOptions = { __DATE__: new Date().toISOString(), __RELOAD_SW__: 'false' }
 
@@ -23,6 +24,8 @@ if (TARGET === 'pwa') {
   targetPlugins = pwaPlugins
 } else if (TARGET === 'chrome') {
   targetPlugins = chromePlugins()
+} else if (TARGET === 'firefox') {
+  targetPlugins = firefoxPlugins()
 }
 
 const reload = process.env.RELOAD_SW === 'true'
