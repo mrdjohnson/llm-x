@@ -93,7 +93,9 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
     if (inputDisabled) {
       textareaRef.current?.blur()
     } else {
-      textareaRef.current?.focus()
+      setTimeout(() => {
+        textareaRef.current?.focus({ preventScroll: true })
+      }, 300)
     }
   }, [inputDisabled, chat, messageToEdit])
 
