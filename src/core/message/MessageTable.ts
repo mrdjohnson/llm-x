@@ -11,6 +11,10 @@ class MessageTable extends BaseTable<typeof MessageModel> {
 
   hasParentExportTable = true
 
+  getModel() {
+    return MessageModel
+  }
+
   getTableName() {
     return MessageTableName
   }

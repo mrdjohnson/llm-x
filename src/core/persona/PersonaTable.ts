@@ -8,6 +8,10 @@ class PersonaTable extends BaseTable<typeof PersonaModel> {
   schema = PersonaModel
   localStorageLocation = 'personas'
 
+  getModel() {
+    return PersonaModel
+  }
+
   getTableName() {
     return PersonaTableName
   }

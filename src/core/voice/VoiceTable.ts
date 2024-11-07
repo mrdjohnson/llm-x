@@ -7,6 +7,10 @@ export const VoiceTableName = 'Voice' as const
 class VoiceTable extends BaseTable<typeof VoiceModel> {
   schema = VoiceModel
 
+  getModel() {
+    return VoiceModel
+  }
+
   getTableName() {
     return VoiceTableName
   }

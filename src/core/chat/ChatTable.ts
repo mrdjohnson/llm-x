@@ -14,6 +14,10 @@ export class ChatTable extends BaseTable<typeof ChatModel> {
   schema = ChatModel
   localStorageLocation = 'chat-store'
 
+  getModel() {
+    return ChatModel
+  }
+
   getTableName() {
     return ChatTableName
   }

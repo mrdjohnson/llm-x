@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { isObservable, makeAutoObservable, observable, toJS } from 'mobx'
+import { isObservable, makeObservable, observable, toJS } from 'mobx'
 import { AnyZodObject } from 'zod'
 
 export default class EntityCache<Input extends { id: string }, Output = Input> {
@@ -15,7 +15,7 @@ export default class EntityCache<Input extends { id: string }, Output = Input> {
     this.transform = transform || _.identity
 
     if (schema) {
-      this.annotations = _.mapValues(schema.shape, () => null)
+      this.annotations = _.mapValues(schema.shape, () => undefined)
     }
   }
 
@@ -42,10 +42,13 @@ export default class EntityCache<Input extends { id: string }, Output = Input> {
       // a map of Record keys to null so they can be observed
       const observableFields = toJS(this.annotations)
 
-      // keeps the real values on the object, while keeping the undefined fields as null
+      // keeps the real values on the object, while keeping the undefined fields
       const record = _.merge({}, observableFields, entity)
 
-      entityObservable = makeAutoObservable(record)
+      entityObservable = makeObservable(
+        record,
+        _.mapValues(this.annotations, () => observable),
+      )
     }
 
     const transformedEntity = this.transform(entityObservable)

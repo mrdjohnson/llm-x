@@ -10,6 +10,10 @@ class ConnectionTable extends BaseTable<typeof ConnectionModel> {
   schema = ConnectionModel
   localStorageLocation = 'connection-store'
 
+  getModel() {
+    return ConnectionModel
+  }
+
   getTableName() {
     return ConnectionTableName
   }

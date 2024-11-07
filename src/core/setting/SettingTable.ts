@@ -14,6 +14,10 @@ export const SettingTableName = 'Setting' as const
 class SettingTable extends BaseTable<typeof SettingModel> {
   schema = SettingModel
 
+  getModel() {
+    return SettingModel
+  }
+
   getTableName(): string {
     return SettingTableName
   }

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import localForage from 'localforage'
 import { createId } from '@paralleldrive/cuid2'
-import { ZodType, ZodTypeDef } from 'zod'
+import { AnyZodObject, ZodType, ZodTypeDef } from 'zod'
 
 import EntityCache from '~/utils/EntityCache'
 
@@ -19,7 +19,7 @@ export abstract class BaseTable<
 
   database: typeof localForage
 
-  cache: EntityCache<Output> = new EntityCache<Output>()
+  cache: EntityCache<Output>
 
   // if this table import/export is handled by another table (ie Chats and Messages)
   hasParentExportTable: boolean = false
@@ -27,8 +27,11 @@ export abstract class BaseTable<
   constructor() {
     this.database = localForage.createInstance({ name: 'llm-x', storeName: this.getTableName() })
     console.log('created table for %s', this.getTableName())
+
+    this.cache = new EntityCache<Output>({ schema: this.getModel() })
   }
 
+  abstract getModel(): AnyZodObject
   abstract getTableName(): string
 
   findCachedById(id?: string) {
@@ -108,7 +111,8 @@ export abstract class BaseTable<
   }
 
   async put(entity: Output, { skipCache = false }: { skipCache?: boolean } = {}) {
-    await this.database.setItem(entity.id, this.schema.safeParse(entity).data)
+    console.log('data: ', entity, this.getModel().safeParse(entity).data)
+    await this.database.setItem(entity.id, this.getModel().safeParse(entity).data)
 
     if (skipCache) {
       return entity
