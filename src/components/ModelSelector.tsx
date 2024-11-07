@@ -28,7 +28,7 @@ const ModelSelector = observer(() => {
 
   const handleClick = () => {
     if (!selectedConnection) {
-      settingStore.openSettingsModal('general')
+      settingStore.openSettingsModal('connections')
     } else {
       settingStore.openSettingsModal('models')
     }
