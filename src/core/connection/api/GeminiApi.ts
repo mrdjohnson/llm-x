@@ -72,7 +72,6 @@ export class OpenAiApi extends BaseApi {
       temperature,
       topK,
       initialPrompts: messages,
-      systemPrompt: personaStore.selectedPersona?.description,
       monitor(m) {
         m.addEventListener('downloadprogress', e => {
           if (!progress) return
