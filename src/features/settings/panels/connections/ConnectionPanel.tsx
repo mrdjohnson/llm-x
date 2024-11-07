@@ -84,7 +84,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ConnectionViewMo
                 }}
               />
 
-              <HostInput connection={connection} isEnabled={isEnabled} />
+              {connection.hostLabel && <HostInput connection={connection} isEnabled={isEnabled} />}
 
               <ConnectionDataParameterSection />
             </div>

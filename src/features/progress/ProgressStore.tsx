@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 import _ from 'lodash'
 
-type ProgressType = {
+export type ProgressType = {
   label: string
   id: string
   subLabel: string

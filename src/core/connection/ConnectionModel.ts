@@ -17,7 +17,13 @@ export const ConnectionParameterModel = z.object({
 export const ConnectionModel = z.object({
   id: z.string().cuid2(),
   label: z.string(),
-  type: z.union([z.literal('LMS'), z.literal('A1111'), z.literal('Ollama'), z.literal('OpenAi')]),
+  type: z.union([
+    z.literal('LMS'),
+    z.literal('A1111'),
+    z.literal('Ollama'),
+    z.literal('OpenAi'),
+    z.literal('Gemini'),
+  ]),
   host: z.string().optional(),
   enabled: z.boolean().default(true),
   parameters: z.array(ConnectionParameterModel),

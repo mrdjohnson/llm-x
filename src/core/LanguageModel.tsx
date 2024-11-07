@@ -8,6 +8,8 @@ import {
   LmsLanguageModel,
   OllamaLanguageModel,
   OpenAiLanguageModel,
+  GeminiLanguageModel,
+  IGeminiModel,
 } from '~/core/connection/types'
 
 export type BaseLanguageModel = {
@@ -63,6 +65,14 @@ class LanguageModel {
       type: 'OpenAi',
       label: model._id,
       modelName: model._id,
+    })
+  }
+
+  static fromIGeminiModel(model: IGeminiModel, connectionId: string): GeminiLanguageModel {
+    return LanguageModel.toSharedLanguageModel(connectionId, model, {
+      type: 'Gemini',
+      label: model.name,
+      modelName: model.name,
     })
   }
 }

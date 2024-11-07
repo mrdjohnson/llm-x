@@ -7,6 +7,7 @@ import OllamaModelPanel from '~/features/settings/panels/model/OllamaModelPanel'
 import A1111ModelPanel from '~/features/settings/panels/model/A1111ModelPanel'
 import LmsModelPanel from '~/features/settings/panels/model/LmsModelPanel'
 import OpenAiModelPanel from '~/features/settings/panels/model/OpenAiModelPanel'
+import GeminiModelPanel from '~/features/settings/panels/model/GeminiModelPanel'
 
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { settingStore } from '~/core/setting/SettingStore'
@@ -63,6 +64,7 @@ const ModelPanel = observer(() => {
                 {connection.type === 'A1111' && <A1111ModelPanel connection={connection} />}
                 {connection.type === 'Ollama' && <OllamaModelPanel connection={connection} />}
                 {connection.type === 'OpenAi' && <OpenAiModelPanel connection={connection} />}
+                {connection.type === 'Gemini' && <GeminiModelPanel connection={connection} />}
               </ScrollShadow>
             </div>
           )}

@@ -29,7 +29,7 @@ abstract class BaseConnectionViewModel<
   abstract modelTableHeaders: Array<SelectionPanelSortType<SingleModelType>>
   primaryHeader?: keyof SingleModelType = undefined
 
-  abstract readonly hostLabel: string
+  abstract readonly hostLabel?: string
   abstract readonly enabledLabel: string
 
   static getSnapshot(): ConnectionModel {
