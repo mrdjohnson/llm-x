@@ -112,9 +112,9 @@ const PersonaForm = observer(() => {
       nextPersonaToEdit = await personaTable.create({ name, description })
     }
 
-    personaStore.setPersonaToEdit(nextPersonaToEdit)
+    personaStore.setSelectedPersona(nextPersonaToEdit)
 
-    reset(nextPersonaToEdit)
+    reset()
   })
 
   const validateName = (name: string) => {
@@ -181,7 +181,7 @@ const PersonaForm = observer(() => {
           </button>
         )}
 
-        <button className="btn btn-primary btn-sm" type="submit">
+        <button className="btn btn-primary btn-sm outline-none" type="submit">
           {personaToEdit ? 'Edit Persona' : 'Create Persona'}
         </button>
       </div>
