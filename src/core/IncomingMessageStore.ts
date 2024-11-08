@@ -141,7 +141,7 @@ export class IncomingMessageStore {
 
         shouldDeleteMessage = _.isEmpty(messageToEdit.content)
       } else if (error instanceof Error) {
-        messageToEdit.setError(error)
+        await messageToEdit.setError(error)
 
         // make sure the server is still connected
         connectionStore.selectedConnection?.fetchLmModels()

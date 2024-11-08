@@ -91,12 +91,12 @@ export class MessageViewModel {
     3000,
   )
 
-  setError(errorData: Error) {
-    const error = MessageErrorModel.safeParse(errorData)
+  async setError(errorData: Error) {
+    const { data: error } = MessageErrorModel.safeParse(errorData)
 
-    const extras = MessageExtrasModel.safeParse({ ...this.source.extras, error })
+    const { data: extras } = MessageExtrasModel.safeParse({ ...this.source.extras, error })
 
-    this.update({ extras })
+    return this.update({ extras })
   }
 
   async setExtraDetails(detailObject?: Record<string, unknown>) {
