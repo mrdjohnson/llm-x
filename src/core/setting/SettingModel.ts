@@ -16,7 +16,7 @@ export const SettingModel = z.object({
   id: z.string().default('setting'),
 
   // general settings
-  theme: ThemeOptions.default('_system'),
+  theme: ThemeOptions.default('dracula'),
   isSidebarOpen: z.boolean().default(true),
 
   // connection settings
