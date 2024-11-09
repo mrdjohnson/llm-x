@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "LLM-X",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "action": {},
   "side_panel": {
     "default_path": "index.html"
