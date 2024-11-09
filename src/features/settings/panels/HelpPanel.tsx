@@ -3,8 +3,10 @@ import { observer } from 'mobx-react-lite'
 
 import CopyButton from '~/components/CopyButton'
 
-const OLLAMA_CODE = 'OLLAMA_ORIGINS=https://mrdjohnson.github.io ollama serve'
-const POWERSHELL_OLLAMA_CODE = '$env:OLLAMA_ORIGINS="https://mrdjohnson.github.io"; ollama serve'
+const ORIGIN = __TARGET__ === 'chrome'? 'chrome-extension://iodcdhcpahifeligoegcmcdibdkffclk' : 'https://mrdjohnson.github.io'
+
+const OLLAMA_CODE = `OLLAMA_ORIGINS=${ORIGIN} ollama serve`
+const POWERSHELL_OLLAMA_CODE = `$env:OLLAMA_ORIGINS="${ORIGIN}"; ollama serve`
 const A1111_CODE = './webui.sh --api --listen --cors-allow-origins "*"'
 const LMS_CODE = 'lms server start --cors=true'
 
@@ -65,7 +67,7 @@ const HelpPanel = observer(() => {
               </span>
               <span>to be</span>
               <span className="prose mx-1">
-                <code>https://mrdjohnson.github.io</code>
+                <code>{ORIGIN}</code>
               </span>
               (this tells ollama that mrdjohnson github projects, like this one, are OK to listen
               to).
