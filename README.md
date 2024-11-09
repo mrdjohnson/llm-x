@@ -14,7 +14,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 # Recent additions:
 
-- Gemini Nano support! 
+- Gemini Nano support!
 - IndexedDB support! All text is now saved in IndexedDB instead of local storage
 - Auto-connect on load. If there is a server thats visible and ready to connect, we connect to it for you
 - LaTex support!
@@ -27,24 +27,44 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 - Ollama: Download and install [Ollama](https://ollama.com/)
   - Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava` (or use the app)
-- LM Studio:  Download and install [LM Studio](https://lmstudio.ai/)
+- LM Studio: Download and install [LM Studio](https://lmstudio.ai/)
 - AUTOMATIC1111: Git clone [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#installation-and-running) (for image generation)
+- Gemini Nano: Download and install [Chrome Canary](https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0#heading=h.witohboigk0o)
+  - Enable   [On Device Model](chrome://flags/#optimization-guide-on-device-model) by selecting `BypassPerfRequirement`
+  - Enable [Api Gemini for nano](chrome://flags/#prompt-api-for-gemini-nano)
+  - Relaunch Chrome (may need to wait for it to download)
 
 ## How to use web client (no install):
 
 ### Prerequisites for web client
-- Ollama Options: 
+
+- Ollama Options:
   - Use [Ollama's FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server) to set `OLLAMA_ORIGINS` = `https://mrdjohnson.github.io`
   - Run this in your terminal `OLLAMA_ORIGINS=https://mrdjohnson.github.io ollama serve`
     - (Powershell users: `$env:OLLAMA_ORIGINS="https://mrdjohnson.github.io"; ollama serve`)
 - LM Studio:
   - Run this in your terminal: `lms server start --cors=true`
-- A1111: 
-  - Run this in the a1111 project folder: `./webui.sh --api --listen --cors-allow-origins "*"` 
+- A1111:
+  - Run this in the a1111 project folder: `./webui.sh --api --listen --cors-allow-origins "*"`
+- Gemini Nano: works automatically
+
 ---
+
 - Use your browser to go to [LLM-X](https://mrdjohnson.github.io/llm-x/)
 - Go offline! (optional)
 - Start chatting!
+
+
+### Prerequisites for chrome extension
+- Download and install [Chrome Extension](https://chromewebstore.google.com/detail/llm-x/iodcdhcpahifeligoegcmcdibdkffclk)
+- Ollama Options:
+  - Use [Ollama's FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server) to set `OLLAMA_ORIGINS` = `chrome-extension://iodcdhcpahifeligoegcmcdibdkffclk`
+  - Run this in your terminal `OLLAMA_ORIGINS=chrome-extension://iodcdhcpahifeligoegcmcdibdkffclk ollama serve`
+    - (Powershell users: `$env:OLLAMA_ORIGINS="chrome-extension://iodcdhcpahifeligoegcmcdibdkffclk"; ollama serve`)
+- LM Studio:
+  - Run this in your terminal: `lms server start --cors=true`
+- A1111:
+  - Run this in the a1111 project folder: `./webui.sh --api --listen --cors-allow-origins "*"`
 
 ## How to use offline:
 
@@ -56,23 +76,28 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 ## How to use from project source:
 
 ### Prerequisites for project source
+
 - Ollama: Run this in your terminal `ollama serve`
 - LM Studio: Run this in your terminal: `lms server start`
-- A1111: Run this in the a1111 project folder: `./webui.sh --api --listen` 
+- A1111: Run this in the a1111 project folder: `./webui.sh --api --listen`
+
 ---
 
 ### Vite preview mode
+
 - Pull down this project; `yarn install`, `yarn preview`
 - Go offline! (optional)
 - Start chatting!
 
 ### Docker
+
 - Run this in your terminal: `docker compose up -d`
 - Open http://localhost:3030
 - Go offline! (optional)
 - Start chatting!
 
 ### Chrome Extension
+
 - Pull down this project; `yarn chrome:build`
 - Navigate to `chrome://extensions/`
 - Load unpacked (developer mode option) from path: `llm-x/extensions/chrome/dist`
@@ -82,7 +107,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 - [x] **COMPLETELY PRIVATE WORKS COMPLETELY OFFLINE** via PWA technology
 - [x] **Ollama integration!**
 - [x] **LM Studio integration!**
-- [x] **Open AI server integration!** 
+- [x] **Open AI server integration!**
 - [x] **Gemini Nano integration!**
 - [x] **AUTOMATIC1111 integration!**
 - [x] **Text to Image generation** through AUTOMATIC1111
@@ -103,7 +128,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 ## Screenshots:
 
-| Showing Chrome extension mode with Google's on-device  Gemini Nano                                                                |
+| Showing Chrome extension mode with Google's on-device Gemini Nano                                                                |
 | -------------------------------------------------------------------------------------------------------------------------------- |
 | ![Logo convo screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-gemini-in-extension.png) |
 
@@ -127,8 +152,8 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 | --------------------------------------------------------------------------------------------------------- |
 | ![Cat screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-cat.png) |
 
-| LaTex support!                                                                                   |
-| --------------------------------------------------------------------------------------------------------- |
+| LaTex support!                                                                                                |
+| ------------------------------------------------------------------------------------------------------------- |
 | ![Latex screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-latex.png) |
 
 | Another logo response                                                                                           |
