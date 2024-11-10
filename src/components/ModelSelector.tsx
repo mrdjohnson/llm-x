@@ -38,7 +38,7 @@ const ModelSelector = observer(() => {
     <button
       tabIndex={0}
       role="button"
-      className="btn btn-active flex-1"
+      className="btn btn-active btn-sm flex-1 md:btn-md"
       disabled={noServer}
       onClick={handleClick}
     >

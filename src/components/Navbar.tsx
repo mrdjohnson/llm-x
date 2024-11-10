@@ -41,12 +41,12 @@ const Navbar = observer(() => {
 
   return (
     <nav className="navbar mb-2 flex h-auto min-h-0 justify-between gap-4 rounded-md bg-base-300">
-      <div className="ml-2 pr-2 text-sm md:text-xl">
+      <div className="ml-2 hidden pr-2 md:block md:text-xl">
         <h1 className="hidden">LLM-X</h1>
         <FunTitle className="md:text-xl" />
       </div>
 
-      <div className="hidden max-w-[600px] flex-1 flex-row gap-2 md:flex">
+      <div className="max-w-[600px] flex-1 flex-row gap-2 md:flex">
         <ModelSelector />
         <ModelRefreshButton />
       </div>
