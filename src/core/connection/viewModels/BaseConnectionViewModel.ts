@@ -4,7 +4,6 @@ import { AxiosError } from 'axios'
 import { observable, computed, action, makeObservable, IObservableArray } from 'mobx'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import { classFromProps } from '~/utils/classFromProps'
 
 import { LanguageModelType } from '~/core/LanguageModel'
 import { toastStore } from '~/core/ToastStore'
@@ -17,7 +16,7 @@ import { settingTable } from '~/core/setting/SettingTable'
 abstract class BaseConnectionViewModel<
   BaseModelType = object,
   SingleModelType = LanguageModelType<BaseModelType>,
-> extends classFromProps<ConnectionModel>() {
+> {
   abstract DefaultHost: string
 
   models: IObservableArray<LanguageModelType<BaseModelType>> = observable.array()
@@ -40,10 +39,11 @@ abstract class BaseConnectionViewModel<
     public source: ConnectionModel,
     { autoFetch = true } = {},
   ) {
-    super(source)
-
     makeObservable(this, {
       models: observable,
+      id: computed, 
+      label: computed,
+      formattedHost: computed,
       parsedParameters: computed,
       isConnected: observable,
       fetchLmModels: action,
@@ -52,6 +52,14 @@ abstract class BaseConnectionViewModel<
     if (autoFetch) {
       this.fetchLmModels()
     }
+  }
+
+  get id() {
+    return this.source.id
+  }
+
+  get label() {
+    return this.source.label
   }
 
   parsedParameterValue<T = string>(parameter: ConnectionParameterModel): T | undefined {
@@ -67,7 +75,7 @@ abstract class BaseConnectionViewModel<
   get parsedParameters() {
     console.log('parsing parameters')
 
-    return _.chain(this.parameters)
+    return _.chain(this.source.parameters)
       .keyBy('field')
       .mapValues(parameter => this.parsedParameterValue(parameter))
       .value()
@@ -78,7 +86,7 @@ abstract class BaseConnectionViewModel<
   }
 
   get formattedHost() {
-    const host = this.host || this.DefaultHost
+    const host = this.source.host || this.DefaultHost
 
     if (host.endsWith('/')) return host.trim().substring(0, host.length - 1)
 
@@ -93,7 +101,7 @@ abstract class BaseConnectionViewModel<
 
   async fetchLmModels({ skipFailedMessage = false } = {}) {
     const host = this.formattedHost
-    const enabled = this.enabled
+    const enabled = this.source.enabled
 
     if (!enabled || !host) return []
 

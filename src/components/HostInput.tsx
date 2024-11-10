@@ -15,7 +15,7 @@ type HostInputProps = {
 }
 
 const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
-  const { host } = connection
+  const { host } = connection.source
 
   const {
     control,

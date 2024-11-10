@@ -92,7 +92,7 @@ export class OpenAiApi extends BaseApi {
     const parameters = connection.parsedParameters
     await incomingMessageVariant.setExtraDetails({ sentWith: parameters })
 
-    const openAIApiKey = _.find(connection.parameters, { field: 'apiKey' })?.value || 'not-needed'
+    const openAIApiKey = _.find(connection.source.parameters, { field: 'apiKey' })?.value || 'not-needed'
 
     const chatOpenAi = new ChatOpenAI({
       configuration: { baseURL: host },

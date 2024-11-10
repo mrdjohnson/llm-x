@@ -172,7 +172,7 @@ const useRegisterModelActions = () => {
       })
 
       for (const connection of connectionStore.connections) {
-        if (!connection.enabled) continue
+        if (!connection.source.enabled) continue
 
         const typeAndLabel = `${connection.type} ${connection.label}`
 

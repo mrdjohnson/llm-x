@@ -9,7 +9,7 @@ type EnabledCheckboxProps = {
 }
 
 const EnabledCheckbox = observer(({ control, connection }: EnabledCheckboxProps) => {
-  const { enabled } = connection
+  const { enabled } = connection.source
 
   return (
     <Controller

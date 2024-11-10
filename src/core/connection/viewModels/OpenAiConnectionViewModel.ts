@@ -64,7 +64,7 @@ class OpenAiConnectionViewModel extends BaseConnectionViewModel<IOpenAiModel> {
     })
 
   async _fetchLmModels(host: string): Promise<OpenAiLanguageModel[]> {
-    const apiKey = _.find(this.parameters, { field: 'apiKey' })?.value || 'not-needed'
+    const apiKey = _.find(this.source.parameters, { field: 'apiKey' })?.value || 'not-needed'
 
     const {
       data: { data },
