@@ -105,7 +105,7 @@ const ConnectionPanel = observer(({ connection }: { connection: ConnectionViewMo
               <button
                 type="button"
                 className="btn btn-outline w-full text-base-content/60 md:btn-ghost md:btn-sm hover:text-base-content md:mx-4 md:text-base-content/60"
-                onClick={() => connectionStore.duplicateConnection(connection)}
+                onClick={() => connectionStore.duplicateConnection(connection.source)}
                 disabled={isDirty}
               >
                 Duplicate <Copy />
