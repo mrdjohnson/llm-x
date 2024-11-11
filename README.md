@@ -2,7 +2,7 @@
 
 # LLM X
 
-![LLM X logo](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/public/LLMX.png)
+<img src="https://raw.githubusercontent.com/mrdjohnson/llm-X/main/public/LLMX.png" alt="drawing" width="200"/>
 
 # Privacy statement:
 
@@ -14,12 +14,10 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 # Recent additions:
 
+- Chrome extension support! All the features of the web app, built into the browser
 - Gemini Nano support!
 - IndexedDB support! All text is now saved in IndexedDB instead of local storage
 - Auto-connect on load. If there is a server thats visible and ready to connect, we connect to it for you
-- LaTex support!
-- Users can connect to open ai compatible servers
-- Users can connect to multiple of the same server at the same time
 
 # How To Use:
 
@@ -30,7 +28,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 - LM Studio: Download and install [LM Studio](https://lmstudio.ai/)
 - AUTOMATIC1111: Git clone [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#installation-and-running) (for image generation)
 - Gemini Nano: Download and install [Chrome Canary](https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0#heading=h.witohboigk0o)
-  - Enable   [On Device Model](chrome://flags/#optimization-guide-on-device-model) by selecting `BypassPerfRequirement`
+  - Enable [On Device Model](chrome://flags/#optimization-guide-on-device-model) by selecting `BypassPerfRequirement`
   - Enable [Api Gemini for nano](chrome://flags/#prompt-api-for-gemini-nano)
   - Relaunch Chrome (may need to wait for it to download)
 
@@ -54,8 +52,8 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 - Go offline! (optional)
 - Start chatting!
 
-
 ### Prerequisites for chrome extension
+
 - Download and install [Chrome Extension](https://chromewebstore.google.com/detail/llm-x/iodcdhcpahifeligoegcmcdibdkffclk)
 - Ideally this works out of the box, no special anything needed to get it connecting! If not continue with the steps below:
 - Ollama Options:
@@ -105,7 +103,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 ## Goals / Features
 
-- [x] **COMPLETELY PRIVATE WORKS COMPLETELY OFFLINE** via PWA technology
+- [x] **COMPLETELY PRIVATE; WORKS COMPLETELY OFFLINE**
 - [x] **Ollama integration!**
 - [x] **LM Studio integration!**
 - [x] **Open AI server integration!**
