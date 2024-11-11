@@ -77,7 +77,7 @@ class ConnectionStore {
   }
 
   async duplicateConnection(connection: ConnectionModel) {
-    return this.addConnection(connection.type, connection)
+    return this.addConnection(connection.type, { ...connection, label: connection.label + ' Copy' })
   }
 
   async setSelectedConnection(connection: ConnectionViewModelTypes) {
