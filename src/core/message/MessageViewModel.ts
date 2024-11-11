@@ -78,7 +78,8 @@ export class MessageViewModel {
   }
 
   update = (data: Partial<MessageModel>) => {
-    this.slowUpdate.cancel
+    this.slowUpdate.cancel?.()
+    
     return messageTable.put({ ...this.source, ...data })
   }
 
