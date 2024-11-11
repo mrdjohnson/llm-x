@@ -4,7 +4,7 @@ import Refresh from '~/icons/Refresh'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const ModelRefreshButton = observer(
-  ({ small = false, shouldShow = true }: { small?: boolean; shouldShow?: boolean }) => {
+  ({ small = false, shouldShow = false }: { small?: boolean; shouldShow?: boolean }) => {
     const noServer = !connectionStore.isAnyServerConnected
 
     return (
