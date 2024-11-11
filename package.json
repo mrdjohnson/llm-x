@@ -52,6 +52,7 @@
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.51.0",
     "react-markdown": "^9.0.1",
+    "react-router-dom": "^6.28.0",
     "react-scrollable-feed": "^2.0.2",
     "react-text-to-speech": "^0.16.1",
     "react-textarea-autosize": "^8.5.3",
