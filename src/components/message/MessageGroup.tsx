@@ -18,10 +18,10 @@ type MessageGroupType = PropsWithChildren<{
 }>
 
 const MessageGroup = observer(({ message, children, chat }: MessageGroupType) => {
-  const handleAddMoreVariations = () => {
-    _.times(3, async () => {
+  const handleAddMoreVariations = async () => {
+    for (let index = 0; index < 3; index++) {
       await incomingMessageStore.generateVariation(chat, message)
-    })
+    }
   }
 
   return (
