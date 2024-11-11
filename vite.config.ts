@@ -43,6 +43,7 @@ export default defineConfig({
     comlink(),
     react(),
     targetPlugins,
+    // @ts-expect-error this was part of the original setup, it works but probably needs to be updated
     replace(replaceOptions),
     removeConsole(),
     tsconfigPaths(),
