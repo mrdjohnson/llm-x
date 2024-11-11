@@ -3,7 +3,10 @@ import { observer } from 'mobx-react-lite'
 
 import CopyButton from '~/components/CopyButton'
 
-const ORIGIN = __TARGET__ === 'chrome'? 'chrome-extension://iodcdhcpahifeligoegcmcdibdkffclk' : 'https://mrdjohnson.github.io'
+const ORIGIN =
+  __TARGET__ === 'chrome'
+    ? 'chrome-extension://iodcdhcpahifeligoegcmcdibdkffclk'
+    : 'https://mrdjohnson.github.io'
 
 const OLLAMA_CODE = `OLLAMA_ORIGINS=${ORIGIN} ollama serve`
 const POWERSHELL_OLLAMA_CODE = `$env:OLLAMA_ORIGINS="${ORIGIN}"; ollama serve`
@@ -14,6 +17,20 @@ const HelpPanel = observer(() => {
   return (
     <ScrollShadow>
       <div className="w-full pl-2">
+        {__TARGET__ === 'chrome' && (
+          <>
+            <h3 className="-ml-2 pb-3 text-lg font-bold">NOTE: Connections should be automatic!</h3>
+
+            <p>
+              This chrome extension automatically detects your local network and connects to Ollama,
+              LM Studio, and Automatic1111 for you without needing any special configurations!
+              (special thanks to page-assist and ollama-ui)
+            </p>
+
+            <div className="divider" />
+          </>
+        )}
+
         <h3 className="-ml-2 pb-3 text-lg font-bold">
           How to connect to
           <a href="https://lmstudio.ai/" target="__blank" className="link text-lg text-primary">

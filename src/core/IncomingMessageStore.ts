@@ -7,6 +7,7 @@ import BaseApi from '~/core/connection/api/BaseApi'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
+import { rewriteChromeUrl } from '../utils/rewriteChromeUrl'
 
 export class IncomingMessageStore {
   messageById: Record<string, MessageViewModel> = {}
@@ -108,6 +109,8 @@ export class IncomingMessageStore {
     const connection = connectionStore.selectedConnection
 
     if (!connection) throw 'Unknown server'
+
+    await rewriteChromeUrl(connection.source.host)
 
     if (connectionStore.isImageGenerationMode) {
       return this.generateImage(chat, incomingMessage, connection.api)

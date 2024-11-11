@@ -12,6 +12,7 @@ import BaseApi from '~/core/connection/api/BaseApi'
 import { ConnectionTypes } from '~/core/connection/types'
 import { ConnectionModel, ConnectionParameterModel } from '~/core/connection/ConnectionModel'
 import { settingTable } from '~/core/setting/SettingTable'
+import { rewriteChromeUrl } from '~/utils/rewriteChromeUrl'
 
 abstract class BaseConnectionViewModel<
   BaseModelType = object,
@@ -41,7 +42,7 @@ abstract class BaseConnectionViewModel<
   ) {
     makeObservable(this, {
       models: observable,
-      id: computed, 
+      id: computed,
       label: computed,
       formattedHost: computed,
       parsedParameters: computed,
@@ -104,6 +105,8 @@ abstract class BaseConnectionViewModel<
     const enabled = this.source.enabled
 
     if (!enabled || !host) return []
+
+    await rewriteChromeUrl(this.source.host)
 
     try {
       this.models = observable.array(await this._fetchLmModels(host))

@@ -57,6 +57,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 ### Prerequisites for chrome extension
 - Download and install [Chrome Extension](https://chromewebstore.google.com/detail/llm-x/iodcdhcpahifeligoegcmcdibdkffclk)
+- Ideally this works out of the box, no special anything needed to get it connecting! If not continue with the steps below:
 - Ollama Options:
   - Use [Ollama's FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server) to set `OLLAMA_ORIGINS` = `chrome-extension://iodcdhcpahifeligoegcmcdibdkffclk`
   - Run this in your terminal `OLLAMA_ORIGINS=chrome-extension://iodcdhcpahifeligoegcmcdibdkffclk ollama serve`

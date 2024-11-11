@@ -1,12 +1,20 @@
 {
   "manifest_version": 3,
   "name": "LLM-X",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "action": {},
   "side_panel": {
     "default_path": "index.html"
   },
-  "permissions": ["sidePanel"],
+  "permissions": ["sidePanel", "declarativeNetRequest"],
+  "host_permissions": [
+    "http://*:11434/*",
+    "http://*:1234/*",
+    "http://*:7860/*",
+    "https://*:11434/*",
+    "https://*:1234/*",
+    "https://*:7860/*"
+  ],
   "icons": {
     "16": "logo-16x16.png",
     "32": "logo-32x32.png",
