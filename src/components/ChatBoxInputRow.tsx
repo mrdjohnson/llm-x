@@ -4,13 +4,13 @@ import { observer } from 'mobx-react-lite'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
-import { settingStore } from '~/core/setting/SettingStore'
 import { personaStore } from '~/core/persona/PersonaStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import CachedImage from '~/components/CachedImage'
+import { NavButton } from '~/components/NavButton'
 
 import { TransferHandler } from '~/utils/transfer/TransferHandler'
 
@@ -198,16 +198,15 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
         onSubmit={onFormSubmit}
       >
         <div className="join-item flex w-full flex-col justify-between bg-base-200 align-middle md:flex-row md:gap-2">
-          <button
+          <NavButton
             tabIndex={0}
-            type="button"
+            to="/personas"
             className="btn btn-active hidden rounded-none rounded-bl-md md:flex"
             disabled={inputDisabled || connectionStore.isImageGenerationMode}
-            onClick={() => settingStore.openSettingsModal('personas')}
           >
             {personaStore.selectedPersona?.name || 'No personas selected'}
             <ChevronDown />
-          </button>
+          </NavButton>
 
           <div className="flex">
             <AttachmentWrapper className="mr-auto md:mr-0">

@@ -17,7 +17,7 @@ const GeneralModelPanel = observer(() => {
   }, [selectedTabId])
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col p-2">
       <ScrollShadow orientation="horizontal" className="border-b border-base-content/30">
         <Tabs
           aria-label="Options"

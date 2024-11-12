@@ -96,7 +96,7 @@ const SelectionPanelTable = observer(
       return (
         <span
           className={
-            'transition-[opacity transform] ml-2 h-fit scale-90 duration-300 ease-in-out ' +
+            'transition-[opacity transform] ml-2 -mr-2 h-fit scale-90 duration-300 ease-in-out ' +
             (ascendingSort ? ' rotate-180 ' : '') +
             (activeSortType === sortType ? ' opacity-100 ' : ' opacity-0 ')
           }

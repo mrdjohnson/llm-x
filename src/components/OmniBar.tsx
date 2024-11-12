@@ -14,6 +14,7 @@ import {
 import type { Action, ActionImpl } from 'kbar'
 import { autorun } from 'mobx'
 import _ from 'lodash'
+import { useNavigate } from 'react-router-dom'
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { personaStore } from '~/core/persona/PersonaStore'
@@ -140,6 +141,8 @@ const useRegisterThemeActions = () => {
 }
 
 const useRegisterModelActions = () => {
+  const navigate = useNavigate()
+
   const [modelActions, setModelActions] = useState<Action[]>([])
 
   useEffect(() => {
@@ -203,7 +206,7 @@ const useRegisterModelActions = () => {
         keywords: 'model modal open select',
         section: 'Actions',
         priority: Priority.LOW,
-        perform: () => settingStore.openSettingsModal('models'),
+        perform: () => navigate('/models'),
       })
 
       setModelActions(nextModelActions)
@@ -214,6 +217,8 @@ const useRegisterModelActions = () => {
 }
 
 const useRegisterPersonaActions = () => {
+  const navigate = useNavigate()
+
   const [personaActions, setPersonaActions] = useState<Action[]>([])
 
   useEffect(() => {
@@ -232,7 +237,7 @@ const useRegisterPersonaActions = () => {
           keywords: 'persona open select',
           section: 'Actions',
           priority: Priority.LOW,
-          perform: () => settingStore.openSettingsModal('personas'),
+          perform: () => navigate('personas'),
         },
       ]
 
@@ -425,6 +430,8 @@ const useNewChatActions = () => {
 }
 
 const OmniBar = () => {
+  const navigate = useNavigate()
+
   useRegisterThemeActions()
   useRegisterModelActions()
   useRegisterPersonaActions()
@@ -446,7 +453,7 @@ const OmniBar = () => {
       section: 'Actions',
       shortcut: ['/'],
       priority: Priority.LOW,
-      perform: () => settingStore.openSettingsModal('general'),
+      perform: () => navigate('/general'),
     }),
   ])
 

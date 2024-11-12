@@ -5,7 +5,8 @@ import Question from '~/icons/Question'
 import Refresh from '~/icons/Refresh'
 
 import FormInput from '~/components/form/FormInput'
-import { settingStore } from '~/core/setting/SettingStore'
+import { NavButtonDiv } from '~/components/NavButton'
+
 import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 
@@ -27,13 +28,9 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
   const modelsFoundLabel = isDirty ? (
     'Save to see model length'
   ) : (
-    <button
-      className="link"
-      onClick={() => settingStore.setModelPanelOverride(connection.id)}
-      type="button"
-    >
+    <NavButtonDiv className="link" to={'/models/' + connection.id}>
       {connection.models.length} models found
-    </button>
+    </NavButtonDiv>
   )
 
   return (
@@ -50,16 +47,15 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
             <span className="flex flex-col gap-2 align-baseline text-sm md:flex-row">
               <span className="flex align-baseline">
                 See connection instructions here:
-                <button
-                  onClick={() => settingStore.openSettingsModal('connection')}
-                  className="ml-2 align-baseline hover:text-base-content"
-                  type="button"
+                <NavButtonDiv
+                  to="/connection"
+                  className="ml-2 flex items-center hover:text-base-content"
                 >
                   <Question />
-                </button>
+                </NavButtonDiv>
               </span>
 
-              <span className="text-sm md:ml-auto md:pl-2">{modelsFoundLabel}</span>
+              <span className="text-right text-sm md:ml-auto md:pl-2">{modelsFoundLabel}</span>
             </span>
           }
           endContent={

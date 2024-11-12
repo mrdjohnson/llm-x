@@ -1,12 +1,14 @@
 import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
+import { useNavigate } from 'react-router-dom'
 
 import ChevronDown from '~/icons/ChevronDown'
-import { settingStore } from '~/core/setting/SettingStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const ModelSelector = observer(() => {
+  const navigate = useNavigate()
+
   const { selectedModelLabel, isAnyServerConnected, selectedConnection } = connectionStore
   const noServer = !isAnyServerConnected
 
@@ -28,9 +30,9 @@ const ModelSelector = observer(() => {
 
   const handleClick = () => {
     if (!selectedConnection) {
-      settingStore.openSettingsModal('connections')
+      navigate('/models')
     } else {
-      settingStore.openSettingsModal('models')
+      navigate('/models/' + selectedConnection.id)
     }
   }
 

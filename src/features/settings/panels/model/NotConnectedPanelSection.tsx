@@ -1,15 +1,9 @@
 import Refresh from '~/icons/Refresh'
 
-import { settingStore } from '~/core/setting/SettingStore'
-import { connectionStore } from '~/core/connection/ConnectionStore'
 import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
+import { NavButtonDiv } from '~/components/NavButton'
 
 const NotConnectedPanelSection = ({ connection }: { connection: ConnectionViewModelTypes }) => {
-  const openConnectionSettings = () => {
-    connectionStore.setSelectedConnection(connection)
-    settingStore.openSettingsModal('connections')
-  }
-
   return (
     <div className="flex w-full flex-col justify-center gap-3">
       <span className="flex items-center justify-center gap-2 text-lg font-semibold">
@@ -19,9 +13,9 @@ const NotConnectedPanelSection = ({ connection }: { connection: ConnectionViewMo
         </button>
       </span>
 
-      <button className="btn btn-active" onClick={openConnectionSettings}>
+      <NavButtonDiv to={`/models/edit/${connection.id}`} className="btn btn-active">
         Go to {connection.label} settings
-      </button>
+      </NavButtonDiv>
     </div>
   )
 }

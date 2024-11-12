@@ -1,15 +1,16 @@
 import { observer } from 'mobx-react-lite'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import _ from 'lodash'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { settingStore } from '~/core/setting/SettingStore'
-import { IOllamaModel } from '~/core/connection/types'
+import { OllamaLanguageModel } from '~/core/connection/types'
 
-import OllamaStore, { CorrectShowResponse } from '~/features/ollama/OllamaStore'
+import { CorrectShowResponse } from '~/features/ollama/OllamaStore'
 
+import { NavButtonDiv } from '~/components/NavButton'
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 import CopyButton from '~/components/CopyButton'
-import BreadcrumbBar, { BreadcrumbType } from '~/components/BreadcrumbBar'
 import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnectedPanelSection'
 
 import Globe from '~/icons/Globe'
@@ -19,121 +20,134 @@ import Edit from '~/icons/Edit'
 
 import OllamaConnectionViewModel from '~/core/connection/viewModels/OllamaConnectionViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
+import { useCrumb } from '~/containers/Drawer'
 
 type PanelTableProps = {
   connection: OllamaConnectionViewModel
-  ollamaStore: OllamaStore
-  onShowDetails: () => void
 }
 
-const OllamaModelPanelTable = observer(
-  ({ onShowDetails, connection, ollamaStore }: PanelTableProps) => {
-    const selectedModelId = settingStore.setting?.selectedModelId
+const OllamaModelPanelTable = observer(({ connection }: PanelTableProps) => {
+  const navigate = useNavigate()
 
-    const [filterText, setFilterText] = useState('')
+  const selectedModelId = settingStore.setting?.selectedModelId
+  const ollamaStore = connection.store
 
-    const pullModel = () => {
-      ollamaStore.pull(filterText)
+  const [filterText, setFilterText] = useState('')
 
-      settingStore.closeSettingsModal()
-    }
+  const pullModel = () => {
+    ollamaStore.pull(filterText)
 
-    const updateAllModels = () => {
-      ollamaStore.updateAll()
+    navigate('/')
+  }
 
-      settingStore.closeSettingsModal()
-    }
+  const updateAllModels = () => {
+    ollamaStore.updateAll()
 
-    if (!connection.isConnected) {
-      return <NotConnectedPanelSection connection={connection} />
-    }
+    navigate('/')
+  }
 
-    const renderRow = (model: IOllamaModel) => (
-      <>
-        <td>
-          <span className="block max-w-52 overflow-hidden font-semibold xl:max-w-80">
-            {model.name}
-          </span>
-        </td>
+  if (!connection.isConnected) {
+    return <NotConnectedPanelSection connection={connection} />
+  }
 
-        <td>{model.details.parameter_size}</td>
+  const renderRow = (model: OllamaLanguageModel) => (
+    <>
+      <td>
+        <span className="block max-w-52 overflow-hidden font-semibold xl:max-w-80">
+          {model.name}
+        </span>
+      </td>
 
-        <td>
-          <input
-            type="checkbox"
-            defaultChecked={model.supportsImages}
-            className="checkbox checkbox-xs tooltip tooltip-bottom"
-            data-tip="Supports Images?"
-            onClick={e => e.preventDefault()}
-          />
-        </td>
+      <td>{model.details.parameter_size}</td>
 
-        <td>{model.gbSize}</td>
-        <td className="opacity-65">{model.timeAgo}</td>
+      <td>
+        <input
+          type="checkbox"
+          defaultChecked={model.supportsImages}
+          className="checkbox checkbox-xs tooltip tooltip-bottom"
+          data-tip="Supports Images?"
+          onClick={e => e.preventDefault()}
+        />
+      </td>
 
-        <td className="w-fit">
+      <td>{model.gbSize}</td>
+      <td className="opacity-65">{model.timeAgo}</td>
+
+      <td className="w-fit">
+        <NavButtonDiv
+          to={'ollama/' + model.modelName}
+          className="align-center flex opacity-30 transition-opacity duration-200 ease-in-out hover:opacity-100"
+        >
+          <Edit />
+        </NavButtonDiv>
+      </td>
+    </>
+  )
+
+  return (
+    <SelectionPanelTable
+      items={connection.models}
+      sortTypes={connection.modelTableHeaders}
+      primarySortTypeLabel="name"
+      itemFilter={connection.modelFilter}
+      renderRow={renderRow}
+      getItemKey={model => model.id}
+      onItemSelected={model => connection.selectModel(model)}
+      onFilterChanged={setFilterText}
+      getIsItemSelected={model => selectedModelId === model.id}
+      filterInputPlaceholder="Filter by name or pull..."
+      includeEmptyHeader
+    >
+      <div className="mx-auto mt-auto flex flex-row content-center gap-2">
+        <a
+          href="https://ollama.com/library"
+          className="btn btn-outline btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
+          target="__blank"
+          title="Open Ollama Library in new tab"
+        >
+          <span className="whitespace-nowrap text-sm">Ollama Library</span>
+          <Globe />
+        </a>
+
+        {filterText ? (
           <button
-            className="align-center flex opacity-30 transition-opacity duration-200 ease-in-out hover:opacity-100"
-            onClick={onShowDetails}
+            className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
+            onClick={pullModel}
           >
-            <Edit />
+            <span className="whitespace-nowrap text-sm">
+              Pull model: {filterText.includes(':') ? filterText : `${filterText}:latest`}
+            </span>
+            <DownloadTray />
           </button>
-        </td>
-      </>
-    )
-
-    return (
-      <SelectionPanelTable
-        items={connection.models}
-        sortTypes={connection.modelTableHeaders}
-        primarySortTypeLabel="name"
-        itemFilter={connection.modelFilter}
-        renderRow={renderRow}
-        getItemKey={model => model.id}
-        onItemSelected={model => connection.selectModel(model)}
-        onFilterChanged={setFilterText}
-        getIsItemSelected={model => selectedModelId === model.id}
-        filterInputPlaceholder="Filter by name or pull..."
-        includeEmptyHeader
-      >
-        <div className="mx-auto mt-auto flex flex-row content-center gap-2">
-          <a
-            href="https://ollama.com/library"
-            className="btn btn-outline btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
-            target="__blank"
-            title="Open Ollama Library in new tab"
+        ) : (
+          <button
+            className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
+            onClick={updateAllModels}
           >
-            <span className="whitespace-nowrap text-sm">Ollama Library</span>
-            <Globe />
-          </a>
+            <span className="whitespace-nowrap text-sm">Update all models</span>
+            <DownloadTray />
+          </button>
+        )}
+      </div>
+    </SelectionPanelTable>
+  )
+})
 
-          {filterText ? (
-            <button
-              className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
-              onClick={pullModel}
-            >
-              <span className="whitespace-nowrap text-sm">
-                Pull model: {filterText.includes(':') ? filterText : `${filterText}:latest`}
-              </span>
-              <DownloadTray />
-            </button>
-          ) : (
-            <button
-              className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
-              onClick={updateAllModels}
-            >
-              <span className="whitespace-nowrap text-sm">Update all models</span>
-              <DownloadTray />
-            </button>
-          )}
-        </div>
-      </SelectionPanelTable>
-    )
-  },
-)
+export const OllamaModelSettings = observer(() => {
+  const { modelName, id } = useParams()
+  const navigate = useNavigate()
 
-const OllamaModelSettings = observer(({ ollamaStore }: { ollamaStore: OllamaStore }) => {
-  const { selectedModelName } = connectionStore
+  const viewModel = connectionStore.getConnectionById(id)!
+
+  useCrumb({ label: modelName!, path: 'ollama/' + modelName! })
+
+  if (viewModel.type !== 'Ollama') {
+    throw new Error('Ollama connection not found')
+  }
+  const ollamaStore = viewModel.store
+  const model = _.find<OllamaLanguageModel>(viewModel.models, { modelName })!
+
+  const selectedModelName = model.modelName
 
   const [modelData, setModelData] = useState<CorrectShowResponse | undefined>()
 
@@ -148,13 +162,13 @@ const OllamaModelSettings = observer(({ ollamaStore }: { ollamaStore: OllamaStor
   const details = modelData.details || {}
 
   const updateModel = () => {
-    settingStore.closeSettingsModal()
+    navigate('/')
 
     ollamaStore.pull(selectedModelName)
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full w-full flex-col p-2">
       <label className="text-lg font-semibold text-base-content">
         {_.capitalize(selectedModelName)}
 
@@ -208,53 +222,9 @@ const OllamaModelSettings = observer(({ ollamaStore }: { ollamaStore: OllamaStor
 })
 
 const OllamaModelPanel = observer(({ connection }: { connection: OllamaConnectionViewModel }) => {
-  const { selectedConnectionId } = settingStore.setting
-  const { selectedModelName } = connectionStore
-
-  const [tab, setTab] = useState<'all' | 'single'>('all')
-
-  const ollamaStore = useMemo(() => {
-    return new OllamaStore(connection)
-  }, [connection])
-
-  useEffect(() => {
-    // if the model changes, go into model settings
-    if (!selectedModelName) {
-      setTab('all')
-    }
-  }, [selectedModelName])
-
-  let selectedModelBreadcrumb: BreadcrumbType | undefined = undefined
-  if (selectedModelName && selectedConnectionId === connection.id) {
-    selectedModelBreadcrumb = {
-      label: selectedModelName,
-      isSelected: tab === 'single',
-      onClick: () => setTab('single'),
-    }
-  }
-
   return (
     <div className="relative flex h-full w-full flex-col">
-      <BreadcrumbBar
-        breadcrumbs={[
-          {
-            label: 'Models',
-            isSelected: tab === 'all',
-            onClick: () => setTab('all'),
-          },
-          selectedModelBreadcrumb,
-        ]}
-      />
-
-      {tab === 'all' || !selectedModelName ? (
-        <OllamaModelPanelTable
-          connection={connection}
-          ollamaStore={ollamaStore}
-          onShowDetails={() => setTab('single')}
-        />
-      ) : (
-        <OllamaModelSettings ollamaStore={ollamaStore} />
-      )}
+      <OllamaModelPanelTable connection={connection} />
     </div>
   )
 })

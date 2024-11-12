@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import useMedia from 'use-media'
 import { Modal, ModalContent, ModalBody } from '@nextui-org/react'
-
-import { settingStore } from '~/core/setting/SettingStore'
+import { NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
+import Drawer from '~/containers/Drawer'
+
+import { NavButton } from '~/components/NavButton'
 
 import Github from '~/icons/Github'
 import Back from '~/icons/Back'
@@ -14,92 +16,63 @@ import Back from '~/icons/Back'
 import {
   SettingPanelOptionsType,
   SettingPanelType,
-  settingsPanelByName,
-} from '~/features/settings/settingsPanels'
+  settingRoutesByName,
+} from '~/features/settings/settingRoutes'
 
 const SettingsSidePanel = observer(
-  ({
-    selectedPanel,
-    onSectionClick,
-  }: {
-    selectedPanel?: SettingPanelOptionsType
-    onSectionClick?: (panelName: SettingPanelOptionsType) => void
-  }) => {
-    const handleSectionClick = (panelName: SettingPanelOptionsType) => {
-      // clicking on self or other will open other
-      onSectionClick?.(panelName)
-      settingStore.openSettingsModal(panelName)
-    }
-
+  ({ onSectionClick }: { onSectionClick?: (panelName: SettingPanelOptionsType) => void }) => {
     return _.map(
-      settingsPanelByName,
+      settingRoutesByName,
       ({ mobileOnly, label }: SettingPanelType, panelName: SettingPanelOptionsType) => {
         if (mobileOnly || !label) return <div key={panelName} />
 
         return (
-          <button
+          <NavLink
+            to={panelName}
             key={panelName}
-            className={
-              'btn w-full justify-start ' + (panelName === selectedPanel ? ' btn-neutral' : '')
+            className={({ isActive }) =>
+              'btn w-full justify-start ' + (isActive ? ' btn-neutral' : '')
             }
-            onClick={() => handleSectionClick(panelName)}
+            onClick={() => onSectionClick?.(panelName)}
           >
             {label}
-          </button>
+          </NavLink>
         )
       },
     )
   },
 )
 
-const MobileSettingsSidePanel = observer(
-  ({ selectedPanel }: { selectedPanel?: SettingPanelOptionsType }) => {
-    const containerRef = useRef<HTMLDetailsElement>(null)
+const MobileSettingsSidePanel = observer(() => {
+  const containerRef = useRef<HTMLDetailsElement>(null)
 
-    const handleSectionClick = (panelName: SettingPanelOptionsType) => {
-      settingStore.openSettingsModal(panelName)
+  const handleSectionClick = () => {
+    containerRef.current?.removeAttribute('open')
+  }
 
-      containerRef.current?.removeAttribute('open')
-    }
+  return (
+    <details className="dropdown w-full" ref={containerRef}>
+      <summary role="button" className="btn w-full lg:hidden">
+        Go to section
+      </summary>
 
-    if (!selectedPanel || !settingsPanelByName[selectedPanel]) return null
-
-    return (
-      <details className="dropdown w-full" ref={containerRef}>
-        <summary role="button" className="btn w-full lg:hidden">
-          Go to section
-        </summary>
-
-        <ul className="menu dropdown-content z-50 mt-1 w-full rounded-box bg-base-200 p-2 lg:p-0">
-          <SettingsSidePanel selectedPanel={selectedPanel} onSectionClick={handleSectionClick} />
-        </ul>
-      </details>
-    )
-  },
-)
+      <ul className="menu dropdown-content z-50 mt-1 w-full rounded-box bg-base-200 p-2 lg:p-0">
+        <SettingsSidePanel onSectionClick={handleSectionClick} />
+      </ul>
+    </details>
+  )
+})
 
 const SettingsModal = observer(() => {
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+
   const modalRef = useRef<HTMLDialogElement>(null)
   const isMobile = useMedia('(max-width: 1024px)')
 
-  let panelName = settingStore.settingPanelName
-  if (panelName === 'initial' && !isMobile) {
-    panelName = 'general'
-  }
+  const isOpen = pathname !== '/'
 
-  const { subtitle, Component } = useMemo<Partial<SettingPanelType>>(() => {
-    if (!panelName) return {}
-
-    return settingsPanelByName[panelName]
-  }, [panelName, isMobile])
-
-  const isOpen = !!Component
-
-  const handleClose = () => {
-    settingStore.closeSettingsModal()
-  }
-
-  const shouldShowBackButton = panelName !== 'initial' && isMobile
+  const shouldShowBackButton = pathname !== '/initial' && isMobile
 
   useEffect(() => {
     if (isOpen) {
@@ -109,11 +82,18 @@ const SettingsModal = observer(() => {
     }
   }, [isOpen])
 
+  // if the panel name was changed outside of the router scope, we need to reset it
+  useEffect(() => {
+    if (pathname === '/initial' && !isMobile) {
+      navigate('general', { replace: true })
+    }
+  }, [pathname, isMobile])
+
   return (
     <Modal
       backdrop="opaque"
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={() => navigate('/')}
       size={isMobile ? 'full' : undefined}
       classNames={{
         base: isMobile ? '' : '!container',
@@ -133,23 +113,21 @@ const SettingsModal = observer(() => {
                   'btn btn-circle btn-ghost btn-sm !text-lg opacity-70 ' +
                   (shouldShowBackButton ? '' : ' pointer-events-none !opacity-0') // hack to hide the button but keep spacing
                 }
-                onClick={() => settingStore.openSettingsModal('initial')}
+                onClick={() => navigate(-1)}
               >
                 <Back />
               </button>
             </div>
 
             <div className="w-full flex-1 justify-center font-semibold lg:text-xl">
-              Settings{subtitle && `: ${subtitle}`}
+              Settings
+              {/* {subtitle && `: ${subtitle}`} */}
             </div>
 
             <div className="ml-auto justify-end">
-              <button
-                className="btn btn-circle btn-ghost btn-sm opacity-70 lg:text-lg"
-                onClick={handleClose}
-              >
+              <NavButton to="/" className="btn btn-circle btn-ghost btn-sm opacity-70 lg:text-lg">
                 ✕
-              </button>
+              </NavButton>
             </div>
           </div>
 
@@ -161,11 +139,7 @@ const SettingsModal = observer(() => {
                   role="complementary"
                 >
                   <div className="flex w-full flex-col gap-2 rounded-md bg-base-200 lg:h-full lg:p-2 ">
-                    {isMobile ? (
-                      <MobileSettingsSidePanel selectedPanel={panelName} />
-                    ) : (
-                      <SettingsSidePanel selectedPanel={panelName} />
-                    )}
+                    {isMobile ? <MobileSettingsSidePanel /> : <SettingsSidePanel />}
 
                     <a
                       href="https://github.com/mrdjohnson/llm-x"
@@ -181,7 +155,20 @@ const SettingsModal = observer(() => {
                 </div>
 
                 <section className="flex h-full w-full flex-1 justify-stretch overflow-x-auto overflow-y-scroll">
-                  {Component && <Component />}
+                  <Routes>
+                    {_.map(settingRoutesByName, ({ Component, label, ...rest }, key) => (
+                      <Route
+                        key={key}
+                        path={key + '/*'}
+                        element={
+                          <Drawer label={label} path={'/' + key}>
+                            <Component />
+                          </Drawer>
+                        }
+                        {...rest}
+                      />
+                    ))}
+                  </Routes>
                 </section>
               </div>
             </div>

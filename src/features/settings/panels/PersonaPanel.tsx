@@ -193,7 +193,7 @@ export const PersonaPanel = observer(() => {
   const { selectedPersona, personas } = personaStore
 
   return (
-    <div className="no-scrollbar flex w-full flex-col gap-2">
+    <div className="no-scrollbar flex w-full flex-col gap-2 h-full overflow-scroll bg-base-100">
       <button
         className={'btn w-full ' + (selectedPersona ? '' : ' btn-primary')}
         onClick={() => personaStore.setSelectedPersona(undefined)}

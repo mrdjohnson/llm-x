@@ -19,7 +19,10 @@ const FormInput = forwardRef((inputProps: FormInputProps) => {
           inputWrapper:
             '!bg-base-transparent border rounded-md border-base-content/30' +
             (isInvalid ? ' !border-error' : '') +
-            (isDisabled ? ' opacity-30 hover:!border-base-content/30' : ''),
+            (isDisabled ? ' opacity-30 hover:!border-base-content/30' : '') +
+            (inputProps.variant === 'underlined' ? ' border-0 border-b-1' : ''),
+
+          input: inputProps.variant === 'underlined' ? ' !text-base-content' : '',
         }}
         {...inputProps}
       />

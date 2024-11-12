@@ -2,6 +2,7 @@ import { useKBar } from 'kbar'
 import { Kbd } from '@nextui-org/react'
 import { observer } from 'mobx-react-lite'
 import { type PropsWithChildren } from 'react'
+import { NavLink } from 'react-router-dom'
 
 import ModelSelector from '~/components/ModelSelector'
 import ModelRefreshButton from '~/components/ModelRefreshButton'
@@ -13,7 +14,6 @@ import Bars3 from '~/icons/Bars3'
 import Search from '~/icons/Search'
 import AppSettings from '~/icons/AppSettings'
 
-import { settingStore } from '~/core/setting/SettingStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const KeyboardTooltip = ({ command, children }: PropsWithChildren<{ command: string }>) => (
@@ -69,11 +69,7 @@ const Navbar = observer(() => {
         </KeyboardTooltip>
 
         <KeyboardTooltip command="/">
-          <label
-            htmlFor="app-drawer"
-            className="btn btn-square btn-ghost btn-sm md:btn-md "
-            onClick={() => settingStore.openSettingsModal()}
-          >
+          <NavLink to="initial" className="btn btn-square btn-ghost btn-sm md:btn-md ">
             <div className="indicator p-1">
               <div className="swap lg:swap-active">
                 <div className="swap-on align-middle">
@@ -91,7 +87,7 @@ const Navbar = observer(() => {
                 </span>
               )}
             </div>
-          </label>
+          </NavLink>
         </KeyboardTooltip>
       </div>
     </nav>
