@@ -4,10 +4,11 @@ import { observer } from 'mobx-react-lite'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import FunTitle from '~/components/FunTitle'
+import { NavButtonDiv } from '~/components/NavButton'
+
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { personaTable } from '~/core/persona/PersonaTable'
 import { connectionStore } from '~/core/connection/ConnectionStore'
-import { settingStore } from '~/core/setting/SettingStore'
 
 type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
 
@@ -71,16 +72,16 @@ const ChatBoxPrompt = observer(({ chat }: { chat: ChatViewModel }) => {
           </h1>
 
           <div className="text-2xl">
-            <ul className="steps steps-vertical list-inside list-disc gap-3 py-6 text-left *:text-lg [&_a]:text-lg [&_span]:text-lg">
+            <ul className="steps steps-vertical list-inside list-disc gap-3 py-6 text-left *:!text-lg [&_a]:text-lg [&_span]:text-lg">
               <Step isCompleted={!_.isEmpty(activeConnectionTypes)}>
                 {'Tell LM Studio, Ollama, AUTOMATIC1111, or Open AI that '}
                 <span className="text-primary">we're cool:</span>
-                <button
-                  className="link decoration-primary"
-                  onClick={() => settingStore.openSettingsModal('connection')}
+                <NavButtonDiv
+                  to="/connection"
+                  className="link inline-block text-lg decoration-primary"
                 >
                   How to connect
-                </button>
+                </NavButtonDiv>
               </Step>
 
               <Step isCompleted={anyConnectionHasModels}>
@@ -107,12 +108,12 @@ const ChatBoxPrompt = observer(({ chat }: { chat: ChatViewModel }) => {
               <Step type="secondary" isCompleted={hasCreatedPersonas}>
                 {'Create and Select a'}
 
-                <button
-                  className="link ml-1 decoration-secondary"
-                  onClick={() => settingStore.openSettingsModal('personas')}
+                <NavButtonDiv
+                  to="/personas"
+                  className="link ml-1 inline-block decoration-secondary"
                 >
                   Persona <span className="text-xs">(aka System Prompt)</span>
-                </button>
+                </NavButtonDiv>
 
                 {'to give your bot some pizzaz'}
               </Step>

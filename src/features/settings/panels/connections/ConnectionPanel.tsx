@@ -1,22 +1,33 @@
 import { observer } from 'mobx-react-lite'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useMemo, useRef } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import _ from 'lodash'
+import useMedia from 'use-media'
 import { ScrollShadow } from '@nextui-org/react'
 
 import HostInput from '~/components/HostInput'
 import EnabledCheckbox from '~/components/EnabledCheckbox'
 import FormInput from '~/components/form/FormInput'
 
+import { Drawer } from '~/containers/Drawer'
+
 import Copy from '~/icons/Copy'
+import Options from '~/icons/Options'
+
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
-import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import ConnectionDataParameterSection from '~/features/settings/panels/connections/ConnectionParameterSection'
 
 export type ConnectionFormDataType = ConnectionModel
 
-const ConnectionPanel = observer(({ connection }: { connection: ConnectionViewModelTypes }) => {
+const ConnectionPanel = observer(() => {
+  const { id } = useParams()
+  const navigate = useNavigate()
+
+  const isMobile = useMedia('(max-width: 768px)')
+
+  const connection = connectionStore.getConnectionById(id)!
   const methods = useForm<ConnectionFormDataType>({})
 
   const formRef = useRef<HTMLFormElement>(null)
@@ -53,16 +64,33 @@ const ConnectionPanel = observer(({ connection }: { connection: ConnectionViewMo
     return true
   }
 
+  const deleteConnection = async () => {
+    await connectionStore.deleteConnection(connection)
+
+    navigate('/models')
+  }
+
+  const duplicateConnection = async () => {
+    const duplicate = await connectionStore.duplicateConnection(connection.source)
+
+    navigate('/models')
+
+    // this lets the drawer close first....then opens it back up
+    setTimeout(() => {
+      navigate('/models/edit/' + duplicate.id)
+    }, 300)
+  }
+
   useEffect(() => {
     resetToSnapshot()
   }, [connection])
 
   return (
-    <div className="flex h-full w-full flex-col">
-      <FormProvider {...methods}>
-        <form className="contents" onSubmit={handleFormSubmit} ref={formRef}>
-          <ScrollShadow className="h-full max-h-full">
-            <div className="my-2 flex w-full flex-col gap-2 overflow-scroll">
+    <Drawer label={'Edit ' + connection.label} path={'edit/' + id} outletContent={{ control }}>
+      <div className="flex h-full w-full flex-col px-2 overflow-hidden">
+        <FormProvider {...methods}>
+          <form className="contents" onSubmit={handleFormSubmit} ref={formRef}>
+            <ScrollShadow className="flex h-full max-h-full flex-col gap-2 overflow-scroll ">
               <EnabledCheckbox connection={connection} control={control} />
 
               <Controller
@@ -86,55 +114,109 @@ const ConnectionPanel = observer(({ connection }: { connection: ConnectionViewMo
 
               {connection.hostLabel && <HostInput connection={connection} isEnabled={isEnabled} />}
 
-              <ConnectionDataParameterSection />
-            </div>
-          </ScrollShadow>
+              <div className="h-full rounded-lg bg-base-100 pt-0">
+                <ConnectionDataParameterSection subControl={control} />
+              </div>
+            </ScrollShadow>
 
-          <div className="mt-auto flex flex-col justify-between gap-3 pt-2 md:flex-row md:pb-2">
-            <div>
-              <button
-                type="button"
-                className="btn btn-outline btn-sm mr-8 w-full text-error md:btn-ghost md:text-error"
-                onClick={() => connectionStore.deleteConnection(connection)}
-              >
-                Delete Connection
-              </button>
-            </div>
+            <div className="mt-auto flex flex-row justify-between gap-3 py-2 md:pb-2 flex-shrink-0">
+              {isMobile ? (
+                <div className="dropdown dropdown-top">
+                  <div tabIndex={0} role="button" className="btn btn-sm m-1 w-fit">
+                    <Options />
+                  </div>
 
-            <div>
-              <button
-                type="button"
-                className="btn btn-outline w-full text-base-content/60 md:btn-ghost md:btn-sm hover:text-base-content md:mx-4 md:text-base-content/60"
-                onClick={() => connectionStore.duplicateConnection(connection.source)}
-                disabled={isDirty}
-              >
-                Duplicate <Copy />
-              </button>
-            </div>
+                  <ul
+                    tabIndex={0}
+                    className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
+                  >
+                    <li>
+                      <button
+                        type="button"
+                        className="btn text-error"
+                        key="delete"
+                        onClick={deleteConnection}
+                      >
+                        Delete
+                      </button>
+                    </li>
 
-            <div className="flex flex-row justify-between">
-              <button
-                type="button"
-                className="btn btn-outline md:btn-ghost md:btn-sm md:mx-4"
-                onClick={() => reset()}
-                disabled={!isDirty}
-              >
-                Reset
-              </button>
+                    <li>
+                      <button
+                        type="button"
+                        className="btn"
+                        key="duplicate"
+                        onClick={duplicateConnection}
+                        disabled={isDirty}
+                      >
+                        Duplicate <Copy />
+                      </button>
+                    </li>
 
-              <button
-                type="submit"
-                className="btn btn-primary md:btn-sm"
-                onClick={handleFormSubmit}
-                disabled={!isDirty && _.isEmpty(errors)}
-              >
-                Save
-              </button>
+                    <li>
+                      <button
+                        type="button"
+                        className="btn"
+                        key="reset"
+                        disabled={!isDirty}
+                        onClick={() => reset()}
+                      >
+                        Reset
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <button
+                      type="button"
+                      className="btn btn-outline btn-sm mr-8 w-full text-error md:btn-ghost md:text-error"
+                      onClick={deleteConnection}
+                    >
+                      Delete Connection
+                    </button>
+                  </div>
+
+                  <div>
+                    <button
+                      type="button"
+                      className="btn btn-outline w-full text-base-content/60 md:btn-ghost md:btn-sm hover:text-base-content md:mx-4 md:text-base-content/60"
+                      onClick={duplicateConnection}
+                      disabled={isDirty}
+                    >
+                      Duplicate <Copy />
+                    </button>
+                  </div>
+                </>
+              )}
+
+              <div className="flex flex-row justify-between">
+                {!isMobile && (
+                  <button
+                    type="button"
+                    className="btn btn-outline md:btn-ghost md:btn-sm md:mx-4"
+                    onClick={() => reset()}
+                    disabled={!isDirty}
+                  >
+                    Reset
+                  </button>
+                )}
+
+                <button
+                  type="submit"
+                  className="min-height-4 btn btn-primary btn-sm h-auto md:btn-sm"
+                  onClick={handleFormSubmit}
+                  disabled={!isDirty && _.isEmpty(errors)}
+                >
+                  Save
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
-      </FormProvider>
-    </div>
+          </form>
+        </FormProvider>
+      </div>
+    </Drawer>
   )
 })
 

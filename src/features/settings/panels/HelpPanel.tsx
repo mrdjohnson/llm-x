@@ -15,7 +15,7 @@ const LMS_CODE = 'lms server start --cors=true'
 
 const HelpPanel = observer(() => {
   return (
-    <ScrollShadow>
+    <ScrollShadow className='p-2'>
       <div className="w-full pl-2">
         {__TARGET__ === 'chrome' && (
           <>

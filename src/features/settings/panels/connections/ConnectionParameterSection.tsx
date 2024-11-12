@@ -1,14 +1,17 @@
-import { MouseEventHandler, useCallback, useMemo, useState } from 'react'
+import { KeyboardEventHandler, MouseEventHandler } from 'react'
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import _ from 'lodash'
-import { Controller, useFormContext, useFieldArray } from 'react-hook-form'
+import { Controller, useFieldArray, Control, useFormState, useWatch } from 'react-hook-form'
 import { Checkbox, Select, SelectItem } from '@nextui-org/react'
 
 import Delete from '~/icons/Delete'
-import Back from '~/icons/Back'
 
-import { ConnectionFormDataType } from '~/features/settings/panels/connections/ConnectionPanel'
+import { ConnectionParameterModel } from '~/core/connection/ConnectionModel'
+
 import ToolTip from '~/components/Tooltip'
 import FormInput from '~/components/form/FormInput'
+import SettingSection, { SettingSectionItem } from '~/containers/SettingSection'
+import { useCrumb } from '~/containers/Drawer'
 
 type ParameterOptionsType = 'system' | 'valueRequired' | 'fieldRequired'
 
@@ -18,31 +21,41 @@ const parameterOptions: Array<{ key: ParameterOptionsType; label: string }> = [
   { key: 'fieldRequired', label: 'Is the field required by the api?' },
 ]
 
-type ConnectionDataParameterRowProps = {
-  index: number
-  onRemove: () => void
-}
+type ParameterFormOutletContext = { control: Control<{ parameters: ConnectionParameterModel[] }> }
 
-const ParameterForm = ({ index, onRemove }: ConnectionDataParameterRowProps) => {
-  const {
-    register,
-    control,
-    getValues,
-    formState: { errors },
-  } = useFormContext<ConnectionFormDataType>()
-  const { fields: parameters } = useFieldArray({
+export const ParameterForm = () => {
+  const { parameterId } = useParams()
+  const { control } = useOutletContext<ParameterFormOutletContext>()
+  const navigate = useNavigate()
+
+  const { errors } = useFormState({ control })
+
+  const { fields: parameters, remove } = useFieldArray({
     control,
     name: 'parameters',
   })
 
+  const index = _.findIndex(parameters, { field: parameterId })
   const parameter = parameters[index]
-  const currentParameter = getValues(`parameters.${index}`)
 
-  if (!parameter || !currentParameter) return null
+  useCrumb({ label: parameter?.field, path: parameterId! })
+
+  // if this does not exist, go back
+  // (reproduce by deleting a parameter on mobile and then pressing back)
+  if (!parameter) {
+    navigate(-1)
+    return
+  }
+
+  const handleRemove = () => {
+    navigate(-1)
+
+    remove(index)
+  }
 
   const validateUniqueField = (nextField: string) => {
     // skip if the field did not change
-    if (currentParameter.field === parameter.field) return
+    if (parameter.field === parameter.field) return
 
     const otherParameter = _.find(parameters, { field: nextField })
 
@@ -52,10 +65,10 @@ const ParameterForm = ({ index, onRemove }: ConnectionDataParameterRowProps) => 
     return true
   }
 
-  const valueRequired = currentParameter.types?.includes('valueRequired')
+  const valueRequired = parameter.types?.includes('valueRequired')
 
   const validateValue = (nextValue?: string) => {
-    if (currentParameter.isJson) {
+    if (parameter.isJson) {
       try {
         JSON.stringify(nextValue)
       } catch (e) {
@@ -63,7 +76,7 @@ const ParameterForm = ({ index, onRemove }: ConnectionDataParameterRowProps) => 
       }
     }
 
-    if (valueRequired && _.isEmpty(nextValue) && _.isEmpty(currentParameter.defaultValue)) {
+    if (valueRequired && _.isEmpty(nextValue) && _.isEmpty(parameter.defaultValue)) {
       return 'A value or default value is required'
     }
 
@@ -82,12 +95,19 @@ const ParameterForm = ({ index, onRemove }: ConnectionDataParameterRowProps) => 
     return true
   }
 
-  console.log('field: ', getValues(`parameters.${index}.label`), currentParameter.label)
-  console.log('parameter types: ', currentParameter.types)
-  console.log('valueRequired: ', valueRequired)
+  const handleEnterPressedOnDrawer: KeyboardEventHandler<HTMLDivElement> = e => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+
+      navigate(-1)
+    }
+  }
 
   return (
-    <div className="m-2 ml-0 flex w-full flex-col gap-3 overflow-y-scroll rounded-md bg-base-100 p-2">
+    <div
+      className="flex h-full w-full flex-col gap-3 overflow-y-scroll rounded-md p-2"
+      onKeyDown={handleEnterPressedOnDrawer}
+    >
       <Controller
         render={({ field }) => (
           <FormInput
@@ -143,18 +163,25 @@ const ParameterForm = ({ index, onRemove }: ConnectionDataParameterRowProps) => 
       </div>
 
       <div className="flex justify-center gap-3">
-        <Checkbox
-          className="flex flex-row"
-          classNames={{ label: 'flex flex-row justify-center align-middle' }}
-          {...register(`parameters.${index}.isJson`)}
-          size="sm"
-        >
-          <div className="flex flex-row justify-center align-middle text-base-content">
-            <ToolTip label="Check this if this value is not supposed to be a string">
-              <span>Convert to JSON?</span>
-            </ToolTip>
-          </div>
-        </Checkbox>
+        <Controller
+          render={({ field }) => (
+            <Checkbox
+              className="flex flex-row"
+              classNames={{ label: 'flex flex-row justify-center align-middle' }}
+              onChange={field.onChange}
+              size="sm"
+            >
+              <div className="flex flex-row justify-center align-middle text-base-content">
+                <ToolTip label="Check this if this value is not supposed to be a string">
+                  <span>Convert to JSON?</span>
+                </ToolTip>
+              </div>
+            </Checkbox>
+          )}
+          control={control}
+          name={`parameters.${index}.isJson`}
+          defaultValue={parameter.isJson || false}
+        />
       </div>
 
       <Controller
@@ -185,7 +212,6 @@ const ParameterForm = ({ index, onRemove }: ConnectionDataParameterRowProps) => 
             className="w-full min-w-[20ch] rounded-md border border-base-content/30 bg-transparent"
             selectionMode="multiple"
             size="sm"
-            // variant="bordered"
             classNames={{
               value: '!text-base-content min-w-[20ch]',
               trigger: 'bg-base-100 hover:!bg-base-200 rounded-md',
@@ -217,44 +243,42 @@ const ParameterForm = ({ index, onRemove }: ConnectionDataParameterRowProps) => 
         defaultValue={parameter.types}
       />
 
-      <button
-        type="button"
-        className="btn btn-ghost btn-sm mt-auto w-fit place-self-center text-error"
-        disabled={currentParameter.types?.includes('fieldRequired')}
-        onClick={onRemove}
-      >
-        Delete Parameter
-      </button>
+      <div className="mt-auto flex flex-row justify-between">
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm w-fit place-self-center text-error"
+          disabled={parameter.types?.includes('fieldRequired')}
+          onClick={handleRemove}
+        >
+          Delete Parameter
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm w-fit place-self-center"
+          onClick={() => navigate(-1)}
+        >
+          Done
+        </button>
+      </div>
     </div>
   )
 }
 
-const ConnectionDataParameterSection = () => {
-  const { control } = useFormContext<ConnectionFormDataType>()
+const ConnectionDataParameterSection = ({ subControl }: { subControl: unknown }) => {
+  // we really just want the field array options
+  const control = subControl as Control<{ parameters: ConnectionParameterModel[] }>
+  const navigate = useNavigate()
 
-  const [selectedIndex, setSelectedIndex] = useState<number | undefined>()
-  const [filterText, setFilterText] = useState('')
-
-  const {
-    fields: parameters,
-    append,
-    remove,
-  } = useFieldArray({
+  const { append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormProvider)
     name: 'parameters', // unique name for your Field Array
   })
 
-  const hasNewField = !!_.find(parameters, { field: 'newField' })
-  const hasSelectedParameter = selectedIndex !== undefined
+  // we need to use this to get the updated ids
+  const parameters = useWatch({ control, name: 'parameters' })
 
-  const filteredParameters = useMemo(() => {
-    const lowerCaseFilter = filterText.toLowerCase()
-    return parameters.filter(
-      parameter =>
-        parameter.field.toLowerCase().includes(lowerCaseFilter) ||
-        parameter.label?.toLowerCase().includes(lowerCaseFilter),
-    )
-  }, [parameters, filterText])
+  const hasNewField = !!_.find(parameters, { field: 'newField' })
 
   const addParameter: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
@@ -267,108 +291,58 @@ const ConnectionDataParameterSection = () => {
       isJson: false,
     })
 
-    setSelectedIndex(parameters.length)
+    navigate('newField')
   }
 
   const removeParameterByIndex = (index: number) => {
-    setSelectedIndex(undefined)
-
     remove(index)
   }
 
-  const Form = useCallback(
-    () =>
-      hasSelectedParameter && (
-        <ParameterForm
-          index={selectedIndex}
-          onRemove={() => removeParameterByIndex(selectedIndex)}
-        />
-      ),
-    [selectedIndex, parameters, hasSelectedParameter],
-  )
+  const parameterToSectionItem = (
+    parameter: ConnectionParameterModel,
+  ): SettingSectionItem<ConnectionParameterModel> => ({
+    id: parameter.field || '',
+    label: parameter.field,
+    subLabels: parameter.helpText && [parameter.helpText],
+    data: parameter,
+  })
+
+  const itemFilter = (parameter: ConnectionParameterModel, filterText: string) => {
+    return (
+      parameter.field.toLowerCase().includes(filterText) ||
+      parameter.label?.toLowerCase().includes(filterText)
+    )
+  }
+
+  // watched parameters still loading
+  if (!parameters) return null
 
   return (
-    <div className="flex h-full max-h-full flex-col rounded-md bg-base-200">
-      <div className="flex w-full flex-row gap-2 p-2 pb-0 align-middle">
-        {hasSelectedParameter && (
-          <button type="button" onClick={() => setSelectedIndex(undefined)}>
-            <Back />
-          </button>
-        )}
-        <span className="content-center">Parameters:</span>
-        <FormInput
-          value={filterText}
-          placeholder="Filter parameters by field or label..."
-          onChange={e => setFilterText(e.target.value)}
-        />
-      </div>
-
-      <div className="flex h-full flex-row">
-        <ul
-          className={
-            'menu rounded-box bg-base-200 p-0 pt-1 ' + (hasSelectedParameter ? 'w-fit' : 'w-full')
-          }
+    <SettingSection
+      items={parameters.map(parameterToSectionItem)}
+      filterProps={{
+        helpText: 'Filter parameters by field or label...',
+        itemFilter,
+        emptyLabel: 'No parameter fields or labels matches this filter',
+      }}
+      addButtonProps={{
+        label: 'Add parameter',
+        onClick: addParameter,
+        isDisabled: hasNewField,
+      }}
+      renderActionRow={(parameter, index) => (
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm ml-auto justify-start px-2 text-error"
+          disabled={parameter.types?.includes('fieldRequired')}
+          onClick={() => _.isNumber(index) && removeParameterByIndex(index)}
         >
-          {filteredParameters.map((parameter, index) => (
-            <li
-              key={parameter.field}
-              onClick={() => setSelectedIndex(index)}
-              className={
-                'mx-2 rounded-md ' +
-                (selectedIndex === index ? 'bg-base-content/10' : 'bg-base-300')
-              }
-            >
-              {hasSelectedParameter ? (
-                <span className="max-w-[15ch] justify-center">{parameter.field}</span>
-              ) : (
-                <div className="flex flex-col px-2 *:text-left">
-                  <div className="flex w-full flex-row self-start text-left">
-                    <span className="mr-3 content-center">{parameter.field}</span>
-                    <span className="content-center text-sm font-semibold text-base-content/30">
-                      {parameter.label}
-                    </span>
-
-                    <button
-                      type="button"
-                      className="btn btn-ghost btn-sm ml-auto justify-start pl-3 text-error"
-                      disabled={parameter.types?.includes('fieldRequired')}
-                      onClick={() => removeParameterByIndex(index)}
-                    >
-                      <Delete />
-                    </button>
-                  </div>
-
-                  {parameter.helpText && (
-                    <p className="line-clamp-2 self-start text-base-content/45">
-                      {parameter.helpText}
-                    </p>
-                  )}
-                </div>
-              )}
-            </li>
-          ))}
-
-          {!filteredParameters[0] && parameters[0] && (
-            <span className="pt-6 text-center font-semibold text-base-content/30">
-              No parameter fields or labels matches this filter
-            </span>
-          )}
-
-          <li className="mx-2 mt-auto pt-4">
-            <button
-              type="button"
-              className="btn btn-primary btn-sm mb-1 whitespace-nowrap"
-              onClick={addParameter}
-              disabled={hasNewField}
-            >
-              Add parameter
-            </button>
-          </li>
-        </ul>
-
-        <Form />
-      </div>
-    </div>
+          <Delete />
+        </button>
+      )}
+      selectedItem={undefined}
+      isSubSection
+    />
   )
 }
 

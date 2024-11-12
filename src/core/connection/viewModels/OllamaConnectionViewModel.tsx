@@ -12,6 +12,7 @@ import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnec
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
 import ollamaApi from '~/core/connection/api/OllamaApi'
+import OllamaStore from '~/features/ollama/OllamaStore'
 
 const LazyOllamaModelPanel = lazy(() => import('~/features/settings/panels/model/OllamaModelPanel'))
 
@@ -37,6 +38,10 @@ class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
 
   readonly hostLabel = 'Ollama Host:'
   readonly enabledLabel = 'Text generation through Ollama:'
+
+  get store() {
+    return new OllamaStore(this)
+  }
 
   static toViewModel(connection: ConnectionModel, { autoFetch = true } = {}) {
     return new this(connection, { autoFetch })
