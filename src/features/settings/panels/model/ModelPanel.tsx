@@ -45,7 +45,10 @@ const ModelPanel = observer(() => {
   ): SettingSectionItem<ConnectionViewModelTypes> => ({
     id: connection.id,
     label: connection.label,
-    subLabels: [connection.source.enabled ? 'Enabled' : 'Disabled'],
+    subLabels: [
+      connection.source.enabled ? 'Enabled' : 'Disabled',
+      connection.isConnected ? 'Connected' : 'Disconnected',
+    ],
     data: connection,
   })
 
