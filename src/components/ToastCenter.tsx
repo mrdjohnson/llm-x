@@ -33,7 +33,7 @@ const ToastCenter = observer(() => {
 
   return (
     <div
-      className="z-30 w-full gap-3 bg-transparent"
+      className="z-30 w-full gap-3 bg-transparent toast mb-24"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
