@@ -224,7 +224,7 @@ export class ChatViewModel {
     this.messageViewModelCache.put(userMessage)
 
     // if there was not a name before, auto make one now
-    const name = this.source.name || content.substring(0, 40)
+    const name = this.source.name === 'New Chat' ? content.substring(0, 40) : this.source.name
     // add the message (and new name) to the chat
     await this.update({
       name,
