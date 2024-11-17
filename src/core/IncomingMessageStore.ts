@@ -7,9 +7,10 @@ import BaseApi from '~/core/connection/api/BaseApi'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
-import { rewriteChromeUrl } from '../utils/rewriteChromeUrl'
+import { rewriteChromeUrl } from '~/utils/rewriteChromeUrl'
 
 export class IncomingMessageStore {
+  messageGroupById: Record<string, number> = {}
   messageById: Record<string, MessageViewModel> = {}
   messageAbortedById: Set<string> = new Set()
 
@@ -21,13 +22,26 @@ export class IncomingMessageStore {
     return !!this.messageById[message.id]
   }
 
+  containsGroup(message: MessageViewModel): boolean {
+    return _.gt(this.messageGroupById[message.rootMessage.id], 0)
+  }
+
   get isGettingData() {
     return !_.isEmpty(this.messageById)
+  }
+
+  get incomingData() {
+    const messages = _.values(this.messageById)
+
+    return messages[0]?.contentOverride
   }
 
   commitMessage(message: MessageViewModel) {
     _.unset(this.messageById, message.id)
     _.unset(this.messageAbortedById, message.id)
+
+    this.messageGroupById[message.rootMessage.id] ??= 1
+    this.messageGroupById[message.rootMessage.id] -= 1
   }
 
   deleteMessage(chat: ChatViewModel, message: MessageViewModel) {
@@ -105,6 +119,8 @@ export class IncomingMessageStore {
 
   async generateMessage(chat: ChatViewModel, incomingMessage: MessageViewModel) {
     this.messageById[incomingMessage.id] = incomingMessage
+    this.messageGroupById[incomingMessage.rootMessage.id] ??= 0
+    this.messageGroupById[incomingMessage.rootMessage.id] += 1
 
     const connection = connectionStore.selectedConnection
 

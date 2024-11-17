@@ -1,7 +1,6 @@
-import { useRef, MouseEvent, useEffect } from 'react'
+import { MouseEvent, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
-import ScrollableFeed from 'react-scrollable-feed'
-import { twMerge } from 'tailwind-merge'
+import _ from 'lodash'
 
 import { chatStore } from '~/core/chat/ChatStore'
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
@@ -14,17 +13,10 @@ import Stop from '~/icons/Stop'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 import { ChatBoxMessage } from '~/components/message/ChatBoxMessage'
+import ScrollableChatFeed from '~/containers/ScrollableChatFeed'
 
 const ChatBox = observer(() => {
   const chat = chatStore.selectedChat
-
-  const scrollableFeedRef = useRef<ScrollableFeed>(null)
-
-  useEffect(() => {
-    setTimeout(() => {
-      scrollableFeedRef.current?.scrollToBottom()
-    }, 300)
-  }, [chat])
 
   useEffect(() => {
     chat?.fetchMessages()
@@ -50,9 +42,7 @@ const ChatBox = observer(() => {
 
       const incomingMessage = await chat.createAndPushIncomingMessage()
 
-      await incomingMessageStore.generateMessage(chat, incomingMessage).finally(() => {
-        scrollableFeedRef.current?.scrollToBottom()
-      })
+      await incomingMessageStore.generateMessage(chat, incomingMessage)
     }
   }
 
@@ -69,14 +59,7 @@ const ChatBox = observer(() => {
 
   return (
     <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-hidden rounded-md">
-      <ScrollableFeed
-        ref={scrollableFeedRef}
-        className={twMerge(
-          'no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden',
-          (isEditingMessage || isGettingData) && '!overflow-y-hidden',
-        )}
-        animateScroll={(element, offset) => element.scrollBy({ top: offset, behavior: 'smooth' })}
-      >
+      <ScrollableChatFeed className="no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden">
         {chat.messages.length > 0 ? (
           chat.messages.map(message => (
             <ChatBoxMessage
@@ -92,7 +75,7 @@ const ChatBox = observer(() => {
         ) : (
           <ChatBoxPrompt chat={chat} />
         )}
-      </ScrollableFeed>
+      </ScrollableChatFeed>
 
       <ToastCenter />
 

@@ -29,7 +29,7 @@ export class ChatViewModel {
   }
 
   async fetchMessages() {
-    messageTable.findByIds(this.source.messageIds).then(loadedMessages => {
+    return messageTable.findByIds(this.source.messageIds).then(loadedMessages => {
       this.messageViewModelCache.clear()
 
       loadedMessages.forEach(message => {

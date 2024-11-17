@@ -65,7 +65,12 @@ export const ChatBoxMessage = observer(
     }
 
     return (
-      <MessageGroup message={message} key={message.id + '_group'} chat={chat}>
+      <MessageGroup
+        message={message}
+        key={message.id + '_group'}
+        chat={chat}
+        shouldScrollIntoView={incomingMessageStore.containsGroup(message)}
+      >
         {message.selectedVariationHandler.displayVariations.map((variant, index) => (
           <MessageOrEditedMessage
             key={variant.id}

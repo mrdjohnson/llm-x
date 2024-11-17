@@ -33,7 +33,6 @@ export const IncomingMessage = observer(({ message, messageVariant }: CustomMess
       customDeleteIcon={<Stop />}
       disableRegeneration
       disableEditing
-      shouldScrollIntoView
     >
       <Loading />
     </Message>
