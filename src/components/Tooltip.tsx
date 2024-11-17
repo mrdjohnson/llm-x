@@ -6,9 +6,17 @@ type ToolTipProps = PropsWithChildren<{
   className?: string
   placement?: NextUiTooltipProps['placement']
   delay?: number
+  showArrow?: boolean
 }>
 
-const ToolTip = ({ label, placement, children, className = '', delay }: ToolTipProps) => {
+const ToolTip = ({
+  label,
+  placement,
+  children,
+  className = '',
+  delay,
+  showArrow = true,
+}: ToolTipProps) => {
   return (
     <NextUiTooltip
       content={label}
@@ -21,7 +29,7 @@ const ToolTip = ({ label, placement, children, className = '', delay }: ToolTipP
       }}
       placement={placement}
       delay={delay}
-      showArrow
+      showArrow={showArrow}
     >
       {children}
     </NextUiTooltip>
