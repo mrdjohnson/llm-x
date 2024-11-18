@@ -52,11 +52,11 @@ const MobileSettingsSidePanel = observer(() => {
 
   return (
     <details className="dropdown w-full" ref={containerRef}>
-      <summary role="button" className="btn w-full lg:hidden">
+      <summary role="button" className="btn w-full md:hidden">
         Go to section
       </summary>
 
-      <ul className="menu dropdown-content z-50 mt-1 w-full rounded-box bg-base-200 p-2 lg:p-0">
+      <ul className="menu dropdown-content z-50 mt-1 w-full rounded-box bg-base-200 p-2 md:p-0">
         <SettingsSidePanel onSectionClick={handleSectionClick} />
       </ul>
     </details>
@@ -68,7 +68,7 @@ const SettingsModal = observer(() => {
   const navigate = useNavigate()
 
   const modalRef = useRef<HTMLDialogElement>(null)
-  const isMobile = useMedia('(max-width: 1024px)')
+  const isMobile = useMedia('(max-width: 768px)')
 
   const isOpen = pathname !== '/'
 
@@ -96,7 +96,7 @@ const SettingsModal = observer(() => {
       onClose={() => navigate('/')}
       size={isMobile ? 'full' : undefined}
       classNames={{
-        base: isMobile ? '' : '!container',
+        base: isMobile ? '' : '!w-full max-w-full',
         body: 'px-2 text-base-content overflow-hidden',
         backdrop:
           'bg-gradient-to-t from-base-200 from-25% to-base-200/20 backdrop-opacity-20 !cursor-pointer',
@@ -119,31 +119,31 @@ const SettingsModal = observer(() => {
               </button>
             </div>
 
-            <div className="w-full flex-1 justify-center font-semibold lg:text-xl">
+            <div className="w-full flex-1 justify-center font-semibold md:text-xl">
               Settings
               {/* {subtitle && `: ${subtitle}`} */}
             </div>
 
             <div className="ml-auto justify-end">
-              <NavButton to="/" className="btn btn-circle btn-ghost btn-sm opacity-70 lg:text-lg">
+              <NavButton to="/" className="btn btn-circle btn-ghost btn-sm opacity-70 md:text-lg">
                 ✕
               </NavButton>
             </div>
           </div>
 
-          <ModalBody className="pt-0">
+          <ModalBody className="p-0">
             <div className="flex h-full flex-col rounded-md bg-base-100 p-2 pt-0">
-              <div className="flex h-full flex-grow-0 flex-col justify-stretch gap-2 overflow-y-scroll lg:h-[700px] lg:flex-row">
+              <div className="flex h-full flex-grow-0 flex-col justify-stretch gap-2 overflow-y-scroll md:h-[700px] md:flex-row">
                 <div
-                  className="w-full lg:w-[260px] lg:min-w-[260px] lg:max-w-[260px]"
+                  className="w-full md:w-[200px] md:min-w-[200px] md:max-w-[200px]"
                   role="complementary"
                 >
-                  <div className="flex w-full flex-col gap-2 rounded-md bg-base-200 lg:h-full lg:p-2 ">
+                  <div className="flex w-full flex-col gap-2 rounded-md bg-base-200 md:h-full md:p-2 ">
                     {isMobile ? <MobileSettingsSidePanel /> : <SettingsSidePanel />}
 
                     <a
                       href="https://github.com/mrdjohnson/llm-x"
-                      className="btn btn-outline btn-neutral mt-auto hidden fill-base-content stroke-base-content hover:fill-primary-content lg:flex"
+                      className="btn btn-outline btn-neutral mt-auto hidden fill-base-content stroke-base-content hover:fill-primary-content md:flex"
                       aria-label="LLM-X's Github"
                       target="__blank"
                     >
@@ -151,7 +151,7 @@ const SettingsModal = observer(() => {
                     </a>
                   </div>
 
-                  <div className="divider mb-0 mt-2 lg:hidden" />
+                  <div className="divider mb-0 mt-2 md:hidden" />
                 </div>
 
                 <section className="flex h-full w-full flex-1 justify-stretch overflow-x-auto overflow-y-scroll">

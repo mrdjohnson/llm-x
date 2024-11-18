@@ -117,7 +117,7 @@ const MessageFooter = observer(
     return (
       <div
         className={
-          'sticky bottom-0 z-10 flex w-full gap-2 bg-base-100 px-2 pt-2 opacity-0 group-hover:opacity-100 ' +
+          'sticky bottom-0 z-10 flex w-full gap-2 bg-gradient-to-b from-transparent to-base-100 to-60% px-2 pt-2 opacity-0 transition-colors duration-300 ease-in-out hover:bg-base-100 group-hover:opacity-100 ' +
           (message.source.fromBot ? 'flex-row' : 'flex-row-reverse self-end')
         }
       >

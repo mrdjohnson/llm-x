@@ -30,7 +30,7 @@ const MessageHeader = ({
   return (
     <div
       className={
-        'group sticky z-10 mb-2 flex flex-row gap-2 bg-base-100 align-baseline opacity-100 ' +
+        'group sticky z-10 mb-2 flex flex-row gap-2 bg-gradient-to-b from-base-100 from-60% to-transparent pb-2 align-baseline transition-colors duration-300 ease-in-out hover:bg-base-100 ' +
         (isVariationGroupView ? ' top-7' : ' top-0')
       }
     >

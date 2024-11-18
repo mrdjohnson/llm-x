@@ -194,10 +194,10 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
         )} */}
 
       <form
-        className={' h-full min-h-fit w-full ' + (inputDisabled ? 'bg-base-200' : '')}
+        className={'join-item w-full rounded-b-md ' + (inputDisabled ? 'bg-base-200' : '')}
         onSubmit={onFormSubmit}
       >
-        <div className="join-item flex w-full flex-col justify-between bg-base-200 align-middle md:flex-row md:gap-2">
+        <div className=" flex w-full flex-col justify-between rounded-b-md bg-base-200 align-middle md:flex-row md:gap-2">
           <NavButton
             tabIndex={0}
             to="/personas"
@@ -227,7 +227,7 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
 
             {children || (
               <button
-                className="btn btn-ghost rounded-none rounded-br-md bg-base-100"
+                className="btn btn-ghost rounded-none rounded-br-lg bg-base-100"
                 disabled={noModelSelected || _.isEmpty(messageContent)}
               >
                 Send

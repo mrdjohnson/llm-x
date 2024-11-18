@@ -25,8 +25,10 @@ const DelayedPwaReloadPrompt = () => {
 function App() {
   return (
     <Dropzone>
-      <div className="container drawer drawer-end mx-auto flex !h-dvh !max-h-dvh flex-col place-self-center p-3 text-base-content">
-        <Navbar />
+      <div className="drawer drawer-end mx-auto flex !h-dvh !max-h-dvh flex-col place-self-center text-base-content">
+        <div className="md:hidden">
+          <Navbar />
+        </div>
 
         <SettingsModal />
 
@@ -36,12 +38,12 @@ function App() {
 
         <OmniBar />
 
-        <section className="drawer-content flex h-full max-h-full w-full flex-grow flex-row gap-4 overflow-hidden text-xl">
-          <aside className="hidden lg:block" role="complementary">
+        <section className="drawer-content flex h-full max-h-full w-full flex-row gap-4 overflow-hidden text-xl">
+          <aside className="hidden md:block" role="complementary">
             <SideBar />
           </aside>
 
-          <main className="h-full w-full flex-1 overflow-x-auto overflow-y-hidden">
+          <main className="mx-auto flex h-full max-w-4xl flex-1 overflow-x-hidden overflow-y-hidden rounded-md p-3">
             <ChatBox />
           </main>
         </section>

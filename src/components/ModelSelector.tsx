@@ -40,12 +40,14 @@ const ModelSelector = observer(() => {
     <button
       tabIndex={0}
       role="button"
-      className="btn btn-active btn-sm flex-1 md:btn-md"
+      className="btn btn-active btn-sm flex-1 justify-items-start bg-base-100 text-left md:btn-md"
       disabled={noServer}
       onClick={handleClick}
     >
-      {label}
-      <ChevronDown />
+      <span className="flex w-full flex-row items-baseline justify-between gap-2 ">
+        {label}
+        <ChevronDown className="place-self-center" />
+      </span>
     </button>
   )
 })

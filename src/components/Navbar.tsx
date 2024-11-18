@@ -1,7 +1,6 @@
 import { useKBar } from 'kbar'
-import { Kbd } from '@nextui-org/react'
+import { Kbd, TooltipProps } from '@nextui-org/react'
 import { observer } from 'mobx-react-lite'
-import { type PropsWithChildren } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import ModelSelector from '~/components/ModelSelector'
@@ -16,16 +15,18 @@ import AppSettings from '~/icons/AppSettings'
 
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
-const KeyboardTooltip = ({ command, children }: PropsWithChildren<{ command: string }>) => (
+const KeyboardTooltip = ({
+  command,
+  ...rest
+}: Omit<TooltipProps, 'label'> & { command: string }) => (
   <ToolTip
     label={
       <Kbd keys={['command']} className="border-none bg-transparent text-base-content shadow-none">
         {command}
       </Kbd>
     }
-  >
-    {children}
-  </ToolTip>
+    {...rest}
+  />
 )
 
 const Navbar = observer(() => {
@@ -40,13 +41,13 @@ const Navbar = observer(() => {
   // }
 
   return (
-    <nav className="navbar mb-2 flex h-auto min-h-0 justify-between gap-4 rounded-md bg-base-300">
+    <div className="navbar mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 bg-base-300 p-1 md:mb-0 md:flex-col md:p-0">
       <div className="ml-2 hidden pr-2 md:block md:text-xl">
         <h1 className="hidden">LLM-X</h1>
         <FunTitle className="md:text-xl" />
       </div>
 
-      <div className="max-w-[600px] flex-1 flex-row gap-2 md:flex">
+      <div className="w-fit max-w-[600px] flex-row gap-2 md:flex md:w-full md:flex-1">
         <ModelSelector />
         <ModelRefreshButton />
       </div>
@@ -62,16 +63,16 @@ const Navbar = observer(() => {
           </button>
         )} */}
 
-        <KeyboardTooltip command="K">
+        <KeyboardTooltip command="K" placement="left" showArrow={false}>
           <button className="btn btn-square btn-ghost btn-md hidden md:flex" onClick={query.toggle}>
             <Search />
           </button>
         </KeyboardTooltip>
 
-        <KeyboardTooltip command="/">
-          <NavLink to="initial" className="btn btn-square btn-ghost btn-sm md:btn-md ">
+        <KeyboardTooltip command="/" placement="right" showArrow={false}>
+          <NavLink to="initial" className="btn btn-square btn-ghost btn-sm min-w-0 md:btn-md">
             <div className="indicator p-1">
-              <div className="swap lg:swap-active">
+              <div className="swap md:swap-active">
                 <div className="swap-on align-middle">
                   <AppSettings />
                 </div>
@@ -90,7 +91,7 @@ const Navbar = observer(() => {
           </NavLink>
         </KeyboardTooltip>
       </div>
-    </nav>
+    </div>
   )
 })
 
