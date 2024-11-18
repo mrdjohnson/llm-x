@@ -144,6 +144,7 @@ export const OllamaModelSettings = observer(() => {
   if (viewModel.type !== 'Ollama') {
     throw new Error('Ollama connection not found')
   }
+
   const ollamaStore = viewModel.store
   const model = _.find<OllamaLanguageModel>(viewModel.models, { modelName })!
 
@@ -157,7 +158,7 @@ export const OllamaModelSettings = observer(() => {
     ollamaStore.show(selectedModelName).then(setModelData)
   }, [selectedModelName])
 
-  if (!selectedModelName || !modelData) return
+  if (!selectedModelName || !modelData || !model) return
 
   const details = modelData.details || {}
 
@@ -179,10 +180,22 @@ export const OllamaModelSettings = observer(() => {
         )}
       </label>
 
-      <div className="my-4">
-        <label className="label-text">ModelFile:</label>
+      <div className="mt-2 flex flex-col gap-1">
+        <p>
+          Size on disk:
+          <span className="ml-2 scale-90 text-base-content/70">{model.fullGbSize}</span>
+        </p>
 
-        <div className="relative flex max-h-52 w-full flex-wrap overflow-scroll whitespace-pre-line rounded-md border border-base-content/30 p-2 pr-6">
+        <p>
+          Last Update:
+          <span className="ml-2 scale-90 text-base-content/70">{model.timeAgo}</span>
+        </p>
+      </div>
+
+      <div className="my-4">
+        <label>ModelFile:</label>
+
+        <div className="relative flex max-h-52 w-full flex-wrap overflow-scroll whitespace-pre-line rounded-md border border-base-content/30 p-2 pr-6 text-base-content/70">
           {modelData.modelfile.replace(/\n/g, '  \n')}
 
           <CopyButton
