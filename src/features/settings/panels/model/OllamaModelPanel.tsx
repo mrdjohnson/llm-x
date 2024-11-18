@@ -71,7 +71,7 @@ const OllamaModelPanelTable = observer(({ connection }: PanelTableProps) => {
       </td>
 
       <td>{model.gbSize}</td>
-      <td className="opacity-65">{model.timeAgo}</td>
+      <td className="hidden opacity-65 md:flex">{model.timeAgo}</td>
 
       <td className="w-fit">
         <NavButtonDiv

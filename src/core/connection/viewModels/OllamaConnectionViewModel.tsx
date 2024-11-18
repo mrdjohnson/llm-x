@@ -29,7 +29,7 @@ class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
     { label: 'Params', value: 'paramSize' },
     { label: <Image />, value: 'supportsImages', tooltip: 'Supports Images?', invertOrder: true },
     { label: 'Size', value: 'size' },
-    { label: 'Updated', value: 'modifiedAt', invertOrder: true },
+    { label: 'Updated', value: 'modifiedAt', invertOrder: true, hideOnMobile: true },
   ]
 
   primaryHeader = this.modelTableHeaders[0].value
