@@ -193,15 +193,17 @@ export const OllamaModelSettings = observer(() => {
       </div>
 
       <div className="my-4">
-        <label>ModelFile:</label>
-
-        <div className="relative flex max-h-52 w-full flex-wrap overflow-scroll whitespace-pre-line rounded-md border border-base-content/30 p-2 pr-6 text-base-content/70">
-          {modelData.modelfile.replace(/\n/g, '  \n')}
+        <div className="flex justify-between">
+          <label>ModelFile:</label>
 
           <CopyButton
-            className="absolute right-2 top-2 text-base-content/30 hover:text-base-content"
+            className="text-base-content/30 hover:text-base-content"
             text={modelData.modelfile}
           />
+        </div>
+
+        <div className="flex max-h-52 w-full overflow-scroll whitespace-pre-line rounded-md border border-base-content/30 p-2 text-base-content/70">
+          {modelData.modelfile.replace(/\n/g, '  \n')}
         </div>
       </div>
 
