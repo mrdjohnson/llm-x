@@ -10,6 +10,7 @@ export type SortType<SelectorType> = {
   value?: keyof SelectorType
   invertOrder?: boolean
   tooltip?: string
+  hideOnMobile?: true
 }
 
 const EmptySortType = {
@@ -52,9 +53,9 @@ const SelectionPanelTable = observer(
   }: SelectionPanelTableProps<SelectorType>) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const [activeSortType, setActiveSortType] = useState<SortType<SelectorType> | typeof EmptySortType>(
-      EmptySortType,
-    )
+    const [activeSortType, setActiveSortType] = useState<
+      SortType<SelectorType> | typeof EmptySortType
+    >(EmptySortType)
     const [ascendingSort, setAscendingSort] = useState(true)
     const [filterText, setFilterText] = useState('')
 
@@ -96,7 +97,7 @@ const SelectionPanelTable = observer(
       return (
         <span
           className={
-            'transition-[opacity transform] ml-2 -mr-2 h-fit scale-90 duration-300 ease-in-out ' +
+            'transition-[opacity transform] -mr-2 ml-2 h-fit scale-90 duration-300 ease-in-out ' +
             (ascendingSort ? ' rotate-180 ' : '') +
             (activeSortType === sortType ? ' opacity-100 ' : ' opacity-0 ')
           }
@@ -135,10 +136,13 @@ const SelectionPanelTable = observer(
             <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
               <tr>
                 {sortTypes.map(sortType => (
-                  <th key={sortType.label as string | number}>
+                  <th
+                    key={sortType.label as string | number}
+                    className={sortType.hideOnMobile ? ' hidden md:flex' : ''}
+                  >
                     <span
                       className={
-                        'tooltip tooltip-bottom flex w-fit select-none flex-row items-center' +
+                        'tooltip tooltip-bottom -mr-2 flex w-fit select-none flex-row items-center' +
                         (sortType.value === undefined ? '' : ' cursor-pointer')
                       }
                       onClick={() => handleSortTypeChanged(sortType)}
