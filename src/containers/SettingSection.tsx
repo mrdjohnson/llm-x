@@ -20,7 +20,7 @@ export type SettingSectionProps<T> = {
     itemFilter?: (item: T, filterText: string) => void
     emptyLabel?: string
   }
-  addButtonProps: {
+  addButtonProps?: {
     label: string
     onClick?: MouseEventHandler<HTMLButtonElement>
     isDisabled?: boolean
@@ -31,6 +31,7 @@ export type SettingSectionProps<T> = {
   selectedItem?: SettingSectionItem<T>
   isSubSection?: boolean
   skipSelectedItem?: boolean
+  hasLargeItems?: boolean
 }
 
 const SettingSection = observer(
@@ -42,6 +43,7 @@ const SettingSection = observer(
     renderActionRow,
     onItemSelected,
     isSubSection = false,
+    hasLargeItems = false,
   }: SettingSectionProps<T>) => {
     const [filterText, setFilterText] = useState('')
 
@@ -60,7 +62,7 @@ const SettingSection = observer(
     }
 
     const handleAddButtonClicked: MouseEventHandler<HTMLButtonElement> = e => {
-      addButtonProps.onClick?.(e)
+      addButtonProps!.onClick?.(e)
     }
 
     const handleFilterChanged = (text: string) => {
@@ -99,6 +101,7 @@ const SettingSection = observer(
                   isSelectedItem={item.id === selectedItem?.id}
                   onClick={handleItemSelected}
                   renderActionRow={renderActionRow}
+                  isLarge={hasLargeItems}
                 />
               ))}
 
@@ -108,21 +111,23 @@ const SettingSection = observer(
                 </span>
               )}
 
-              <li className="mt-auto w-full pt-2">
-                <NavButton
-                  to="empty_panel"
-                  className={
-                    'btn  btn-sm mx-auto mb-1 w-fit ' +
-                    (addButtonProps.isDisabled
-                      ? ' btn-neutral pointer-events-none opacity-35'
-                      : 'btn-primary')
-                  }
-                  disabled={addButtonProps.isDisabled}
-                  onClick={handleAddButtonClicked}
-                >
-                  {addButtonProps.label}
-                </NavButton>
-              </li>
+              {addButtonProps && (
+                <li className="mt-auto w-full pt-2">
+                  <NavButton
+                    to="empty_panel"
+                    className={
+                      'btn  btn-sm mx-auto mb-1 w-fit ' +
+                      (addButtonProps.isDisabled
+                        ? ' btn-neutral pointer-events-none opacity-35'
+                        : 'btn-primary')
+                    }
+                    disabled={addButtonProps.isDisabled}
+                    onClick={handleAddButtonClicked}
+                  >
+                    {addButtonProps.label}
+                  </NavButton>
+                </li>
+              )}
             </ul>
           </ScrollShadow>
         </div>

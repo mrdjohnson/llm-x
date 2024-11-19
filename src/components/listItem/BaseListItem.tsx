@@ -18,7 +18,7 @@ type BaseListItemProps<T> = {
   renderActionRow?: (data: T, index?: number) => ReactNode
   onClick?: (data?: BaseListItemType<T>, index?: number) => void
 
-  isSmall?: boolean
+  isLarge?: boolean
   isSelectedItem?: boolean
   isDisplayItem?: boolean
   index?: number
@@ -27,7 +27,7 @@ type BaseListItemProps<T> = {
 const BaseListItem = observer(
   <T,>({
     item,
-    isSmall,
+    isLarge,
     renderActionRow,
     onClick,
     isSelectedItem,
@@ -43,32 +43,34 @@ const BaseListItem = observer(
           (isSelectedItem ? ' text-primary' : '')
         }
       >
-        {isSmall ? (
-          <span className="max-w-[20ch] justify-center">{item.label}</span>
-        ) : (
-          <div className="flex flex-row items-center gap-0 rounded-md px-2 *:text-left">
-            <div className="my-auto flex w-full flex-col self-start text-left">
-              <span className={'mr-3 ' + (isSelectedItem ? ' text-primary' : '')}>
-                {item.label}
-              </span>
+        <div className="group flex flex-row items-center gap-0 rounded-md px-2 *:text-left">
+          <div className="my-auto flex w-full flex-col self-start text-left">
+            <span
+              className={
+                'mr-3 underline decoration-transparent underline-offset-4 transition-all duration-100 ease-in group-hover:decoration-current ' +
+                (isSelectedItem ? ' text-primary' : '') +
+                (isLarge ? ' p-2 text-large' : '')
+              }
+            >
+              {item.label}
+            </span>
 
-              {_.toArray(item.subLabels).map((subLabel, index) => (
-                <p className="line-clamp-2 self-start text-sm text-base-content/45" key={index}>
-                  {subLabel}
-                </p>
-              ))}
-            </div>
-
-            {renderActionRow && (
-              <div
-                className="isolate ml-auto flex h-full flex-row flex-nowrap items-center pl-4"
-                onClick={e => e.preventDefault()}
-              >
-                {renderActionRow?.(item.data, index)}
-              </div>
-            )}
+            {_.toArray(item.subLabels).map((subLabel, index) => (
+              <p className="line-clamp-2 self-start text-sm text-base-content/45" key={index}>
+                {subLabel}
+              </p>
+            ))}
           </div>
-        )}
+
+          {renderActionRow && (
+            <div
+              className="isolate ml-auto flex h-full flex-row flex-nowrap items-center pl-4"
+              onClick={e => e.preventDefault()}
+            >
+              {renderActionRow?.(item.data, index)}
+            </div>
+          )}
+        </div>
       </NavButtonDiv>
     )
   },
