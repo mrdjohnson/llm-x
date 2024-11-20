@@ -24,8 +24,8 @@ export type SettingPanelType = {
 }
 
 export const settingRoutesByName: Record<SettingPanelOptionsType, SettingPanelType> = {
+  initial: { label: 'Chats', Component: MobileSplashPanel, mobileOnly: true },
   general: { label: 'General', Component: GeneralPanel },
-  initial: { label: 'Go to Section', Component: MobileSplashPanel, mobileOnly: true },
   connection: { label: 'How To Connect', Component: HelpPanel },
   models: {
     label: 'Models',

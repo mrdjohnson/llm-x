@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import useMedia from 'use-media'
-import { Modal, ModalContent, ModalBody } from '@nextui-org/react'
+import { Modal, ModalContent, ModalBody, Select, SelectItem } from '@nextui-org/react'
 import { NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
@@ -44,22 +44,45 @@ const SettingsSidePanel = observer(
 )
 
 const MobileSettingsSidePanel = observer(() => {
-  const containerRef = useRef<HTMLDetailsElement>(null)
+  const navigate = useNavigate()
+  const { pathname: selectedPanel } = useLocation()
 
-  const handleSectionClick = () => {
-    containerRef.current?.removeAttribute('open')
+  const goToSection = (path: string) => {
+    //  reset the route to initial first
+    navigate('/initial', { replace: true })
+
+    navigate(path)
   }
 
   return (
-    <details className="dropdown w-full" ref={containerRef}>
-      <summary role="button" className="btn w-full md:hidden">
-        Go to section
-      </summary>
-
-      <ul className="menu dropdown-content z-50 mt-1 w-full rounded-box bg-base-200 p-2 md:p-0">
-        <SettingsSidePanel onSectionClick={handleSectionClick} />
-      </ul>
-    </details>
+    <Select
+      className="w-full min-w-[20ch] rounded-md border border-base-content/30 bg-transparent"
+      size="sm"
+      classNames={{
+        value: '!text-base-content min-w-[20ch]',
+        trigger: 'bg-base-100 hover:!bg-base-200 rounded-md',
+        popoverContent: 'text-base-content bg-base-100',
+      }}
+      selectedKeys={[selectedPanel]}
+      label="Section"
+      onChange={selection => goToSection(selection.target.value)}
+    >
+      {_.map(settingRoutesByName, ({ label }: SettingPanelType, panelName) => (
+        <SelectItem
+          key={'/' + panelName}
+          value={'/' + panelName}
+          className={
+            'w-full !min-w-[13ch] text-base-content' +
+            (panelName === selectedPanel ? ' text-primary' : '')
+          }
+          classNames={{
+            description: ' text',
+          }}
+        >
+          {label}
+        </SelectItem>
+      ))}
+    </Select>
   )
 })
 
@@ -88,6 +111,17 @@ const SettingsModal = observer(() => {
       navigate('general', { replace: true })
     }
   }, [pathname, isMobile])
+
+  // const history = useHistor
+
+  // const handleMobileBackButtonClicked = useCallback(
+  //   e => {
+  //     e.preventDefault()
+
+  //     navigate('/initial')
+  //   },
+  //   [pathname],
+  // )
 
   return (
     <Modal
