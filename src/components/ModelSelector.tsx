@@ -43,24 +43,29 @@ const ModelSelector = observer(() => {
   }
 
   return (
-    <Input
-      isReadOnly
-      label={label}
-      variant="bordered"
-      value={selectedModelLabel}
-      className="w-full !cursor-pointer"
-      classNames={{
-        inputWrapper:
-          'btn !cursor-pointer border-base-content/20 rounded-md hover:!border-base-content/30 p-2 pr-1',
-        input: '!cursor-pointer',
-        label: '!cursor-pointer mr-2',
-        innerWrapper: '!cursor-pointer',
-      }}
-      endContent={
-        <ChevronDown className="-rotate-90 place-self-center !stroke-[3px]  text-base-content/45" />
-      }
+    <button
       onClick={handleClick}
-    />
+      className="w-full !cursor-pointer rounded-md border-2 border-base-content/20 hover:!border-base-content/30 hover:bg-base-100"
+    >
+      <Input
+        isReadOnly
+        label={label}
+        variant="bordered"
+        value={selectedModelLabel}
+        size={isMobile ? 'sm' : undefined}
+        className="pointer-events-none w-full !cursor-pointer bg-transparent"
+        classNames={{
+          inputWrapper:
+            'btn !cursor-pointer border-none p-2 pr-1 !min-h-0 ' + (isMobile ? ' h-fit' : ''),
+          input: '!cursor-pointer',
+          label: '!cursor-pointer mr-2',
+          innerWrapper: '!cursor-pointer ' + (isMobile ? ' h-fit' : ''),
+        }}
+        endContent={
+          <ChevronDown className="-rotate-90 place-self-center !stroke-[3px]  text-base-content/45" />
+        }
+      />
+    </button>
   )
 })
 
