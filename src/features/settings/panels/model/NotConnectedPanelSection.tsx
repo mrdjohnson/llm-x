@@ -1,7 +1,7 @@
 import Refresh from '~/icons/Refresh'
 
-import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 import { NavButtonDiv } from '~/components/NavButton'
+import { connectionModelLabelByType, ConnectionViewModelTypes } from '~/core/connection/viewModels'
 
 const NotConnectedPanelSection = ({ connection }: { connection: ConnectionViewModelTypes }) => {
   return (
@@ -15,6 +15,12 @@ const NotConnectedPanelSection = ({ connection }: { connection: ConnectionViewMo
 
       <NavButtonDiv to={`/models/edit/${connection.id}`} className="btn btn-active">
         Go to {connection.label} settings
+      </NavButtonDiv>
+
+      <p className="text-center">or</p>
+
+      <NavButtonDiv to={`/connection/${connection.type}`} className="btn btn-active">
+        See {connectionModelLabelByType[connection.type]} setup instructions
       </NavButtonDiv>
     </div>
   )

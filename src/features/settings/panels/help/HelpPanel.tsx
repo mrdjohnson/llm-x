@@ -1,154 +1,118 @@
+import { useMemo } from 'react'
+import _ from 'lodash'
 import { ScrollShadow } from '@nextui-org/react'
 import { observer } from 'mobx-react-lite'
+import { useParams } from 'react-router-dom'
+import Markdown from 'react-markdown'
 
 import CopyButton from '~/components/CopyButton'
+import SettingSection, { SettingSectionItem } from '~/containers/SettingSection'
+import Drawer from '~/containers/Drawer'
 
-const ORIGIN =
-  __TARGET__ === 'chrome'
-    ? 'chrome-extension://iodcdhcpahifeligoegcmcdibdkffclk'
-    : 'https://mrdjohnson.github.io'
+import { connectionModelLabelByType, connectionViewModelByType } from '~/core/connection/viewModels'
+import { ConnectionModel } from '~/core/connection/ConnectionModel'
+import { ConnectionTypes } from '~/core/connection/types'
 
-const OLLAMA_CODE = `OLLAMA_ORIGINS=${ORIGIN} ollama serve`
-const POWERSHELL_OLLAMA_CODE = `$env:OLLAMA_ORIGINS="${ORIGIN}"; ollama serve`
-const A1111_CODE = './webui.sh --api --listen --cors-allow-origins "*"'
-const LMS_CODE = 'lms server start --cors=true'
+import { LmsHelpMarkdown } from '~/features/settings/panels/help/LmsHelpMarkdown'
+import { OllamaHelpMarkdown } from '~/features/settings/panels/help/OllamaHelpMarkdown'
+import { A1111HelpMarkdown } from '~/features/settings/panels/help/A1111HelpMarkdown'
+import { GeminiHelpMarkdown } from '~/features/settings/panels/help/GeminiHelpPanel'
+import { OpenAiHelpMarkdown } from '~/features/settings/panels/help/OpenAiHelpPanelMarkdown'
+
+const CodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
+  const { children } = props
+
+  const code = useMemo(() => {
+    return _.toString(children)
+  }, [children])
+
+  return (
+    <span className="my-4 inline-flex w-fit flex-row flex-wrap gap-2">
+      <CopyButton className="btn swap btn-sm" text={code} />
+
+      <span className="prose">
+        <code>{code}</code>
+      </span>
+    </span>
+  )
+}
+
+export const ConnectionHelpPanel = observer(() => {
+  const { id } = useParams<{ id: ConnectionTypes }>()
+
+  const markdown = useMemo(() => {
+    if (id === 'LMS') return LmsHelpMarkdown
+    if (id === 'Ollama') return OllamaHelpMarkdown
+    if (id === 'A1111') return A1111HelpMarkdown
+    if (id === 'Gemini') return GeminiHelpMarkdown
+    if (id === 'OpenAi') return OpenAiHelpMarkdown
+  }, [id])
+
+  return (
+    <Drawer label={connectionModelLabelByType[id!]} path={id!}>
+      <div className="flex-1 overflow-y-hidden px-2 pt-2">
+        <ScrollShadow className="h-full max-h-full pb-7">
+          {__TARGET__ === 'chrome' && (
+            <>
+              <h3 className="text-wrap pb-3 text-lg font-bold">
+                NOTE: Connections should be automatic!
+              </h3>
+
+              <p>
+                This chrome extension automatically detects your local network and connects to
+                Ollama, LM Studio, and Automatic1111 for you without needing any special
+                configurations! (special thanks to page-assist and ollama-ui)
+              </p>
+
+              <div className="divider" />
+            </>
+          )}
+
+          <Markdown
+            className="prose-spacing prose ml-2 flex w-full flex-wrap prose-p:w-full"
+            components={{
+              h3: props => <h3 className="-ml-2 [&>*]:text-lg [&>*]:font-bold" {...props} />,
+              a: props => <a target="__blank" className="link mx-0 !text-primary " {...props} />,
+              code: CodeBlock,
+            }}
+          >
+            {markdown}
+          </Markdown>
+
+          {/* TODO: add a list of connection cards (based on selected type) at the bottom here for easy transitions back for the user */}
+        </ScrollShadow>
+      </div>
+    </Drawer>
+  )
+})
 
 const HelpPanel = observer(() => {
+  const helpItems = _.values(connectionViewModelByType).map(connection =>
+    connection().getSnapshot(),
+  )
+
+  const connectionToSectionItem = (
+    connection: ConnectionModel,
+  ): SettingSectionItem<ConnectionModel> => ({
+    id: connection.type,
+    label: connectionModelLabelByType[connection.type],
+    data: connection,
+  })
+
+  const itemFilter = (connection: ConnectionModel, filterText: string) => {
+    return connection.label.toLowerCase().includes(filterText)
+  }
+
   return (
-    <ScrollShadow className='p-2'>
-      <div className="w-full pl-2">
-        {__TARGET__ === 'chrome' && (
-          <>
-            <h3 className="-ml-2 pb-3 text-lg font-bold">NOTE: Connections should be automatic!</h3>
-
-            <p>
-              This chrome extension automatically detects your local network and connects to Ollama,
-              LM Studio, and Automatic1111 for you without needing any special configurations!
-              (special thanks to page-assist and ollama-ui)
-            </p>
-
-            <div className="divider" />
-          </>
-        )}
-
-        <h3 className="-ml-2 pb-3 text-lg font-bold">
-          How to connect to
-          <a href="https://lmstudio.ai/" target="__blank" className="link text-lg text-primary">
-            LM Studio
-          </a>
-          :
-        </h3>
-
-        <p>LM Studio makes working with models easy! Use this and get going:</p>
-
-        <div className="my-4 flex flex-row place-content-center gap-2">
-          <div className="prose">
-            <code>{LMS_CODE}</code>
-          </div>
-
-          <CopyButton className="btn swap btn-sm my-auto" text={LMS_CODE} />
-        </div>
-
-        <div className="divider" />
-
-        <h3 className="-ml-2 pb-3 text-lg font-bold">
-          How to connect to
-          <a href="https://ollama.com/" target="__blank" className="link text-lg text-primary">
-            Ollama
-          </a>
-          Server:
-        </h3>
-
-        <div className="flex flex-col gap-2">
-          <p>
-            By default, Ollama only allows requests from local host. To use custom origins (like
-            this one), you need to change
-            <span className="prose mx-1">
-              <code>OLLAMA_ORIGINS</code>
-            </span>
-          </p>
-          <p>
-            <p>Option 1:</p>
-
-            <p className="ml-2">
-              1: Follow the instructions in the faq:
-              <a
-                href="https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server"
-                className=" link self-center"
-              >
-                Ollama FAQ
-              </a>
-              <span>and set the</span>
-              <span className="prose mx-1">
-                <code>OLLAMA_ORIGINS</code>
-              </span>
-              <span>to be</span>
-              <span className="prose mx-1">
-                <code>{ORIGIN}</code>
-              </span>
-              (this tells ollama that mrdjohnson github projects, like this one, are OK to listen
-              to).
-              <p>
-                2: You are now set up to run{' '}
-                <span className="prose mx-1">
-                  <code>ollama serve</code>
-                </span>
-                normally, or you can start the application normally
-              </p>
-            </p>
-          </p>
-        </div>
-
-        <p className="my-2">
-          Option 2:
-          <p className="ml-2">
-            <div className="my-2 flex flex-row place-content-center gap-2">
-              <div className="prose">
-                When starting ollama: <code>{OLLAMA_CODE}</code>
-              </div>
-              <CopyButton className="btn swap btn-sm my-auto" text={OLLAMA_CODE} />
-            </div>
-            <div className="my-2 flex flex-row place-content-center gap-2">
-              <div className="prose">
-                Powershell version: <code>{POWERSHELL_OLLAMA_CODE}</code>
-              </div>
-
-              <CopyButton className="btn swap btn-sm my-auto" text={POWERSHELL_OLLAMA_CODE} />
-            </div>
-          </p>
-        </p>
-
-        <div>
-          Find out more about Ollama on their website:
-          <a href="https://ollama.com/" className=" link self-center">
-            https://ollama.com/
-          </a>
-        </div>
-
-        <div className="divider" />
-
-        <h3 className="-ml-2 mt-5 pb-3 text-lg font-bold">
-          How to connect to
-          <a
-            href="https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#stable-diffusion-web-ui"
-            target="__blank"
-            className="link text-lg text-primary"
-          >
-            AUTOMATIC1111
-          </a>
-          for image generation:
-        </h3>
-
-        <p>Ideally you just need to clone the project, and run this code in the folder:</p>
-        <div className="my-4 flex flex-row place-content-center gap-2">
-          <div className="prose">
-            <code>{A1111_CODE}</code>
-          </div>
-
-          <CopyButton className="btn swap btn-sm my-auto" text={A1111_CODE} />
-        </div>
-      </div>
-    </ScrollShadow>
+    <SettingSection
+      items={helpItems.map(connectionToSectionItem)}
+      filterProps={{
+        helpText: 'Filter connections by label...',
+        itemFilter,
+        emptyLabel: 'No connections found',
+      }}
+      hasLargeItems
+    />
   )
 })
 

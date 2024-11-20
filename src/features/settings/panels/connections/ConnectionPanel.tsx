@@ -9,11 +9,13 @@ import { ScrollShadow } from '@nextui-org/react'
 import HostInput from '~/components/HostInput'
 import EnabledCheckbox from '~/components/EnabledCheckbox'
 import FormInput from '~/components/form/FormInput'
+import { NavButtonDiv } from '~/components/NavButton'
 
 import { Drawer } from '~/containers/Drawer'
 
 import Copy from '~/icons/Copy'
 import Options from '~/icons/Options'
+import Question from '~/icons/Question'
 
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
@@ -87,7 +89,7 @@ const ConnectionPanel = observer(() => {
 
   return (
     <Drawer label={'Edit ' + connection.label} path={'edit/' + id} outletContent={{ control }}>
-      <div className="flex h-full w-full flex-col px-2 overflow-hidden">
+      <div className="flex h-full w-full flex-col overflow-hidden px-2">
         <FormProvider {...methods}>
           <form className="contents" onSubmit={handleFormSubmit} ref={formRef}>
             <ScrollShadow className="flex h-full max-h-full flex-col gap-2 overflow-scroll ">
@@ -101,6 +103,19 @@ const ConnectionPanel = observer(() => {
                     disabled={!isEnabled}
                     placeholder={connection.label}
                     errorMessage={errors.label?.message}
+                    description={
+                      !connection.hostLabel && (
+                        <span className="flex align-baseline">
+                          See connection instructions here:
+                          <NavButtonDiv
+                            to={'/connection/' + connection.type}
+                            className="ml-2 flex items-center hover:text-base-content"
+                          >
+                            <Question />
+                          </NavButtonDiv>
+                        </span>
+                      )
+                    }
                     {...field}
                   />
                 )}
@@ -119,7 +134,7 @@ const ConnectionPanel = observer(() => {
               </div>
             </ScrollShadow>
 
-            <div className="mt-auto flex flex-row justify-between gap-3 py-2 md:pb-2 flex-shrink-0">
+            <div className="mt-auto flex flex-shrink-0 flex-row justify-between gap-3 py-2 md:pb-2">
               {isMobile ? (
                 <div className="dropdown dropdown-top">
                   <div tabIndex={0} role="button" className="btn btn-sm m-1 w-fit">

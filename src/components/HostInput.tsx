@@ -48,7 +48,7 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
               <span className="flex align-baseline">
                 See connection instructions here:
                 <NavButtonDiv
-                  to="/connection"
+                  to={'/connection/' + connection.type}
                   className="ml-2 flex items-center hover:text-base-content"
                 >
                   <Question />

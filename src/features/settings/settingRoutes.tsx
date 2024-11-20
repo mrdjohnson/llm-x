@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 
 import GeneralPanel from '~/features/settings/panels/general/GeneralPanel'
 import MobileSplashPanel from '~/features/settings/panels/MobileSplashPanel'
-import HelpPanel from '~/features/settings/panels/help/HelpPanel'
+import HelpPanel, { ConnectionHelpPanel } from '~/features/settings/panels/help/HelpPanel'
 import PersonaPanel from '~/features/settings/panels/PersonaPanel'
 
 import ModelPanel, { ConnectionModelPanel } from '~/features/settings/panels/model/ModelPanel'
@@ -26,7 +26,15 @@ export type SettingPanelType = {
 export const settingRoutesByName: Record<SettingPanelOptionsType, SettingPanelType> = {
   initial: { label: 'Chats', Component: MobileSplashPanel, mobileOnly: true },
   general: { label: 'General', Component: GeneralPanel },
-  connection: { label: 'How To Connect', Component: HelpPanel },
+  connection: {
+    label: 'How To Connect',
+    Component: HelpPanel,
+    children: (
+      <>
+        <Route path=":id" element={<ConnectionHelpPanel />} />
+      </>
+    ),
+  },
   models: {
     label: 'Models',
     subtitle: 'Select a Model',

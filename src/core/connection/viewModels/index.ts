@@ -20,3 +20,11 @@ export const connectionViewModelByType = {
   // if we try to connect to LMS and fail, the try catch does not catch the error
   LMS: () => LmsConnectionViewModel,
 }
+
+export const connectionModelLabelByType = {
+  A1111: 'Automatic1111',
+  Ollama: 'Ollama',
+  OpenAi: 'Open AI',
+  Gemini: 'Gemini nano',
+  LMS: 'LM Studio',
+}
