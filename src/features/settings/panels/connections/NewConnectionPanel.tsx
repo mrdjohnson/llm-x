@@ -6,6 +6,8 @@ import { ConnectionTypes } from '~/core/types'
 import { connectionViewModelByType } from '~/core/connection/viewModels'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
+import Drawer from '~/containers/Drawer'
+
 const NewConnectionPanel = observer(() => {
   const navigate = useNavigate()
 
@@ -21,21 +23,23 @@ const NewConnectionPanel = observer(() => {
   }
 
   return (
-    <div className="mx-auto mt-4 flex flex-col gap-4 *:text-center">
-      <span>Select a connection type: </span>
+    <Drawer label={'Add new connection '} path={'empty_panel'}>
+      <div className="mx-auto mt-4 flex flex-col gap-4 *:text-center">
+        <span>Select a connection type: </span>
 
-      {_.map(connectionViewModelByType, getConnector => getConnector().getSnapshot()).map(
-        ({ type, label }) => (
-          <button
-            key={type}
-            onClick={() => addConnection(type)}
-            className="btn btn-outline btn-secondary w-fit place-self-center border-0"
-          >
-            {label}
-          </button>
-        ),
-      )}
-    </div>
+        {_.map(connectionViewModelByType, getConnector => getConnector().getSnapshot()).map(
+          ({ type, label }) => (
+            <button
+              key={type}
+              onClick={() => addConnection(type)}
+              className="btn btn-outline btn-secondary w-fit place-self-center border-0"
+            >
+              {label}
+            </button>
+          ),
+        )}
+      </div>
+    </Drawer>
   )
 })
 
