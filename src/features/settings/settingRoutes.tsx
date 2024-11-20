@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import GeneralPanel from '~/features/settings/panels/general/GeneralPanel'
 import MobileSplashPanel from '~/features/settings/panels/MobileSplashPanel'
 import HelpPanel, { ConnectionHelpPanel } from '~/features/settings/panels/help/HelpPanel'
-import PersonaPanel from '~/features/settings/panels/PersonaPanel'
+import PersonaPanel from '~/features/settings/panels/persona/PersonaPanel'
 
 import ModelPanel, { ConnectionModelPanel } from '~/features/settings/panels/model/ModelPanel'
 import ConnectionPanel from '~/features/settings/panels/connections/ConnectionPanel'
