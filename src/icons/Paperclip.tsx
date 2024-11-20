@@ -6,7 +6,7 @@ export default function Paperclip() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="h-4 w-4"
+      className="h-5 w-5"
     >
       <path
         strokeLinecap="round"

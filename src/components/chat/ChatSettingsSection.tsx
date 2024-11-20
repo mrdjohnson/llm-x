@@ -134,7 +134,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
             <Tooltip label="Export Chat">
               <button
                 onClick={openExportDialog}
-                className="btn btn-ghost flex flex-1"
+                className="btn btn-ghost flex flex-1 text-base-content/60 hover:text-base-content"
                 title="Export Chat"
               >
                 <DocumentArrowDown />
