@@ -87,7 +87,7 @@ const ChatBoxPrompt = observer(({ chat }: { chat: ChatViewModel }) => {
               <Step isCompleted={anyConnectionHasModels}>
                 {'Download a model from '}
                 <a
-                  href="https://huggingface.co/lmstudio-ai"
+                  href="https://huggingface.co/lmstudio-community"
                   className="link decoration-primary"
                   target="__blank"
                   title="Open LM Studio's hugging face account in new tab"
