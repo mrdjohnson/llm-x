@@ -6,7 +6,7 @@ export default function CloudDown() {
       viewBox="0 0 512 512"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="h-4 w-4"
+      className="h-6 w-6"
     >
       <path
         fill="none"

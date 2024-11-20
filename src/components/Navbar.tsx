@@ -102,13 +102,19 @@ const Navbar = observer(() => {
         )} */}
 
         <KeyboardTooltip command="K" placement="left" showArrow={false}>
-          <button className="btn btn-square btn-ghost btn-md hidden md:flex" onClick={query.toggle}>
+          <button
+            className="btn btn-square btn-ghost btn-md hidden text-base-content/60 hover:text-base-content md:flex"
+            onClick={query.toggle}
+          >
             <Search />
           </button>
         </KeyboardTooltip>
 
         <KeyboardTooltip command="/" placement="right" showArrow={false}>
-          <NavLink to="initial" className="btn btn-square btn-ghost btn-sm min-w-0 md:btn-md">
+          <NavLink
+            to="initial"
+            className="btn btn-square btn-ghost btn-sm min-w-0 text-base-content/60 md:btn-md hover:text-base-content"
+          >
             <div className="indicator p-1">
               <div className="swap md:swap-active">
                 <div className="swap-on align-middle">
