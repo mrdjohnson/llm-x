@@ -169,7 +169,7 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
           </AttachmentWrapper>
 
           <TextareaAutosize
-            className="no-scrollbar textarea m-0 max-h-60 min-h-0 w-full resize-none rounded-none border-0 p-0 text-base focus:outline-none "
+            className="no-scrollbar textarea m-0 max-h-60 min-h-0 w-full resize-none rounded-none border-0 p-0 text-base focus:outline-none bg-transparent "
             placeholder="Enter Prompt..."
             ref={textareaRef}
             value={messageContent}
