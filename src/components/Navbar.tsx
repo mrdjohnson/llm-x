@@ -14,9 +14,11 @@ import Bars3 from '~/icons/Bars3'
 import Search from '~/icons/Search'
 import AppSettings from '~/icons/AppSettings'
 import ChevronDown from '~/icons/ChevronDown'
+import ShrinkHorizontal from '~/icons/ShrinkHorizontal'
 
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { personaStore } from '~/core/persona/PersonaStore'
+import { settingStore } from '~/core/setting/SettingStore'
 
 const KeyboardTooltip = ({
   command,
@@ -45,8 +47,16 @@ const Navbar = observer(() => {
 
   return (
     <div className="navbar mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 bg-base-300 p-1 md:mb-0 md:flex-col md:p-0">
-      <div className="ml-2 hidden pr-2 md:block md:text-xl">
-        <h1 className="hidden">LLM-X</h1>
+      <div className="ml-2 hidden items-center pr-2 md:flex md:text-xl">
+        <button
+          className="absolute left-2 text-base-content/30 transition-colors duration-100 ease-in-out hover:text-base-content/80"
+          onClick={() =>
+            settingStore.update({ isSidebarOpen: !settingStore.setting.isSidebarOpen })
+          }
+        >
+          <ShrinkHorizontal />
+        </button>
+
         <FunTitle className="md:text-xl" />
       </div>
 
