@@ -340,7 +340,6 @@ const ConnectionDataParameterSection = ({ subControl }: { subControl: unknown })
           <Delete />
         </button>
       )}
-      selectedItem={undefined}
       isSubSection
     />
   )

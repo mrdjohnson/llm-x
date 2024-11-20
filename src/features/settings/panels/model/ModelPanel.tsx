@@ -67,7 +67,7 @@ const ModelPanel = observer(() => {
       addButtonProps={{
         label: 'Add New Connection',
       }}
-      selectedItem={selectedConnection && connectionToSectionItem(selectedConnection)}
+      selectedItemId={selectedConnection?.id}
       renderActionRow={connection => (
         <NavButtonDiv
           to={'/models/edit/' + connection.id}

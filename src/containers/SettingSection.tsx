@@ -28,7 +28,7 @@ export type SettingSectionProps<T> = {
   items: Array<SettingSectionItem<T>>
   renderActionRow?: (data: T, index?: number) => ReactNode
   onItemSelected?: (data?: T, index?: number) => void
-  selectedItem?: SettingSectionItem<T>
+  selectedItemId?: string
   isSubSection?: boolean
   skipSelectedItem?: boolean
   hasLargeItems?: boolean
@@ -39,7 +39,7 @@ const SettingSection = observer(
     filterProps,
     addButtonProps,
     items,
-    selectedItem,
+    selectedItemId,
     renderActionRow,
     onItemSelected,
     isSubSection = false,
@@ -98,7 +98,7 @@ const SettingSection = observer(
                   item={item}
                   key={item.id}
                   index={index}
-                  isSelectedItem={item.id === selectedItem?.id}
+                  isSelectedItem={item.id === selectedItemId}
                   onClick={handleItemSelected}
                   renderActionRow={renderActionRow}
                   isLarge={hasLargeItems}
