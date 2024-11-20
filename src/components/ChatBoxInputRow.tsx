@@ -4,18 +4,17 @@ import { observer } from 'mobx-react-lite'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
-import { personaStore } from '~/core/persona/PersonaStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import CachedImage from '~/components/CachedImage'
-import { NavButton } from '~/components/NavButton'
 
 import { TransferHandler } from '~/utils/transfer/TransferHandler'
 
 import Paperclip from '~/icons/Paperclip'
-import ChevronDown from '~/icons/ChevronDown'
+import Send from '~/icons/Send'
+import CancelEdit from '~/icons/CancelEdit'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 
@@ -48,8 +47,9 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
     textareaRef.current.focus()
   }
 
+  // TODO: stop the input from growing if only one line is sent
   const handleKeyDown = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.shiftKey || !textareaRef.current) return
+    if (e.shiftKey || !textareaRef.current || inputDisabled) return
 
     if (e.key === 'Enter' && messageContent) {
       await sendMessage()
@@ -83,6 +83,8 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
   const inputDisabled =
     incomingMessageStore.isGettingData || noModelSelected || !!lightboxStore.lightboxMessage
 
+  const sendingDisabled = incomingMessageStore.isGettingData || !!lightboxStore.lightboxMessage
+
   useEffect(() => {
     if (!textareaRef.current) return
 
@@ -102,7 +104,7 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
   return (
     <div
       className={
-        'no-scrollbar join join-vertical relative mt-2 h-fit max-h-[700px] w-full shrink-0 rounded-md border border-base-content/20 ' +
+        'no-scrollbar relative mt-2 flex h-fit max-h-[700px] w-full shrink-0 flex-col ' +
         (noModelSelected && 'tooltip cursor-not-allowed')
       }
       data-tip={
@@ -111,7 +113,7 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
     >
       <div
         className={
-          'join-item max-h-[600px] overflow-y-scroll p-2 pb-0' +
+          'join-item max-h-[600px] overflow-y-scroll rounded-large border border-base-content/20 p-2 ' +
           (inputDisabled ? ' bg-base-200' : '')
         }
       >
@@ -155,18 +157,53 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
           </div>
         )}
 
-        <TextareaAutosize
-          className="no-scrollbar textarea m-0 min-h-8 w-full resize-none border-0 p-0 text-base focus:outline-none "
-          placeholder="Enter Prompt..."
-          ref={textareaRef}
-          value={messageContent}
-          disabled={inputDisabled}
-          minRows={1}
-          onKeyDown={handleKeyDown}
-          onChange={e => setMessageContent(_.trimStart(e.target.value))}
-          onPaste={e => TransferHandler.handleImport(e.clipboardData.files)}
-          autoFocus
-        />
+        <form className="flex flex-row" onSubmit={onFormSubmit}>
+          <AttachmentWrapper className="mr-2 flex !h-fit content-end items-end self-end">
+            <button
+              className="btn btn-ghost btn-md my-1  h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] text-base-content/40 hover:text-primary"
+              type="button"
+              disabled={sendingDisabled}
+            >
+              <Paperclip />
+            </button>
+          </AttachmentWrapper>
+
+          <TextareaAutosize
+            className="no-scrollbar textarea m-0 max-h-60 min-h-0 w-full resize-none rounded-none border-0 p-0 text-base focus:outline-none "
+            placeholder="Enter Prompt..."
+            ref={textareaRef}
+            value={messageContent}
+            disabled={sendingDisabled}
+            minRows={1}
+            onKeyDown={handleKeyDown}
+            onChange={e => setMessageContent(_.trimStart(e.target.value))}
+            onPaste={e => TransferHandler.handleImport(e.clipboardData.files)}
+            autoFocus
+          />
+
+          <span className=" flex !h-fit flex-row content-end items-end gap-1 self-end">
+            {chat.isEditingMessage && (
+              <button
+                className="btn btn-ghost btn-md my-1  h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] text-error/50 hover:text-error hover:scale-110"
+                type="button"
+                onClick={() => chat.setMessageToEdit(undefined)}
+                title="Cancel edit"
+              >
+                <CancelEdit />
+              </button>
+            )}
+
+            {children || (
+              <button
+                className="btn btn-ghost btn-md my-1  h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] hover:text-primary hover:scale-110"
+                disabled={inputDisabled || _.isEmpty(messageContent)}
+                title="Send"
+              >
+                <Send />
+              </button>
+            )}
+          </span>
+        </form>
       </div>
 
       {/* TODO, this will be moot in the coming updates */}
@@ -192,50 +229,6 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
             </div>
           </div>
         )} */}
-
-      <form
-        className={'join-item w-full rounded-b-md ' + (inputDisabled ? 'bg-base-200' : '')}
-        onSubmit={onFormSubmit}
-      >
-        <div className=" flex w-full flex-col justify-between rounded-b-md bg-base-200 align-middle md:flex-row md:gap-2">
-          <NavButton
-            tabIndex={0}
-            to="/personas"
-            className="btn btn-active hidden rounded-none rounded-bl-md md:flex"
-            disabled={inputDisabled || connectionStore.isImageGenerationMode}
-          >
-            {personaStore.selectedPersona?.name || 'No personas selected'}
-            <ChevronDown />
-          </NavButton>
-
-          <div className="flex">
-            <AttachmentWrapper className="mr-auto md:mr-0">
-              <button className="btn btn-ghost rounded-none" type="button" disabled={inputDisabled}>
-                <Paperclip />
-              </button>
-            </AttachmentWrapper>
-
-            {chat.isEditingMessage && (
-              <button
-                className="btn btn-ghost rounded-none text-error/50 hover:text-error"
-                type="button"
-                onClick={() => chat.setMessageToEdit(undefined)}
-              >
-                Cancel
-              </button>
-            )}
-
-            {children || (
-              <button
-                className="btn btn-ghost rounded-none rounded-br-lg bg-base-100"
-                disabled={noModelSelected || _.isEmpty(messageContent)}
-              >
-                Send
-              </button>
-            )}
-          </div>
-        </div>
-      </form>
     </div>
   )
 })

@@ -9,6 +9,8 @@ import ChatBoxInputRow from '~/components/ChatBoxInputRow'
 import ChatBoxPrompt from '~/components/ChatBoxPrompt'
 import ToastCenter from '~/components/ToastCenter'
 
+import Stop from '~/icons/Stop'
+
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 import { ChatBoxMessage } from '~/components/message/ChatBoxMessage'
 
@@ -97,10 +99,10 @@ const ChatBox = observer(() => {
         {isGettingData && (
           <button
             type="button"
-            className="btn btn-ghost rounded-none rounded-br-md text-error/50 hover:text-error"
+            className="btn btn-ghost btn-md my-1  h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] text-error/50 hover:scale-110 hover:text-error"
             onClick={handleMessageStopped}
           >
-            Stop
+            <Stop />
           </button>
         )}
       </ChatBoxInputRow>

@@ -25,6 +25,7 @@ type MessageFooterProps = {
   variationIndex?: number
   disableRegeneration?: boolean
   customDeleteIcon?: React.ReactNode
+  customDeleteText?: string
   speechStatus: SpeechStatus
   onDestroy?: () => void
   start: () => void
@@ -62,6 +63,7 @@ const MessageFooter = observer(
     disableEditing,
     disableRegeneration,
     customDeleteIcon,
+    customDeleteText,
     speechStatus,
     onDestroy,
     start,
@@ -125,7 +127,7 @@ const MessageFooter = observer(
           <button
             className="rounded-md text-error/60 hover:scale-125 hover:text-error"
             onClick={onDestroy}
-            title={customDeleteIcon ? 'Stop' : 'Delete'}
+            title={customDeleteIcon ? customDeleteText || 'Stop' : 'Delete'}
           >
             {customDeleteIcon || <Delete />}
           </button>

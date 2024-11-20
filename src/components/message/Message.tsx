@@ -3,6 +3,7 @@ import type { PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import Stop from '~/icons/Stop'
+import CancelEdit from '~/icons/CancelEdit'
 
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
@@ -47,7 +48,8 @@ export const MessageToEdit = observer(({ message, messageVariant }: CustomMessag
       message={message}
       messageVariant={messageVariant}
       onDestroy={() => chat.setMessageToEdit(undefined)}
-      customDeleteIcon={<Stop />}
+      customDeleteIcon={<CancelEdit />}
+      customDeleteText="Cancel edit"
       shouldDimMessage={false}
       shouldScrollIntoView
       disableEditing
@@ -64,6 +66,7 @@ export type MessageProps = PropsWithChildren<{
   loading?: boolean
   onDestroy?: () => void
   customDeleteIcon?: React.ReactNode
+  customDeleteText?: string
   disableRegeneration?: boolean
   disableEditing?: boolean
   shouldDimMessage?: boolean

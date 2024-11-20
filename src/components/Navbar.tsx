@@ -1,5 +1,5 @@
 import { useKBar } from 'kbar'
-import { Kbd, TooltipProps } from '@nextui-org/react'
+import { Input, Kbd, TooltipProps } from '@nextui-org/react'
 import { observer } from 'mobx-react-lite'
 import { NavLink } from 'react-router-dom'
 
@@ -7,13 +7,16 @@ import ModelSelector from '~/components/ModelSelector'
 import ModelRefreshButton from '~/components/ModelRefreshButton'
 import FunTitle from '~/components/FunTitle'
 import ToolTip from '~/components/Tooltip'
+import { NavButton } from '~/components/NavButton'
 
 import Warning from '~/icons/Warning'
 import Bars3 from '~/icons/Bars3'
 import Search from '~/icons/Search'
 import AppSettings from '~/icons/AppSettings'
+import ChevronDown from '~/icons/ChevronDown'
 
 import { connectionStore } from '~/core/connection/ConnectionStore'
+import { personaStore } from '~/core/persona/PersonaStore'
 
 const KeyboardTooltip = ({
   command,
@@ -51,6 +54,31 @@ const Navbar = observer(() => {
         <ModelSelector />
         <ModelRefreshButton />
       </div>
+
+      <NavButton
+        tabIndex={0}
+        to="/personas"
+        disabled={connectionStore.isImageGenerationMode}
+        className="hidden w-full md:block"
+      >
+        <Input
+          isReadOnly
+          label="Persona"
+          variant="bordered"
+          value={personaStore.selectedPersona?.name || 'No personas selected'}
+          className="w-full !cursor-pointer"
+          classNames={{
+            inputWrapper:
+              'btn !cursor-pointer border-base-content/20 rounded-md hover:!border-base-content/30 p-2 pr-1',
+            input: '!cursor-pointer',
+            label: '!cursor-pointer',
+            innerWrapper: '!cursor-pointer',
+          }}
+          endContent={
+            <ChevronDown className="-rotate-90 place-self-center !stroke-[3px]  text-base-content/45" />
+          }
+        />
+      </NavButton>
 
       <div className="flex flex-row justify-end gap-2">
         {/* {settingStore.pwaNeedsUpdate && (

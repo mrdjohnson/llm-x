@@ -28,7 +28,7 @@ const AttachmentWrapper = ({
         multiple
       />
 
-      <span role="button" onClick={() => fileInputRef.current?.click()}>
+      <span role="button" className='contents' onClick={() => fileInputRef.current?.click()}>
         {children}
       </span>
     </span>

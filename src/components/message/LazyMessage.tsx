@@ -37,6 +37,7 @@ const LazyMessage = observer(
     onDestroy,
     children,
     customDeleteIcon,
+    customDeleteText,
     disableRegeneration,
     disableEditing,
     shouldDimMessage,
@@ -188,6 +189,7 @@ const LazyMessage = observer(
           disableEditing={disableEditing}
           disableRegeneration={disableRegeneration}
           customDeleteIcon={customDeleteIcon}
+          customDeleteText={customDeleteText}
           speechStatus={speechStatus}
           onDestroy={onDestroy}
           start={start}
