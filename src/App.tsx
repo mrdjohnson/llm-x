@@ -43,7 +43,7 @@ function App() {
             <SideBar />
           </aside>
 
-          <main className="mx-auto flex h-full max-w-4xl flex-1 overflow-x-hidden overflow-y-hidden rounded-md p-3">
+          <main className="mx-auto flex h-full max-w-4xl flex-1 overflow-x-hidden overflow-y-hidden rounded-md pt-0 md:pt-3 p-3">
             <ChatBox />
           </main>
         </section>
