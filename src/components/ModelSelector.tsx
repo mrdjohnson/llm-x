@@ -2,12 +2,16 @@ import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import { useNavigate } from 'react-router-dom'
+import { Input } from '@nextui-org/react'
+import useMedia from 'use-media'
 
 import ChevronDown from '~/icons/ChevronDown'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const ModelSelector = observer(() => {
   const navigate = useNavigate()
+
+  const isMobile = useMedia('(max-width: 768px)')
 
   const { selectedModelLabel, isAnyServerConnected, selectedConnection } = connectionStore
   const noServer = !isAnyServerConnected
@@ -17,16 +21,18 @@ const ModelSelector = observer(() => {
       return 'No Servers connected'
     }
 
-    if (selectedModelLabel) return selectedModelLabel
+    if (selectedModelLabel && selectedConnection) {
+      return isMobile ? undefined : selectedConnection.label
+    }
 
-    if (!selectedConnection) return 'Add a connection here'
+    if (!selectedConnection) return 'Add a Server here'
 
     if (_.isEmpty(selectedConnection.models)) {
       return `No ${selectedConnection.label} models available`
     }
 
     return `No ${selectedConnection.label} models selected`
-  }, [noServer, selectedConnection?.models, selectedModelLabel])
+  }, [noServer, selectedConnection?.models, selectedModelLabel, isMobile])
 
   const handleClick = () => {
     if (!selectedConnection) {
@@ -37,18 +43,24 @@ const ModelSelector = observer(() => {
   }
 
   return (
-    <button
-      tabIndex={0}
-      role="button"
-      className="btn btn-active btn-sm flex-1 justify-items-start bg-base-100 text-left md:btn-md"
-      disabled={noServer}
+    <Input
+      isReadOnly
+      label={label}
+      variant="bordered"
+      value={selectedModelLabel}
+      className="w-full !cursor-pointer"
+      classNames={{
+        inputWrapper:
+          'btn !cursor-pointer border-base-content/20 rounded-md hover:!border-base-content/30 p-2 pr-1',
+        input: '!cursor-pointer',
+        label: '!cursor-pointer mr-2',
+        innerWrapper: '!cursor-pointer',
+      }}
+      endContent={
+        <ChevronDown className="-rotate-90 place-self-center !stroke-[3px]  text-base-content/45" />
+      }
       onClick={handleClick}
-    >
-      <span className="flex w-full flex-row items-baseline justify-between gap-2 ">
-        {label}
-        <ChevronDown className="place-self-center" />
-      </span>
-    </button>
+    />
   )
 })
 
