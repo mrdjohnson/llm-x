@@ -21,7 +21,7 @@ class ConnectionTable extends BaseTable<typeof ConnectionModel> {
   async create(connection: ConnectionModelInput) {
     const result = await super.create(connection)
 
-    await settingTable.put({ selectedConnectionId: result.id })
+    await settingTable.put({ selectedConnectionId: result.id, selectedModelId: undefined })
 
     return result
   }
