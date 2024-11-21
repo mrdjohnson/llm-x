@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, type MouseEvent } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 
@@ -16,7 +16,7 @@ type BaseListItemProps<T> = {
   item: BaseListItemType<T>
 
   renderActionRow?: (data: T, index?: number) => ReactNode
-  onClick?: (data?: BaseListItemType<T>, index?: number) => void
+  onClick?: (data?: BaseListItemType<T>, index?: number, e?: MouseEvent<HTMLDivElement>) => void
 
   isLarge?: boolean
   isSelectedItem?: boolean
@@ -37,19 +37,24 @@ const BaseListItem = observer(
       <NavButtonDiv
         key={item.id}
         to={item.id}
-        onClick={() => onClick?.(item, index)}
+        onClick={e => onClick?.(item, index, e)}
         className={
           ' rounded-md bg-base-200 p-1 first-of-type:mt-0 ' +
           (isSelectedItem ? ' text-primary' : '')
         }
       >
-        <div className="group flex flex-row items-center gap-0 rounded-md px-2 *:text-left">
+        <div
+          className={
+            'group flex flex-row items-center gap-0 rounded-md px-2 *:text-left' +
+            (isLarge ? ' p-2 ' : '')
+          }
+        >
           <div className="my-auto flex w-full flex-col self-start text-left">
             <span
               className={
                 'mr-3 underline decoration-transparent underline-offset-4 transition-all duration-100 ease-in group-hover:decoration-current ' +
                 (isSelectedItem ? ' text-primary' : '') +
-                (isLarge ? ' p-2 text-large' : '')
+                (isLarge ? ' text-large' : '')
               }
             >
               {item.label}

@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { useMemo, useState, ReactNode, MouseEventHandler } from 'react'
+import { useMemo, useState, ReactNode, MouseEventHandler, type MouseEvent } from 'react'
 import { ScrollShadow } from '@nextui-org/react'
 import _ from 'lodash'
 
@@ -57,8 +57,16 @@ const SettingSection = observer(
       return items.filter(({ data }) => itemFilter(data, lowerCaseFilter))
     }, [items, filterText])
 
-    const handleItemSelected = (item?: SettingSectionItem<T>, index?: number) => {
-      onItemSelected?.(item?.data, index)
+    const handleItemSelected = (
+      item?: SettingSectionItem<T>,
+      index?: number,
+      e?: MouseEvent<HTMLDivElement>,
+    ) => {
+      if (onItemSelected) {
+        onItemSelected(item?.data, index)
+
+        e?.preventDefault()
+      }
     }
 
     const handleAddButtonClicked: MouseEventHandler<HTMLButtonElement> = e => {
