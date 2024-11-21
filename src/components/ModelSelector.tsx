@@ -53,7 +53,7 @@ const ModelSelector = observer(() => {
         label={label}
         variant="bordered"
         value={selectedModelLabel}
-        size={isMobile ? 'sm' : undefined}
+        size={isMobile || !selectedModelLabel ? 'sm' : undefined}
         className="pointer-events-none w-full !cursor-pointer bg-transparent"
         classNames={{
           inputWrapper: twMerge(
