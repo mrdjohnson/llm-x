@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
+import { twMerge } from 'tailwind-merge'
 
 import { settingStore } from '~/core/setting/SettingStore'
 
@@ -49,7 +50,7 @@ const FunTitle = observer(({ className }: { className?: string }) => {
       <button onClick={sampleXWord}>
         {titleSections[0]}
 
-        <span className={className + ' link mx-0 text-primary'}>{titleSections[1]}</span>
+        <span className={twMerge(className, 'link mx-0 text-primary')}>{titleSections[1]}</span>
 
         {titleSections[2]}
       </button>

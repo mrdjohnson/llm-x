@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { PropsWithChildren, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import _ from 'lodash'
+import { twMerge } from 'tailwind-merge'
 
 import ChevronDown from '~/icons/ChevronDown'
 import FormInput from '~/components/form/FormInput'
@@ -96,11 +97,11 @@ const SelectionPanelTable = observer(
     const makeChevron = (sortType: SortType<SelectorType>) => {
       return (
         <span
-          className={
-            'transition-[opacity transform] -mr-2 ml-2 h-fit scale-90 duration-300 ease-in-out ' +
-            (ascendingSort ? ' rotate-180 ' : '') +
-            (activeSortType === sortType ? ' opacity-100 ' : ' opacity-0 ')
-          }
+          className={twMerge(
+            'transition-[opacity transform] -mr-2 ml-2 h-fit scale-90 opacity-0 duration-300 ease-in-out',
+            ascendingSort && 'rotate-180',
+            activeSortType === sortType && 'opacity-100',
+          )}
         >
           <ChevronDown />
         </span>
@@ -131,7 +132,9 @@ const SelectionPanelTable = observer(
           </label>
         )}
 
-        <div className={'mt-2 flex h-full flex-col overflow-y-scroll rounded-md ' + className}>
+        <div
+          className={twMerge('mt-2 flex h-full flex-col overflow-y-scroll rounded-md', className)}
+        >
           <table className="table table-zebra table-sm -mt-4 mb-4 border-separate border-spacing-y-2 pt-0">
             <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
               <tr>
@@ -141,18 +144,18 @@ const SelectionPanelTable = observer(
                     className={sortType.hideOnMobile ? ' hidden md:flex' : ''}
                   >
                     <span
-                      className={
-                        'tooltip tooltip-bottom -mr-2 flex w-fit select-none flex-row items-center' +
-                        (sortType.value === undefined ? '' : ' cursor-pointer')
-                      }
+                      className={twMerge(
+                        'tooltip tooltip-bottom -mr-2 flex w-fit select-none flex-row items-center',
+                        sortType.value && 'cursor-pointer',
+                      )}
                       onClick={() => handleSortTypeChanged(sortType)}
                       data-tip={sortType.tooltip}
                     >
                       <span
-                        className={
-                          ' border-b-current leading-[1.25]' +
-                          (sortType.value === undefined ? '' : ' border-b-[1.5px]')
-                        }
+                        className={twMerge(
+                          'border-b-current leading-[1.25]',
+                          sortType.value && 'border-b-[1.5px]',
+                        )}
                       >
                         {sortType.label}
                       </span>
@@ -170,12 +173,10 @@ const SelectionPanelTable = observer(
             <tbody className="-mt-4 gap-2 px-2">
               {filteredItems?.map((item, index) => (
                 <tr
-                  className={
-                    '-flex cursor-pointer ' +
-                    (getIsItemSelected(item)
-                      ? ' !bg-primary text-primary-content'
-                      : ' hover:!bg-primary/30')
-                  }
+                  className={twMerge(
+                    'cursor-pointer hover:!bg-primary/30',
+                    getIsItemSelected(item) && '!bg-primary text-primary-content hover:!bg-primary',
+                  )}
                   onClick={() => onItemSelected(item)}
                   key={getItemKey(item, index)}
                 >

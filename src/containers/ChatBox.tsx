@@ -1,6 +1,7 @@
 import { useRef, MouseEvent, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import ScrollableFeed from 'react-scrollable-feed'
+import { twMerge } from 'tailwind-merge'
 
 import { chatStore } from '~/core/chat/ChatStore'
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
@@ -70,10 +71,10 @@ const ChatBox = observer(() => {
     <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-hidden rounded-md">
       <ScrollableFeed
         ref={scrollableFeedRef}
-        className={
-          'no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden' +
-          (isEditingMessage || isGettingData ? ' !overflow-y-hidden ' : '')
-        }
+        className={twMerge(
+          'no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden',
+          (isEditingMessage || isGettingData) && '!overflow-y-hidden',
+        )}
         animateScroll={(element, offset) => element.scrollBy({ top: offset, behavior: 'smooth' })}
       >
         {chat.messages.length > 0 ? (

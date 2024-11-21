@@ -38,7 +38,7 @@ const MessageGroup = observer(({ message, children, chat }: MessageGroupType) =>
 
         <ToolTip label="Delete variation group" placement="top" delay={400}>
           <button
-            className={'bg-base-100 text-error/30 hover:scale-125 hover:text-error'}
+            className="bg-base-100 text-error/30 hover:scale-125 hover:text-error"
             onClick={() => chat.destroyMessage(message)}
           >
             <Delete />

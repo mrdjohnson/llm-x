@@ -1,3 +1,5 @@
+import { twMerge } from 'tailwind-merge'
+
 export default function Copy({ className = '' }: { className?: string }) {
   return (
     <svg
@@ -6,7 +8,7 @@ export default function Copy({ className = '' }: { className?: string }) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={className + ' text-current/60 h-4 w-4 hover:text-current'}
+      className={twMerge(className, 'text-current/60 h-4 w-4 hover:text-current')}
     >
       <path
         strokeLinecap="round"

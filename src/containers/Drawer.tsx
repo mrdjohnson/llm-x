@@ -9,6 +9,7 @@ import React, {
   useState,
 } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { twMerge } from 'tailwind-merge'
 
 import BreadcrumbBar, { type BreadcrumbType } from '~/components/BreadcrumbBar'
 
@@ -91,15 +92,13 @@ export const Drawer = ({ path, label, children, outletContent = { crumbs: [] } }
       <div className="drawer drawer-end h-full max-h-full overflow-scroll rounded-md">
         <div className="drawer-content col-span-full flex h-full max-h-full flex-col overflow-hidden">
           <div
-            className={
-              'flex h-full max-h-full w-full flex-1 flex-col rounded-md ' +
-              (hasChild ? ' border-l-1 border-l-white' : '') +
-              (notTopSlide ? ' blur-[1px]' : '')
-            }
-          >
-            {depth.current > 0 && (
-              <BreadcrumbBar breadcrumbs={stateCrumbs} />
+            className={twMerge(
+              'flex h-full max-h-full w-full flex-1 flex-col rounded-md',
+              hasChild && 'border-l-1 border-l-white',
+              notTopSlide && 'blur-[1px]',
             )}
+          >
+            {depth.current > 0 && <BreadcrumbBar breadcrumbs={stateCrumbs} />}
 
             {children}
           </div>
@@ -114,9 +113,7 @@ export const Drawer = ({ path, label, children, outletContent = { crumbs: [] } }
             className="relative z-20 flex h-full max-h-full min-h-full w-full flex-col overflow-hidden rounded-md bg-base-200 text-base-content lg:w-11/12"
             data-id={label}
           >
-            {depth.current > 0 && (
-              <BreadcrumbBar breadcrumbs={stateCrumbs} />
-            )}
+            {depth.current > 0 && <BreadcrumbBar breadcrumbs={stateCrumbs} />}
 
             <Outlet context={outletContent} />
           </div>

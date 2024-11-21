@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSpeech, useVoices } from 'react-text-to-speech'
 import { Select, SelectItem, Switch } from '@nextui-org/react'
 import { useForm } from 'react-hook-form'
+import { twMerge } from 'tailwind-merge'
 
 import ThemeSelector from '~/components/ThemeSelector'
 import AttachmentWrapper from '~/components/AttachmentWrapper'
@@ -52,12 +53,11 @@ const DownloadSelector = () => {
         <div className="join">
           {[true, false].map(isEnabled => (
             <button
-              className={
-                'btn join-item btn-sm mr-0 ' +
-                (includeImages === isEnabled
-                  ? 'btn-active cursor-default bg-base-300 underline underline-offset-2 '
-                  : 'btn bg-base-100')
-              }
+              className={twMerge(
+                'btn join-item btn-sm mr-0 bg-base-100',
+                includeImages === isEnabled &&
+                  'btn-active cursor-default bg-base-300 underline underline-offset-2',
+              )}
               onClick={() => setIncludeImages(isEnabled)}
               key={isEnabled ? 0 : 1}
             >
@@ -161,10 +161,10 @@ const SpeechSelector = observer(() => {
         endContent={
           <div className="flex h-full items-center gap-2">
             <button
-              className={
-                'text-error opacity-30 hover:scale-110 hover:opacity-100 ' +
-                (speechStatus === 'stopped' ? ' hidden' : ' block')
-              }
+              className={twMerge(
+                'block text-error opacity-30 hover:scale-110 hover:opacity-100',
+                speechStatus === 'stopped' && 'hidden',
+              )}
               onClick={stop}
               type="button"
             >
@@ -172,10 +172,10 @@ const SpeechSelector = observer(() => {
             </button>
 
             <button
-              className={
-                'h-fit w-fit opacity-30 hover:scale-110 hover:opacity-100 ' +
-                (speechStatus === 'started' ? ' animate-pulse opacity-100' : '')
-              }
+              className={twMerge(
+                'h-fit w-fit opacity-30 hover:scale-110 hover:opacity-100',
+                speechStatus === 'started' && ' animate-pulse opacity-100',
+              )}
               onClick={speechStatus === 'started' ? pause : start}
               type="button"
             >

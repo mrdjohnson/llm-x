@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { useMemo, useState, ReactNode, MouseEventHandler, type MouseEvent } from 'react'
 import { ScrollShadow } from '@nextui-org/react'
 import _ from 'lodash'
+import { twMerge } from 'tailwind-merge'
 
 import FormInput from '~/components/form/FormInput'
 import ListItem from '~/components/listItem/BaseListItem'
@@ -80,10 +81,10 @@ const SettingSection = observer(
 
     return (
       <div
-        className={
-          'flex h-full max-h-full w-full flex-col rounded-md px-2 ' +
-          (isSubSection ? ' bg-base-300' : '')
-        }
+        className={twMerge(
+          'flex h-full max-h-full w-full flex-col rounded-md px-2',
+          isSubSection && 'bg-base-300',
+        )}
       >
         {!_.isEmpty(items) && (
           <div className="flex w-full flex-row gap-2 py-2 align-middle">
@@ -98,9 +99,9 @@ const SettingSection = observer(
           </div>
         )}
 
-        <div className={'flex flex-1 flex-row gap-2 overflow-hidden'}>
-          <ScrollShadow className={'flex max-h-full w-full flex-shrink-0'}>
-            <ul className={'menu !flex w-full flex-col flex-nowrap gap-2 rounded-md p-0 '}>
+        <div className="flex flex-1 flex-row gap-2 overflow-hidden">
+          <ScrollShadow className="flex max-h-full w-full flex-shrink-0">
+            <ul className="menu !flex w-full flex-col flex-nowrap gap-2 rounded-md p-0">
               {filteredItems.map((item, index) => (
                 <ListItem
                   item={item}
@@ -123,12 +124,10 @@ const SettingSection = observer(
                 <li className="mt-auto w-full pt-2">
                   <NavButton
                     to="empty_panel"
-                    className={
-                      'btn  btn-sm mx-auto mb-1 w-fit ' +
-                      (addButtonProps.isDisabled
-                        ? ' btn-neutral pointer-events-none opacity-35'
-                        : 'btn-primary')
-                    }
+                    className={twMerge(
+                      'btn btn-primary btn-sm mx-auto mb-1 w-fit',
+                      addButtonProps.isDisabled && 'btn-neutral pointer-events-none opacity-35',
+                    )}
                     disabled={addButtonProps.isDisabled}
                     onClick={handleAddButtonClicked}
                   >

@@ -1,6 +1,7 @@
 import { ReactNode, type MouseEvent } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
+import { twMerge } from 'tailwind-merge'
 
 import { NavButtonDiv } from '~/components/NavButton'
 
@@ -38,24 +39,24 @@ const BaseListItem = observer(
         key={item.id}
         to={item.id}
         onClick={e => onClick?.(item, index, e)}
-        className={
-          ' rounded-md bg-base-200 p-1 first-of-type:mt-0 ' +
-          (isSelectedItem ? ' text-primary' : '')
-        }
+        className={twMerge(
+          'rounded-md bg-base-200 p-1 first-of-type:mt-0',
+          isSelectedItem && 'text-primary',
+        )}
       >
         <div
-          className={
-            'group flex flex-row items-center gap-0 rounded-md px-2 *:text-left' +
-            (isLarge ? ' p-2 ' : '')
-          }
+          className={twMerge(
+            'group flex flex-row items-center gap-0 rounded-md px-2 *:text-left',
+            isLarge && 'p-2',
+          )}
         >
           <div className="my-auto flex w-full flex-col self-start text-left">
             <span
-              className={
-                'mr-3 underline decoration-transparent underline-offset-4 transition-all duration-100 ease-in group-hover:decoration-current ' +
-                (isSelectedItem ? ' text-primary' : '') +
-                (isLarge ? ' text-large' : '')
-              }
+              className={twMerge(
+                'mr-3 underline decoration-transparent underline-offset-4 transition-all duration-100 ease-in group-hover:decoration-current',
+                isSelectedItem && 'text-primary',
+                isLarge && 'text-large',
+              )}
             >
               {item.label}
             </span>

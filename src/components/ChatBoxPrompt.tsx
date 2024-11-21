@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
+import { twMerge } from 'tailwind-merge'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import FunTitle from '~/components/FunTitle'
@@ -20,7 +21,7 @@ const Step = ({
 }: PropsWithChildren<StepProps>) => {
   return (
     <li
-      className={isCompleted ? `step step-${type}` : 'step'}
+      className={twMerge('step', isCompleted && `step-${type}`)}
       data-content={isCompleted ? '✓' : inCompleteIcon}
     >
       <span className="text-left">{children}</span>

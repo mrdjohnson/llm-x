@@ -11399,6 +11399,7 @@ __metadata:
     rehype-katex: "npm:^7.0.0"
     remark-gfm: "npm:^4.0.0"
     remark-math: "npm:^6.0.0"
+    tailwind-merge: "npm:^2.5.4"
     tailwindcss: "npm:^3.4.1"
     typescript: "npm:^5.2.2"
     use-media: "npm:^1.5.0"
@@ -15393,6 +15394,13 @@ __metadata:
   version: 1.14.0
   resolution: "tailwind-merge@npm:1.14.0"
   checksum: 10c0/a66f5ab1a2bb2b0f5a40a031867a6bc900de98eb3339b2a51759351221527a3d600eecb6cb5a038830aa89548eba72bb63aa3856cb9f31c9a3918b42eb3df350
+  languageName: node
+  linkType: hard
+
+"tailwind-merge@npm:^2.5.4":
+  version: 2.5.4
+  resolution: "tailwind-merge@npm:2.5.4"
+  checksum: 10c0/6c3d2a1d44344f373859f005e6366f0dbd7f66131d330a51dbe823dab08f71c388b2efcbb2b6a2170ca469581d27079c25cd40c234ca1356c4893ae99c2febb3
   languageName: node
   linkType: hard
 

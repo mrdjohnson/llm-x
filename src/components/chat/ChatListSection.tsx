@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { Fragment } from 'react'
 import _ from 'lodash'
+import { twMerge } from 'tailwind-merge'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import Tooltip from '~/components/Tooltip'
@@ -55,12 +56,10 @@ export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: (
 
               {chats.map(chat => (
                 <button
-                  className={
-                    ' group flex w-full max-w-full cursor-pointer flex-row justify-between rounded-md p-2 text-left lg:dropdown-right ' +
-                    (chat.id === chatStore.selectedChat?.id
-                      ? ' btn-neutral btn-active '
-                      : ' btn-ghost ')
-                  }
+                  className={twMerge(
+                    'group btn-ghost flex w-full max-w-full cursor-pointer flex-row justify-between rounded-md p-2 text-left lg:dropdown-right',
+                    chat.id === chatStore.selectedChat?.id && 'btn-neutral btn-active',
+                  )}
                   onClick={() => handleChatSelected(chat)}
                   key={chat.id}
                 >

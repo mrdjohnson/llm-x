@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { ScrollShadow, Tab, Tabs } from '@nextui-org/react'
 import _ from 'lodash'
+import { twMerge } from 'tailwind-merge'
 
 import AppGeneralPanel from '~/features/settings/panels/general/AppGeneralPanel'
 
@@ -36,7 +37,7 @@ const GeneralModelPanel = observer(() => {
           <Tab
             key="App"
             title="App"
-            className={selectedTabId === 'App' ? 'is-active-parent' : ''}
+            className={twMerge(selectedTabId === 'App' && 'is-active-parent')}
           />
         </Tabs>
       </ScrollShadow>

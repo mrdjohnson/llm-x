@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import useMedia from 'use-media'
+import { twMerge } from 'tailwind-merge'
 
 import Navbar from '~/components/Navbar'
 import { ChatSettingsSection } from '~/components/chat/ChatSettingsSection'
@@ -48,12 +49,12 @@ export const SideBar = observer(() => {
   if (!setting) return <div />
 
   return (
-    <nav className={'group/sidebar relative h-full ' + width}>
+    <nav className={twMerge('group/sidebar relative h-full', width)}>
       <div
-        className={
-          'flex h-full flex-1 flex-col flex-nowrap gap-2 self-stretch bg-base-300 p-2 transition-opacity duration-300 ease-in-out' +
-          (isSidebarOpen || isMobile ? ' opacity-100' : ' pointer-events-none -z-10 opacity-0')
-        }
+        className={twMerge(
+          'flex h-full flex-1 flex-col flex-nowrap gap-2 self-stretch bg-base-300 p-2 transition-opacity duration-300 ease-in-out',
+          isSidebarOpen || isMobile ? ' opacity-100' : ' pointer-events-none -z-10 opacity-0',
+        )}
       >
         <div className="hidden md:block">
           <Navbar />
@@ -70,13 +71,13 @@ export const SideBar = observer(() => {
 
       {/* hide sidebar button */}
       <button
-        className={
-          'group absolute top-[45%] z-20 opacity-30 transition-all duration-300 ease-in-out hover:opacity-100 group-hover/sidebar:opacity-100' +
-          (isSidebarOpen ? ' -right-4' : ' -right-8')
-        }
+        className={twMerge(
+          'group absolute -right-8 top-[45%] z-20 opacity-30 transition-all duration-300 ease-in-out hover:opacity-100 group-hover/sidebar:opacity-100',
+          isSidebarOpen && '-right-4',
+        )}
         onClick={() => settingStore.update({ isSidebarOpen: !isSidebarOpen })}
       >
-        <MediaEject className={'h-8 ' + (isSidebarOpen ? '-rotate-90' : 'rotate-90')} />
+        <MediaEject className={twMerge('h-8 w-8 rotate-90', isSidebarOpen && '-rotate-90')} />
       </button>
     </nav>
   )

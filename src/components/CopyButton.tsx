@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { twMerge } from 'tailwind-merge'
 
 import Copy from '~/icons/Copy'
 import CopySuccess from '~/icons/CopySuccess'
@@ -23,7 +24,7 @@ const CopyButton = ({ text, className = '', getText }: CopyButtonProps) => {
   }
 
   return (
-    <button className={className + ' swap ' + (copied && ' swap-active')} onClick={handleClick}>
+    <button className={twMerge(className, 'swap', copied && ' swap-active')} onClick={handleClick}>
       <Copy className="swap-off" />
       <CopySuccess className="swap-on" />
     </button>

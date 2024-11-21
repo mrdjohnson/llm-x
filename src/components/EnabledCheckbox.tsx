@@ -1,5 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { Control, Controller } from 'react-hook-form'
+import { twMerge } from 'tailwind-merge'
+
 import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 
@@ -24,10 +26,10 @@ const EnabledCheckbox = observer(({ control, connection }: EnabledCheckboxProps)
               {[true, false].map((isEnabledOption, index) => (
                 <button
                   type="button"
-                  className={
-                    'btn join-item btn-sm mr-0 ' +
-                    (value === isEnabledOption ? 'btn-active cursor-default' : 'btn')
-                  }
+                  className={twMerge(
+                    'btn join-item btn-sm mr-0',
+                    value === isEnabledOption && 'btn-active cursor-default',
+                  )}
                   onClick={() => onChange(isEnabledOption)}
                   key={index}
                 >

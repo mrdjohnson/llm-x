@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
+import { twMerge } from 'tailwind-merge'
 
 import { toastStore } from '~/core/ToastStore'
 
@@ -33,9 +34,10 @@ const ToastCenter = observer(() => {
 
   return (
     <div
-      className={
-        'toast z-30 mb-24 w-full gap-3 bg-transparent' + (_.isEmpty(toasts) ? ' hidden ' : '')
-      }
+      className={twMerge(
+        'toast z-30 mb-24 w-full gap-3 bg-transparent',
+        _.isEmpty(toasts) && 'hidden',
+      )}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >

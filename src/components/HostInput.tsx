@@ -61,7 +61,7 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
           endContent={
             isEnabled && (
               <button
-                className={'btn btn-ghost btn-sm px-2'}
+                className="btn btn-ghost btn-sm px-2"
                 type="button"
                 title="Refresh models"
                 onClick={() => connection.fetchLmModels()}

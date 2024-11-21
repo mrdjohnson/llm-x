@@ -1,3 +1,5 @@
+import { twMerge } from 'tailwind-merge'
+
 export default function Delete({ className }: { className?: string }) {
   return (
     <svg
@@ -6,7 +8,7 @@ export default function Delete({ className }: { className?: string }) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={className || 'h-4 w-4'}
+      className={twMerge('h-4 w-4', className)}
     >
       <path
         strokeLinecap="round"

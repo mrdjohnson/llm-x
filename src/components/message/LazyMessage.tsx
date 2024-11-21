@@ -7,6 +7,7 @@ import { type PropsWithChildren } from 'react'
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { useSpeech } from 'react-text-to-speech'
+import { twMerge } from 'tailwind-merge'
 
 import ChevronDown from '~/icons/ChevronDown'
 
@@ -111,12 +112,12 @@ const LazyMessage = observer(
 
     return (
       <div
-        className={
-          'group indicator relative flex w-fit min-w-6 max-w-full scroll-m-5 flex-col ' +
-          (fromBot ? 'pr-4 lg:pr-8' : ' self-end pl-4 lg:pl-8 ') +
-          (shouldDimMessage ? ' opacity-55 ' : '') +
-          (children ? ' mt-2 ' : '')
-        }
+        className={twMerge(
+          'group indicator relative flex w-fit min-w-6 max-w-full scroll-m-5 flex-col self-end pl-4 lg:pl-8',
+          fromBot && 'pr-4 lg:pr-8',
+          shouldDimMessage && 'opacity-55',
+          children && 'mt-2',
+        )}
         key={id}
         ref={containerRef}
       >
@@ -150,11 +151,11 @@ const LazyMessage = observer(
             {children}
 
             <div
-              className={
-                'w-full p-2 ' +
-                (children ? 'min-w-16 ' : '') +
-                (error ? 'join-item border-b-0' : 'rounded-md')
-              }
+              className={twMerge(
+                'w-full rounded-md p-2',
+                children && 'min-w-16',
+                error && 'join-item border-b-0',
+              )}
             >
               <Content />
             </div>

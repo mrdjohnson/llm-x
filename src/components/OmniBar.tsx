@@ -15,6 +15,7 @@ import type { Action, ActionImpl } from 'kbar'
 import { autorun } from 'mobx'
 import _ from 'lodash'
 import { useNavigate } from 'react-router-dom'
+import { twMerge } from 'tailwind-merge'
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { personaStore } from '~/core/persona/PersonaStore'
@@ -70,15 +71,13 @@ function RenderResults() {
 
         return (
           <button
-            className={
-              'w-full cursor-pointer justify-normal rounded-none border-l-2 px-6 py-3 text-left text-base-content' +
-              (item.ancestors[0] ? '' : '') +
-              (active ? ' border-l-base-content/40 bg-base-200 ' : '') +
-              (selected ? ' border-l-primary/40 ' : '') +
-              (!active && !selected ? ' border-l-transparent ' : '')
-            }
+            className={twMerge(
+              'w-full cursor-pointer justify-normal rounded-none border-l-2 border-l-transparent px-6 py-3 text-left text-base-content',
+              active && 'border-l-base-content/40 bg-base-200',
+              selected && 'border-l-primary/40',
+            )}
           >
-            <span className=" text-base-content/70">
+            <span className="text-base-content/70">
               {item.ancestors[0] && `   ${item.ancestors[0].name} > `}
             </span>
 

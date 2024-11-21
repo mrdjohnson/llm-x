@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite'
+import { twMerge } from 'tailwind-merge'
 
 import { progressStore } from '~/features/progress/ProgressStore'
 
@@ -29,7 +30,10 @@ const Progresses = observer(() => {
           </span>
 
           <span
-            className={'block h-4 rounded-full text-center ' + colorCodedProgress[progress.status]}
+            className={twMerge(
+              'block h-4 rounded-full text-center',
+              colorCodedProgress[progress.status],
+            )}
             style={{ width: progress.label }}
           />
         </span>

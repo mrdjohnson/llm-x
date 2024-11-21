@@ -228,7 +228,7 @@ export const ParameterForm = () => {
                 key={parameterType}
                 value={parameterType}
                 description={label}
-                className={'w-full !min-w-[13ch] text-base-content'}
+                className="w-full !min-w-[13ch] text-base-content"
                 classNames={{
                   description: ' text',
                 }}

@@ -3,6 +3,7 @@ import { SpeechStatus } from 'react-text-to-speech/types'
 import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Badge, ScrollShadow } from '@nextui-org/react'
+import { twMerge } from 'tailwind-merge'
 
 import ToolTip from '~/components/Tooltip'
 import CopyButton from '~/components/CopyButton'
@@ -118,10 +119,10 @@ const MessageFooter = observer(
 
     return (
       <div
-        className={
-          'sticky bottom-0 z-10 flex w-full gap-2 bg-gradient-to-b from-transparent to-base-100 to-60% px-2 pt-2 opacity-0 transition-colors duration-300 ease-in-out hover:bg-base-100 group-hover:opacity-100 ' +
-          (message.source.fromBot ? 'flex-row' : 'flex-row-reverse self-end')
-        }
+        className={twMerge(
+          'sticky bottom-0 z-10 flex w-full gap-2 bg-gradient-to-b from-transparent to-base-100 to-60% px-2 pt-2 opacity-0 transition-colors duration-300 ease-in-out hover:bg-base-100 group-hover:opacity-100',
+          message.source.fromBot ? 'flex-row' : 'flex-row-reverse self-end',
+        )}
       >
         {onDestroy && (
           <button
@@ -154,29 +155,29 @@ const MessageFooter = observer(
         )}
 
         <div
-          className={
-            'flex gap-2 ' +
-            (fromBot ? 'ml-auto flex-row-reverse' : 'mr-auto') +
-            (_.isEmpty(content) ? ' hidden' : '')
-          }
+          className={twMerge(
+            'flex gap-2',
+            fromBot ? 'ml-auto flex-row-reverse' : 'mr-auto',
+            _.isEmpty(content) && ' hidden',
+          )}
         >
           <button
-            className={
-              'h-fit w-fit opacity-30 hover:scale-110 hover:opacity-100 ' +
-              (speechStatus === 'started' ? ' animate-pulse opacity-100' : '')
-            }
+            className={twMerge(
+              'h-fit w-fit opacity-30 hover:scale-110 hover:opacity-100',
+              speechStatus === 'started' && ' animate-pulse opacity-100',
+            )}
             onClick={speechStatus === 'started' ? pause : start}
           >
             <PlayPause />
           </button>
 
           <button
-            className={
-              'text-error hover:scale-110' +
-              (speechStatus === 'stopped'
+            className={twMerge(
+              'text-error hover:scale-110',
+              speechStatus === 'stopped'
                 ? ' pointer-events-none opacity-0'
-                : ' opacity-30  hover:opacity-100 ')
-            }
+                : ' opacity-30  hover:opacity-100 ',
+            )}
             onClick={stop}
           >
             <Stop />

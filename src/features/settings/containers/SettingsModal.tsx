@@ -4,6 +4,7 @@ import _ from 'lodash'
 import useMedia from 'use-media'
 import { Modal, ModalContent, ModalBody, Select, SelectItem } from '@nextui-org/react'
 import { NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { twMerge } from 'tailwind-merge'
 
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 import Drawer from '~/containers/Drawer'
@@ -31,7 +32,7 @@ const SettingsSidePanel = observer(
             to={panelName}
             key={panelName}
             className={({ isActive }) =>
-              'btn w-full justify-start ' + (isActive ? ' btn-neutral' : '')
+              twMerge('btn w-full justify-start', isActive && 'btn-neutral')
             }
             onClick={() => onSectionClick?.(panelName)}
           >
@@ -71,10 +72,10 @@ const MobileSettingsSidePanel = observer(() => {
         <SelectItem
           key={'/' + panelName}
           value={'/' + panelName}
-          className={
-            'w-full !min-w-[13ch] text-base-content' +
-            (panelName === selectedPanel ? ' text-primary' : '')
-          }
+          className={twMerge(
+            'w-full !min-w-[13ch] text-base-content',
+            panelName === selectedPanel && ' text-primary',
+          )}
           classNames={{
             description: ' text',
           }}
@@ -130,7 +131,7 @@ const SettingsModal = observer(() => {
       onClose={() => navigate('/')}
       size={isMobile ? 'full' : undefined}
       classNames={{
-        base: isMobile ? '' : '!w-full max-w-full',
+        base: twMerge(!isMobile && '!w-full max-w-full'),
         body: 'px-2 text-base-content overflow-hidden',
         backdrop:
           'bg-gradient-to-t from-base-200 from-25% to-base-200/20 backdrop-opacity-20 !cursor-pointer',
@@ -143,10 +144,11 @@ const SettingsModal = observer(() => {
           <div className="navbar flex h-auto min-h-0 max-w-full text-base-content">
             <div className="ml-auto justify-end">
               <button
-                className={
-                  'btn btn-circle btn-ghost btn-sm !text-lg opacity-70 ' +
-                  (shouldShowBackButton ? '' : ' pointer-events-none !opacity-0') // hack to hide the button but keep spacing
-                }
+                className={twMerge(
+                  'btn btn-circle btn-ghost btn-sm !text-lg opacity-70',
+                  // hack to hide the button but keep spacing
+                  !shouldShowBackButton && 'pointer-events-none !opacity-0',
+                )}
                 onClick={() => navigate(-1)}
               >
                 <Back />

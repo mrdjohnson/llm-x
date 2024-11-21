@@ -7,6 +7,7 @@ import useMedia from 'use-media'
 
 import ChevronDown from '~/icons/ChevronDown'
 import { connectionStore } from '~/core/connection/ConnectionStore'
+import { twMerge } from 'tailwind-merge'
 
 const ModelSelector = observer(() => {
   const navigate = useNavigate()
@@ -55,11 +56,13 @@ const ModelSelector = observer(() => {
         size={isMobile ? 'sm' : undefined}
         className="pointer-events-none w-full !cursor-pointer bg-transparent"
         classNames={{
-          inputWrapper:
-            'btn !cursor-pointer border-none p-2 pr-1 !min-h-0 ' + (isMobile ? ' h-fit' : ''),
+          inputWrapper: twMerge(
+            'btn !cursor-pointer border-none p-2 pr-1 !min-h-0',
+            isMobile && 'h-fit',
+          ),
           input: '!cursor-pointer',
           label: '!cursor-pointer mr-2',
-          innerWrapper: '!cursor-pointer ' + (isMobile ? ' h-fit' : ''),
+          innerWrapper: twMerge('!cursor-pointer', isMobile && 'h-fit'),
         }}
         endContent={
           <ChevronDown className="-rotate-90 place-self-center !stroke-[3px]  text-base-content/45" />

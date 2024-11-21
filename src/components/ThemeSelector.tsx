@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
+import { twMerge } from 'tailwind-merge'
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { Select, SelectItem } from '@nextui-org/react'
@@ -34,10 +35,10 @@ const ThemeSelector = observer(() => {
           <SelectItem
             key={key}
             value={key}
-            className={
-              'w-full !min-w-[13ch] text-base-content' +
-              (key === selectedTheme ? ' text-primary' : '')
-            }
+            className={twMerge(
+              'w-full !min-w-[13ch] text-base-content',
+              key === selectedTheme && 'text-primary',
+            )}
             classNames={{
               description: ' text',
             }}
