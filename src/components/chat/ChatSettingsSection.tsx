@@ -7,9 +7,11 @@ import Check from '~/icons/Check'
 import Delete from '~/icons/Delete'
 import DocumentArrowDown from '~/icons/DocumentArrowDown'
 import Back from '~/icons/Back'
+import Edit from '~/icons/Edit'
 
 import Tooltip from '~/components/Tooltip'
 import FormInput from '~/components/form/FormInput'
+import { NavButton } from '~/components/NavButton'
 
 import { chatStore } from '~/core/chat/ChatStore'
 import { chatTable } from '~/core/chat/ChatTable'
@@ -93,6 +95,13 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
           <span className="flex-shrink-1 line-clamp-1 max-w-[85%] flex-1 text-left md:text-lg">
             {chatModel.name || 'new chat'}
           </span>
+
+          <NavButton
+            to={'/chats/' + chat.id}
+            className="!bg-transparent text-base-content/60 hover:text-base-content p-1 transition-colors duration-250 ease-in-out"
+          >
+            <Edit />
+          </NavButton>
         </div>
 
         <div className=" mt-2 flex flex-1 flex-col text-base-content">

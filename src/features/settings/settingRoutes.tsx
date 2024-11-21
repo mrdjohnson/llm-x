@@ -12,8 +12,16 @@ import { ParameterForm } from '~/features/settings/panels/connections/Connection
 import { PersonaForm } from '~/features/settings/panels/persona/PersonaForm'
 import { OllamaModelSettings } from '~/features/settings/panels/model/OllamaModelPanel'
 import NewConnectionPanel from '~/features/settings/panels/connections/NewConnectionPanel'
+import { ChatForm } from '~/features/settings/panels/chat/ChatForm'
+import ChatPanel from '~/features/settings/panels/chat/ChatPanel'
 
-export type SettingPanelOptionsType = 'general' | 'initial' | 'connection' | 'personas' | 'models'
+export type SettingPanelOptionsType =
+  | 'general'
+  | 'initial'
+  | 'connection'
+  | 'personas'
+  | 'models'
+  | 'chats'
 
 export type SettingPanelType = {
   label: string
@@ -52,6 +60,15 @@ export const settingRoutesByName: Record<SettingPanelOptionsType, SettingPanelTy
       </>
     ),
     Component: ModelPanel,
+  },
+  chats: {
+    label: 'Chats',
+    Component: ChatPanel,
+    children: (
+      <>
+        <Route path=":id" element={<ChatForm />} />
+      </>
+    ),
   },
   personas: {
     label: 'Personas',

@@ -13,7 +13,7 @@ import { chatToDateLabel } from '~/utils/chatToDateLabel'
 class ChatStore {
   chatCache = new EntityCache<ChatModel, ChatViewModel>({
     transform: chat => new ChatViewModel(chat),
-    schema: ChatModel
+    schema: ChatModel,
   })
 
   constructor() {
@@ -64,6 +64,8 @@ class ChatStore {
     }
 
     await settingTable.put({ selectedChatId: nextSelectedChat?.id })
+
+    this.chatCache.remove(chat.id)
 
     return chatTable.destroy(chat)
   }
