@@ -9,7 +9,7 @@ import PersonaPanel from '~/features/settings/panels/persona/PersonaPanel'
 import ModelPanel, { ConnectionModelPanel } from '~/features/settings/panels/model/ModelPanel'
 import ConnectionPanel from '~/features/settings/panels/connections/ConnectionPanel'
 import { ParameterForm } from '~/features/settings/panels/connections/ConnectionParameterSection'
-
+import { PersonaForm } from '~/features/settings/panels/persona/PersonaForm'
 import { OllamaModelSettings } from '~/features/settings/panels/model/OllamaModelPanel'
 import NewConnectionPanel from '~/features/settings/panels/connections/NewConnectionPanel'
 
@@ -53,5 +53,14 @@ export const settingRoutesByName: Record<SettingPanelOptionsType, SettingPanelTy
     ),
     Component: ModelPanel,
   },
-  personas: { label: 'Personas', subtitle: 'Select a Persona', Component: PersonaPanel },
+  personas: {
+    label: 'Personas',
+    subtitle: 'Select a Persona',
+    Component: PersonaPanel,
+    children: (
+      <>
+        <Route path=":id" element={<PersonaForm />} />
+      </>
+    ),
+  },
 }

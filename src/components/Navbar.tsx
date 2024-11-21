@@ -75,7 +75,7 @@ const Navbar = observer(() => {
           isReadOnly
           label="Persona"
           variant="bordered"
-          value={personaStore.selectedPersona?.name || 'No personas selected'}
+          value={personaStore.selectedPersona?.name || 'No persona selected'}
           className="w-full !cursor-pointer"
           classNames={{
             inputWrapper:

@@ -28,6 +28,10 @@ class PersonaStore {
     this.personaToEdit = persona
   }
 
+  getPersonaById(id: string) {
+    return personaTable.findCachedById(id)
+  }
+
   async setSelectedPersona(persona?: PersonaModel) {
     return await settingTable.put({ selectedPersonaId: persona?.id || null })
   }
