@@ -78,6 +78,11 @@ export const Drawer = ({ path, label, children, outletContent = { crumbs: [] } }
   useEffect(() => {
     if (depth.current === 0) {
       setStateCrumbs([{ label, path }])
+    } else {
+      const nextCrumbs = [...stateCrumbs]
+      nextCrumbs[depth.current] = currentCrumb
+
+      setStateCrumbs(nextCrumbs)
     }
   }, [label, path])
 
