@@ -103,7 +103,7 @@ export const PersonaForm = observer(() => {
             Reset
           </button>
 
-          <button className="btn btn-primary outline-none md:btn-sm" type="submit">
+          <button className="btn btn-primary outline-none md:btn-sm" type="submit" disabled={!isDirty}>
             Save
           </button>
         </div>
