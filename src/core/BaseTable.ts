@@ -73,7 +73,7 @@ export abstract class BaseTable<
       allValues.push(value)
 
       if (cache) {
-        this.cache.put(value, false)
+        this.cache.put(this.schema.parse(value), false)
       }
     })
 
@@ -95,7 +95,7 @@ export abstract class BaseTable<
 
     if (!entity) return undefined
 
-    return this.cache.put(entity, false)
+    return this.cache.put(this.schema.parse(entity), false)
   }
 
   async findByIds(ids: string[]): Promise<Output[]> {
