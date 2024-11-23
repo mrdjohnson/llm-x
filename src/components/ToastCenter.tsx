@@ -9,21 +9,11 @@ const ToastCenter = observer(() => {
   const [hovering, setHovering] = useState(false)
 
   const { toasts } = toastStore
-
-  useEffect(() => {
-    if (hovering) return
-
-    const timeout = setTimeout(() => {
-      toastStore.clearToasts()
-    }, 3000)
-
-    return () => clearTimeout(timeout)
-  }, [hovering])
-
+  
   // this effect will run every render, yes
   // but it will also auto update whenever there is a change to toasts
   useEffect(() => {
-    if (_.isEmpty(toasts)) return
+    if (hovering || _.isEmpty(toasts)) return
 
     const timeout = setTimeout(() => {
       toastStore.clearToasts()
