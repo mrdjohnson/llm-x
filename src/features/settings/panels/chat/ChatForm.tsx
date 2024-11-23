@@ -35,7 +35,7 @@ export const ChatForm = observer(() => {
   const handleDelete = async () => {
     navigate('/chats')
 
-    await chatStore.destroyChat(chat.source)
+    await chatStore.destroyChat(chat)
   }
 
   const validateName = (name: string) => {
@@ -49,7 +49,7 @@ export const ChatForm = observer(() => {
   }, [chat])
 
   return (
-    <Drawer path={chat.id} label={chat.source.name}>
+    <Drawer path={chat.id} label={chat.name}>
       <form onSubmit={handleFormSubmit} className="flex h-full flex-col p-2">
         <Controller
           render={({ field }) => (

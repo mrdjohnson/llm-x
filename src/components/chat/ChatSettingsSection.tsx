@@ -32,8 +32,6 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
 
   const chat = chatStore.selectedChat!
 
-  const chatModel = chat.source
-
   const onExportClose = () => {
     setIsExportOpen(false)
   }
@@ -43,7 +41,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
   }
 
   const handleFormSubmit = handleSubmit(async formData => {
-    await chatTable.put({ ...chatModel, ...formData })
+    await chatTable.put({ ...chat.source, ...formData })
 
     reset(formData)
   })
@@ -60,12 +58,12 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
 
     const link = document.createElement('a')
     link.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
-    link.download = `llm-x-chat-${_.snakeCase(chatModel.name).replace('_', '-')}.json`
+    link.download = `llm-x-chat-${_.snakeCase(chat.name).replace('_', '-')}.json`
     link.click()
   }
 
   useEffect(() => {
-    reset({ name: chatModel.name || 'new chat' })
+    reset({ name: chat.name || 'new chat' })
   }, [chat])
 
   useEffect(() => {
@@ -93,12 +91,12 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
           </button>
 
           <span className="flex-shrink-1 line-clamp-1 max-w-[85%] flex-1 text-left md:text-lg">
-            {chatModel.name || 'new chat'}
+            {chat.name || 'new chat'}
           </span>
 
           <NavButton
             to={'/chats/' + chat.id}
-            className="!bg-transparent text-base-content/60 hover:text-base-content p-1 transition-colors duration-250 ease-in-out"
+            className="!bg-transparent p-1 text-base-content/60 transition-colors duration-250 ease-in-out hover:text-base-content"
           >
             <Edit />
           </NavButton>
@@ -130,7 +128,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
                   )}
                   control={control}
                   name="name"
-                  defaultValue={chatModel.name || 'new chat'}
+                  defaultValue={chat.name || 'new chat'}
                   rules={{
                     validate: validateName,
                   }}
@@ -152,7 +150,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
 
             <Tooltip label="Delete Chat">
               <button
-                onClick={() => chatStore.destroyChat(chatModel)}
+                onClick={() => chatStore.destroyChat(chat)}
                 className="btn btn-ghost text-error"
               >
                 <Delete className="h-5 w-5" />

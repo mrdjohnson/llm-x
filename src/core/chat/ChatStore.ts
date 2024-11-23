@@ -20,8 +20,8 @@ class ChatStore {
     makeAutoObservable(this)
   }
 
-  get chats(): ChatModel[] {
-    return chatTable.cache.allValues()
+  get chats() {
+    return _.compact(chatTable.cache.allValues().map(this.chatCache.getOrPut))
   }
 
   get selectedChat() {
@@ -34,12 +34,12 @@ class ChatStore {
     return undefined
   }
 
-  get emptyChat(): ChatModel | undefined {
-    return _.find(this.chats, chat => chat.messageIds.length === 0)
+  get emptyChat(): ChatViewModel | undefined {
+    return _.find(this.chats, chat => chat.source.messageIds.length === 0)
   }
 
   get orderedChats() {
-    return _.orderBy(this.chats, 'lastMessageTimestamp', 'desc') // newest sent message first
+    return _.orderBy(this.chats, 'source.lastMessageTimestamp', 'desc') // newest sent message first
   }
 
   // todo, see if this is used in more than one place?
@@ -51,11 +51,11 @@ class ChatStore {
       .value()
   }
 
-  async destroyChat(chat: ChatModel) {
+  async destroyChat(chat: ChatViewModel) {
     let nextSelectedChat: ChatModel | undefined = undefined
 
     if (this.selectedChat?.id === chat.id) {
-      nextSelectedChat = _.without(chatStore.orderedChats, chat)[0]
+      nextSelectedChat = _.without(chatStore.orderedChats, chat)[0]?.source
     }
 
     // if we deleted the selected chat, and there was nothing to replace it
@@ -67,10 +67,10 @@ class ChatStore {
 
     this.chatCache.remove(chat.id)
 
-    return chatTable.destroy(chat)
+    return chatTable.destroy(chat.source)
   }
 
-  async selectChat(chat: ChatModel) {
+  async selectChat(chat: ChatViewModel) {
     return settingTable.put({ selectedChatId: chat.id })
   }
 }

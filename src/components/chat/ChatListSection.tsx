@@ -10,13 +10,13 @@ import DocumentArrowUp from '~/icons/DocumentArrowUp'
 import Edit from '~/icons/Edit'
 
 import { chatStore } from '~/core/chat/ChatStore'
-import { ChatModel } from '~/core/chat/ChatModel'
+import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { chatTable } from '~/core/chat/ChatTable'
 
 export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: () => void }) => {
   const { dateLabelToChatPairs } = chatStore
 
-  const handleChatSelected = async (chat: ChatModel) => {
+  const handleChatSelected = async (chat: ChatViewModel) => {
     await chatStore.selectChat(chat)
 
     onChatSelected()

@@ -284,7 +284,7 @@ const useRegisterChatActions = () => {
         },
       ]
 
-      _.orderBy(chatStore.chats, 'lastMessageDate', 'desc').forEach(chat => {
+      chatStore.orderedChats.forEach(chat => {
         const name = chat.name || 'new chat'
 
         return nextChatActions.push({
@@ -349,7 +349,7 @@ const useRegisterMessageActions = () => {
     const nextMessageActions: Action[] = []
 
     chatStore.chats.forEach(chat => {
-      const messageCount = countMessagesWithText(chat.messageIds)
+      const messageCount = countMessagesWithText(chat.source.messageIds)
 
       if (messageCount > 0) {
         nextMessageActions.push(

@@ -42,6 +42,10 @@ export class ChatViewModel {
     return this.source.id
   }
 
+  get name() {
+    return this.source.name
+  }
+
   get messages() {
     return _.compact(this.source.messageIds.map(this.messageViewModelCache.get))
   }
@@ -224,7 +228,7 @@ export class ChatViewModel {
     this.messageViewModelCache.put(userMessage)
 
     // if there was not a name before, auto make one now
-    const name = this.source.name === 'New Chat' ? content.substring(0, 40) : this.source.name
+    const name = this.name === 'New Chat' ? content.substring(0, 40) : this.name
     // add the message (and new name) to the chat
     await this.update({
       name,

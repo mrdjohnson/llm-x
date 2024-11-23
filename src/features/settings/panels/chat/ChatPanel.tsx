@@ -8,7 +8,7 @@ import SettingSection, { SettingSectionItem } from '~/containers/SettingSection'
 
 import Edit from '~/icons/Edit'
 
-import { ChatModel } from '~/core/chat/ChatModel'
+import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { chatTable } from '~/core/chat/ChatTable'
 import { chatStore } from '~/core/chat/ChatStore'
 import { settingTable } from '~/core/setting/SettingTable'
@@ -17,20 +17,18 @@ export const ChatPanel = observer(() => {
   const { selectedChat, chats } = chatStore
   const navigate = useNavigate()
 
-  const chatToSectionItem = (chat: ChatModel): SettingSectionItem<ChatModel> => ({
+  const chatToSectionItem = (chat: ChatViewModel): SettingSectionItem<ChatViewModel> => ({
     id: chat.id,
     label: chat.name,
-    subLabels: [chat.messageIds.length + ' messages'],
+    subLabels: [chat.source.messageIds.length + ' messages'],
     data: chat,
   })
 
-  const itemFilter = (chat: ChatModel, filterText: string) => {
-    return (
-      chat.name.toLowerCase().includes(filterText)
-    )
+  const itemFilter = (chat: ChatViewModel, filterText: string) => {
+    return chat.name.toLowerCase().includes(filterText)
   }
 
-  const handleChatSelected = async (chat: ChatModel) => {
+  const handleChatSelected = async (chat: ChatViewModel) => {
     await chatStore.selectChat(chat)
   }
 
@@ -65,7 +63,7 @@ export const ChatPanel = observer(() => {
       addButtonProps={{
         label: 'Add New Chat',
         onClick: e => createChat(e),
-        isDisabled: !!chatStore.emptyChat
+        isDisabled: !!chatStore.emptyChat,
       }}
     />
   )
