@@ -291,7 +291,7 @@ const ConnectionDataParameterSection = ({ subControl }: { subControl: unknown })
       isJson: false,
     })
 
-    navigate('newField')
+    navigate('parameter/newField')
   }
 
   const removeParameterByIndex = (index: number) => {
@@ -301,7 +301,8 @@ const ConnectionDataParameterSection = ({ subControl }: { subControl: unknown })
   const parameterToSectionItem = (
     parameter: ConnectionParameterModel,
   ): SettingSectionItem<ConnectionParameterModel> => ({
-    id: parameter.field || '',
+    id: parameter.field,
+    to: 'parameter/' + parameter.field,
     label: parameter.field,
     subLabels: parameter.helpText && [parameter.helpText],
     data: parameter,

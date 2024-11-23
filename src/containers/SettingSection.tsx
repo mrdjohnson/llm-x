@@ -10,6 +10,7 @@ import { NavButton } from '~/components/NavButton'
 
 export type SettingSectionItem<T> = {
   id: string
+  to?: string
   label: string
   subLabels?: string | string[]
   data: T

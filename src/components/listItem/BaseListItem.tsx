@@ -7,6 +7,7 @@ import { NavButtonDiv } from '~/components/NavButton'
 
 export type BaseListItemType<T> = {
   id: string
+  to?: string
   label: string
   data: T
 
@@ -37,7 +38,7 @@ const BaseListItem = observer(
     return (
       <NavButtonDiv
         key={item.id}
-        to={item.id}
+        to={item.to || item.id}
         onClick={e => onClick?.(item, index, e)}
         className={twMerge(
           'rounded-md bg-base-200 p-1 first-of-type:mt-0',

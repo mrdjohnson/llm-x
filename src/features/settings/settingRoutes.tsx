@@ -51,7 +51,7 @@ export const settingRoutesByName: Record<SettingPanelOptionsType, SettingPanelTy
         <Route path="empty_panel" element={<NewConnectionPanel />} />
 
         <Route path="edit/:id" element={<ConnectionPanel />}>
-          <Route path=":parameterId" element={<ParameterForm />} />
+          <Route path="parameter/:parameterId" element={<ParameterForm />} />
         </Route>
 
         <Route path=":id" element={<ConnectionModelPanel />}>
