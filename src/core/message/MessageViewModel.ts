@@ -79,7 +79,7 @@ export class MessageViewModel {
 
   update = (data: Partial<MessageModel>) => {
     this.slowUpdate.cancel?.()
-    
+
     return messageTable.put({ ...this.source, ...data })
   }
 
@@ -102,7 +102,7 @@ export class MessageViewModel {
 
   async setExtraDetails(detailObject?: Record<string, unknown>) {
     const details = formatMessageDetails(detailObject)
-    const extras = MessageExtrasModel.safeParse({ ...this.source.extras, details })
+    const extras = MessageExtrasModel.safeParse({ ...this.source.extras, details }).data
 
     await this.update({ extras })
   }
