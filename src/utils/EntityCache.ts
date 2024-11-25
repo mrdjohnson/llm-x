@@ -2,6 +2,12 @@ import _ from 'lodash'
 import { isObservable, makeObservable, observable, toJS } from 'mobx'
 import { AnyZodObject } from 'zod'
 
+const mergeArrays = (entityArray: unknown, cachedArray: unknown) => {
+  if (_.isArray(entityArray) && _.isArray(cachedArray)) {
+    return cachedArray
+  }
+}
+
 export default class EntityCache<Input extends { id: string }, Output = Input> {
   map = observable.map<string, Output>()
 
@@ -30,7 +36,7 @@ export default class EntityCache<Input extends { id: string }, Output = Input> {
       if (cachedEntity) {
         const observedEntity = cachedEntity
 
-        _.merge(observedEntity, entity)
+        _.mergeWith(observedEntity, entity, mergeArrays)
 
         return observedEntity
       }
