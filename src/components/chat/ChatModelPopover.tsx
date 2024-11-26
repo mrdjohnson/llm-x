@@ -127,7 +127,7 @@ const ChatModelPopoverContent = observer(
             role="button"
           >
             <span className="line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline opacity-40 ">
-              {actor.label}
+              {actor.modelName}
             </span>
 
             <button
