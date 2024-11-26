@@ -127,7 +127,7 @@ const ChatModelPopoverContent = observer(
             role="button"
           >
             <span className="line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline opacity-40 ">
-              {actor.modelName}
+              {actor.modelName || actor.label}
             </span>
 
             <button
@@ -156,8 +156,13 @@ const ChatModelPopover = observer(({ chat, actor }: ChatModelPopoverProps) => {
 
   const trigger = actor ? (
     <div className="group my-2 flex flex-row gap-2" role="button" onClick={onOpen}>
-      <span className="link mx-0 line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline text-lg opacity-45 transition-all duration-300 ease-in-out hover:opacity-65 md:text-base">
-        {actor.model?.label}
+      <span
+        className={twMerge(
+          'link mx-0 line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline text-lg opacity-45 transition-all duration-300 ease-in-out hover:opacity-65 md:text-base',
+          !actor.isConnected && 'opacity-20',
+        )}
+      >
+        {actor.label}
       </span>
 
       <span

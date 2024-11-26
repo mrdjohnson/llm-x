@@ -26,8 +26,16 @@ export class ActorViewModel {
     return this.model?.modelName
   }
 
+  get isConnected() {
+    return !!this.model
+  }
+
   get label() {
-    return this.source.name || this.model?.label
+    if (this.source.name && !this.isConnected) {
+      return this.source.name + ' (disconnected)'
+    }
+
+    return this.model?.label || 'Disconnected Model'
   }
 
   async update(patch: Partial<ActorModel>) {
