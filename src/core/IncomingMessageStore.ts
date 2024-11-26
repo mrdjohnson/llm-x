@@ -42,6 +42,8 @@ export class IncomingMessageStore {
 
     this.messageGroupById[message.rootMessage.id] ??= 1
     this.messageGroupById[message.rootMessage.id] -= 1
+
+    message.unsetCreationActor()
   }
 
   deleteMessage(chat: ChatViewModel, message: MessageViewModel) {
@@ -94,7 +96,10 @@ export class IncomingMessageStore {
 
     const messageToEdit = incomingMessage.selectedVariation
 
-    await messageToEdit.update({ botName: connectionStore.selectedModelName })
+    await messageToEdit.update({
+      botName: incomingMessage.actor.modelName,
+      modelType: incomingMessage.actor.connection?.type,
+    })
 
     console.log(prompt)
 
@@ -122,7 +127,7 @@ export class IncomingMessageStore {
     this.messageGroupById[incomingMessage.rootMessage.id] ??= 0
     this.messageGroupById[incomingMessage.rootMessage.id] += 1
 
-    const connection = connectionStore.selectedConnection
+    const connection = incomingMessage.actor.connection
 
     if (!connection) throw 'Unknown server'
 
@@ -134,7 +139,10 @@ export class IncomingMessageStore {
 
     const api: BaseApi | undefined = connection.api
 
-    await incomingMessage.update({ botName: connectionStore.selectedModelName! })
+    await incomingMessage.update({
+      botName: incomingMessage.actor.modelName,
+      modelType: incomingMessage.actor.connection?.type,
+    })
 
     await this.handleIncomingMessage(chat, incomingMessage, async () => {
       for await (const contentChunk of api.generateChat(chat.messages, incomingMessage)) {

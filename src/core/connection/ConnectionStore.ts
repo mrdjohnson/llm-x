@@ -3,7 +3,7 @@ import { makeAutoObservable } from 'mobx'
 
 import EntityCache from '~/utils/EntityCache'
 
-import { ConnectionTypes, LanguageModelTypes } from '~/core/connection/types'
+import { BaseLanguageModel, ConnectionTypes, LanguageModelTypes } from '~/core/connection/types'
 import { connectionTable } from '~/core/connection/ConnectionTable'
 import { ConnectionModel, ConnectionModelInput } from '~/core/connection/ConnectionModel'
 import { connectionViewModelByType, ConnectionViewModelTypes } from '~/core/connection/viewModels'
@@ -11,6 +11,7 @@ import { connectionViewModelByType, ConnectionViewModelTypes } from '~/core/conn
 import { settingStore } from '~/core/setting/SettingStore'
 import { settingTable } from '~/core/setting/SettingTable'
 import { toastStore } from '~/core/ToastStore'
+import { actorStore } from '~/core/actor/ActorStore'
 
 class ConnectionStore {
   connectionCache = new EntityCache<ConnectionModel, ConnectionViewModelTypes>({
@@ -27,6 +28,11 @@ class ConnectionStore {
 
   get connections() {
     return connectionTable.cache.allValues().map(this.connectionCache.getOrPut)
+  }
+
+  get activeConnections() {
+    // only connections that have models
+    return this.connections.filter(connection => !!connection.models[0])
   }
 
   get selectedConnection(): ConnectionViewModelTypes | undefined {
@@ -53,13 +59,56 @@ class ConnectionStore {
     return this.selectedModel?.label
   }
 
+  getAllModels() {
+    const models = []
+    for (const connection of this.connections) {
+      if (!connection.source.enabled) continue
+
+      for (const model of connection.models) {
+        models.push(model)
+      }
+    }
+
+    return models
+  }
+
   getConnectionById(id?: string) {
     if (!id) return
 
     return this.connectionCache.get(id)
   }
 
+  getModelById(id: string = ''): BaseLanguageModel | undefined {
+    const [connectionId] = id.split(':')
+
+    const connection = this.getConnectionById(connectionId)
+
+    return _.find(connection?.models, { id }) as BaseLanguageModel | undefined
+  }
+
+  getFilteredModelGroups(filterText: string) {
+    const groups = this.connections.map(connection => {
+      if (!connection.isConnected || !connection.source.enabled || !connection.models[0])
+        return null
+
+      const models = connection.filteredModels(filterText)
+
+      if (_.isEmpty(models)) return null
+
+      return {
+        connection,
+        models,
+      }
+    })
+
+    return _.compact(groups)
+  }
+
   async deleteConnection(connection: ConnectionViewModelTypes) {
+    for (const actor of actorStore.actors) {
+      await actor.removeConnection(connection.id)
+    }
+
     return await connectionTable.destroy(connection.source)
   }
 

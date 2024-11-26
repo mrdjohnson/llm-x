@@ -8,6 +8,8 @@ import { SelectedVariationHandler } from '~/core/message/SelectedVariationHandle
 import EntityCache from '~/utils/EntityCache'
 import { formatMessageDetails } from '~/utils/formatMessageDetails'
 import { addImageToCachedStorage } from '~/utils/addImageToCachedStorage'
+import { ActorViewModel } from '~/core/actor/ActorViewModel'
+import { actorStore } from '~/core/actor/ActorStore'
 
 export class MessageViewModel {
   contentOverride = ''
@@ -19,6 +21,9 @@ export class MessageViewModel {
   selectedVariationHandler: SelectedVariationHandler
 
   showVariations: boolean = false
+
+  // only used during creation
+  private creationActor: ActorViewModel | undefined
 
   constructor(
     public source: MessageModel,
@@ -59,6 +64,10 @@ export class MessageViewModel {
     return this._rootMessage || this
   }
 
+  get actor() {
+    return this.creationActor || actorStore.systemActor
+  }
+
   fetchVariations() {
     messageTable.findByIds(this.source.variationIds).then(loadedVariations => {
       loadedVariations.forEach(message => this.variationViewModelCache.put(message))
@@ -91,6 +100,14 @@ export class MessageViewModel {
     },
     3000,
   )
+
+  setCreationActor(actor: ActorViewModel) {
+    this.creationActor = actor
+  }
+
+  unsetCreationActor() {
+    this.creationActor = undefined
+  }
 
   async setError(errorData: Error) {
     const { data: error } = MessageErrorModel.safeParse(errorData)

@@ -17,6 +17,7 @@ import { chatStore } from '~/core/chat/ChatStore'
 import { chatTable } from '~/core/chat/ChatTable'
 
 import { CURRENT_DB_TIMESTAMP_MILLISECONDS } from '~/core/setting/SettingModel'
+import ChatModelPopover from '~/components/chat/ChatModelPopover'
 
 export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked: () => void }) => {
   const {
@@ -105,7 +106,7 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
         <div className=" mt-2 flex flex-1 flex-col text-base-content">
           <div className="no-scrollbar flex h-full flex-1 flex-col overflow-y-scroll rounded-md">
             <div className="flex flex-col gap-2 rounded-box bg-base-300 text-base-content">
-              <form className="flex w-full flex-row gap-2" onSubmit={handleFormSubmit}>
+              <form className="flex w-full flex-col gap-2" onSubmit={handleFormSubmit}>
                 <Controller
                   render={({ field }) => (
                     <FormInput
@@ -133,6 +134,14 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
                     validate: validateName,
                   }}
                 />
+
+                <ChatModelPopover chat={chat} />
+
+                <div className="flex flex-col">
+                  {chat.actors.map(actor => (
+                    <ChatModelPopover key={actor.id} chat={chat} actor={actor} />
+                  ))}
+                </div>
               </form>
             </div>
           </div>

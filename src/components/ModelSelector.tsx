@@ -4,10 +4,12 @@ import _ from 'lodash'
 import { useNavigate } from 'react-router-dom'
 import { Input } from '@nextui-org/react'
 import useMedia from 'use-media'
+import { twMerge } from 'tailwind-merge'
 
 import ChevronDown from '~/icons/ChevronDown'
+
 import { connectionStore } from '~/core/connection/ConnectionStore'
-import { twMerge } from 'tailwind-merge'
+import { chatStore } from '~/core/chat/ChatStore'
 
 const ModelSelector = observer(() => {
   const navigate = useNavigate()
@@ -16,6 +18,9 @@ const ModelSelector = observer(() => {
 
   const { selectedModelLabel, isAnyServerConnected, selectedConnection } = connectionStore
   const noServer = !isAnyServerConnected
+
+  const selectedChat = chatStore.selectedChat
+  const hasActorOverrides = !_.isEmpty(selectedChat?.actors)
 
   const label = useMemo(() => {
     if (noServer) {
@@ -36,7 +41,13 @@ const ModelSelector = observer(() => {
   }, [noServer, selectedConnection?.models, selectedModelLabel, isMobile])
 
   const handleClick = () => {
-    if (!selectedConnection) {
+    if (hasActorOverrides) {
+      if (isMobile) {
+        navigate('/initial')
+      } else {
+        navigate('/chats/' + selectedChat?.id)
+      }
+    } else if (!selectedConnection) {
       navigate('/models')
     } else {
       navigate('/models/' + selectedConnection.id)
@@ -46,14 +57,14 @@ const ModelSelector = observer(() => {
   return (
     <button
       onClick={handleClick}
-      className="w-full !cursor-pointer rounded-md border-2 border-base-content/20 hover:!border-base-content/30 hover:bg-base-100"
+      className="w-full !cursor-pointer rounded-md border-2 border-base-content/20 hover:!border-base-content/30 hover:bg-base-100 disabled:opacity-20"
     >
       <Input
         isReadOnly
-        label={label}
+        label={hasActorOverrides ? 'See chat settings' : label}
         variant="bordered"
-        value={selectedModelLabel}
-        size={isMobile || !selectedModelLabel ? 'sm' : undefined}
+        value={hasActorOverrides ? undefined : selectedModelLabel}
+        size={isMobile || !selectedModelLabel || hasActorOverrides ? 'sm' : undefined}
         className="pointer-events-none w-full !cursor-pointer bg-transparent"
         classNames={{
           inputWrapper: twMerge(

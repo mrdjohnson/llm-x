@@ -14,6 +14,9 @@ import { MessageModel } from '~/core/message/MessageModel'
 import { messageTable } from '~/core/message/MessageTable'
 
 import { connectionStore } from '~/core/connection/ConnectionStore'
+import { actorStore } from '~/core/actor/ActorStore'
+import { ActorViewModel } from '~/core/actor/ActorViewModel'
+import { ActorModel } from '../actor/ActorModel'
 
 export class ChatViewModel {
   messageViewModelCache = new EntityCache<MessageModel, MessageViewModel>({
@@ -48,6 +51,11 @@ export class ChatViewModel {
 
   get messages() {
     return _.compact(this.source.messageIds.map(this.messageViewModelCache.get))
+  }
+
+  get actors() {
+    console.log('actor length: ', this.source.actorIds.length)
+    return _.compact(this.source.actorIds.map(actorStore.getActorById))
   }
 
   get previewImages() {
@@ -88,6 +96,26 @@ export class ChatViewModel {
 
     // remove all connected messages
     await messageTable.destroyMany(this.source.messageIds)
+  }
+
+  async removeActorById(actorId: string) {
+    const actorIds = _.without(this.source.actorIds, actorId)
+
+    if (actorIds.length !== this.source.actorIds.length) {
+      await this.update({ actorIds })
+    }
+  }
+
+  async createActor(input: Partial<ActorModel>) {
+    const actor = await actorStore.createActor({ ...input, chatId: this.id })
+
+    await this.addActor(actor)
+
+    return actor
+  }
+
+  async addActor(actor: ActorViewModel) {
+    await this.update({ actorIds: this.source.actorIds.concat(actor.id) })
   }
 
   async destroyMessage({ source: message }: MessageViewModel) {

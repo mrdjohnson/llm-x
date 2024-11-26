@@ -6,6 +6,7 @@ import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { chatTable } from '~/core/chat/ChatTable'
 import { settingStore } from '~/core/setting/SettingStore'
 import { settingTable } from '~/core/setting/SettingTable'
+import { actorStore } from '~/core/actor/ActorStore'
 
 import EntityCache from '~/utils/EntityCache'
 import { chatToDateLabel } from '~/utils/chatToDateLabel'
@@ -51,6 +52,10 @@ class ChatStore {
       .value()
   }
 
+  getChatById(chatId: string) {
+    return this.chatCache.get(chatId)
+  }
+
   async destroyChat(chat: ChatViewModel) {
     let nextSelectedChat: ChatModel | undefined = undefined
 
@@ -66,6 +71,12 @@ class ChatStore {
     await settingTable.put({ selectedChatId: nextSelectedChat?.id })
 
     this.chatCache.remove(chat.id)
+
+    for (const actor of chat.actors) {
+      if (actor.source.chatId === chat.id) {
+        await actorStore.destroyActor(actor, { skipChatCheck: true })
+      }
+    }
 
     return chatTable.destroy(chat.source)
   }

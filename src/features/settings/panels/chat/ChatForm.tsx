@@ -1,10 +1,12 @@
 import { chatStore } from '~/core/chat/ChatStore'
 import { observer } from 'mobx-react-lite'
 import { Controller, useForm } from 'react-hook-form'
-import { useEffect } from 'react'
+import { useEffect, type MouseEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import Drawer from '~/containers/Drawer'
+import SettingSection, { SettingSectionItem } from '~/containers/SettingSection'
+
 import FormInput from '~/components/form/FormInput'
 
 import Check from '~/icons/Check'
@@ -12,6 +14,84 @@ import Delete from '~/icons/Delete'
 
 import { ChatModel } from '~/core/chat/ChatModel'
 import { chatTable } from '~/core/chat/ChatTable'
+import { ChatViewModel } from '~/core/chat/ChatViewModel'
+import { actorStore } from '~/core/actor/ActorStore'
+import { ActorViewModel } from '~/core/actor/ActorViewModel'
+
+const ChatActorSection = observer(({ chat }: { chat: ChatViewModel }) => {
+  const actors = chat.actors
+  const navigate = useNavigate()
+
+  const actorToSectionItem = (actor: ActorViewModel): SettingSectionItem<ActorViewModel> => {
+    const modelName = actor.model?.label || 'Inactive model:' + actor.connection?.id
+    const subLabels = []
+    let label
+
+    if (actor.connection) {
+      subLabels.push(actor.connection.label)
+    }
+
+    if (actor.source.name) {
+      label = actor.source.name
+      subLabels.push(modelName)
+    } else {
+      label = modelName
+    }
+
+    return {
+      id: actor.id,
+      to: 'actor/' + actor.id,
+      label,
+      subLabels,
+      data: actor,
+    }
+  }
+
+  const itemFilter = (actor: ActorViewModel, filterText: string) => {
+    return (
+      actor.modelName?.toLowerCase().includes(filterText) ||
+      actor.source.name?.toLowerCase().includes(filterText)
+    )
+  }
+
+  const createActor = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    const actor = await chat.createActor({ name: 'New Actor' })
+
+    navigate('actor/' + actor.id)
+  }
+
+  const actorToActionRow = (actor: ActorViewModel) => {
+    return (
+      <button
+        className="btn btn-ghost btn-sm ml-auto justify-start px-2 text-error"
+        onClick={() => actorStore.destroyActor(actor)}
+      >
+        <Delete />
+      </button>
+    )
+  }
+
+  return (
+    <SettingSection
+      items={actors.map(actorToSectionItem)}
+      filterProps={{
+        helpText: 'Filter actor models by name or model name...',
+        itemFilter,
+        emptyLabel: 'No actors found',
+      }}
+      addButtonProps={{
+        label: 'Add New Actor',
+        onClick: e => createActor(e),
+      }}
+      onItemSelected={actor => navigate('actor/' + actor!.id)}
+      renderActionRow={actorToActionRow}
+      hasLargeItems
+      isSubSection
+    />
+  )
+})
 
 export const ChatForm = observer(() => {
   const navigate = useNavigate()
@@ -19,12 +99,14 @@ export const ChatForm = observer(() => {
   const chat = chatStore.selectedChat!
   const chatModel = chat.source
 
+  const methods = useForm<ChatModel>()
+
   const {
     handleSubmit,
     reset,
     control,
     formState: { isDirty, errors },
-  } = useForm<ChatModel>()
+  } = methods
 
   const handleFormSubmit = handleSubmit(async formData => {
     await chatTable.put(formData)
@@ -49,7 +131,7 @@ export const ChatForm = observer(() => {
   }, [chat])
 
   return (
-    <Drawer label={chat.name}>
+    <Drawer label={chat.name} outletContent={methods}>
       <form onSubmit={handleFormSubmit} className="flex h-full flex-col gap-2 p-2">
         <Controller
           render={({ field }) => (
@@ -78,6 +160,8 @@ export const ChatForm = observer(() => {
             validate: validateName,
           }}
         />
+
+        <ChatActorSection chat={chat} />
 
         <div className="mt-auto flex flex-row gap-2 pt-2">
           <button

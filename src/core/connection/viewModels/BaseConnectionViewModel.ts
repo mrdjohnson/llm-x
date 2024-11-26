@@ -149,6 +149,18 @@ abstract class BaseConnectionViewModel<
   async selectModel(model?: LanguageModelType<BaseModelType>) {
     await settingTable.put({ selectedConnectionId: this.id, selectedModelId: model?.id })
   }
+
+  getModelById(id?: string): LanguageModelType<BaseModelType> | undefined {
+    if (!id) return undefined
+
+    return _.find(this.models, model => model.id === id)
+  }
+
+  filteredModels(filterText: string) {
+    if (!filterText) return this.models
+
+    return this.models.filter(model => this.modelFilter(model, filterText))
+  }
 }
 
 export type ConnectionViewModelPanel<BaseModel, T = BaseConnectionViewModel<BaseModel>> = (props: {

@@ -14,6 +14,7 @@ import { OllamaModelSettings } from '~/features/settings/panels/model/OllamaMode
 import NewConnectionPanel from '~/features/settings/panels/connections/NewConnectionPanel'
 import { ChatForm } from '~/features/settings/panels/chat/ChatForm'
 import ChatPanel from '~/features/settings/panels/chat/ChatPanel'
+import { ActorForm } from '~/features/settings/panels/actor/ActorForm'
 
 export type SettingPanelOptionsType =
   | 'general'
@@ -66,7 +67,9 @@ export const settingRoutesByName: Record<SettingPanelOptionsType, SettingPanelTy
     Component: ChatPanel,
     children: (
       <>
-        <Route path=":id" element={<ChatForm />} />
+        <Route path=":id" element={<ChatForm />}>
+          <Route path="actor/:id" element={<ActorForm />} />
+        </Route>
       </>
     ),
   },
