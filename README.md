@@ -14,6 +14,8 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 # Recent additions:
 
+- Multi-model support! Chats now support multiple models, from any connected server, and can respond with each them at the same time 
+- Quick Delete! using the quick search/ kbar panel, it is super easy to delete all app related data
 - Chrome extension support! All the features of the web app, built into the browser
 - Gemini Nano support!
 - IndexedDB support! All text is now saved in IndexedDB instead of local storage
