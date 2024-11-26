@@ -18,9 +18,10 @@ import DownloadTray from '~/icons/DownloadTray'
 import Delete from '~/icons/Delete'
 import Edit from '~/icons/Edit'
 
+import Drawer from '~/containers/Drawer'
+
 import OllamaConnectionViewModel from '~/core/connection/viewModels/OllamaConnectionViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
-import { useCrumb } from '~/containers/Drawer'
 
 type PanelTableProps = {
   connection: OllamaConnectionViewModel
@@ -139,8 +140,6 @@ export const OllamaModelSettings = observer(() => {
 
   const viewModel = connectionStore.getConnectionById(id)!
 
-  useCrumb({ label: modelName!, path: 'ollama/' + modelName! })
-
   if (viewModel.type !== 'Ollama') {
     throw new Error('Ollama connection not found')
   }
@@ -169,70 +168,74 @@ export const OllamaModelSettings = observer(() => {
   }
 
   return (
-    <div className="flex h-full w-full flex-col p-2">
-      <label className="text-lg font-semibold text-base-content">
-        {_.capitalize(selectedModelName)}
+    <Drawer label={modelName!}>
+      <div className="flex h-full w-full flex-col p-2">
+        <label className="text-lg font-semibold text-base-content">
+          {_.capitalize(selectedModelName)}
 
-        {details && (
-          <label className="text-md ml-2 text-base-content/70">
-            {[modelData.details.parameter_size, modelData.details.quantization_level].join(' ')}
-          </label>
-        )}
-      </label>
+          {details && (
+            <label className="text-md ml-2 text-base-content/70">
+              {[modelData.details.parameter_size, modelData.details.quantization_level].join(' ')}
+            </label>
+          )}
+        </label>
 
-      <div className="mt-2 flex flex-col gap-1">
-        <p>
-          Size on disk:
-          <span className="ml-2 scale-90 text-base-content/70">{model.fullGbSize}</span>
-        </p>
+        <div className="mt-2 flex flex-col gap-1">
+          <p>
+            Size on disk:
+            <span className="ml-2 scale-90 text-base-content/70">{model.fullGbSize}</span>
+          </p>
 
-        <p>
-          Last Update:
-          <span className="ml-2 scale-90 text-base-content/70">{model.timeAgo}</span>
-        </p>
-      </div>
-
-      <div className="my-4">
-        <div className="flex justify-between">
-          <label>ModelFile:</label>
-
-          <CopyButton
-            className="text-base-content/30 hover:text-base-content"
-            text={modelData.modelfile}
-          />
+          <p>
+            Last Update:
+            <span className="ml-2 scale-90 text-base-content/70">{model.timeAgo}</span>
+          </p>
         </div>
 
-        <div className="flex max-h-52 w-full overflow-scroll whitespace-pre-line rounded-md border border-base-content/30 p-2 text-base-content/70">
-          {modelData.modelfile.replace(/\n/g, '  \n')}
+        <div className="my-4">
+          <div className="flex justify-between">
+            <label>ModelFile:</label>
+
+            <CopyButton
+              className="text-base-content/30 hover:text-base-content"
+              text={modelData.modelfile}
+            />
+          </div>
+
+          <div className="flex max-h-52 w-full overflow-scroll whitespace-pre-line rounded-md border border-base-content/30 p-2 text-base-content/70">
+            {modelData.modelfile.replace(/\n/g, '  \n')}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          {Object.entries(modelData.details).map(
+            ([key, value]) =>
+              value && (
+                <p key={key}>
+                  {key}:
+                  <span className="ml-2 scale-90 text-base-content/70">
+                    {JSON.stringify(value)}
+                  </span>
+                </p>
+              ),
+          )}
+        </div>
+
+        <div className="mt-auto flex justify-between">
+          <button onClick={updateModel} className="btn btn-neutral btn-sm">
+            Update {selectedModelName}
+            <DownloadTray />
+          </button>
+
+          <button
+            onClick={() => ollamaStore.delete(selectedModelName)}
+            className="btn btn-ghost btn-sm self-end text-error"
+          >
+            <Delete className="h-5 w-5" />
+          </button>
         </div>
       </div>
-
-      <div className="flex flex-col gap-1">
-        {Object.entries(modelData.details).map(
-          ([key, value]) =>
-            value && (
-              <p key={key}>
-                {key}:
-                <span className="ml-2 scale-90 text-base-content/70">{JSON.stringify(value)}</span>
-              </p>
-            ),
-        )}
-      </div>
-
-      <div className="mt-auto flex justify-between">
-        <button onClick={updateModel} className="btn btn-neutral btn-sm">
-          Update {selectedModelName}
-          <DownloadTray />
-        </button>
-
-        <button
-          onClick={() => ollamaStore.delete(selectedModelName)}
-          className="btn btn-ghost btn-sm self-end text-error"
-        >
-          <Delete className="h-5 w-5" />
-        </button>
-      </div>
-    </div>
+    </Drawer>
   )
 })
 

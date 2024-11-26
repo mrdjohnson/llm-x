@@ -49,7 +49,7 @@ export const PersonaForm = observer(() => {
   }, [persona])
 
   return (
-    <Drawer label={'Edit ' + persona.name} path={persona.id}>
+    <Drawer label={'Edit ' + persona.name}>
       <form onSubmit={handleFormSubmit} className="flex h-full flex-col gap-2 p-2">
         <Controller
           render={({ field }) => (

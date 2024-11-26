@@ -23,7 +23,7 @@ const NewConnectionPanel = observer(() => {
   }
 
   return (
-    <Drawer label={'Add new connection '} path={'empty_panel'}>
+    <Drawer label="Add new connection">
       <div className="mx-auto mt-4 flex flex-col gap-4 *:text-center">
         <span>Select a connection type: </span>
 

@@ -11,7 +11,7 @@ import { ConnectionParameterModel } from '~/core/connection/ConnectionModel'
 import ToolTip from '~/components/Tooltip'
 import FormInput from '~/components/form/FormInput'
 import SettingSection, { SettingSectionItem } from '~/containers/SettingSection'
-import { useCrumb } from '~/containers/Drawer'
+import Drawer from '~/containers/Drawer'
 
 type ParameterOptionsType = 'system' | 'valueRequired' | 'fieldRequired'
 
@@ -37,8 +37,6 @@ export const ParameterForm = () => {
 
   const index = _.findIndex(parameters, { field: parameterId })
   const parameter = parameters[index]
-
-  useCrumb({ label: parameter?.field, path: parameterId! })
 
   // if this does not exist, go back
   // (reproduce by deleting a parameter on mobile and then pressing back)
@@ -104,164 +102,166 @@ export const ParameterForm = () => {
   }
 
   return (
-    <div
-      className="flex h-full w-full flex-col gap-3 overflow-y-scroll rounded-md p-2"
-      onKeyDown={handleEnterPressedOnDrawer}
-    >
-      <Controller
-        render={({ field }) => (
-          <FormInput
-            label="Field Name"
-            defaultValue={parameter.field}
-            errorMessage={errors.parameters?.[index]?.field?.message}
-            isRequired
-            {...field}
-          />
-        )}
-        control={control}
-        name={`parameters.${index}.field`}
-        defaultValue={parameter.field}
-        rules={{
-          validate: validateUniqueField,
-        }}
-      />
-
-      <div className="flex flex-row gap-2">
+    <Drawer label={parameter.field}>
+      <div
+        className="flex h-full w-full flex-col gap-3 overflow-y-scroll rounded-md p-2"
+        onKeyDown={handleEnterPressedOnDrawer}
+      >
         <Controller
           render={({ field }) => (
             <FormInput
-              label="Value"
-              defaultValue={parameter.value}
-              errorMessage={errors.parameters?.[index]?.value?.message}
+              label="Field Name"
+              defaultValue={parameter.field}
+              errorMessage={errors.parameters?.[index]?.field?.message}
+              isRequired
               {...field}
             />
           )}
           control={control}
-          name={`parameters.${index}.value`}
-          defaultValue={parameter.value}
+          name={`parameters.${index}.field`}
+          defaultValue={parameter.field}
           rules={{
-            validate: validateValue,
+            validate: validateUniqueField,
           }}
         />
 
-        <Controller
-          render={({ field }) => (
-            <FormInput
-              label="Default Value"
-              defaultValue={parameter.defaultValue}
-              errorMessage={errors.parameters?.[index]?.defaultValue?.message}
-              {...field}
-            />
-          )}
-          control={control}
-          name={`parameters.${index}.defaultValue`}
-          defaultValue={parameter.defaultValue}
-          rules={{
-            validate: validateDefaultValue,
-          }}
-        />
-      </div>
-
-      <div className="flex justify-center gap-3">
-        <Controller
-          render={({ field }) => (
-            <Checkbox
-              className="flex flex-row"
-              classNames={{ label: 'flex flex-row justify-center align-middle' }}
-              onChange={field.onChange}
-              size="sm"
-            >
-              <div className="flex flex-row justify-center align-middle text-base-content">
-                <ToolTip label="Check this if this value is not supposed to be a string">
-                  <span>Convert to JSON?</span>
-                </ToolTip>
-              </div>
-            </Checkbox>
-          )}
-          control={control}
-          name={`parameters.${index}.isJson`}
-          defaultValue={parameter.isJson || false}
-        />
-      </div>
-
-      <Controller
-        render={({ field }) => (
-          <FormInput label="Display Name" defaultValue={parameter.label} {...field} />
-        )}
-        control={control}
-        name={`parameters.${index}.label`}
-        defaultValue={parameter.label}
-      />
-
-      <Controller
-        render={({ field }) => (
-          <FormInput
-            label="Help text: What is this field for?"
-            defaultValue={parameter.helpText}
-            {...field}
-          />
-        )}
-        control={control}
-        name={`parameters.${index}.helpText`}
-        defaultValue={parameter.helpText}
-      />
-
-      <Controller
-        render={({ field }) => (
-          <Select
-            className="w-full min-w-[20ch] rounded-md border border-base-content/30 bg-transparent"
-            selectionMode="multiple"
-            size="sm"
-            classNames={{
-              value: '!text-base-content min-w-[20ch]',
-              trigger: 'bg-base-100 hover:!bg-base-200 rounded-md',
-              popoverContent: 'text-base-content bg-base-100',
+        <div className="flex flex-row gap-2">
+          <Controller
+            render={({ field }) => (
+              <FormInput
+                label="Value"
+                defaultValue={parameter.value}
+                errorMessage={errors.parameters?.[index]?.value?.message}
+                {...field}
+              />
+            )}
+            control={control}
+            name={`parameters.${index}.value`}
+            defaultValue={parameter.value}
+            rules={{
+              validate: validateValue,
             }}
-            defaultSelectedKeys={field.value}
-            onSelectionChange={selection => field.onChange(_.toArray(selection))}
-            label="Classification"
-            {...field}
-            onChange={undefined}
-          >
-            {parameterOptions.map(({ key: parameterType, label }) => (
-              <SelectItem
-                key={parameterType}
-                value={parameterType}
-                description={label}
-                className="w-full !min-w-[13ch] text-base-content"
-                classNames={{
-                  description: ' text',
-                }}
+          />
+
+          <Controller
+            render={({ field }) => (
+              <FormInput
+                label="Default Value"
+                defaultValue={parameter.defaultValue}
+                errorMessage={errors.parameters?.[index]?.defaultValue?.message}
+                {...field}
+              />
+            )}
+            control={control}
+            name={`parameters.${index}.defaultValue`}
+            defaultValue={parameter.defaultValue}
+            rules={{
+              validate: validateDefaultValue,
+            }}
+          />
+        </div>
+
+        <div className="flex justify-center gap-3">
+          <Controller
+            render={({ field }) => (
+              <Checkbox
+                className="flex flex-row"
+                classNames={{ label: 'flex flex-row justify-center align-middle' }}
+                onChange={field.onChange}
+                size="sm"
               >
-                {parameterType}
-              </SelectItem>
-            ))}
-          </Select>
-        )}
-        control={control}
-        name={`parameters.${index}.types`}
-        defaultValue={parameter.types}
-      />
+                <div className="flex flex-row justify-center align-middle text-base-content">
+                  <ToolTip label="Check this if this value is not supposed to be a string">
+                    <span>Convert to JSON?</span>
+                  </ToolTip>
+                </div>
+              </Checkbox>
+            )}
+            control={control}
+            name={`parameters.${index}.isJson`}
+            defaultValue={parameter.isJson || false}
+          />
+        </div>
 
-      <div className="mt-auto flex flex-row justify-between">
-        <button
-          type="button"
-          className="btn btn-ghost btn-sm w-fit place-self-center text-error"
-          disabled={parameter.types?.includes('fieldRequired')}
-          onClick={handleRemove}
-        >
-          Delete Parameter
-        </button>
+        <Controller
+          render={({ field }) => (
+            <FormInput label="Display Name" defaultValue={parameter.label} {...field} />
+          )}
+          control={control}
+          name={`parameters.${index}.label`}
+          defaultValue={parameter.label}
+        />
 
-        <button
-          type="button"
-          className="btn btn-ghost btn-sm w-fit place-self-center"
-          onClick={() => navigate(-1)}
-        >
-          Done
-        </button>
+        <Controller
+          render={({ field }) => (
+            <FormInput
+              label="Help text: What is this field for?"
+              defaultValue={parameter.helpText}
+              {...field}
+            />
+          )}
+          control={control}
+          name={`parameters.${index}.helpText`}
+          defaultValue={parameter.helpText}
+        />
+
+        <Controller
+          render={({ field }) => (
+            <Select
+              className="w-full min-w-[20ch] rounded-md border border-base-content/30 bg-transparent"
+              selectionMode="multiple"
+              size="sm"
+              classNames={{
+                value: '!text-base-content min-w-[20ch]',
+                trigger: 'bg-base-100 hover:!bg-base-200 rounded-md',
+                popoverContent: 'text-base-content bg-base-100',
+              }}
+              defaultSelectedKeys={field.value}
+              onSelectionChange={selection => field.onChange(_.toArray(selection))}
+              label="Classification"
+              {...field}
+              onChange={undefined}
+            >
+              {parameterOptions.map(({ key: parameterType, label }) => (
+                <SelectItem
+                  key={parameterType}
+                  value={parameterType}
+                  description={label}
+                  className="w-full !min-w-[13ch] text-base-content"
+                  classNames={{
+                    description: ' text',
+                  }}
+                >
+                  {parameterType}
+                </SelectItem>
+              ))}
+            </Select>
+          )}
+          control={control}
+          name={`parameters.${index}.types`}
+          defaultValue={parameter.types}
+        />
+
+        <div className="mt-auto flex flex-row justify-between">
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm w-fit place-self-center text-error"
+            disabled={parameter.types?.includes('fieldRequired')}
+            onClick={handleRemove}
+          >
+            Delete Parameter
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm w-fit place-self-center"
+            onClick={() => navigate(-1)}
+          >
+            Done
+          </button>
+        </div>
       </div>
-    </div>
+    </Drawer>
   )
 }
 

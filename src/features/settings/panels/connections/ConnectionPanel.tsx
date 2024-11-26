@@ -88,7 +88,7 @@ const ConnectionPanel = observer(() => {
   }, [connection])
 
   return (
-    <Drawer label={'Edit ' + connection.label} path={'edit/' + id} outletContent={{ control }}>
+    <Drawer label={'Edit ' + connection.label} outletContent={{ control }}>
       <div className="flex h-full w-full flex-col overflow-hidden px-2">
         <FormProvider {...methods}>
           <form className="contents" onSubmit={handleFormSubmit} ref={formRef}>

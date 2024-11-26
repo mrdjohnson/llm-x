@@ -49,7 +49,7 @@ export const ConnectionHelpPanel = observer(() => {
   }, [id])
 
   return (
-    <Drawer label={connectionModelLabelByType[id!]} path={id!}>
+    <Drawer label={connectionModelLabelByType[id!]}>
       <div className="flex-1 overflow-y-hidden px-2 pt-2">
         <ScrollShadow className="h-full max-h-full pb-7">
           {__TARGET__ === 'chrome' && (

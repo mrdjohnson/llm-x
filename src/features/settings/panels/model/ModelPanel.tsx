@@ -23,7 +23,7 @@ export const ConnectionModelPanel = observer(() => {
   const connection = connectionStore.getConnectionById(id)!
 
   return (
-    <Drawer label={connection.label} path={id!} outletContent={{ connection }}>
+    <Drawer label={connection.label} outletContent={{ connection }}>
       <div className="flex-1 overflow-y-hidden px-2 pt-2">
         <ScrollShadow className="h-full max-h-full pb-7">
           {connection.type === 'LMS' && <LmsModelPanel connection={connection} />}

@@ -49,8 +49,8 @@ export const ChatForm = observer(() => {
   }, [chat])
 
   return (
-    <Drawer path={chat.id} label={chat.name}>
-      <form onSubmit={handleFormSubmit} className="flex h-full flex-col p-2">
+    <Drawer label={chat.name}>
+      <form onSubmit={handleFormSubmit} className="flex h-full flex-col gap-2 p-2">
         <Controller
           render={({ field }) => (
             <FormInput
