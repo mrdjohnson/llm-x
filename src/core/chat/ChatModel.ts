@@ -6,6 +6,7 @@ export const ChatModel = z.object({
   name: z.string().default('New Chat'),
   messageIds: z.array(z.string()).default([]),
   lastMessageTimestamp: z.number().default(() => moment.now()),
+  actorIds: z.array(z.string()).optional().default([]),
 })
 
 export type ChatModel = z.infer<typeof ChatModel>

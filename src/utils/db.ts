@@ -12,6 +12,7 @@ import { messageTable } from '~/core/message/MessageTable'
 import { personaTable } from '~/core/persona/PersonaTable'
 import { voiceTable } from '~/core/voice/VoiceTable'
 import { settingTable } from '~/core/setting/SettingTable'
+import { actorTable } from '~/core/actor/ActorTable'
 
 export const DATABASE_TABLES = [
   messageTable,
@@ -20,6 +21,7 @@ export const DATABASE_TABLES = [
   voiceTable,
   connectionTable,
   settingTable,
+  actorTable,
 ]
 
 export const initDb = async () => {
@@ -46,7 +48,7 @@ export const initDb = async () => {
   for (const table of DATABASE_TABLES) {
     if (isMigrationNeeded) {
       await table.migrate(savedSetting?.databaseTimestamp)
-    } 
+    }
 
     await table.clearCacheAndPreload()
   }
