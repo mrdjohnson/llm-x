@@ -41,6 +41,18 @@ class PersonaStore {
 
     await settingTable.put({ selectedPersonaId: duplicate.id })
   }
+
+  async destroyPersona(persona: PersonaModel) {
+    return await personaTable.destroy(persona)
+  }
+
+  async destroyAllPersonas() {
+    const personas = [...this.personas]
+
+    for (const persona of personas) {
+      await this.destroyPersona(persona)
+    }
+  }
 }
 
 export const personaStore = new PersonaStore()

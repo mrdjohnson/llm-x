@@ -81,6 +81,14 @@ class ChatStore {
     return chatTable.destroy(chat.source)
   }
 
+  async destroyAllChats() {
+    const chats = [...this.chats]
+
+    for (const chat of chats) {
+      await this.destroyChat(chat)
+    }
+  }
+
   async selectChat(chat: ChatViewModel) {
     return settingTable.put({ selectedChatId: chat.id })
   }

@@ -16,6 +16,7 @@ import { autorun } from 'mobx'
 import _ from 'lodash'
 import { useNavigate } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
+import localForage from 'localforage'
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { personaStore } from '~/core/persona/PersonaStore'
@@ -428,6 +429,113 @@ const useNewChatActions = () => {
   useRegisterActions(newChatActions, [newChatActions])
 }
 
+const useDeleteActions = () => {
+  const [deleteActions, setDeleteActions] = useState<Action[]>([])
+
+  useEffect(() => {
+    autorun(() => {
+      const actions: Action[] = []
+
+      actions.push({
+        id: 'delete',
+        name: 'Delete data',
+        keywords: 'delete ',
+        section: 'Actions',
+      })
+
+      chatStore.chats.forEach(chat => {
+        actions.push(
+          createAction({
+            name: 'Delete ' + chat.name,
+            keywords: 'delete chat ' + chat.name,
+            section: 'Chat',
+            parent: 'delete',
+            perform: () => chatStore.destroyChat(chat),
+          }),
+        )
+      })
+
+      personaStore.personas.forEach(persona =>
+        actions.push(
+          createAction({
+            name: 'Delete ' + persona.name,
+            keywords: 'system prompt persona delete ' + persona.name,
+            section: 'Persona',
+            parent: 'delete',
+            perform: () => personaStore.destroyPersona(persona),
+          }),
+        ),
+      )
+
+      connectionStore.connections.forEach(connection => {
+        actions.push(
+          createAction({
+            name: 'Delete ' + connection.label,
+            keywords: 'connection server delete ' + connection.label,
+            section: 'Connection',
+            parent: 'delete',
+            perform: () => connectionStore.deleteConnection(connection),
+          }),
+        )
+      })
+
+      actions.push(
+        createAction({
+          name: 'Delete ALL Chats',
+          keywords: 'delete all chats reset',
+          section: 'Batch',
+          parent: 'delete',
+          priority: Priority.HIGH,
+          perform: () => chatStore.destroyAllChats(),
+        }),
+      )
+
+      actions.push(
+        createAction({
+          name: 'Delete ALL Personas',
+          keywords: 'delete all personas reset',
+          section: 'Batch',
+          parent: 'delete',
+          priority: Priority.HIGH,
+          perform: () => personaStore.destroyAllPersonas(),
+        }),
+      )
+
+      actions.push(
+        createAction({
+          name: 'Delete ALL Connections',
+          keywords: 'delete all connection reset',
+          section: 'Batch',
+          parent: 'delete',
+          priority: Priority.HIGH,
+          perform: () => connectionStore.destroyAllConnections(),
+        }),
+      )
+
+      actions.push(
+        createAction({
+          name: 'Delete/Reset/Wipe App',
+          keywords: 'delete all app wipe reset',
+          section: 'Batch',
+          parent: 'delete',
+          priority: Priority.LOW,
+          perform: async () => {
+            // this goes through all the caches as well
+            await chatStore.destroyAllChats()
+
+            localForage.dropInstance({ name: 'llm-x' })
+            window.location.reload()
+          },
+        }),
+      )
+
+      setDeleteActions(actions)
+    })
+  }, [])
+
+  useRegisterActions(deleteActions, [deleteActions])
+}
+
 const OmniBar = () => {
   const navigate = useNavigate()
 
@@ -437,6 +545,7 @@ const OmniBar = () => {
   useRegisterChatActions()
   useRegisterMessageActions()
   useNewChatActions()
+  useDeleteActions()
 
   useRegisterActions([
     createAction({

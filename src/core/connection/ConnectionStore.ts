@@ -112,6 +112,14 @@ class ConnectionStore {
     return await connectionTable.destroy(connection.source)
   }
 
+  async destroyAllConnections() {
+    const connections = [...this.connections]
+
+    for (const connection of connections) {
+      await this.deleteConnection(connection)
+    }
+  }
+
   async addConnection(type: ConnectionTypes, input?: ConnectionModelInput) {
     const connection = await connectionTable.create(
       input ?? connectionViewModelByType[type]().getSnapshot(),
