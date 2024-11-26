@@ -80,6 +80,7 @@ const ModelAutoComplete = observer(
 
           ...connectionStore.activeConnections.map(connection => (
             <AutocompleteSection
+              key={connection.id}
               title={connection.label}
               classNames={{
                 heading:
