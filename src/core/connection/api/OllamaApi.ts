@@ -14,7 +14,6 @@ import CachedStorage from '~/utils/CachedStorage'
 import BaseApi from '~/core/connection/api/BaseApi'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { personaStore } from '~/core/persona/PersonaStore'
-import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const createHumanMessage = async (message: MessageViewModel): Promise<HumanMessage> => {
   if (!_.isEmpty(message.source.imageUrls)) {
@@ -74,10 +73,12 @@ export class OllamaApi extends BaseApi {
     chatMessages: MessageViewModel[],
     incomingMessageVariant: MessageViewModel,
   ): AsyncGenerator<string> {
-    const connection = connectionStore.selectedConnection
+    const connection = incomingMessageVariant.actor.connection
     const host = connection?.formattedHost
 
-    const model = connectionStore.selectedModelName
+    const actor = incomingMessageVariant.actor
+    const model = actor.modelName
+
     if (!connection || !host || !model) return
 
     const abortController = new AbortController()

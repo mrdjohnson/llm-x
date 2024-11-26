@@ -6,7 +6,6 @@ import { progressStore } from '~/features/progress/ProgressStore'
 import BaseApi from '~/core/connection/api/BaseApi'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { personaStore } from '~/core/persona/PersonaStore'
-import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: string) => {
   const messages: ChatMessageData[] = []
@@ -43,10 +42,12 @@ const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: stri
 
 export class LmsApi extends BaseApi {
   async *generateChat(chatMessages: MessageViewModel[], incomingMessageVariant: MessageViewModel) {
-    const connection = connectionStore.selectedConnection
+    const connection = incomingMessageVariant.actor.connection
     const host = connection?.formattedHost
 
-    const modelName = connectionStore.selectedModelName
+    const actor = incomingMessageVariant.actor
+    const modelName = actor.modelName
+
     if (!connection || !host || !modelName) return
 
     const messages = await getMessages(chatMessages, incomingMessageVariant.rootMessage.id)

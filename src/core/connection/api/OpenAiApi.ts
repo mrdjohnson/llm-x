@@ -14,7 +14,6 @@ import CachedStorage from '~/utils/CachedStorage'
 import BaseApi from '~/core/connection/api/BaseApi'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { personaStore } from '~/core/persona/PersonaStore'
-import { connectionStore } from '~/core/connection/ConnectionStore'
 
 const createHumanMessage = async (message: MessageViewModel): Promise<HumanMessage> => {
   if (!_.isEmpty(message.source.imageUrls)) {
@@ -78,10 +77,12 @@ export class OpenAiApi extends BaseApi {
     chatMessages: MessageViewModel[],
     incomingMessageVariant: MessageViewModel,
   ): AsyncGenerator<string> {
-    const connection = connectionStore.selectedConnection
+    const connection = incomingMessageVariant.actor.connection
     const host = connection?.formattedHost
 
-    const model = connectionStore.selectedModelName
+    const actor = incomingMessageVariant.actor
+    const model = actor.modelName
+
     if (!connection || !model) return
 
     const abortController = new AbortController()
@@ -92,7 +93,8 @@ export class OpenAiApi extends BaseApi {
     const parameters = connection.parsedParameters
     await incomingMessageVariant.setExtraDetails({ sentWith: parameters })
 
-    const openAIApiKey = _.find(connection.source.parameters, { field: 'apiKey' })?.value || 'not-needed'
+    const openAIApiKey =
+      _.find(connection.source.parameters, { field: 'apiKey' })?.value || 'not-needed'
 
     const chatOpenAi = new ChatOpenAI({
       configuration: { baseURL: host },

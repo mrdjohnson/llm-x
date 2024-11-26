@@ -4,6 +4,7 @@ import _ from 'lodash'
 
 import { chatStore } from '~/core/chat/ChatStore'
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
+import { actorStore } from '~/core/actor/ActorStore'
 
 import ChatBoxInputRow from '~/components/ChatBoxInputRow'
 import ChatBoxPrompt from '~/components/ChatBoxPrompt'
@@ -42,7 +43,22 @@ const ChatBox = observer(() => {
 
       const incomingMessage = await chat.createAndPushIncomingMessage()
 
-      await incomingMessageStore.generateMessage(chat, incomingMessage)
+      incomingMessage.setCreationActor(chat.actors[0] || actorStore.systemActor)
+
+      for (const actor of _.drop(chat.actors)) {
+        console.log('other actor: ', actor.modelName)
+        const variationModel = await chat.createIncomingMessage()
+
+        const variation = await incomingMessage.addVariation(variationModel)
+
+        variation.setCreationActor(actor)
+
+        incomingMessageStore.generateMessage(chat, variation)
+
+        incomingMessage.setShowVariations(true)
+      }
+
+      incomingMessageStore.generateMessage(chat, incomingMessage)
     }
   }
 

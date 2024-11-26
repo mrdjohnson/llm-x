@@ -2,17 +2,19 @@ import axios from 'axios'
 
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import BaseApi from '~/core/connection/api/BaseApi'
-import { connectionStore } from '~/core/connection/ConnectionStore'
 
 class A1111Api extends BaseApi {
   async generateImages(
     prompt: string,
     incomingMessageVariant: MessageViewModel,
   ): Promise<string[]> {
-    const connection = connectionStore.selectedConnection
+    const connection = incomingMessageVariant.actor.connection
     const host = connection?.formattedHost
 
-    if (!connection || !host) return []
+    const actor = incomingMessageVariant.actor
+    const model = actor.modelName
+
+    if (!connection || !host || !model) return []
 
     const abortController = new AbortController()
 
@@ -25,7 +27,7 @@ class A1111Api extends BaseApi {
       host + '/sdapi/v1/txt2img',
       {
         prompt,
-        hr_checkpoint_name: connectionStore.selectedModelName,
+        hr_checkpoint_name: model,
         ...parameters,
       },
       {
