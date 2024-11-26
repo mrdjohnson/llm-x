@@ -64,7 +64,7 @@ const SettingSection = observer(
       index?: number,
       e?: MouseEvent<HTMLDivElement>,
     ) => {
-      if (onItemSelected) {
+      if (onItemSelected && !e?.isDefaultPrevented()) {
         onItemSelected(item?.data, index)
 
         e?.preventDefault()
