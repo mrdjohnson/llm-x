@@ -22,6 +22,7 @@ import FormInput from '~/components/form/FormInput'
 import Back from '~/icons/Back'
 import ChevronDown from '~/icons/ChevronDown'
 import Delete from '~/icons/Delete'
+import Check from '~/icons/Check'
 
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
@@ -37,7 +38,7 @@ const ChatModelPopoverContent = observer(
   ({ chat, actor, onClose }: ChatModelPopoverProps & { onClose: () => void }) => {
     const [filterText, setFilterText] = useState('')
 
-    const createActor = async (connectionId: string, modelId: string) => {
+    const createActor = async (connectionId?: string | null, modelId?: string | null) => {
       if (actor) {
         await actor.update({ connectionId, modelId })
       } else {
@@ -47,23 +48,24 @@ const ChatModelPopoverContent = observer(
       onClose()
     }
 
-    const currentModelOptions = !connectionStore.selectedModel
-      ? []
-      : [
-          <ListboxItem
-            key="any"
-            textValue="System current model"
-            onClick={() =>
-              createActor(connectionStore.selectedConnection!.id, connectionStore.selectedModel!.id)
-            }
-            className="my-1 line-clamp-1 p-4 text-lg text-base-content/60 md:p-2 md:!text-lg"
-            classNames={{
-              title: 'text-lg md:text-sm line-clamp-1',
-            }}
-          >
-            Use current model: {connectionStore.selectedModelLabel}
-          </ListboxItem>,
-        ]
+    const dynamicModelOptions = []
+
+    if (actorStore.systemActor) {
+      dynamicModelOptions.push(
+        <ListboxItem
+          key="system_model"
+          textValue="System current model"
+          onClick={() => createActor(null, null)}
+          className="my-1 line-clamp-1 p-4 text-lg text-base-content/60 md:p-2 md:!text-lg"
+          classNames={{
+            title: 'text-lg md:text-sm line-clamp-1',
+          }}
+          startContent={actor?.isUsingDefaults && <Check />}
+        >
+          {actorStore.systemActor.modelLabel}
+        </ListboxItem>,
+      )
+    }
 
     return (
       <>
@@ -84,7 +86,7 @@ const ChatModelPopoverContent = observer(
             </button>
           }
           size="sm"
-          className="w-full pt-2"
+          className="w-full py-2"
           value={filterText}
           onChange={e => setFilterText(e.target.value)}
           autoFocus
@@ -93,10 +95,11 @@ const ChatModelPopoverContent = observer(
         <Listbox className="w-full overflow-scroll p-0">
           {/* Listbox wants a list, add default items to the list and then spread the sections */}
           {[
-            ...currentModelOptions,
+            ...dynamicModelOptions,
 
             ...connectionStore.getFilteredModelGroups(filterText).map(({ connection, models }) => (
               <ListboxSection
+                key={connection.id}
                 title={connection.label}
                 classNames={{
                   heading:
@@ -112,6 +115,9 @@ const ChatModelPopoverContent = observer(
                     classNames={{
                       title: 'text-lg md:text-sm line-clamp-1',
                     }}
+                    startContent={
+                      model.id === actor?.model?.id && !actor.isUsingDefaults && <Check />
+                    }
                   >
                     {model.label}
                   </ListboxItem>
@@ -127,12 +133,13 @@ const ChatModelPopoverContent = observer(
             role="button"
           >
             <span className="line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline opacity-40 ">
-              {actor.modelName || actor.label}
+              {actor.modelLabel}
             </span>
 
             <button
               className="place-content-center pl-2 text-error opacity-30 hover:!opacity-65"
               onClick={() => actorStore.destroyActor(actor)}
+              title="Remove model from chat"
             >
               <Delete className="h-6 w-6 md:w-4" />
             </button>

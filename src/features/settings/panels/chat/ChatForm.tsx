@@ -23,12 +23,12 @@ const ChatActorSection = observer(({ chat }: { chat: ChatViewModel }) => {
   const navigate = useNavigate()
 
   const actorToSectionItem = (actor: ActorViewModel): SettingSectionItem<ActorViewModel> => {
-    const modelName = actor.model?.label || 'Inactive model:' + actor.connection?.id
+    const modelName = actor.modelLabel || 'Inactive model:' + actor.connection?.id
     const subLabels = []
     let label
 
     if (actor.connection) {
-      subLabels.push(actor.connection.label)
+      subLabels.push(actor.connection.label + (actor.isUsingDefaults? ' (default)' : ''))
     }
 
     if (actor.source.name) {

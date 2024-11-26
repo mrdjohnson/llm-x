@@ -61,10 +61,10 @@ const ModelSelector = observer(() => {
     >
       <Input
         isReadOnly
-        label={hasActorOverrides ? 'See chat settings' : label}
+        label={hasActorOverrides ? 'Default model:' : label}
         variant="bordered"
-        value={hasActorOverrides ? undefined : selectedModelLabel}
-        size={isMobile || !selectedModelLabel || hasActorOverrides ? 'sm' : undefined}
+        value={selectedModelLabel}
+        size={isMobile || !selectedModelLabel ? 'sm' : undefined}
         className="pointer-events-none w-full !cursor-pointer bg-transparent"
         classNames={{
           inputWrapper: twMerge(

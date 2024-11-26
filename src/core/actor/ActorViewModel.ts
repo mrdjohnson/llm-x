@@ -4,6 +4,7 @@ import { makeAutoObservable } from 'mobx'
 import { actorTable } from '~/core/actor/ActorTable'
 import { ActorModel } from '~/core/actor/ActorModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
+import { actorStore } from '~/core/actor/ActorStore'
 
 export class ActorViewModel {
   constructor(public source: ActorModel) {
@@ -14,16 +15,30 @@ export class ActorViewModel {
     return this.source.id
   }
 
+  get isUsingDefaults() {
+    return !this.source.modelId || this.source.id === '__system'
+  }
+
   get connection() {
-    return connectionStore.getConnectionById(this.source.connectionId ?? undefined)
+    const connectionId = this.source.connectionId ?? actorStore.systemActor.source.connectionId
+
+    return connectionStore.getConnectionById(connectionId ?? undefined)
   }
 
   get model() {
-    return this.connection?.getModelById(this.source.modelId ?? undefined)
+    const modelId = this.source.modelId ?? actorStore.systemActor.source.modelId
+
+    return this.connection?.getModelById(modelId ?? undefined)
   }
 
   get modelName() {
     return this.model?.modelName
+  }
+
+  get modelLabel() {
+    if (!this.model) return undefined
+
+    return this.model.label + (this.isUsingDefaults ? ' (default)' : '')
   }
 
   get isConnected() {
@@ -31,19 +46,31 @@ export class ActorViewModel {
   }
 
   get label() {
-    if (this.source.name && !this.isConnected) {
-      return this.source.name + ' (disconnected)'
+    const name = this.source.name
+    const connection = this.connection
+    const model = this.model
+
+    if (!model) {
+      if (name) {
+        if (connection && !connection.isConnected) {
+          return name + ' (disconnected)'
+        }
+
+        return name + ' (no model found)'
+      }
+
+      return 'Disconnected model'
     }
 
-    return this.model?.label || 'Disconnected Model'
+    return this.modelLabel
   }
 
   async update(patch: Partial<ActorModel>) {
     await actorTable.put({ ...this.source, ...patch })
   }
 
-  async removeConnection(connectionId: string) {
-    if (this.source.connectionId === connectionId) {
+  async removeConnection(connectionId?: string) {
+    if (connectionId === undefined || this.source.connectionId === connectionId) {
       await this.update({ connectionId: null, modelId: null })
     }
   }
