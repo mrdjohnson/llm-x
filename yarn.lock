@@ -11396,7 +11396,7 @@ __metadata:
     react-scrollable-feed: "npm:^2.0.2"
     react-text-to-speech: "npm:^0.16.1"
     react-textarea-autosize: "npm:^8.5.3"
-    rehype-katex: "npm:^7.0.0"
+    rehype-katex: "npm:^7.0.1"
     remark-gfm: "npm:^4.0.0"
     remark-math: "npm:^6.0.0"
     tailwind-merge: "npm:^2.5.4"
@@ -14126,9 +14126,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rehype-katex@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "rehype-katex@npm:7.0.0"
+"rehype-katex@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "rehype-katex@npm:7.0.1"
   dependencies:
     "@types/hast": "npm:^3.0.0"
     "@types/katex": "npm:^0.16.0"
@@ -14137,7 +14137,7 @@ __metadata:
     katex: "npm:^0.16.0"
     unist-util-visit-parents: "npm:^6.0.0"
     vfile: "npm:^6.0.0"
-  checksum: 10c0/4986d5db673576df0274464eafecef7c999fb72bf16e8df92454c68bf063b005010ab5465c64dacfbc1767ed6446dd03768917df7b9983f5e60711bce78b9880
+  checksum: 10c0/73c770319536128b75055d904d06951789d00a0552c11724c0dac2e244dcb21041630552d118a11cc42233fdcd1bfee525e78a0020fde635bd916cceb281dfb1
   languageName: node
   linkType: hard
 
