@@ -179,7 +179,10 @@ I couldn't help but bee cool 😎
 - [React](https://react.dev/)
 - [Typescript](https://www.typescriptlang.org/)
 - [Lodash](https://lodash.com/docs/4.17.15)
-- [Mobx State Tree](https://mobx-state-tree.js.org/intro/welcome)
+- [Zod](https://zod.dev/)
+- [Mobx](https://mobx.js.org/README.html)
+- [~~Mobx State Tree~~](https://mobx-state-tree.js.org/intro/welcome) (great for rapid starting a project, terrible for long term maintenance)
+- [Langchain.js](https://js.langchain.com/docs/introduction/)
 
 **_UI Helpers:_**
 
@@ -190,18 +193,20 @@ I couldn't help but bee cool 😎
 - [React Markdown](https://www.npmjs.com/package/react-markdown)
 - [kbar](https://www.npmjs.com/package/kbar)
 - [Yet Another React Lightbox](https://yet-another-react-lightbox.com/)
+- [React speech to text](https://www.npmjs.com/package/react-text-to-speech/v/0.19.5)
 
 **_Project setup helpers:_**
 
 - [Vite](https://vitejs.dev/)
 - [Vite PWA plugin](https://vite-pwa-org.netlify.app/)
+- [Vite Plugin Web Extension](https://vite-plugin-web-extension.aklinker1.io/guide/)
 
 **_Inspiration:_**
 [ollama-ui's](https://github.com/ollama-ui/ollama-ui) project. Which allows users to connect to ollama via a [web app](https://ollama-ui.github.io/ollama-ui/)
 
 [Perplexity.ai](https://www.perplexity.ai/) Perplexity has some amazing UI advancements in the LLM UI space and I have been very interested in getting to that point. Hopefully this starter project lets me get closer to doing something similar!
 
-## Getting started
+## Getting started with local development
 
 (please note the minimum engine requirements in the package json)
 
