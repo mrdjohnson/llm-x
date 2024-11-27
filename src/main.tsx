@@ -10,21 +10,27 @@ import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 
 import '~/index.css'
 
+const errorPage = (
+  <div className="flex h-screen w-screen place-content-center bg-slate-700 text-3xl text-black">
+    Waiting for app to load, hard refresh may be needed
+  </div>
+)
+
 // load the database before anything else
 initDb().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-      <Suspense fallback={<div />}>
-        <MemoryRouter initialEntries={['/']}>
-          <NextUIProvider>
-            <DaisyUiThemeProvider>
-              <KBarProvider>
+      <MemoryRouter initialEntries={['/']}>
+        <NextUIProvider>
+          <KBarProvider>
+            <Suspense fallback={errorPage}>
+              <DaisyUiThemeProvider>
                 <App />
-              </KBarProvider>
-            </DaisyUiThemeProvider>
-          </NextUIProvider>
-        </MemoryRouter>
-      </Suspense>
+              </DaisyUiThemeProvider>
+            </Suspense>
+          </KBarProvider>
+        </NextUIProvider>
+      </MemoryRouter>
     </React.StrictMode>,
   )
 })

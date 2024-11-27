@@ -5,10 +5,13 @@ import { SideBar } from '~/containers/SideBar'
 import ChatBox from '~/containers/ChatBox'
 import SettingsModal from '~/features/settings/containers/SettingsModal'
 import Progresses from '~/features/progress/components/Progresses'
+import { observer } from 'mobx-react-lite'
 
 import Navbar from '~/components/Navbar'
 import OmniBar from '~/components/OmniBar'
 import Lightbox from '~/features/lightbox/components/Lightbox'
+
+import { settingStore } from '~/core/setting/SettingStore'
 
 const PwaReloadPrompt = React.lazy(() => import('~/components/LazyPwaReloadPrompt'))
 
@@ -22,7 +25,11 @@ const DelayedPwaReloadPrompt = () => {
   )
 }
 
-function App() {
+const App = observer(() => {
+  if (!settingStore.setting) {
+    throw new Error('waiting for app to load')
+  }
+
   return (
     <Dropzone>
       <div className="drawer drawer-end mx-auto flex !h-dvh !max-h-dvh flex-col place-self-center text-base-content">
@@ -43,7 +50,7 @@ function App() {
             <SideBar />
           </aside>
 
-          <main className="mx-auto flex h-full max-w-4xl flex-1 overflow-x-hidden overflow-y-hidden rounded-md pt-0 md:pt-3 p-3">
+          <main className="mx-auto flex h-full max-w-4xl flex-1 overflow-x-hidden overflow-y-hidden rounded-md p-3 pt-0 md:pt-3">
             <ChatBox />
           </main>
         </section>
@@ -52,6 +59,6 @@ function App() {
       </div>
     </Dropzone>
   )
-}
+})
 
 export default App
