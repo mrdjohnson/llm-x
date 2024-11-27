@@ -116,7 +116,7 @@ const ChatModelPopoverContent = observer(
                     key={model.id}
                     textValue={model.modelName}
                     onClick={() => createActor(connection.id, model.id)}
-                    className="my-1 line-clamp-1 p-4 text-lg text-base-content/60 hover:!bg-base-100 md:p-2 md:!text-lg"
+                    className="my-1 line-clamp-1 p-4 text-lg text-base-content/60 hover:!bg-base-100 hover:!text-base-content/80 md:p-2 md:!text-lg"
                     classNames={{
                       title: 'text-lg md:text-sm line-clamp-1',
                     }}
