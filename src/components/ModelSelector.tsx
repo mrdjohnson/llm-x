@@ -68,7 +68,7 @@ const ModelSelector = observer(() => {
         className="pointer-events-none w-full !cursor-pointer bg-transparent"
         classNames={{
           inputWrapper: twMerge(
-            'btn !cursor-pointer border-none p-2 pr-1 !min-h-0',
+            'btn !cursor-pointer border-none p-2 pr-1 !min-h-0 rounded-md',
             isMobile && 'h-fit',
           ),
           input: '!cursor-pointer',
