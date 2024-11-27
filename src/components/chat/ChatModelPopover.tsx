@@ -28,6 +28,7 @@ import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { actorStore } from '~/core/actor/ActorStore'
 import { ActorViewModel } from '~/core/actor/ActorViewModel'
+import _ from 'lodash'
 
 type ChatModelPopoverProps = {
   chat: ChatViewModel
@@ -81,7 +82,11 @@ const ChatModelPopoverContent = observer(
             </button>
           }
           endContent={
-            <button className="hidden pr-1 text-base-content/30 hover:text-base-content/60 md:block">
+            <button
+              className="hidden pr-1 text-base-content/30 hover:text-base-content/60 disabled:hidden md:block"
+              disabled={_.isEmpty(filterText)}
+              onClick={() => setFilterText('')}
+            >
               ✕
             </button>
           }
