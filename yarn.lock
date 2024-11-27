@@ -11378,7 +11378,6 @@ __metadata:
     lodash: "npm:^4.17.21"
     mobx: "npm:^6.12.0"
     mobx-react-lite: "npm:^4.0.5"
-    mobx-state-tree: "npm:^5.4.1"
     moment: "npm:^2.30.1"
     mst-persist: "npm:^0.1.4"
     msw: "npm:^2.2.2"
@@ -12581,15 +12580,6 @@ __metadata:
     react-native:
       optional: true
   checksum: 10c0/6c8f69646ee9fb50155062c8a43e6d222a7b9dbd28f139648dcbb2a097d9ea660d643dd94529355e7f6926561e37c0206ca9e477f01784aedafbed607daceda6
-  languageName: node
-  linkType: hard
-
-"mobx-state-tree@npm:^5.4.1":
-  version: 5.4.1
-  resolution: "mobx-state-tree@npm:5.4.1"
-  peerDependencies:
-    mobx: ^6.3.0
-  checksum: 10c0/86fe369526dcf04671dd2216e4a4ac8140a30c476acbded338841a3e74d7610ae4186410379016c37b506469e6f3fcc3d9beb2dd8fd3cad10879dcd1d94b35a8
   languageName: node
   linkType: hard
 

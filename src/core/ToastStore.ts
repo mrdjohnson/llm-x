@@ -1,37 +1,36 @@
-import { types, cast, Instance, destroy } from 'mobx-state-tree'
 import _ from 'lodash'
+import { makeAutoObservable, observable } from 'mobx'
 
-const ToastModel = types.model({
-  id: types.identifier,
-  message: types.string,
-  type: types.string,
-})
+type Toast = {
+  id: string
+  message: string
+  type: 'error' | 'success' | 'info'
+}
 
-export interface IToastModel extends Instance<typeof ToastModel> {}
+class ToastStore {
+  toasts = observable.array<Toast>()
 
-const ToastStore = types
-  .model({
-    toasts: types.array(ToastModel),
-  })
-  .actions(self => ({
-    addToast(message: string, type: 'error' | 'success' | 'info') {
-      let toasts: IToastModel[] = self.toasts
+  constructor() {
+    makeAutoObservable(this)
+  }
 
-      if (toasts.length === 10) {
-        // remove last toast
-        toasts = _.drop(toasts)
-      }
+  addToast = (message: string, type: Toast['type']) => {
+    if (this.toasts.length === 10) {
+      const lastToast = _.last(this.toasts)
 
-      self.toasts = cast([...toasts, { id: _.uniqueId('toast_'), message: message, type }])
-    },
+      _.remove(this.toasts, lastToast)
+    }
 
-    removeToast(toast: IToastModel) {
-      destroy(toast)
-    },
+    this.toasts.push({ id: _.uniqueId('toast_'), message: message, type })
+  }
 
-    clearToasts() {
-      self.toasts = cast([])
-    },
-  }))
+  removeToast(toast: Toast) {
+    _.remove(this.toasts, toast)
+  }
 
-export const toastStore = ToastStore.create({ toasts: [] })
+  clearToasts() {
+    this.toasts.clear()
+  }
+}
+
+export const toastStore = new ToastStore()
