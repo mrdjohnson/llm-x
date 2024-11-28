@@ -20,7 +20,8 @@
     "test": "vite build; vitest",
     "test:ui": "vite build; vitest --ui",
     "test:watch": "concurrently 'vitest' 'vite build --watch'",
-    "check-circular-deps": "npx madge --circular --extensions ts ."
+    "check-circular-deps": "npx madge --circular --extensions ts .",
+    "view-bundles": "vite-bundle-visualizer"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,css,md,html,json}": [
@@ -101,6 +102,7 @@
     "prettier-plugin-tailwindcss": "^0.5.11",
     "typescript": "^5.2.2",
     "vite": "^5.1.5",
+    "vite-bundle-visualizer": "^1.2.1",
     "vite-plugin-comlink": "^5.1.0",
     "vite-plugin-mkcert": "^1.17.4",
     "vite-plugin-pwa": "^0.19.2",
