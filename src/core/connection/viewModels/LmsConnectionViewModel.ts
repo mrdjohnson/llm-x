@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import { DownloadedModel, LMStudioClient } from '@lmstudio/sdk'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 import { toLmsModel } from '~/core/transformers/toLmsModel'
@@ -61,10 +60,13 @@ class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
   }
 
   async _fetchLmModels(host: string): Promise<LmsLanguageModel[]> {
+    const sdk = await import('@lmstudio/sdk')
+    const { LMStudioClient } = sdk
+
     const client = new LMStudioClient({ baseUrl: host })
 
     // if this fails it breaks downstream, try catches do not work yet
-    const response: DownloadedModel[] = await client.system.listDownloadedModels()
+    const response = await client.system.listDownloadedModels()
 
     const lmsModels: ILmsModel[] = _.filter(response, { type: 'llm' }).map(toLmsModel)
 
