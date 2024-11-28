@@ -82,3 +82,5 @@ export const SideBar = observer(() => {
     </nav>
   )
 })
+
+export default SideBar

@@ -16,6 +16,7 @@ const errorPage = (
   </div>
 )
 
+
 // load the database before anything else
 initDb().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
