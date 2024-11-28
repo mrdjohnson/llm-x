@@ -1,7 +1,7 @@
 import { LMStudioClient, type ChatMessageData, LLMDynamicHandle } from '@lmstudio/sdk'
 import _ from 'lodash'
 
-import { progressStore } from '~/features/progress/ProgressStore'
+import { progressStore } from '~/core/ProgressStore'
 
 import BaseApi from '~/core/connection/api/BaseApi'
 import { MessageViewModel } from '~/core/message/MessageViewModel'

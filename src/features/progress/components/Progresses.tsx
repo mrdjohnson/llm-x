@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { twMerge } from 'tailwind-merge'
 
-import { progressStore } from '~/features/progress/ProgressStore'
+import { progressStore } from '~/core/ProgressStore'
 
 const colorCodedProgress = {
   incomplete: 'bg-accent',

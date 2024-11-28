@@ -2,8 +2,8 @@ import { ModelDetails, Ollama, ShowResponse } from 'ollama/browser'
 import { makeAutoObservable } from 'mobx'
 
 import { toastStore } from '~/core/ToastStore'
-import { progressStore } from '~/features/progress/ProgressStore'
-import  OllamaConnectionViewModel  from '~/core/connection/viewModels/OllamaConnectionViewModel'
+import { progressStore } from '~/core/ProgressStore'
+import OllamaConnectionViewModel from '~/core/connection/viewModels/OllamaConnectionViewModel'
 
 export type CorrectShowResponse = Pick<ShowResponse, 'license' | 'modelfile' | 'template'> & {
   details: ModelDetails

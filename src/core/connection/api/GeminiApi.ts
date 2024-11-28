@@ -4,7 +4,7 @@ import BaseApi from '~/core/connection/api/BaseApi'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { personaStore } from '~/core/persona/PersonaStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
-import { progressStore, ProgressType } from '~/features/progress/ProgressStore'
+import { progressStore, ProgressType } from '~/core/ProgressStore'
 
 const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: string) => {
   const messages: AILanguageModelPrompt[] = []
