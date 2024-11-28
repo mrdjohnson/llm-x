@@ -126,6 +126,4 @@ export class LmsApi extends BaseApi {
   }
 }
 
-const lmsApi = new LmsApi()
-
-export default lmsApi
+export const baseApi = new LmsApi()

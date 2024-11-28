@@ -33,7 +33,7 @@ const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: stri
 }
 
 // note; this is just a copy of the code used for ollama; may refactor later
-export class OpenAiApi extends BaseApi {
+export class GeminiApi extends BaseApi {
   async *generateChat(
     chatMessages: MessageViewModel[],
     incomingMessageVariant: MessageViewModel,
@@ -113,6 +113,4 @@ export class OpenAiApi extends BaseApi {
   }
 }
 
-const openAiApi = new OpenAiApi()
-
-export default openAiApi
+export const baseApi = new GeminiApi()

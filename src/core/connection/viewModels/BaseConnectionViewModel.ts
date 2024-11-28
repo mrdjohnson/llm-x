@@ -7,7 +7,7 @@ import { SortType as SelectionPanelSortType } from '~/components/SelectionTableP
 import { LanguageModelType } from '~/core/LanguageModel'
 import { toastStore } from '~/core/ToastStore'
 
-import BaseApi from '~/core/connection/api/BaseApi'
+import { getApiByType } from '~/core/connection/api/getApiByType'
 import { ConnectionTypes } from '~/core/connection/types'
 import { ConnectionModel, ConnectionParameterModel } from '~/core/connection/ConnectionModel'
 import { settingTable } from '~/core/setting/SettingTable'
@@ -60,6 +60,10 @@ abstract class BaseConnectionViewModel<
 
   get label() {
     return this.source.label
+  }
+
+  async getApi() {
+    return getApiByType(this.type)
   }
 
   parsedParameterValue<T = string>(parameter: ConnectionParameterModel): T | undefined {
@@ -134,8 +138,6 @@ abstract class BaseConnectionViewModel<
 
     return []
   }
-
-  abstract api: BaseApi
 
   modelFilter(model: LanguageModelType<BaseModelType>, filterText: string) {
     return model.modelName.toLowerCase().includes(filterText.toLowerCase())

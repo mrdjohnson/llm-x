@@ -133,11 +133,11 @@ export class IncomingMessageStore {
 
     await rewriteChromeUrl(connection.source.host)
 
-    if (connectionStore.isImageGenerationMode) {
-      return this.generateImage(chat, incomingMessage, connection.api)
-    }
+    const api: BaseApi = await connection.getApi()
 
-    const api: BaseApi | undefined = connection.api
+    if (connectionStore.isImageGenerationMode) {
+      return this.generateImage(chat, incomingMessage, api)
+    }
 
     await incomingMessage.update({
       botName: incomingMessage.actor.modelName,

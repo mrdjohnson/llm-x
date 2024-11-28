@@ -9,15 +9,12 @@ import { IOllamaModel, OllamaLanguageModel } from '~/core/connection/types'
 import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnectionViewModel'
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
-import ollamaApi from '~/core/connection/api/OllamaApi'
 import OllamaStore from '~/core/OllamaStore'
 
 const DefaultHost = 'http://localhost:11434'
 
 class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
   DefaultHost: string = DefaultHost
-
-  api = ollamaApi
 
   modelTableHeaders: SelectionPanelSortType<LanguageModelType<IOllamaModel>>[] = [
     { label: 'Name', value: 'name' },

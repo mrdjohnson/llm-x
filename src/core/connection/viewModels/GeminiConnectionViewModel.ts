@@ -7,14 +7,11 @@ import { IGeminiModel, GeminiLanguageModel } from '~/core/connection/types'
 import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnectionViewModel'
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
-import GeminiApi from '~/core/connection/api/GeminiApi'
 
 const DefaultHost = 'ws://127.0.0.1:1234'
 
 class GeminiConnectionViewModel extends BaseConnectionViewModel<IGeminiModel> {
   DefaultHost: string = DefaultHost
-
-  api = GeminiApi
 
   modelTableHeaders: Array<SelectionPanelSortType<GeminiLanguageModel>> = [
     { label: 'Name', value: 'name' },

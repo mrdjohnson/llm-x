@@ -137,6 +137,4 @@ export class OpenAiApi extends BaseApi {
   }
 }
 
-const openAiApi = new OpenAiApi()
-
-export default openAiApi
+export const baseApi = new OpenAiApi()

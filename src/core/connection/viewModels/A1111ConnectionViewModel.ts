@@ -8,14 +8,11 @@ import { A1111LanguageModel, IA1111Model } from '~/core/connection/types'
 import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnectionViewModel'
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
-import a1111Api from '~/core/connection/api/A1111Api'
 
 const DefaultHost = 'http://127.0.0.1:7860'
 
 class A1111ConnectionViewModel extends BaseConnectionViewModel<IA1111Model> {
   DefaultHost: string = DefaultHost
-
-  api = a1111Api
 
   modelTableHeaders: SelectionPanelSortType<LanguageModelType<IA1111Model>>[] = [
     { label: 'Title', value: 'title' },

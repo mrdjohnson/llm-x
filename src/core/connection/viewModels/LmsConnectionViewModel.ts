@@ -9,14 +9,11 @@ import { ILmsModel, LmsLanguageModel } from '~/core/connection/types'
 import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnectionViewModel'
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
-import lmsApi from '~/core/connection/api/LmsApi'
 
 const DefaultHost = 'ws://127.0.0.1:1234'
 
 class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
   DefaultHost: string = DefaultHost
-
-  api = lmsApi
 
   modelTableHeaders: Array<SelectionPanelSortType<LmsLanguageModel>> = [
     { label: 'Name', value: 'name' },

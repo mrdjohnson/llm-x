@@ -51,6 +51,4 @@ class A1111Api extends BaseApi {
   }
 }
 
-const a1111Api = new A1111Api()
-
-export default a1111Api
+export const baseApi = new A1111Api()

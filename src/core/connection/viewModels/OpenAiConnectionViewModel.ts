@@ -9,14 +9,11 @@ import { IOpenAiModel, OpenAiLanguageModel } from '~/core/connection/types'
 import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnectionViewModel'
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
-import openAiApi from '~/core/connection/api/OpenAiApi'
 
 const DefaultHost = 'https://api.openai.com/v1'
 
 class OpenAiConnectionViewModel extends BaseConnectionViewModel<IOpenAiModel> {
   DefaultHost: string = DefaultHost
-
-  api = openAiApi
 
   modelTableHeaders: Array<SelectionPanelSortType<OpenAiLanguageModel>> = [
     { label: 'Id', value: 'modelName' },

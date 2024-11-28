@@ -129,6 +129,4 @@ export class OllamaApi extends BaseApi {
   }
 }
 
-const ollamaApi = new OllamaApi()
-
-export default ollamaApi
+export const baseApi = new OllamaApi()
