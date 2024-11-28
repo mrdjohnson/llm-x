@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { settingStore } from '~/core/setting/SettingStore'
 import { OllamaLanguageModel } from '~/core/connection/types'
 
-import { CorrectShowResponse } from '~/features/ollama/OllamaStore'
+import { CorrectShowResponse } from '~/core/OllamaStore'
 
 import { NavButtonDiv } from '~/components/NavButton'
 import SelectionPanelTable from '~/components/SelectionTablePanel'

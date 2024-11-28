@@ -12,7 +12,7 @@ import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnec
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
 import ollamaApi from '~/core/connection/api/OllamaApi'
-import OllamaStore from '~/features/ollama/OllamaStore'
+import OllamaStore from '~/core/OllamaStore'
 
 const LazyOllamaModelPanel = lazy(() => import('~/features/settings/panels/model/OllamaModelPanel'))
 
