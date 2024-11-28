@@ -1,4 +1,3 @@
-import { lazy } from 'react'
 import _ from 'lodash'
 
 import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
@@ -10,15 +9,12 @@ import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
 import GeminiApi from '~/core/connection/api/GeminiApi'
 
-const LazyGeminiModelPanel = lazy(() => import('~/features/settings/panels/model/GeminiModelPanel'))
-
 const DefaultHost = 'ws://127.0.0.1:1234'
 
 class GeminiConnectionViewModel extends BaseConnectionViewModel<IGeminiModel> {
   DefaultHost: string = DefaultHost
 
   api = GeminiApi
-  ModelPanel = LazyGeminiModelPanel
 
   modelTableHeaders: Array<SelectionPanelSortType<GeminiLanguageModel>> = [
     { label: 'Name', value: 'name' },

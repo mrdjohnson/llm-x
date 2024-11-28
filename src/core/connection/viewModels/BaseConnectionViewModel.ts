@@ -1,4 +1,3 @@
-import { PropsWithoutRef, ReactNode } from 'react'
 import _ from 'lodash'
 import { AxiosError } from 'axios'
 import { observable, computed, action, makeObservable, IObservableArray } from 'mobx'
@@ -135,10 +134,6 @@ abstract class BaseConnectionViewModel<
 
     return []
   }
-
-  abstract ModelPanel: <T extends typeof this>(
-    props: PropsWithoutRef<{ connection: T }>,
-  ) => ReactNode
 
   abstract api: BaseApi
 

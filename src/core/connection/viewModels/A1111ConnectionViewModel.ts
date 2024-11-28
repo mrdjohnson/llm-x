@@ -1,4 +1,3 @@
-import { lazy } from 'react'
 import camelcaseKeys from 'camelcase-keys'
 import axios from 'axios'
 
@@ -11,15 +10,12 @@ import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
 import a1111Api from '~/core/connection/api/A1111Api'
 
-const LazyA1111ModelPanel = lazy(() => import('~/features/settings/panels/model/A1111ModelPanel'))
-
 const DefaultHost = 'http://127.0.0.1:7860'
 
 class A1111ConnectionViewModel extends BaseConnectionViewModel<IA1111Model> {
   DefaultHost: string = DefaultHost
 
   api = a1111Api
-  ModelPanel = LazyA1111ModelPanel
 
   modelTableHeaders: SelectionPanelSortType<LanguageModelType<IA1111Model>>[] = [
     { label: 'Title', value: 'title' },

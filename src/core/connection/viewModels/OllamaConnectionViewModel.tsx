@@ -1,5 +1,3 @@
-import { lazy } from 'react'
-
 import LanguageModel, { LanguageModelType } from '~/core/LanguageModel'
 import { toOllamaModel } from '~/core/transformers/toOllamaModel'
 
@@ -14,15 +12,12 @@ import { connectionTable } from '~/core/connection/ConnectionTable'
 import ollamaApi from '~/core/connection/api/OllamaApi'
 import OllamaStore from '~/core/OllamaStore'
 
-const LazyOllamaModelPanel = lazy(() => import('~/features/settings/panels/model/OllamaModelPanel'))
-
 const DefaultHost = 'http://localhost:11434'
 
 class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
   DefaultHost: string = DefaultHost
 
   api = ollamaApi
-  ModelPanel = LazyOllamaModelPanel
 
   modelTableHeaders: SelectionPanelSortType<LanguageModelType<IOllamaModel>>[] = [
     { label: 'Name', value: 'name' },

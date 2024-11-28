@@ -1,4 +1,3 @@
-import { lazy } from 'react'
 import _ from 'lodash'
 import { DownloadedModel, LMStudioClient } from '@lmstudio/sdk'
 
@@ -12,15 +11,12 @@ import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
 import lmsApi from '~/core/connection/api/LmsApi'
 
-const LazyLmsModelPanel = lazy(() => import('~/features/settings/panels/model/LmsModelPanel'))
-
 const DefaultHost = 'ws://127.0.0.1:1234'
 
 class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
   DefaultHost: string = DefaultHost
 
   api = lmsApi
-  ModelPanel = LazyLmsModelPanel
 
   modelTableHeaders: Array<SelectionPanelSortType<LmsLanguageModel>> = [
     { label: 'Name', value: 'name' },

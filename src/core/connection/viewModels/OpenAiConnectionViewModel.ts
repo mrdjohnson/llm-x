@@ -1,4 +1,3 @@
-import { lazy } from 'react'
 import axios from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 import _ from 'lodash'
@@ -12,15 +11,12 @@ import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
 import openAiApi from '~/core/connection/api/OpenAiApi'
 
-const LazyOpenAiModelPanel = lazy(() => import('~/features/settings/panels/model/OpenAiModelPanel'))
-
 const DefaultHost = 'https://api.openai.com/v1'
 
 class OpenAiConnectionViewModel extends BaseConnectionViewModel<IOpenAiModel> {
   DefaultHost: string = DefaultHost
 
   api = openAiApi
-  ModelPanel = LazyOpenAiModelPanel
 
   modelTableHeaders: Array<SelectionPanelSortType<OpenAiLanguageModel>> = [
     { label: 'Id', value: 'modelName' },
