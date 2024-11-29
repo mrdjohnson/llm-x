@@ -2600,24 +2600,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lmstudio/lms-isomorphic@npm:^0.3.2":
-  version: 0.3.2
-  resolution: "@lmstudio/lms-isomorphic@npm:0.3.2"
+"@lmstudio/lms-isomorphic@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@lmstudio/lms-isomorphic@npm:0.4.0"
   dependencies:
     bufferutil: "npm:^4.0.1"
     utf-8-validate: "npm:^6.0.3"
     ws: "npm:^8.16.0"
-  checksum: 10c0/8fc10df814d1ace14430341f586aa679270ef5405dc88b54f7530a4b3a3589bb5f69e69046168cc044104b453eee8b5fa050ece1a0b33eeed46d356f9f0e4761
+  checksum: 10c0/49c485a8fe2181080dce3a1abf366042281fd5823d17b20d89c97c685c31b0684bd36e98255c7f0d6fad082e1a30c7ceac571a1cf65a024cf74070e232d5e442
   languageName: node
   linkType: hard
 
-"@lmstudio/sdk@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "@lmstudio/sdk@npm:0.2.0"
+"@lmstudio/sdk@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@lmstudio/sdk@npm:0.3.0"
   dependencies:
-    "@lmstudio/lms-isomorphic": "npm:^0.3.2"
+    "@lmstudio/lms-isomorphic": "npm:^0.4.0"
     chalk: "npm:^4.1.2"
-  checksum: 10c0/68ccb57ce19eba41a8bcd32ec9f340923f1e8e6b415af849498343736df894130fee296294bf08cd3f7a91df1e7c15216149ae2e1c61fe4ffc5653d5f24b191b
+  checksum: 10c0/6d2405b391375b618122a0c93433a36ef2edb5dab6750711eb22705ff3117891e09fd92de2442190ecdcdce8a4effb0fc1f6a55c836cb5d187204748e91db49f
   languageName: node
   linkType: hard
 
@@ -11361,7 +11361,7 @@ __metadata:
   dependencies:
     "@faker-js/faker": "npm:^8.4.1"
     "@langchain/community": "npm:^0.0.36"
-    "@lmstudio/sdk": "npm:^0.2.0"
+    "@lmstudio/sdk": "npm:^0.3.0"
     "@nextui-org/react": "npm:^2.4.1"
     "@paralleldrive/cuid2": "npm:^2.2.2"
     "@playwright/test": "npm:^1.42.1"
