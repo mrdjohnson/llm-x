@@ -114,7 +114,7 @@ const LazyMessage = observer(
       <div
         className={twMerge(
           'group indicator relative flex w-fit min-w-6 max-w-full scroll-m-5 flex-col self-end pl-4 lg:pl-8',
-          fromBot && 'pr-4 lg:pr-8',
+          fromBot && 'pr-4 lg:pr-8 self-start',
           shouldDimMessage && 'opacity-55',
           children && 'mt-2',
         )}
