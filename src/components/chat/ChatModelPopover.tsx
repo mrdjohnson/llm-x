@@ -137,7 +137,7 @@ const ChatModelPopoverContent = observer(
             className="group flex w-full flex-row border-t border-base-content/30 p-2 transition-all duration-300 ease-in-out"
             role="button"
           >
-            <span className="line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline opacity-40 ">
+            <span className="line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline opacity-40 text-base-content cursor-default">
               {actor.modelLabel}
             </span>
 
