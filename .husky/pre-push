@@ -1,0 +1,1 @@
+yarn depcruise src --include-only "^src" --output-type err
