@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-import { ChatViewModel } from '~/core/chat/ChatViewModel'
+import { type ChatViewModel } from '~/core/chat/ChatViewModel'
 
 export const chatToDateLabel = (chat: ChatViewModel) => {
   const sentTime = moment(chat.source.lastMessageTimestamp)
