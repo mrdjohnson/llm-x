@@ -4,7 +4,7 @@ import { settingStore } from '~/core/setting/SettingStore'
 import { chatStore } from '~/core/chat/ChatStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
-import { DATABASE_TABLES } from '~/utils/db'
+import { DATABASE_TABLES } from '~/core/db'
 import { chatTable } from '~/core/chat/ChatTable'
 import { settingTable } from '~/core/setting/SettingTable'
 import { connectionTable } from '~/core/connection/ConnectionTable'

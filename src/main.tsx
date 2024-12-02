@@ -1,4 +1,4 @@
-import { initDb } from '~/utils/db'
+import { initDb } from '~/core/db'
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { KBarProvider } from 'kbar'
@@ -15,7 +15,6 @@ const errorPage = (
     Waiting for app to load, hard refresh may be needed
   </div>
 )
-
 
 // load the database before anything else
 initDb().then(() => {

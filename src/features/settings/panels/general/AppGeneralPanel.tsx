@@ -18,7 +18,7 @@ import Stop from '~/icons/Stop'
 import { voiceStore } from '~/core/voice/VoiceStore'
 import { VoiceModel } from '~/core/voice/VoiceModel'
 
-import { DATABASE_TABLES } from '~/utils/db'
+import { DATABASE_TABLES } from '~/core/db'
 import { CURRENT_DB_TIMESTAMP_MILLISECONDS } from '~/core/setting/SettingModel'
 
 const DownloadSelector = () => {
