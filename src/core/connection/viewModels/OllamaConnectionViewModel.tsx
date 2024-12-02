@@ -1,8 +1,7 @@
 import LanguageModel, { LanguageModelType } from '~/core/LanguageModel'
 import { toOllamaModel } from '~/core/transformers/toOllamaModel'
 
-import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import Image from '~/icons/Image'
+import { type SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 import { Ollama } from 'ollama/browser'
 
 import { IOllamaModel, OllamaLanguageModel } from '~/core/connection/types'
@@ -19,7 +18,7 @@ class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
   modelTableHeaders: SelectionPanelSortType<LanguageModelType<IOllamaModel>>[] = [
     { label: 'Name', value: 'name' },
     { label: 'Params', value: 'paramSize' },
-    { label: <Image />, value: 'supportsImages', tooltip: 'Supports Images?', invertOrder: true },
+    { value: 'supportsImages', tooltip: 'Supports Images?', invertOrder: true, isImage: true },
     { label: 'Size', value: 'size' },
     { label: 'Updated', value: 'modifiedAt', invertOrder: true, hideOnMobile: true },
   ]

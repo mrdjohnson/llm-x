@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
+import { type SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 import { toLmsModel } from '~/core/transformers/toLmsModel'
 import LanguageModel from '~/core/LanguageModel'
 

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { AxiosError } from 'axios'
 import { observable, computed, action, makeObservable, IObservableArray } from 'mobx'
 
-import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
+import { type SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 
 import { LanguageModelType } from '~/core/LanguageModel'
 import { toastStore } from '~/core/ToastStore'

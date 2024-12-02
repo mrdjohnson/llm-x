@@ -2,7 +2,7 @@ import axios from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 import _ from 'lodash'
 
-import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
+import { type SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 import LanguageModel from '~/core/LanguageModel'
 
 import { IOpenAiModel, OpenAiLanguageModel } from '~/core/connection/types'

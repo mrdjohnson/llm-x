@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
+import { type SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 import LanguageModel from '~/core/LanguageModel'
 
 import { IGeminiModel, GeminiLanguageModel } from '~/core/connection/types'

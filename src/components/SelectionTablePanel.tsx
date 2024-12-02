@@ -4,14 +4,16 @@ import _ from 'lodash'
 import { twMerge } from 'tailwind-merge'
 
 import ChevronDown from '~/icons/ChevronDown'
+import Image from '~/icons/Image'
 import FormInput from '~/components/form/FormInput'
 
 export type SortType<SelectorType> = {
-  label: ReactNode
+  label?: string
   value?: keyof SelectorType
   invertOrder?: boolean
   tooltip?: string
   hideOnMobile?: true
+  isImage?: boolean
 }
 
 const EmptySortType = {
@@ -140,7 +142,7 @@ const SelectionPanelTable = observer(
               <tr>
                 {sortTypes.map(sortType => (
                   <th
-                    key={sortType.label as string | number}
+                    key={sortType.label}
                     className={sortType.hideOnMobile ? ' hidden md:flex' : ''}
                   >
                     <span
@@ -157,7 +159,7 @@ const SelectionPanelTable = observer(
                           sortType.value && 'border-b-[1.5px]',
                         )}
                       >
-                        {sortType.label}
+                        {sortType.isImage? <Image /> : sortType.label}
                       </span>
 
                       {makeChevron(sortType)}

@@ -2,6 +2,13 @@
 module.exports = {
   forbidden: [
     {
+      name: 'core-not-to-non-core-utils',
+      comment: 'Core folder should not import from non utils folder',
+      severity: 'error',
+      from: { path: '^src/core/' },
+      to: { pathNot: '^src/(core|utils)/', dependencyTypesNot: ['type-only'] },
+    },
+    {
       name: 'utils-not-to-another-folder',
       comment: 'Utils folder should not import from non utils folder',
       severity: 'error',

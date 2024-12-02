@@ -1,7 +1,7 @@
 import camelcaseKeys from 'camelcase-keys'
 import axios from 'axios'
 
-import { SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
+import { type SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
 import LanguageModel, { LanguageModelType } from '~/core/LanguageModel'
 
 import { A1111LanguageModel, IA1111Model } from '~/core/connection/types'
