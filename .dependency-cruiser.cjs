@@ -2,6 +2,13 @@
 module.exports = {
   forbidden: [
     {
+      name: 'utils-not-to-another-folder',
+      comment: 'Utils folder should not import from non utils folder',
+      severity: 'error',
+      from: { path: '^src/utils/' },
+      to: { pathNot: '^src/utils/', dependencyTypesNot: ['type-only'] },
+    },
+    {
       name: 'no-orphans',
       comment:
         "This is an orphan module - it's likely not used (anymore?). Either use it or " +
