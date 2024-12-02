@@ -1,11 +1,11 @@
 import { ChangeEvent, PropsWithChildren, useRef } from 'react'
 
-import { TransferHandler } from '~/utils/transfer/TransferHandler'
+import { TransferHandler } from '~/core/TransferHandler'
 
 const AttachmentWrapper = ({
   children,
   accept = 'image/*',
-  className
+  className,
 }: PropsWithChildren<{ accept?: string; className?: string }>) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -28,7 +28,7 @@ const AttachmentWrapper = ({
         multiple
       />
 
-      <span role="button" className='contents' onClick={() => fileInputRef.current?.click()}>
+      <span role="button" className="contents" onClick={() => fileInputRef.current?.click()}>
         {children}
       </span>
     </span>

@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react'
 import { useDropzone } from 'react-dropzone'
 
 import DocumentDownload from '~/icons/DocumentDownload'
-import { TransferHandler } from '~/utils/transfer/TransferHandler'
+import { TransferHandler } from '~/core/TransferHandler'
 
 const Dropzone = ({ children }: PropsWithChildren) => {
   const onDrop = TransferHandler.handleImport
@@ -10,11 +10,7 @@ const Dropzone = ({ children }: PropsWithChildren) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, maxFiles: 1 })
 
   return (
-    <div
-      className="grid !h-dvh !max-h-dvh bg-base-100"
-      {...getRootProps()}
-      onClick={undefined}
-    >
+    <div className="grid !h-dvh !max-h-dvh bg-base-100" {...getRootProps()} onClick={undefined}>
       <input {...getInputProps()} />
 
       {isDragActive && (

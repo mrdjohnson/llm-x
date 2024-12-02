@@ -7,11 +7,10 @@ import { twMerge } from 'tailwind-merge'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
+import { TransferHandler } from '~/core/TransferHandler'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import CachedImage from '~/components/CachedImage'
-
-import { TransferHandler } from '~/utils/transfer/TransferHandler'
 
 import Paperclip from '~/icons/Paperclip'
 import Send from '~/icons/Send'
