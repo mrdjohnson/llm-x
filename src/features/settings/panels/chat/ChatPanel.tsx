@@ -56,7 +56,7 @@ export const ChatPanel = observer(() => {
           to={'/chats/' + chat.id}
           className="btn btn-ghost btn-sm ml-auto justify-start px-2"
         >
-          <Edit />
+          <Edit className="size-5" />
         </NavButtonDiv>
       )}
       selectedItemId={selectedChat?.id}

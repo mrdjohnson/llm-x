@@ -70,7 +70,7 @@ const ModelPanel = observer(() => {
           to={'/models/edit/' + connection.id}
           className="btn btn-ghost btn-sm ml-auto justify-start px-2"
         >
-          <Edit />
+          <Edit className="size-5" />
         </NavButtonDiv>
       )}
     />
