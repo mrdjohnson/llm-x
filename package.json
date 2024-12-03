@@ -8,7 +8,7 @@
     "build": "SW=true vite build",
     "chrome:dev": "cross-env TARGET=chrome vite --force",
     "chrome:dev:watch": "cross-env TARGET=chrome vite build --watch --mode development",
-    "chrome:build": "cross-env TARGET=chrome SW=true vite build",
+    "chrome:build": "rm -rf environments/chrome/dist; cross-env TARGET=chrome SW=true vite build",
     "firefox:dev": "cross-env TARGET=firefox vite --force",
     "firefox:dev:watch": "cross-env TARGET=firefox vite build --watch --mode development",
     "firefox:build": "cross-env TARGET=firefox SW=true vite build",
