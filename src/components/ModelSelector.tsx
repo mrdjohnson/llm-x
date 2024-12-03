@@ -20,7 +20,8 @@ const ModelSelector = observer(() => {
   const noServer = !isAnyServerConnected
 
   const selectedChat = chatStore.selectedChat
-  const hasActorOverrides = !_.isEmpty(selectedChat?.actors)
+  const actors = selectedChat?.actors || []
+  const hasActorOverrides = !_.isEmpty(actors)
 
   const label = useMemo(() => {
     if (noServer) {
@@ -37,7 +38,7 @@ const ModelSelector = observer(() => {
       }
 
       if (hasActorOverrides) {
-        return 'Default model:'
+        return actors.length + ' model' + (actors.length === 1 ? '' : 's')
       }
 
       return selectedConnection.label
@@ -50,7 +51,30 @@ const ModelSelector = observer(() => {
     }
 
     return `No ${selectedConnection.label} models selected`
-  }, [noServer, selectedConnection?.models, selectedModelLabel, isMobile, hasActorOverrides])
+  }, [
+    noServer,
+    selectedConnection?.models,
+    selectedModelLabel,
+    isMobile,
+    hasActorOverrides,
+    actors,
+  ])
+
+  const modelValue = useMemo(() => {
+    if (!isMobile) return selectedModelLabel
+
+    if (actors[0]) {
+      const value = actors[0]?.modelLabel
+
+      if (actors.length > 1) {
+        return `${value} (+${actors.length - 1})`
+      }
+
+      return value + ' (chat)'
+    }
+
+    return selectedModelLabel
+  }, [selectedModelLabel, actors[0], actors.length])
 
   const handleClick = () => {
     if (hasActorOverrides) {
@@ -75,7 +99,7 @@ const ModelSelector = observer(() => {
         isReadOnly
         label={label}
         variant="bordered"
-        value={selectedModelLabel}
+        value={modelValue}
         size={isMobile || !selectedModelLabel ? 'sm' : undefined}
         className="pointer-events-none w-full !cursor-pointer bg-transparent"
         classNames={{
