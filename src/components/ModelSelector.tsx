@@ -27,8 +27,20 @@ const ModelSelector = observer(() => {
       return 'No Servers connected'
     }
 
+    if (isMobile) {
+      return undefined
+    }
+
     if (selectedModelLabel && selectedConnection) {
-      return isMobile ? undefined : selectedConnection.label
+      if (isMobile) {
+        return undefined
+      }
+
+      if (hasActorOverrides) {
+        return 'Default model:'
+      }
+
+      return selectedConnection.label
     }
 
     if (!selectedConnection) return 'Add a Server here'
@@ -38,7 +50,7 @@ const ModelSelector = observer(() => {
     }
 
     return `No ${selectedConnection.label} models selected`
-  }, [noServer, selectedConnection?.models, selectedModelLabel, isMobile])
+  }, [noServer, selectedConnection?.models, selectedModelLabel, isMobile, hasActorOverrides])
 
   const handleClick = () => {
     if (hasActorOverrides) {
@@ -61,7 +73,7 @@ const ModelSelector = observer(() => {
     >
       <Input
         isReadOnly
-        label={hasActorOverrides ? 'Default model:' : label}
+        label={label}
         variant="bordered"
         value={selectedModelLabel}
         size={isMobile || !selectedModelLabel ? 'sm' : undefined}
