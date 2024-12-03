@@ -11,11 +11,16 @@ import { settingStore } from '~/core/setting/SettingStore'
 const GeminiModelPanel = observer(({ connection }: { connection: GeminiConnectionViewModel }) => {
   const selectedModelId = settingStore.setting?.selectedModelId
 
-  const renderRow = (model: GeminiLanguageModel) => (
-    <>
-      <td>{model.modelName}</td>
-    </>
-  )
+  const renderRow = (model: GeminiLanguageModel, isMobile: boolean) =>
+    isMobile ? (
+      <div className="flex flex-col rounded-md p-2">
+        <label className="mb-1 line-clamp-1 text-lg font-semibold">{model.modelName}</label>
+      </div>
+    ) : (
+      <>
+        <td>{model.modelName}</td>
+      </>
+    )
 
   if (!connection.isConnected) {
     return <NotConnectedPanelSection connection={connection} />

@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { PropsWithChildren, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import _ from 'lodash'
 import { twMerge } from 'tailwind-merge'
+import useMedia from 'use-media'
 
 import ChevronDown from '~/icons/ChevronDown'
 import Image from '~/icons/Image'
@@ -28,7 +29,7 @@ export type SelectionPanelTableProps<SelectorType extends { id: string }> = Prop
   className?: string
   sortTypes: SortType<SelectorType>[]
   onItemSelected: (item: SelectorType) => void
-  renderRow: (item: SelectorType, index: number) => ReactNode
+  renderRow: (item: SelectorType, isMobile: boolean) => ReactNode
   getIsItemSelected: (item: SelectorType) => boolean
   filterInputPlaceholder?: string
   onFilterChanged?: (text: string) => void
@@ -53,6 +54,7 @@ const SelectionPanelTable = observer(
     children,
   }: SelectionPanelTableProps<SelectorType>) => {
     const inputRef = useRef<HTMLInputElement>(null)
+    const isMobile = useMedia('(max-width: 768px)')
 
     const [activeSortType, setActiveSortType] = useState<
       SortType<SelectorType> | typeof EmptySortType
@@ -123,8 +125,10 @@ const SelectionPanelTable = observer(
           <label className="flex w-full flex-row gap-2">
             <FormInput
               type="text"
+              className="text-base-content/80"
               placeholder={filterInputPlaceholder}
               onChange={e => handleFilterChanged(e.target.value)}
+              size={isMobile ? 'lg' : undefined}
               value={filterText}
               ref={inputRef}
               autoFocus
@@ -135,56 +139,73 @@ const SelectionPanelTable = observer(
         <div
           className={twMerge('mt-2 flex h-full flex-col overflow-y-scroll rounded-md', className)}
         >
-          <table className="table table-zebra table-sm -mt-4 mb-4 border-separate border-spacing-y-2 pt-0">
-            <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
-              <tr>
-                {sortTypes.map(sortType => (
-                  <th
-                    key={sortType.label}
-                    className={sortType.hideOnMobile ? ' hidden md:flex' : ''}
-                  >
-                    <span
-                      className={twMerge(
-                        'tooltip tooltip-bottom -mr-2 flex w-fit select-none flex-row items-center',
-                        sortType.value && 'cursor-pointer',
-                      )}
-                      onClick={() => handleSortTypeChanged(sortType)}
-                      data-tip={sortType.tooltip}
+          {isMobile ? (
+            filteredItems?.map(item => (
+              <div
+                className={twMerge(
+                  'my-2 cursor-pointer rounded-md text-base-content even:bg-base-100 hover:bg-primary/30',
+                  getIsItemSelected(item) && '!bg-primary text-primary-content hover:bg-primary',
+                )}
+                onClick={() => onItemSelected(item)}
+                key={item.id}
+                role="button"
+              >
+                {renderRow(item, isMobile)}
+              </div>
+            ))
+          ) : (
+            <table className="table table-zebra table-sm -mt-4 mb-4 border-separate border-spacing-y-2 pt-0">
+              <thead className="sticky top-0 z-20 bg-base-300 text-base-content">
+                <tr>
+                  {sortTypes.map(sortType => (
+                    <th
+                      key={sortType.label}
+                      className={sortType.hideOnMobile ? ' hidden md:flex' : ''}
                     >
                       <span
                         className={twMerge(
-                          'border-b-current leading-[1.25]',
-                          sortType.value && 'border-b-[1.5px]',
+                          'tooltip tooltip-bottom -mr-2 flex w-fit select-none flex-row items-center',
+                          sortType.value && 'cursor-pointer',
                         )}
+                        onClick={() => handleSortTypeChanged(sortType)}
+                        data-tip={sortType.tooltip}
                       >
-                        {sortType.isImage ? <Image /> : sortType.label}
+                        <span
+                          className={twMerge(
+                            'border-b-current leading-[1.25]',
+                            sortType.value && 'border-b-[1.5px]',
+                          )}
+                        >
+                          {sortType.isImage ? <Image /> : sortType.label}
+                        </span>
+
+                        {makeChevron(sortType)}
                       </span>
+                    </th>
+                  ))}
 
-                      {makeChevron(sortType)}
-                    </span>
-                  </th>
-                ))}
-
-                {includeEmptyHeader && <th className="w-fit" />}
-              </tr>
-              <tr />
-            </thead>
-
-            <tbody className="-mt-4 gap-2 px-2">
-              {filteredItems?.map((item, index) => (
-                <tr
-                  className={twMerge(
-                    'cursor-pointer hover:!bg-primary/30',
-                    getIsItemSelected(item) && '!bg-primary text-primary-content hover:!bg-primary',
-                  )}
-                  onClick={() => onItemSelected(item)}
-                  key={item.id}
-                >
-                  {renderRow(item, index)}
+                  {includeEmptyHeader && <th className="w-fit" />}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+                <tr />
+              </thead>
+
+              <tbody className="-mt-4 gap-2 px-2">
+                {filteredItems?.map(item => (
+                  <tr
+                    className={twMerge(
+                      'cursor-pointer hover:!bg-primary/30',
+                      getIsItemSelected(item) &&
+                        '!bg-primary text-primary-content hover:!bg-primary',
+                    )}
+                    onClick={() => onItemSelected(item)}
+                    key={item.id}
+                  >
+                    {renderRow(item, isMobile)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {children}

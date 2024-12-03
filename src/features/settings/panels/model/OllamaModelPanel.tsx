@@ -17,6 +17,7 @@ import Globe from '~/icons/Globe'
 import DownloadTray from '~/icons/DownloadTray'
 import Delete from '~/icons/Delete'
 import Edit from '~/icons/Edit'
+import Image from '~/icons/Image'
 
 import Drawer from '~/containers/Drawer'
 
@@ -51,39 +52,67 @@ const OllamaModelPanelTable = observer(({ connection }: PanelTableProps) => {
     return <NotConnectedPanelSection connection={connection} />
   }
 
-  const renderRow = (model: OllamaLanguageModel) => (
-    <>
-      <td>
-        <span className="block max-w-52 overflow-hidden font-semibold xl:max-w-80">
-          {model.name}
-        </span>
-      </td>
+  const renderRow = (model: OllamaLanguageModel, isMobile?: boolean) =>
+    isMobile ? (
+      <div className="flex flex-col rounded-md p-2">
+        <label className="mb-1 line-clamp-1 text-lg font-semibold">{model.name}</label>
 
-      <td>{model.details.parameter_size}</td>
+        <div className="flex flex-row justify-between gap-2">
+          <div className="flex flex-col gap-0 opacity-60">
+            <span className="flex flex-row gap-2 align-middle">
+              <span>{model.details.parameter_size}</span>
 
-      <td>
-        <input
-          type="checkbox"
-          defaultChecked={model.supportsImages}
-          className="checkbox checkbox-xs tooltip tooltip-bottom"
-          data-tip="Supports Images?"
-          onClick={e => e.preventDefault()}
-        />
-      </td>
+              {model.supportsImages && (
+                <span className="mt-[2px]">
+                  <Image />
+                </span>
+              )}
+            </span>
 
-      <td>{model.gbSize}</td>
-      <td className="hidden opacity-65 md:flex">{model.timeAgo}</td>
+            <span>{model.modelName}</span>
+          </div>
 
-      <td className="w-fit">
-        <NavButtonDiv
-          to={'ollama/' + model.modelName}
-          className="align-center flex opacity-30 transition-opacity duration-200 ease-in-out hover:opacity-100"
-        >
-          <Edit />
-        </NavButtonDiv>
-      </td>
-    </>
-  )
+          <NavButtonDiv
+            to={'ollama/' + model.modelName}
+            className="align-center my-auto flex opacity-30 transition-opacity duration-200 ease-in-out hover:opacity-100"
+          >
+            <Edit className="size-5" />
+          </NavButtonDiv>
+        </div>
+      </div>
+    ) : (
+      <>
+        <td>
+          <span className="block max-w-52 overflow-hidden font-semibold xl:max-w-80">
+            {model.name}
+          </span>
+        </td>
+
+        <td>{model.details.parameter_size}</td>
+
+        <td>
+          <input
+            type="checkbox"
+            defaultChecked={model.supportsImages}
+            className="checkbox checkbox-xs tooltip tooltip-bottom"
+            data-tip="Supports Images?"
+            onClick={e => e.preventDefault()}
+          />
+        </td>
+
+        <td>{model.gbSize}</td>
+        <td className="hidden opacity-65 md:flex">{model.timeAgo}</td>
+
+        <td className="w-fit">
+          <NavButtonDiv
+            to={'ollama/' + model.modelName}
+            className="align-center flex opacity-30 transition-opacity duration-200 ease-in-out hover:opacity-100"
+          >
+            <Edit />
+          </NavButtonDiv>
+        </td>
+      </>
+    )
 
   return (
     <SelectionPanelTable
