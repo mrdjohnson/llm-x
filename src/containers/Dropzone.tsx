@@ -2,10 +2,13 @@ import { PropsWithChildren } from 'react'
 import { useDropzone } from 'react-dropzone'
 
 import DocumentDownload from '~/icons/DocumentDownload'
-import { TransferHandler } from '~/core/TransferHandler'
 
 const Dropzone = ({ children }: PropsWithChildren) => {
-  const onDrop = TransferHandler.handleImport
+  const onDrop = async (files?: FileList | File[] | null) => {
+    const { TransferHandler } = await import('~/core/TransferHandler')
+
+    TransferHandler.handleImport(files)
+  }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, maxFiles: 1 })
 
