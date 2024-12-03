@@ -69,7 +69,7 @@ export const ConnectionHelpPanel = observer(() => {
           )}
 
           <Markdown
-            className="prose-spacing prose ml-2 flex w-full flex-wrap prose-p:w-full"
+            className="prose-spacing prose flex w-full flex-wrap text-wrap break-words pl-2 prose-p:w-full"
             components={{
               h3: props => <h3 className="-ml-2 [&>*]:text-lg [&>*]:font-bold" {...props} />,
               a: props => <a target="__blank" className="link mx-0 !text-primary " {...props} />,
