@@ -127,7 +127,7 @@ const OllamaModelPanelTable = observer(({ connection }: PanelTableProps) => {
       filterInputPlaceholder="Filter by name or pull..."
       includeEmptyHeader
     >
-      <div className="mx-auto mt-auto flex flex-row content-center gap-2">
+      <div className="mx-auto mt-auto flex flex-row content-center gap-2 pt-2">
         <a
           href="https://ollama.com/library"
           className="btn btn-outline btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
