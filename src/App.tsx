@@ -1,8 +1,7 @@
 import React, { Suspense } from 'react'
+import { observer } from 'mobx-react-lite'
 
 import Dropzone from '~/containers/Dropzone'
-import Progresses from '~/features/progress/components/Progresses'
-import { observer } from 'mobx-react-lite'
 
 import Lightbox from '~/features/lightbox/components/Lightbox'
 
@@ -14,6 +13,7 @@ const LazyOmnibar = React.lazy(() => import('~/components/OmniBar'))
 const LazySidebar = React.lazy(() => import('~/containers/SideBar'))
 const LazyNavbar = React.lazy(() => import('~/components/Navbar'))
 const LazyChatBox = React.lazy(() => import('~/containers/ChatBox'))
+const LazyProgresses = React.lazy(() => import('~/features/progress/components/Progresses'))
 
 const DelayedPwaReloadPrompt = () => {
   if (__TARGET__ !== 'pwa') return null
@@ -65,7 +65,7 @@ const App = observer(() => {
           </main>
         </section>
 
-        <Progresses />
+        <LazyProgresses />
       </div>
     </Dropzone>
   )
