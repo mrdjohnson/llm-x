@@ -179,6 +179,8 @@ class ConnectionStore {
 
         const model = viewModel.models[0]
 
+        this.connectionCache.overrideObservable(viewModel)
+
         await this.setSelectedModel(model?.id, connectionModel.id)
 
         toastStore.addToast('Found and connected to ' + connectionModel.label, 'info')

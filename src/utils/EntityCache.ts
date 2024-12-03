@@ -8,7 +8,10 @@ const mergeArrays = (entityArray: unknown, cachedArray: unknown) => {
   }
 }
 
-export default class EntityCache<Input extends { id: string }, Output = Input> {
+export default class EntityCache<
+  Input extends { id: string },
+  Output extends { id: string } = Input,
+> {
   map = observable.map<string, Output>()
 
   private transform: (input: Input) => Output
@@ -78,6 +81,10 @@ export default class EntityCache<Input extends { id: string }, Output = Input> {
     if (cached) return cached
 
     return this.put(entity)
+  }
+
+  overrideObservable(entity: Output) {
+    this.map.set(entity.id, entity)
   }
 
   clear = () => {
