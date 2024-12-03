@@ -92,7 +92,6 @@ const OllamaModelPanelTable = observer(({ connection }: PanelTableProps) => {
       primarySortTypeLabel="name"
       itemFilter={connection.modelFilter}
       renderRow={renderRow}
-      getItemKey={model => model.id}
       onItemSelected={model => connection.selectModel(model)}
       onFilterChanged={setFilterText}
       getIsItemSelected={model => selectedModelId === model.id}

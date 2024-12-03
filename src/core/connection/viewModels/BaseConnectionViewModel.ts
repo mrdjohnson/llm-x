@@ -15,7 +15,7 @@ import { rewriteChromeUrl } from '~/utils/rewriteChromeUrl'
 
 abstract class BaseConnectionViewModel<
   BaseModelType = object,
-  SingleModelType = LanguageModelType<BaseModelType>,
+  SingleModelType extends { id: string } = LanguageModelType<BaseModelType>,
 > {
   abstract DefaultHost: string
 

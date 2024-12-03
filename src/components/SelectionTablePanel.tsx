@@ -7,7 +7,7 @@ import ChevronDown from '~/icons/ChevronDown'
 import Image from '~/icons/Image'
 import FormInput from '~/components/form/FormInput'
 
-export type SortType<SelectorType> = {
+export type SortType<SelectorType extends { id: string }> = {
   label?: string
   value?: keyof SelectorType
   invertOrder?: boolean
@@ -23,14 +23,13 @@ const EmptySortType = {
   tooltip: undefined,
 }
 
-export type SelectionPanelTableProps<SelectorType> = PropsWithChildren<{
+export type SelectionPanelTableProps<SelectorType extends { id: string }> = PropsWithChildren<{
   items: SelectorType[]
   className?: string
   sortTypes: SortType<SelectorType>[]
   onItemSelected: (item: SelectorType) => void
   renderRow: (item: SelectorType, index: number) => ReactNode
   getIsItemSelected: (item: SelectorType) => boolean
-  getItemKey: (item: SelectorType, index: number) => string | number
   filterInputPlaceholder?: string
   onFilterChanged?: (text: string) => void
   itemFilter?: (item: SelectorType, filter: string) => boolean
@@ -39,7 +38,7 @@ export type SelectionPanelTableProps<SelectorType> = PropsWithChildren<{
 }>
 
 const SelectionPanelTable = observer(
-  <SelectorType,>({
+  <SelectorType extends { id: string }>({
     items,
     className = '',
     sortTypes,
@@ -50,7 +49,6 @@ const SelectionPanelTable = observer(
     onFilterChanged,
     getIsItemSelected,
     onItemSelected,
-    getItemKey,
     filterInputPlaceholder,
     children,
   }: SelectionPanelTableProps<SelectorType>) => {
@@ -180,7 +178,7 @@ const SelectionPanelTable = observer(
                     getIsItemSelected(item) && '!bg-primary text-primary-content hover:!bg-primary',
                   )}
                   onClick={() => onItemSelected(item)}
-                  key={getItemKey(item, index)}
+                  key={item.id}
                 >
                   {renderRow(item, index)}
                 </tr>

@@ -5,7 +5,7 @@ import { A1111LanguageModel } from '~/core/connection/types'
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnectedPanelSection'
 
-import  A1111ConnectionViewModel  from '~/core/connection/viewModels/A1111ConnectionViewModel'
+import A1111ConnectionViewModel from '~/core/connection/viewModels/A1111ConnectionViewModel'
 import { settingStore } from '~/core/setting/SettingStore'
 
 const A1111ModelPanel = observer(({ connection }: { connection: A1111ConnectionViewModel }) => {
@@ -31,7 +31,6 @@ const A1111ModelPanel = observer(({ connection }: { connection: A1111ConnectionV
       primarySortTypeLabel={connection.primaryHeader}
       renderRow={renderRow}
       getIsItemSelected={model => selectedModelId === model.id}
-      getItemKey={model => model.id}
       filterInputPlaceholder="Filter by title or name..."
     />
   )

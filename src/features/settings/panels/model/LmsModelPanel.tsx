@@ -43,7 +43,6 @@ const LmsModelPanel = observer(({ connection }: { connection: LmsConnectionViewM
       primarySortTypeLabel={connection.primaryHeader}
       renderRow={renderRow}
       getIsItemSelected={model => selectedModelId === model.id}
-      getItemKey={model => model.id}
       filterInputPlaceholder="Filter by name or folder..."
     />
   )

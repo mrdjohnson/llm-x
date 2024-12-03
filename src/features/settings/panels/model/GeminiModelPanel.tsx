@@ -5,7 +5,7 @@ import { GeminiLanguageModel } from '~/core/connection/types'
 import SelectionPanelTable from '~/components/SelectionTablePanel'
 import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnectedPanelSection'
 
-import  GeminiConnectionViewModel  from '~/core/connection/viewModels/GeminiConnectionViewModel'
+import GeminiConnectionViewModel from '~/core/connection/viewModels/GeminiConnectionViewModel'
 import { settingStore } from '~/core/setting/SettingStore'
 
 const GeminiModelPanel = observer(({ connection }: { connection: GeminiConnectionViewModel }) => {
@@ -30,7 +30,6 @@ const GeminiModelPanel = observer(({ connection }: { connection: GeminiConnectio
       primarySortTypeLabel={connection.primaryHeader}
       renderRow={renderRow}
       getIsItemSelected={model => selectedModelId === model.id}
-      getItemKey={model => model.id}
       filterInputPlaceholder="Filter by title or name..."
     />
   )
