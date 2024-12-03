@@ -60,7 +60,7 @@ const Navbar = observer(() => {
         <FunTitle className="md:text-xl" />
       </div>
 
-      <div className="w-fit max-w-[600px] flex-row gap-2 md:flex md:w-full md:flex-1">
+      <div className="w-full max-w-[600px] flex-row gap-2 md:flex md:flex-1">
         <ModelSelector />
         <ModelRefreshButton />
       </div>
