@@ -159,7 +159,7 @@ const SelectionPanelTable = observer(
                           sortType.value && 'border-b-[1.5px]',
                         )}
                       >
-                        {sortType.isImage? <Image /> : sortType.label}
+                        {sortType.isImage ? <Image /> : sortType.label}
                       </span>
 
                       {makeChevron(sortType)}
@@ -187,9 +187,9 @@ const SelectionPanelTable = observer(
               ))}
             </tbody>
           </table>
-
-          {children}
         </div>
+
+        {children}
       </>
     )
   },

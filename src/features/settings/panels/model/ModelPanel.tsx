@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
-import { ScrollShadow } from '@nextui-org/react'
 import { useParams } from 'react-router-dom'
 
 import OllamaModelPanel from '~/features/settings/panels/model/OllamaModelPanel'
@@ -24,14 +23,12 @@ export const ConnectionModelPanel = observer(() => {
 
   return (
     <Drawer label={connection.label} outletContent={{ connection }}>
-      <div className="flex-1 overflow-y-hidden px-2 pt-2">
-        <ScrollShadow className="h-full max-h-full pb-7">
-          {connection.type === 'LMS' && <LmsModelPanel connection={connection} />}
-          {connection.type === 'A1111' && <A1111ModelPanel connection={connection} />}
-          {connection.type === 'Ollama' && <OllamaModelPanel connection={connection} />}
-          {connection.type === 'OpenAi' && <OpenAiModelPanel connection={connection} />}
-          {connection.type === 'Gemini' && <GeminiModelPanel connection={connection} />}
-        </ScrollShadow>
+      <div className="flex flex-1 flex-col overflow-y-hidden px-2 pt-2">
+        {connection.type === 'LMS' && <LmsModelPanel connection={connection} />}
+        {connection.type === 'A1111' && <A1111ModelPanel connection={connection} />}
+        {connection.type === 'Ollama' && <OllamaModelPanel connection={connection} />}
+        {connection.type === 'OpenAi' && <OpenAiModelPanel connection={connection} />}
+        {connection.type === 'Gemini' && <GeminiModelPanel connection={connection} />}
       </div>
     </Drawer>
   )
