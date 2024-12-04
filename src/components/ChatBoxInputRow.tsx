@@ -79,7 +79,7 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
     }
   }
 
-  const noModelSelected = !connectionStore.selectedModelName
+  const noModelSelected = !connectionStore.selectedModelName && _.isEmpty(chat.actors)
   const inputDisabled =
     incomingMessageStore.isGettingData || noModelSelected || !!lightboxStore.lightboxMessage
 
