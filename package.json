@@ -30,7 +30,10 @@
     ]
   },
   "dependencies": {
-    "@langchain/community": "^0.0.36",
+    "@langchain/community": "^0.3.17",
+    "@langchain/core": "^0.3.20",
+    "@langchain/ollama": "^0.1.2",
+    "@langchain/openai": "^0.3.14",
     "@lmstudio/sdk": "^0.3.0",
     "@nextui-org/react": "^2.4.1",
     "@paralleldrive/cuid2": "^2.2.2",
@@ -41,6 +44,7 @@
     "gh-pages": "^6.1.1",
     "highlight.js": "^11.9.0",
     "kbar": "^0.1.0-beta.45",
+    "langchain": "^0.3.6",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "mobx": "^6.12.0",
