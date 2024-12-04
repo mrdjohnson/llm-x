@@ -137,7 +137,7 @@ const ChatModelPopoverContent = observer(
             className="group flex w-full flex-row border-t border-base-content/30 p-2 transition-all duration-300 ease-in-out"
             role="button"
           >
-            <span className="line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline opacity-40 text-base-content cursor-default">
+            <span className="line-clamp-1 w-full cursor-default place-content-baseline justify-between break-all align-baseline text-base-content opacity-40">
               {actor.modelLabel}
             </span>
 
@@ -167,15 +167,21 @@ const ChatModelPopover = observer(({ chat, actor }: ChatModelPopoverProps) => {
   }
 
   const trigger = actor ? (
-    <div className="group my-2 flex flex-row gap-2" role="button" onClick={onOpen}>
-      <span
-        className={twMerge(
-          'link mx-0 line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline text-lg opacity-45 transition-all duration-300 ease-in-out hover:opacity-65 md:text-base',
-          !actor.isConnected && 'opacity-20',
+    <div className="group my-2 flex flex-row justify-between gap-2" role="button" onClick={onOpen}>
+      <div className="flex flex-col">
+        <span
+          className={twMerge(
+            'link mx-0 line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline text-lg opacity-45 transition-all duration-300 ease-in-out hover:opacity-65 md:text-base',
+            !actor.isConnected && 'opacity-20',
+          )}
+        >
+          {actor.label}
+        </span>
+
+        {connectionStore.activeConnections.length > 1 && (
+          <span className="text-sm opacity-30">{actor.connection?.label}</span>
         )}
-      >
-        {actor.label}
-      </span>
+      </div>
 
       <span
         className="place-content-center text-error opacity-0 transition-all duration-300 ease-in-out hover:!opacity-100 group-hover:opacity-50"
