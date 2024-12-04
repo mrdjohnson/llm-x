@@ -2,6 +2,8 @@
 
 # LLM X
 
+[Chrome Extension](https://chromewebstore.google.com/detail/llm-x/iodcdhcpahifeligoegcmcdibdkffclk) | [Web/Mobile app](https://mrdjohnson.github.io/llm-x/)
+
 <img src="https://raw.githubusercontent.com/mrdjohnson/llm-X/main/public/LLMX.png" alt="drawing" width="200"/>
 
 # Privacy statement:
