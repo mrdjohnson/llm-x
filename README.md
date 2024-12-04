@@ -14,7 +14,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 # Recent additions:
 
-- Multi-model support! Chats now support multiple models, from any connected server, and can respond with each them at the same time 
+- Multi-model support! Chats now support multiple models, from any connected server, and can respond with each them at the same time
 - Quick Delete! using the quick search/ kbar panel, it is super easy to delete all app related data
 - Chrome extension support! All the features of the web app, built into the browser
 - Gemini Nano support!
@@ -132,6 +132,14 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 | Showing Chrome extension mode with Google's on-device Gemini Nano                                                                |
 | -------------------------------------------------------------------------------------------------------------------------------- |
 | ![Logo convo screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-gemini-in-extension.png) |
+
+| Showing Chrome extension mode with Ollama's llama3.2-vision                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------- |
+| ![Logo convo screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-modernity-and-forward-thinking.png) |
+
+| Showing ability to run ollama and LM Studio at the same time                                                                     |
+| -------------------------------------------------------------------------------------------------------------------------------- |
+| ![Logo convo screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-ollama-and-lmstudio.png) |
 
 | Conversation about logo                                                                                                 |
 | ----------------------------------------------------------------------------------------------------------------------- |
