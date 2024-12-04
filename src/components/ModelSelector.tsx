@@ -32,15 +32,11 @@ const ModelSelector = observer(() => {
       return undefined
     }
 
+    if (hasActorOverrides) {
+      return actors.length + ' model' + (actors.length === 1 ? '' : 's')
+    }
+
     if (selectedModelLabel && selectedConnection) {
-      if (isMobile) {
-        return undefined
-      }
-
-      if (hasActorOverrides) {
-        return actors.length + ' model' + (actors.length === 1 ? '' : 's')
-      }
-
       return selectedConnection.label
     }
 
@@ -57,12 +53,10 @@ const ModelSelector = observer(() => {
     selectedModelLabel,
     isMobile,
     hasActorOverrides,
-    actors,
+    actors.length,
   ])
 
   const modelValue = useMemo(() => {
-    if (!isMobile) return selectedModelLabel
-
     if (actors[0]) {
       const value = actors[0]?.modelLabel
 
@@ -74,7 +68,7 @@ const ModelSelector = observer(() => {
     }
 
     return selectedModelLabel
-  }, [selectedModelLabel, actors[0], actors.length])
+  }, [selectedModelLabel, actors[0]?.modelLabel, actors.length])
 
   const handleClick = () => {
     if (hasActorOverrides) {
