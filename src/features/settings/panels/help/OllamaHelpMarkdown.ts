@@ -27,4 +27,6 @@ By default, Ollama only allows requests from local host. To use custom origins (
    - Powershell version: \`${POWERSHELL_OLLAMA_CODE}\`
 
 Find out more about Ollama on their website: [https://ollama.com/](https://ollama.com/)
+
+Find models to download at their [library](https://ollama.com/library)
 `

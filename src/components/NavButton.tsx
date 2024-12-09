@@ -2,7 +2,7 @@ import { MouseEventHandler } from 'react'
 import { To, useNavigate } from 'react-router-dom'
 
 type NavButtonProps<T = Element> = React.HTMLAttributes<T> & {
-  to: To
+  to?: To
   replace?: boolean
   disabled?: boolean
 }
@@ -18,7 +18,7 @@ export const NavButton = ({
   const handleClick: MouseEventHandler<HTMLButtonElement> = e => {
     onClick?.(e)
 
-    if (!e.isDefaultPrevented()) {
+    if (to && !e.isDefaultPrevented()) {
       navigate(to, { replace })
     }
   }
@@ -37,7 +37,7 @@ export const NavButtonDiv = ({
   const handleClick: MouseEventHandler<HTMLDivElement> = e => {
     onClick?.(e)
 
-    if (!e.isDefaultPrevented()) {
+    if (to && !e.isDefaultPrevented()) {
       navigate(to, { replace })
     }
   }

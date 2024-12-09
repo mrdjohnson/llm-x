@@ -189,7 +189,7 @@ const ConnectionPanel = observer(() => {
                       className="btn btn-outline btn-sm mr-8 w-full text-error md:btn-ghost md:text-error"
                       onClick={deleteConnection}
                     >
-                      Delete Connection
+                      Delete Provider
                     </button>
                   </div>
 

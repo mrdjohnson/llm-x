@@ -1,67 +1,38 @@
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
-import _ from 'lodash'
-import { observer } from 'mobx-react-lite'
+import { type To } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
+import _ from 'lodash'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import FunTitle from '~/components/FunTitle'
-import { NavButtonDiv } from '~/components/NavButton'
+import { NavButton } from '~/components/NavButton'
 
-import { ChatViewModel } from '~/core/chat/ChatViewModel'
-import { personaTable } from '~/core/persona/PersonaTable'
-import { connectionStore } from '~/core/connection/ConnectionStore'
+type PromptButtonProps = { title: string; link?: To }
 
-type StepProps = { isCompleted?: boolean; type?: 'primary' | 'secondary'; inCompleteIcon?: string }
+const direction = _.sample([
+  'bg-gradient-to-br',
+  'bg-gradient-to-tr',
 
-const Step = ({
-  isCompleted,
-  type = 'primary',
-  children,
-  inCompleteIcon = '●',
-}: PropsWithChildren<StepProps>) => {
-  return (
-    <li
-      className={twMerge('step', isCompleted && `step-${type}`)}
-      data-content={isCompleted ? '✓' : inCompleteIcon}
+  'bg-gradient-to-bl',
+  'bg-gradient-to-tl',
+])
+
+const PromptButton = ({ title, link }: PromptButtonProps) => (
+  <div
+    className={twMerge(
+      'group m-[2px] rounded-full from-primary/30 to-secondary/60 p-[1px] pt-[1px] transition-all duration-150 ease-in-out hover:m-[0px] hover:p-[3px]',
+      direction,
+    )}
+  >
+    <NavButton
+      to={link}
+      className="btn btn-ghost rounded-full bg-base-100 text-base-content/80 group-hover:!bg-base-100 group-hover:text-base-content"
     >
-      <span className="text-left">{children}</span>
-    </li>
-  )
-}
+      <p className="first-letter:text-semibold">{title}</p>
+    </NavButton>
+  </div>
+)
 
-const ChatBoxPrompt = observer(({ chat }: { chat: ChatViewModel }) => {
-  const [hasCreatedPersonas, setHasCreatedPersonas] = useState(false)
-
-  const connections = connectionStore.connections
-
-  const activeConnectionTypes = useMemo(() => {
-    const connectionsTypes = _.chain(connections).filter('isConnected').map('type').value()
-
-    return new Set(connectionsTypes)
-  }, [connections])
-
-  const anyConnectionHasModels = useMemo(() => {
-    for (const connection of connections) {
-      if (!_.isEmpty(connection.models)) {
-        return true
-      }
-    }
-    return false
-  }, [connections])
-
-  useEffect(() => {
-    if (personaTable.cache.length > 0) {
-      setHasCreatedPersonas(true)
-      return
-    }
-
-    personaTable.length().then(length => {
-      if (length > 0) {
-        setHasCreatedPersonas(true)
-      }
-    })
-  }, [])
-
+const ChatBoxPrompt = () => {
   return (
     <div className="hero my-auto">
       <div className="hero-content w-fit text-center">
@@ -72,86 +43,23 @@ const ChatBoxPrompt = observer(({ chat }: { chat: ChatViewModel }) => {
             <FunTitle className="text-2xl font-bold md:text-4xl" />
           </h1>
 
-          <div className="text-2xl">
-            <ul className="steps steps-vertical list-inside list-disc gap-3 py-6 text-left *:!text-lg [&_a]:text-lg [&_span]:text-lg">
-              <Step isCompleted={!_.isEmpty(activeConnectionTypes)}>
-                {'Tell LM Studio, Ollama, AUTOMATIC1111, or Open AI that '}
-                <span className="text-primary">we're cool:</span>
-                <NavButtonDiv
-                  to="/connection"
-                  className="link inline-block text-lg decoration-primary"
-                >
-                  How to connect
-                </NavButtonDiv>
-              </Step>
+          <div className="mt-8 flex flex-row flex-wrap justify-center gap-2 text-2xl">
+            <PromptButton title="Select a model" link="/models" />
 
-              <Step isCompleted={anyConnectionHasModels}>
-                {'Download a model from '}
-                <a
-                  href="https://huggingface.co/lmstudio-community"
-                  className="link decoration-primary"
-                  target="__blank"
-                  title="Open LM Studio's hugging face account in new tab"
-                >
-                  LM Studio's Hugging face
-                </a>
-                {' or '}
-                <a
-                  href="https://ollama.com/library"
-                  className="link decoration-primary"
-                  target="__blank"
-                  title="Open Ollama Library in new tab"
-                >
-                  Ollama Library
-                </a>
-              </Step>
+            <PromptButton title="Create a system prompt" link="/personas" />
 
-              <Step type="secondary" isCompleted={hasCreatedPersonas}>
-                {'Create and Select a'}
+            <AttachmentWrapper>
+              <PromptButton title="Attach images" />
+            </AttachmentWrapper>
 
-                <NavButtonDiv
-                  to="/personas"
-                  className="link ml-1 inline-block decoration-secondary"
-                >
-                  Persona <span className="text-xs">(aka System Prompt)</span>
-                </NavButtonDiv>
-
-                {'to give your bot some pizzaz'}
-              </Step>
-
-              <Step type="secondary">
-                {'Drag and Drop or'}
-
-                <AttachmentWrapper accept=".json">
-                  <span className="link decoration-secondary">Import a chat or save</span>
-                </AttachmentWrapper>
-
-                {'from a previous session'}
-              </Step>
-
-              <Step type="secondary" isCompleted={!_.isEmpty(chat?.previewImages)}>
-                {'Drag and Drop, Paste, or'}
-
-                <AttachmentWrapper>
-                  <span className="link decoration-secondary">
-                    Attach as many images as you want
-                  </span>
-                </AttachmentWrapper>
-
-                {'for use with multimodal models'}
-              </Step>
-
-              <Step inCompleteIcon="★">
-                <span>
-                  <span className="font-semibold text-primary">Send</span> a prompt!
-                </span>
-              </Step>
-            </ul>
+            <AttachmentWrapper accept=".json">
+              <PromptButton title="Import previous chat" />
+            </AttachmentWrapper>
           </div>
         </div>
       </div>
     </div>
   )
-})
+}
 
 export default ChatBoxPrompt

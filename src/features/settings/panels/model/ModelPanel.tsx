@@ -62,7 +62,7 @@ const ModelPanel = observer(() => {
         emptyLabel: 'No connections found',
       }}
       addButtonProps={{
-        label: 'Add New Connection',
+        label: 'Add Model Provider',
       }}
       selectedItemId={selectedConnection?.id}
       renderActionRow={connection => (

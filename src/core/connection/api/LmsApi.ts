@@ -41,7 +41,6 @@ const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: stri
 }
 
 export class LmsApi extends BaseApi {
-  // @ts-expect-error todo: fix broken lm studio sdk (again) at another time
   async *generateChat(chatMessages: MessageViewModel[], incomingMessageVariant: MessageViewModel) {
     const connection = incomingMessageVariant.actor.connection
     const host = connection?.formattedHost
@@ -68,7 +67,7 @@ export class LmsApi extends BaseApi {
     BaseApi.abortControllerById[incomingMessageVariant.id] = () => prediction.cancel()
 
     for await (const text of prediction) {
-      yield text
+      yield text.content
     }
 
     const { stats } = await prediction

@@ -23,9 +23,9 @@ const NewConnectionPanel = observer(() => {
   }
 
   return (
-    <Drawer label="Add new connection">
+    <Drawer label="Add Model Provider">
       <div className="mx-auto mt-4 flex flex-col gap-4 *:text-center">
-        <span>Select a connection type: </span>
+        <span>Select a model provider: </span>
 
         {_.map(connectionViewModelByType, getConnector => getConnector().getSnapshot()).map(
           ({ type, label }) => (

@@ -8,5 +8,5 @@ LM Studio makes working with models easy! Use this and get going:
 
 \`${LMS_CODE}\`
 
-Find models to download on their [Hugging Face](https://huggingface.co/lmstudio-community?sort_models=likes#models)
+Find models to download at their [Hugging Face](https://huggingface.co/lmstudio-community?sort_models=likes#models)
 `

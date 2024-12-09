@@ -89,7 +89,7 @@ const ChatBox = observer(() => {
             />
           ))
         ) : (
-          <ChatBoxPrompt chat={chat} />
+          <ChatBoxPrompt />
         )}
       </ScrollableChatFeed>
 
