@@ -50,7 +50,14 @@ const FunTitle = observer(({ className }: { className?: string }) => {
       <button onClick={sampleXWord}>
         {titleSections[0]}
 
-        <span className={twMerge(className, 'link mx-0 text-primary')}>{titleSections[1]}</span>
+        <span
+          className={twMerge(
+            className,
+            'mx-0 bg-gradient-to-b from-primary to-secondary to-70% bg-clip-text font-semibold text-transparent transition-all duration-700 ease-in-out hover:text-primary',
+          )}
+        >
+          {titleSections[1]}
+        </span>
 
         {titleSections[2]}
       </button>
