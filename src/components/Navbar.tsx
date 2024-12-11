@@ -14,10 +14,12 @@ import Search from '~/icons/Search'
 import AppSettings from '~/icons/AppSettings'
 import ChevronDown from '~/icons/ChevronDown'
 import ShrinkHorizontal from '~/icons/ShrinkHorizontal'
+import Create from '~/icons/Create'
 
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { personaStore } from '~/core/persona/PersonaStore'
 import { settingStore } from '~/core/setting/SettingStore'
+import { chatStore } from '~/core/chat/ChatStore'
 
 const Navbar = observer(() => {
   const { query } = useKBar()
@@ -68,6 +70,22 @@ const Navbar = observer(() => {
       </NavButton>
 
       <div className="flex w-fit flex-row gap-2 md:w-full md:justify-evenly">
+        <KeyboardTooltip
+          command="O"
+          shift
+          placement="bottom"
+          showArrow={false}
+          className="-mt-2"
+          title="New Chat"
+        >
+          <button
+            className="group btn btn-square btn-ghost btn-sm !bg-transparent text-base-content/60 md:btn-md hover:text-base-content md:flex"
+            onClick={() => chatStore.createChat()}
+          >
+            <Create className="size-6" />
+          </button>
+        </KeyboardTooltip>
+
         <KeyboardTooltip
           command="K"
           placement="bottom"

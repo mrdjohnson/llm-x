@@ -9,9 +9,7 @@ import SettingSection, { SettingSectionItem } from '~/containers/SettingSection'
 import Edit from '~/icons/Edit'
 
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
-import { chatTable } from '~/core/chat/ChatTable'
 import { chatStore } from '~/core/chat/ChatStore'
-import { settingTable } from '~/core/setting/SettingTable'
 
 export const ChatPanel = observer(() => {
   const { selectedChat, chats } = chatStore
@@ -35,9 +33,7 @@ export const ChatPanel = observer(() => {
   const createChat = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
-    const chat = await chatTable.create({})
-
-    await settingTable.put({ selectedChatId: chat.id })
+    const chat = await chatStore.createChat()
 
     navigate('/chats/' + chat.id)
   }
@@ -61,9 +57,8 @@ export const ChatPanel = observer(() => {
       )}
       selectedItemId={selectedChat?.id}
       addButtonProps={{
-        label: 'Add New Chat',
+        label: 'New Chat',
         onClick: e => createChat(e),
-        isDisabled: !!chatStore.emptyChat,
       }}
     />
   )

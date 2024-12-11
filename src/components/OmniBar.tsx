@@ -23,7 +23,6 @@ import { personaStore } from '~/core/persona/PersonaStore'
 import { chatStore } from '~/core/chat/ChatStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
-import { chatTable } from '~/core/chat/ChatTable'
 import { messageTable } from '~/core/message/MessageTable'
 
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
@@ -399,36 +398,6 @@ const useRegisterMessageActions = () => {
   useRegisterActions(messageActions, [messageActions])
 }
 
-const useNewChatActions = () => {
-  const [newChatActions, setNewChatActions] = useState<Action[]>([])
-
-  useEffect(() => {
-    autorun(() => {
-      let action
-      const emptyChat = chatStore.emptyChat
-      if (emptyChat) {
-        action = createAction({
-          name: 'Go to new chat',
-          keywords: 'empty goto go to new chat ' + emptyChat.name,
-          section: 'Actions',
-          perform: () => chatStore.selectChat(emptyChat),
-        })
-      } else {
-        action = createAction({
-          name: 'Create New chat',
-          keywords: 'create new chat',
-          section: 'Actions',
-          perform: () => chatTable.create({}),
-        })
-      }
-
-      setNewChatActions([action])
-    })
-  }, [])
-
-  useRegisterActions(newChatActions, [newChatActions])
-}
-
 const useDeleteActions = () => {
   const [deleteActions, setDeleteActions] = useState<Action[]>([])
 
@@ -544,7 +513,6 @@ const OmniBar = () => {
   useRegisterPersonaActions()
   useRegisterChatActions()
   useRegisterMessageActions()
-  useNewChatActions()
   useDeleteActions()
 
   useRegisterActions([
@@ -555,6 +523,7 @@ const OmniBar = () => {
       priority: Priority.LOW,
       perform: () => connectionStore.refreshModels(),
     }),
+
     createAction({
       name: 'Open settings',
       keywords: 'settings open',
@@ -562,6 +531,14 @@ const OmniBar = () => {
       shortcut: ['/'],
       priority: Priority.LOW,
       perform: () => navigate('/general'),
+    }),
+
+    createAction({
+      name: 'New chat',
+      keywords: 'empty goto go to new chat create',
+      section: 'Actions',
+      shortcut: ['Meta+Shift+O'],
+      perform: () => chatStore.createChat(),
     }),
   ])
 

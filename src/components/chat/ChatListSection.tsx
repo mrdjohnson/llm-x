@@ -7,11 +7,10 @@ import AttachmentWrapper from '~/components/AttachmentWrapper'
 import Tooltip from '~/components/Tooltip'
 
 import DocumentArrowUp from '~/icons/DocumentArrowUp'
-import Edit from '~/icons/Edit'
+import Create from '~/icons/Create'
 
 import { chatStore } from '~/core/chat/ChatStore'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
-import { chatTable } from '~/core/chat/ChatTable'
 
 export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: () => void }) => {
   const { dateLabelToChatPairs } = chatStore
@@ -26,12 +25,11 @@ export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: (
     <div className="relative flex flex-1 flex-col overflow-y-hidden">
       <div className="join join-horizontal flex w-full">
         <button
-          className="btn join-item btn-neutral mb-2 flex flex-1 flex-row items-center justify-center gap-2 p-2"
-          onClick={() => chatTable.create({})}
-          disabled={!!chatStore.emptyChat}
+          className="group btn join-item btn-neutral mb-2 flex flex-1 flex-row items-center justify-center gap-2 p-2"
+          onClick={() => chatStore.createChat()}
         >
           New Chat
-          <Edit className="h-5 w-5" />
+          <Create className="h-5 w-5" />
         </button>
 
         <AttachmentWrapper accept=".json">

@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { makeAutoObservable } from 'mobx'
+import moment from 'moment'
 
 import { ChatModel } from '~/core/chat/ChatModel'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
@@ -54,6 +55,26 @@ class ChatStore {
 
   getChatById(chatId: string) {
     return this.chatCache.get(chatId)
+  }
+
+  async createChat() {
+    let newChat: ChatModel
+
+    // if there was already a new chat and the user wants to go to it, make it the top of the list
+    if (this.emptyChat) {
+      newChat = await chatTable.put({
+        ...this.emptyChat.source,
+        lastMessageTimestamp: moment.now(),
+      })
+    } else {
+      newChat = await chatTable.create({})
+    }
+
+    const chatViewModel = this.chatCache.put(newChat)
+
+    await settingTable.put({ selectedChatId: newChat.id })
+
+    return chatViewModel
   }
 
   async destroyChat(chat: ChatViewModel) {
