@@ -1,15 +1,14 @@
 import { useKBar } from 'kbar'
-import { Input, Kbd, TooltipProps } from '@nextui-org/react'
+import { Input } from '@nextui-org/react'
 import { observer } from 'mobx-react-lite'
 import { NavLink } from 'react-router-dom'
 
 import ModelSelector from '~/components/ModelSelector'
 import ModelRefreshButton from '~/components/ModelRefreshButton'
 import FunTitle from '~/components/FunTitle'
-import ToolTip from '~/components/Tooltip'
 import { NavButton } from '~/components/NavButton'
+import KeyboardTooltip from '~/components/KeyboardToolTip'
 
-import Warning from '~/icons/Warning'
 import Bars3 from '~/icons/Bars3'
 import Search from '~/icons/Search'
 import AppSettings from '~/icons/AppSettings'
@@ -20,30 +19,8 @@ import { connectionStore } from '~/core/connection/ConnectionStore'
 import { personaStore } from '~/core/persona/PersonaStore'
 import { settingStore } from '~/core/setting/SettingStore'
 
-const KeyboardTooltip = ({
-  command,
-  ...rest
-}: Omit<TooltipProps, 'label'> & { command: string }) => (
-  <ToolTip
-    label={
-      <Kbd keys={['command']} className="border-none bg-transparent text-base-content shadow-none">
-        {command}
-      </Kbd>
-    }
-    {...rest}
-  />
-)
-
 const Navbar = observer(() => {
   const { query } = useKBar()
-
-  const noServer = !connectionStore.isAnyServerConnected
-
-  // const handlePwaUpdate = () => {
-  //   settingStore.getUpdateServiceWorker()?.()
-
-  //   settingStore.setPwaNeedsUpdate(false)
-  // }
 
   return (
     <div className="navbar mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 bg-base-300 p-1 md:mb-0 md:flex-col md:p-0">
@@ -90,18 +67,14 @@ const Navbar = observer(() => {
         />
       </NavButton>
 
-      <div className="flex flex-row justify-end gap-2">
-        {/* {settingStore.pwaNeedsUpdate && (
-          <button
-            className="btn btn-square btn-ghost btn-sm md:btn-md"
-            onClick={handlePwaUpdate}
-            title="Update from cloud"
-          >
-            <CloudDown />
-          </button>
-        )} */}
-
-        <KeyboardTooltip command="K" placement="left" showArrow={false}>
+      <div className="flex w-fit flex-row gap-2 md:w-full md:justify-evenly">
+        <KeyboardTooltip
+          command="K"
+          placement="bottom"
+          showArrow={false}
+          className="-mt-2 ml-auto"
+          title="Command Bar"
+        >
           <button
             className="btn btn-square btn-ghost btn-md hidden !bg-transparent text-base-content/60 hover:text-base-content md:flex"
             onClick={query.toggle}
@@ -110,27 +83,25 @@ const Navbar = observer(() => {
           </button>
         </KeyboardTooltip>
 
-        <KeyboardTooltip command="/" placement="right" showArrow={false}>
+        <KeyboardTooltip
+          command="/"
+          placement="bottom"
+          showArrow={false}
+          className="-mt-2"
+          title="Settings"
+        >
           <NavLink
             to="initial"
             className="btn btn-square btn-ghost btn-sm min-w-0 !bg-transparent text-base-content/60 md:btn-md hover:text-base-content"
           >
-            <div className="indicator p-1">
-              <div className="swap md:swap-active">
-                <div className="swap-on align-middle">
-                  <AppSettings />
-                </div>
-
-                <div className="swap-off">
-                  <Bars3 />
-                </div>
+            <div className="swap md:swap-active">
+              <div className="swap-on align-middle">
+                <AppSettings />
               </div>
 
-              {noServer && (
-                <span className="indicator-item">
-                  <Warning />
-                </span>
-              )}
+              <div className="swap-off">
+                <Bars3 />
+              </div>
             </div>
           </NavLink>
         </KeyboardTooltip>
