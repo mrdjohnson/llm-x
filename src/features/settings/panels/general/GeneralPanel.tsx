@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { observer } from 'mobx-react-lite'
-import { ScrollShadow, Tab, Tabs } from '@nextui-org/react'
+import { ScrollShadow, Tab, Tabs } from "@heroui/react"
 import _ from 'lodash'
 import { twMerge } from 'tailwind-merge'
 

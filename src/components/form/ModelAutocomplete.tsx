@@ -1,4 +1,4 @@
-import { Autocomplete, AutocompleteItem, AutocompleteSection } from '@nextui-org/react'
+import { Autocomplete, AutocompleteItem, AutocompleteSection } from "@heroui/react"
 import { observer } from 'mobx-react-lite'
 
 import Check from '~/icons/Check'

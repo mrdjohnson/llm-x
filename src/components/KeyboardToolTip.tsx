@@ -1,4 +1,4 @@
-import { TooltipProps, Kbd } from '@nextui-org/react'
+import { TooltipProps, Kbd } from "@heroui/react"
 
 import ToolTip from '~/components/Tooltip'
 

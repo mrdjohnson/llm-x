@@ -10,7 +10,7 @@ import { ChatListSection } from '~/components/chat/ChatListSection'
 import { settingStore } from '~/core/setting/SettingStore'
 
 import MediaEject from '~/icons/MediaEject'
-import { Divider } from '@nextui-org/react'
+import { Divider } from "@heroui/react"
 
 export type AccordionSectionProps = {
   isOpen: boolean

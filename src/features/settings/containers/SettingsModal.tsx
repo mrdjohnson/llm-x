@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import useMedia from 'use-media'
-import { Modal, ModalContent, ModalBody, Select, SelectItem } from '@nextui-org/react'
+import { Modal, ModalContent, ModalBody, Select, SelectItem } from "@heroui/react"
 import { NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 

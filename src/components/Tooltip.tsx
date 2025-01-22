@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactNode } from 'react'
-import { Tooltip as NextUiTooltip, TooltipProps as NextUiTooltipProps } from '@nextui-org/react'
+import { Tooltip as NextUiTooltip, TooltipProps as NextUiTooltipProps } from "@heroui/react"
 import { twMerge } from 'tailwind-merge'
 
 type ToolTipProps = PropsWithChildren<{

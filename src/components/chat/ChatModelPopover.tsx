@@ -11,7 +11,7 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { twMerge } from 'tailwind-merge'
 import { observer } from 'mobx-react-lite'
 import useMedia from 'use-media'

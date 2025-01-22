@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import _ from 'lodash'
-import { ScrollShadow } from '@nextui-org/react'
+import { ScrollShadow } from "@heroui/react"
 import { observer } from 'mobx-react-lite'
 import { useParams } from 'react-router-dom'
 import Markdown from 'react-markdown'

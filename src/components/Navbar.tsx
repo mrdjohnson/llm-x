@@ -1,5 +1,5 @@
 import { useKBar } from 'kbar'
-import { Input } from '@nextui-org/react'
+import { Input } from "@heroui/react"
 import { observer } from 'mobx-react-lite'
 import { NavLink } from 'react-router-dom'
 

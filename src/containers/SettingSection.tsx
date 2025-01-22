@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import { useMemo, useState, ReactNode, MouseEventHandler, type MouseEvent } from 'react'
-import { ScrollShadow } from '@nextui-org/react'
+import { ScrollShadow } from "@heroui/react"
 import _ from 'lodash'
 import { twMerge } from 'tailwind-merge'
 

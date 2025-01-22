@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { twMerge } from 'tailwind-merge'
 
 import { settingStore } from '~/core/setting/SettingStore'
-import { Select, SelectItem } from '@nextui-org/react'
+import { Select, SelectItem } from "@heroui/react"
 
 const themes = {
   _system: 'System theme',

@@ -2,7 +2,7 @@ import { KeyboardEventHandler, MouseEventHandler } from 'react'
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import _ from 'lodash'
 import { Controller, useFieldArray, Control, useFormState, useWatch } from 'react-hook-form'
-import { Checkbox, Select, SelectItem } from '@nextui-org/react'
+import { Checkbox, Select, SelectItem } from "@heroui/react"
 
 import Delete from '~/icons/Delete'
 

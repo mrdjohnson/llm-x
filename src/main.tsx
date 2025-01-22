@@ -2,7 +2,7 @@ import { initDb } from '~/core/db'
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { KBarProvider } from 'kbar'
-import { NextUIProvider } from '@nextui-org/react'
+import { HeroUIProvider } from "@heroui/react"
 import { MemoryRouter } from 'react-router-dom'
 
 import App from '~/App'
@@ -21,7 +21,7 @@ initDb().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <MemoryRouter initialEntries={['/']}>
-        <NextUIProvider>
+        <HeroUIProvider>
           <KBarProvider>
             <Suspense fallback={errorPage}>
               <DaisyUiThemeProvider>
@@ -29,7 +29,7 @@ initDb().then(() => {
               </DaisyUiThemeProvider>
             </Suspense>
           </KBarProvider>
-        </NextUIProvider>
+        </HeroUIProvider>
       </MemoryRouter>
     </React.StrictMode>,
   )

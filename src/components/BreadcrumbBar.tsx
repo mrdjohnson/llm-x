@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
-import { Breadcrumbs, BreadcrumbItem } from '@nextui-org/react'
+import { Breadcrumbs, BreadcrumbItem } from "@heroui/react"
 import _ from 'lodash'
 
 export type BreadcrumbType = {

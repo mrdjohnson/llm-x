@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { SpeechStatus } from 'react-text-to-speech/types'
 import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
-import { Badge, ScrollShadow } from '@nextui-org/react'
+import { Badge, ScrollShadow } from "@heroui/react"
 import { twMerge } from 'tailwind-merge'
 
 import ToolTip from '~/components/Tooltip'

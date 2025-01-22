@@ -1,4 +1,4 @@
-import { Textarea } from '@nextui-org/react'
+import { Textarea } from "@heroui/react"
 import { forwardRef } from 'react'
 import { twMerge } from 'tailwind-merge'
 

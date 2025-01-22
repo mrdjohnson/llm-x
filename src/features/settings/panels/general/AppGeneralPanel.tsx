@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { useEffect, useMemo, useState } from 'react'
 import { useSpeech, useVoices } from 'react-text-to-speech'
-import { Select, SelectItem, Switch } from '@nextui-org/react'
+import { Select, SelectItem, Switch } from "@heroui/react"
 import { useForm } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 
