@@ -18,6 +18,7 @@
     "preview": "vite preview",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal-2023 public/logo.svg",
     "prepare": "husky install",
+    "android:dev": "adb reverse tcp:5173 tcp:5173",
     "test": "vite build; vitest",
     "test:ui": "vite build; vitest --ui",
     "test:watch": "concurrently 'vitest' 'vite build --watch'",
