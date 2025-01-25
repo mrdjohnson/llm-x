@@ -67,7 +67,7 @@ export class LmsApi extends BaseApi {
     BaseApi.abortControllerById[incomingMessageVariant.id] = () => prediction.cancel()
 
     for await (const text of prediction) {
-      yield text.content
+      yield text
     }
 
     const { stats } = await prediction
