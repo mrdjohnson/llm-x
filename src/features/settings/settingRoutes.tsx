@@ -1,5 +1,5 @@
 import { Route } from 'react-router-dom'
-import { ReactNode } from 'react'
+import { FunctionComponent, ReactNode } from 'react'
 
 import GeneralPanel from '~/features/settings/panels/general/GeneralPanel'
 import MobileSplashPanel from '~/features/settings/panels/MobileSplashPanel'
@@ -28,7 +28,7 @@ export type SettingPanelType = {
   label: string
   subtitle?: string
   mobileOnly?: boolean
-  Component: () => JSX.Element
+  Component: FunctionComponent
   children?: ReactNode
 }
 
