@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-import { nextui } from '@nextui-org/react'
+import { heroui } from "@heroui/react"
 import themes from 'daisyui/src/theming/themes'
 
 const errorColor = 'oklch(51% 0.17 22.1)'
@@ -8,13 +8,13 @@ const errorColor = 'oklch(51% 0.17 22.1)'
 module.exports = {
   content: [
     'src/**/*.{js,ts,jsx,tsx}',
-    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},
   },
   darkMode: 'class',
-  plugins: [require('@tailwindcss/typography'), require('daisyui'), nextui({
+  plugins: [require('@tailwindcss/typography'), require('daisyui'), heroui({
     themes: {
       light: {
         colors: {
