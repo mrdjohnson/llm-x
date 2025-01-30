@@ -9215,15 +9215,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"daisyui@npm:^4.7.2":
-  version: 4.7.2
-  resolution: "daisyui@npm:4.7.2"
+"daisyui@npm:^4.12.23":
+  version: 4.12.23
+  resolution: "daisyui@npm:4.12.23"
   dependencies:
     css-selector-tokenizer: "npm:^0.8"
     culori: "npm:^3"
     picocolors: "npm:^1"
     postcss-js: "npm:^4"
-  checksum: 10c0/6aa0c206049943b0558a95a0d828f2179714fd92e3d01ccc9d3386c1d816bbec10efea010fb7876a4c1387354a69c1627193304f3c49ca8d6e9102d0eda25727
+  checksum: 10c0/7699d294c6193800fc1a0671d67f1a5ea46059cd36702a4326a82c6b0bb823de8ba485aca20beac970ee2a47949c5411df8ea60a40c3e00989d7ce2214e6c196
   languageName: node
   linkType: hard
 
@@ -12793,7 +12793,7 @@ __metadata:
     comlink: "npm:^4.4.1"
     concurrently: "npm:^8.2.2"
     cross-env: "npm:^7.0.3"
-    daisyui: "npm:^4.7.2"
+    daisyui: "npm:^4.12.23"
     dependency-cruiser: "npm:^16.6.0"
     dot: "npm:^1.1.3"
     eslint: "npm:^8.57.0"
