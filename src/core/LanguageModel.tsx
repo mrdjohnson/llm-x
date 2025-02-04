@@ -2,10 +2,8 @@ import {
   A1111LanguageModel,
   ConnectionTypes,
   IA1111Model,
-  ILmsModel,
   IOllamaModel,
   IOpenAiModel,
-  LmsLanguageModel,
   OllamaLanguageModel,
   OpenAiLanguageModel,
   GeminiLanguageModel,
@@ -34,14 +32,6 @@ class LanguageModel {
 
       id: connectionId + ':' + sharedModel.modelName,
     }
-  }
-
-  static fromILmsModel(model: ILmsModel, connectionId: string): LmsLanguageModel {
-    return LanguageModel.toSharedLanguageModel(connectionId, model, {
-      type: 'LMS',
-      label: model.name,
-      modelName: model.path,
-    })
   }
 
   static fromIA1111Model(model: IA1111Model, connectionId: string): A1111LanguageModel {

@@ -4406,26 +4406,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lmstudio/lms-isomorphic@npm:^0.4.3":
-  version: 0.4.3
-  resolution: "@lmstudio/lms-isomorphic@npm:0.4.3"
-  dependencies:
-    ws: "npm:^8.16.0"
-  checksum: 10c0/f9d647574f2c96ed48c3af0b146fc1f941f7f330510374ac78c6decca026747535d84dc16c6cd3da6ace7e3ca82bbd78e68af1cb56b485de42945aab3b1038ed
-  languageName: node
-  linkType: hard
-
-"@lmstudio/sdk@npm:^0.4.7":
-  version: 0.4.7
-  resolution: "@lmstudio/sdk@npm:0.4.7"
-  dependencies:
-    "@lmstudio/lms-isomorphic": "npm:^0.4.3"
-    chalk: "npm:^4.1.2"
-    zod: "npm:^3.22.4"
-  checksum: 10c0/48e815cfb9a42192be54818c79ca7c1d0cd8b4dcf05cbb3f601a0539d9481c155882d84d63a83c01ea81437828c8cca3738872115492e8e0c14c0858cffdc252
-  languageName: node
-  linkType: hard
-
 "@mswjs/cookies@npm:^1.1.0":
   version: 1.1.0
   resolution: "@mswjs/cookies@npm:1.1.0"
@@ -12759,7 +12739,6 @@ __metadata:
     "@langchain/core": "npm:^0.3.20"
     "@langchain/ollama": "npm:^0.1.2"
     "@langchain/openai": "npm:^0.3.14"
-    "@lmstudio/sdk": "npm:^0.4.7"
     "@paralleldrive/cuid2": "npm:^2.2.2"
     "@playwright/test": "npm:^1.42.1"
     "@rollup/plugin-replace": "npm:^5.0.5"
@@ -18677,21 +18656,6 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 10c0/25eb33aff17edcb90721ed6b0eb250976328533ad3cd1a28a274bd263682e7296a6591ff1436d6cbc50fa67463158b062f9d1122013b361cec99a05f84680e06
-  languageName: node
-  linkType: hard
-
-"ws@npm:^8.16.0":
-  version: 8.17.0
-  resolution: "ws@npm:8.17.0"
-  peerDependencies:
-    bufferutil: ^4.0.1
-    utf-8-validate: ">=5.0.2"
-  peerDependenciesMeta:
-    bufferutil:
-      optional: true
-    utf-8-validate:
-      optional: true
-  checksum: 10c0/55241ec93a66fdfc4bf4f8bc66c8eb038fda2c7a4ee8f6f157f2ca7dc7aa76aea0c0da0bf3adb2af390074a70a0e45456a2eaf80e581e630b75df10a64b0a990
   languageName: node
   linkType: hard
 

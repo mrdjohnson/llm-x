@@ -16,8 +16,6 @@ export const connectionViewModelByType = {
   Ollama: () => OllamaConnectionViewModel,
   OpenAi: () => OpenAiConnectionViewModel,
   Gemini: () => GeminiConnectionViewModel,
-
-  // if we try to connect to LMS and fail, the try catch does not catch the error
   LMS: () => LmsConnectionViewModel,
 }
 
@@ -26,5 +24,5 @@ export const connectionModelLabelByType = {
   Ollama: 'Ollama',
   OpenAi: 'Open AI',
   Gemini: 'Gemini nano',
-  LMS: 'LM Studio',
+  LMS: 'LM Studio (open ai)',
 }

@@ -1,32 +1,29 @@
 import _ from 'lodash'
 
-import { type SortType as SelectionPanelSortType } from '~/components/SelectionTablePanel'
-import { toLmsModel } from '~/core/transformers/toLmsModel'
-import LanguageModel from '~/core/LanguageModel'
-
-import { ILmsModel, LmsLanguageModel } from '~/core/connection/types'
-import { BaseConnectionViewModel } from '~/core/connection/viewModels/BaseConnectionViewModel'
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
 import { connectionTable } from '~/core/connection/ConnectionTable'
+import OpenAiConnectionViewModel from '~/core/connection/viewModels/OpenAiConnectionViewModel'
 
-const DefaultHost = 'ws://127.0.0.1:1234'
+const DefaultHost = 'http://127.0.0.1:1234/v1'
 
-class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
+class LmsConnectionViewModel extends OpenAiConnectionViewModel {
   DefaultHost: string = DefaultHost
-
-  modelTableHeaders: Array<SelectionPanelSortType<LmsLanguageModel>> = [
-    { label: 'Name', value: 'name' },
-    { label: 'Size', value: 'sizeBytes' },
-    { label: 'Type', value: 'architecture' },
-    { label: 'Folder', value: 'folder' },
-  ]
-
-  primaryHeader = this.modelTableHeaders[0].value
 
   type = 'LMS' as const
 
   readonly hostLabel = 'LM Studio Host:'
   readonly enabledLabel = 'Text generation through LM Studio:'
+
+  constructor(
+    public source: ConnectionModel,
+    { autoFetch = true } = {},
+  ) {
+    if (source.host?.startsWith('ws')) {
+      source.host = source.host.replace('ws', 'http') + '/v1'
+    }
+
+    super(source, { autoFetch })
+  }
 
   static toViewModel(connection: ConnectionModel, { autoFetch = true } = {}) {
     return new this(connection, { autoFetch })
@@ -34,7 +31,7 @@ class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
 
   static readonly getSnapshot = (): ConnectionModel =>
     connectionTable.parse({
-      label: 'LM Studio',
+      label: 'LM Studio (open ai)',
       type: 'LMS',
 
       host: DefaultHost,
@@ -50,32 +47,6 @@ class LmsConnectionViewModel extends BaseConnectionViewModel<ILmsModel> {
         },
       ],
     })
-
-  validateHost(host?: string) {
-    if (!host) return true
-
-    if (!host.startsWith('ws')) return 'Host needs to start with ws:// or wss://'
-
-    return true
-  }
-
-  async _fetchLmModels(host: string): Promise<LmsLanguageModel[]> {
-    const sdk = await import('@lmstudio/sdk')
-    const { LMStudioClient } = sdk
-
-    const client = new LMStudioClient({ baseUrl: host })
-
-    // if this fails it breaks downstream, try catches do not work yet
-    const response = await client.system.listDownloadedModels()
-
-    const lmsModels: ILmsModel[] = _.filter(response, { type: 'llm' }).map(toLmsModel)
-
-    const models: LmsLanguageModel[] = lmsModels.map(lmsModel =>
-      LanguageModel.fromILmsModel(lmsModel, this.id),
-    )
-
-    return models
-  }
 }
 
 export default LmsConnectionViewModel

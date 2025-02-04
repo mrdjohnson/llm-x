@@ -23,7 +23,7 @@ class OpenAiConnectionViewModel extends BaseConnectionViewModel<IOpenAiModel> {
 
   primaryHeader = this.modelTableHeaders[0].value
 
-  type = 'OpenAi' as const
+  type: 'OpenAi' | 'LMS' = 'OpenAi'
 
   readonly hostLabel: string = 'Open AI Host:'
   readonly enabledLabel: string = 'Text generation through LM Studio:'

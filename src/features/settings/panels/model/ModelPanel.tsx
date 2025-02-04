@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom'
 
 import OllamaModelPanel from '~/features/settings/panels/model/OllamaModelPanel'
 import A1111ModelPanel from '~/features/settings/panels/model/A1111ModelPanel'
-import LmsModelPanel from '~/features/settings/panels/model/LmsModelPanel'
 import OpenAiModelPanel from '~/features/settings/panels/model/OpenAiModelPanel'
 import GeminiModelPanel from '~/features/settings/panels/model/GeminiModelPanel'
 
@@ -24,7 +23,7 @@ export const ConnectionModelPanel = observer(() => {
   return (
     <Drawer label={connection.label} outletContent={{ connection }}>
       <div className="flex flex-1 flex-col overflow-y-hidden px-2 pt-2">
-        {connection.type === 'LMS' && <LmsModelPanel connection={connection} />}
+        {connection.type === 'LMS' && <OpenAiModelPanel connection={connection} />}
         {connection.type === 'A1111' && <A1111ModelPanel connection={connection} />}
         {connection.type === 'Ollama' && <OllamaModelPanel connection={connection} />}
         {connection.type === 'OpenAi' && <OpenAiModelPanel connection={connection} />}
