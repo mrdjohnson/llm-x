@@ -11,7 +11,8 @@ abstract class BaseApi {
   abstract generateChat(
     chatMessages: MessageViewModel[],
     incomingMessage: MessageViewModel,
-  ): AsyncGenerator<string>
+    handleChunk: (chunk: string) => void
+  ): Promise<void>
 
   static async cancelGeneration(id?: string) {
     if (id) {

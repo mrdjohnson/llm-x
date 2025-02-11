@@ -51,6 +51,16 @@ class ConnectionStore {
     return _.find<LanguageModelTypes>(this.selectedConnection.models, { id: selectedModelId })
   }
 
+  get selectedEmbeddingModel() {
+    const { selectedEmbeddingModelId } = settingStore.setting
+
+    if (!selectedEmbeddingModelId || !this.selectedConnection) return undefined
+
+    return _.find<LanguageModelTypes>(this.selectedConnection.models, {
+      id: selectedEmbeddingModelId,
+    })
+  }
+
   get selectedModelName() {
     return this.selectedModel?.modelName
   }

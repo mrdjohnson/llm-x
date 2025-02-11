@@ -6,16 +6,19 @@ import ModelRefreshButton from '~/components/ModelRefreshButton'
 import FunTitle from '~/components/FunTitle'
 import KeyboardTooltip from '~/components/KeyboardToolTip'
 import { twMerge } from 'tailwind-merge'
+import KnowledgePopoverForm from '~/components/KnowledgePopoverForm'
 
 import Bars3 from '~/icons/Bars3'
 import Search from '~/icons/Search'
 import AppSettings from '~/icons/AppSettings'
 import ShrinkHorizontal from '~/icons/ShrinkHorizontal'
 import Create from '~/icons/Create'
+import Database from '~/icons/Database'
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { chatStore } from '~/core/chat/ChatStore'
-import { Divider } from '@heroui/react'
+import { Divider, Input, PopoverTrigger } from '@heroui/react'
+import { knowledgeStore } from '~/core/knowledge/KnowledgeStore'
 
 const Navbar = () => {
   const isSidebarOpen = settingStore.setting.isSidebarOpen
@@ -78,6 +81,39 @@ const Navbar = () => {
             <Create className="size-6" />
           </button>
         </KeyboardTooltip>
+
+        <KnowledgePopoverForm>
+            {/* needed for the tooltip to attach to */}
+            <div>
+              <KeyboardTooltip
+                command="W"
+                shift
+                placement="bottom"
+                showArrow={false}
+                className="-mt-2"
+                title="Add knowledge"
+                onClick={() =>
+                  knowledgeStore.createVectorStoreFromUrl(
+                    'https://www.imdb.com/name/nm0000226/bio/?ref_=nm_ov_bio_sm',
+                  )
+                }
+              >
+                <button
+                  className={twMerge(
+                    'btn btn-square btn-sm !bg-transparent text-base-content opacity-60 md:btn-md hover:opacity-100',
+                    knowledgeStore.documentStatus.isDocumentsLoaded && 'text-primary',
+                  )}
+                  onClick={() =>
+                    knowledgeStore.createVectorStoreFromUrl(
+                      'https://www.imdb.com/name/nm0000226/bio/?ref_=nm_ov_bio_sm',
+                    )
+                  }
+                >
+                  <Database />
+                </button>
+              </KeyboardTooltip>
+            </div>
+        </KnowledgePopoverForm>
 
         <KeyboardTooltip
           command="$mod+K"

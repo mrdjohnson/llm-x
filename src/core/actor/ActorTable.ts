@@ -21,6 +21,10 @@ class ActorTable extends BaseTable<typeof ActorModel> {
     await super.clearCacheAndPreload()
 
     await this.all()
+
+    if (!this.findCachedById('knowledge')) {
+      await this.create({}, 'knowledge')
+    }
   }
 }
 

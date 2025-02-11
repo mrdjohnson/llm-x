@@ -32,6 +32,7 @@ import _ from 'lodash'
 type ChatModelPopoverProps = {
   chat: ChatViewModel
   actor?: ActorViewModel
+  label?: string
 }
 
 const ChatModelPopoverContent = ({
@@ -156,7 +157,7 @@ const ChatModelPopoverContent = ({
   )
 }
 
-const ChatModelPopover = ({ chat, actor }: ChatModelPopoverProps) => {
+const ChatModelPopover = ({ chat, actor, label }: ChatModelPopoverProps) => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
   const isMobile = useMedia('(max-width: 768px)')
 
@@ -198,7 +199,7 @@ const ChatModelPopover = ({ chat, actor }: ChatModelPopoverProps) => {
     >
       <Input
         isReadOnly
-        label="Add a Model"
+        label={label || 'Add a Model'}
         variant="bordered"
         size="sm"
         className="pointer-events-none w-full !cursor-pointer bg-transparent"
@@ -225,7 +226,7 @@ const ChatModelPopover = ({ chat, actor }: ChatModelPopoverProps) => {
         <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="full" className="bg-base-200">
           <ModalContent className="!max-w-screen !w-screen">
             <ModalHeader className="flex flex-col gap-1 pb-0 pt-2 text-base-content/60">
-              Add a Model
+              {label || 'Add a Model'}
             </ModalHeader>
 
             <ModalBody className="overflow-scroll px-2 pt-0 text-lg">
@@ -239,7 +240,7 @@ const ChatModelPopover = ({ chat, actor }: ChatModelPopoverProps) => {
 
   return (
     <Popover
-      placement="bottom"
+      placement="right"
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       showArrow

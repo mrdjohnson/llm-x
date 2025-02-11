@@ -18,6 +18,11 @@ import Send from '~/icons/Send'
 import CancelEdit from '~/icons/CancelEdit'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
+import { knowledgeStore } from '../core/knowledge/KnowledgeStore'
+
+const Loading = () => (
+  <span className="indicator-item loading loading-dots loading-sm indicator-start ml-4 opacity-65" />
+)
 
 type ChatBoxInputRowProps = PropsWithChildren<{
   chat: ChatViewModel
@@ -85,9 +90,12 @@ const ChatBoxInputRow = ({ chat, onSend, children }: ChatBoxInputRowProps) => {
   const noModelSelected = !connectionStore.selectedModelName && _.isEmpty(chat.actors)
   const inputDisabled =
     incomingMessageStore.isGettingData ||
+   
     noModelSelected ||
+   
     !!lightboxStore.lightboxMessage ||
-    notShowingHomePage
+    notShowingHomePage ||
+    knowledgeStore.documentStatus.isLoadingDocuments
 
   const sendingDisabled = incomingMessageStore.isGettingData || !!lightboxStore.lightboxMessage
 
@@ -118,13 +126,16 @@ const ChatBoxInputRow = ({ chat, onSend, children }: ChatBoxInputRowProps) => {
   return (
     <div
       className={twMerge(
-        'no-scrollbar relative mt-2 flex h-fit max-h-[700px] w-full shrink-0 flex-col',
+        'no-scrollbar indicator relative mt-2 flex h-fit max-h-[700px] w-full shrink-0 flex-col',
         noModelSelected && 'tooltip cursor-not-allowed',
       )}
       data-tip={
         connectionStore.isAnyServerConnected ? 'No Models Selected' : 'Server is not connected'
       }
     >
+      {/* todo: figure out where to put this */}
+      {knowledgeStore.documentStatus.isLoadingDocuments && <Loading />}
+
       <div
         className={twMerge(
           'join-item max-h-[600px] overflow-y-scroll rounded-large border border-base-content/20 p-2',

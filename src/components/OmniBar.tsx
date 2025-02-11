@@ -15,6 +15,7 @@ import { personaStore } from '~/core/persona/PersonaStore'
 import { chatStore } from '~/core/chat/ChatStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { focusStore } from '~/core/FocusStore'
+import { knowledgeStore } from '~/core/knowledge/KnowledgeStore'
 
 import { messageTable } from '~/core/message/MessageTable'
 import { humanizeShortcut } from '~/utils/humanizeShortcut'
@@ -549,6 +550,16 @@ const OmniBar = () => {
       shortcut: ['$mod+Shift+O'],
       perform: () => chatStore.createChat(),
     }),
+
+    // // todo: do not let this into the wild
+    //  createAction({
+    //   name: 'Chat with current page',
+    //   keywords: 'chat with page',
+    //   section: 'Actions',
+    //   shortcut: ['Meta+Shift+W'],
+    //   priority: Priority.LOW,
+    //   perform: () => knowledgeStore.createVectorStoreFromPageContent(),
+    // }),
 
     createAction({
       name: 'Toggle Sidebar',

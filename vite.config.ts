@@ -68,7 +68,7 @@ export default defineConfig({
   build: {
     outDir: PLATFORM_IS_PWA ? './dist' : `./environments/${PLATFORM}/dist`,
     emptyOutDir: true,
-    rollupOptions: { external: PLATFORM_IS_PWA ? undefined : ['virtual:pwa-register/react'] },
+    rollupOptions: { external: PLATFORM_IS_PWA ? ['@webext-core/messaging'] : ['virtual:pwa-register/react'] },
   },
   base: PLATFORM_IS_PWA ? '/llm-x/' : undefined,
   worker: {

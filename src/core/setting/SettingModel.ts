@@ -24,6 +24,7 @@ export const SettingModel = z.object({
   // connection settings
   selectedConnectionId: z.string().optional(),
   selectedModelId: z.string().optional(),
+  selectedEmbeddingModelId: z.string().optional(),
 
   // persona settings
   selectedPersonaId: z.string().nullish(),

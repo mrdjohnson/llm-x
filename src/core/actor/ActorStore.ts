@@ -39,6 +39,10 @@ class ActorStore {
     return new ActorViewModel({ ...actorModel, id })
   }
 
+  get knowledgeActor() {
+    return this.getActorById('knowledge')!
+  }
+
   getActorById = (actorId: string) => {
     const actor = actorTable.findCachedById(actorId)
 
@@ -66,6 +70,10 @@ class ActorStore {
   }
 
   async destroyActor(actor: ActorViewModel, { skipChatCheck = false } = {}) {
+    if (actor === this.knowledgeActor) {
+      return this.updateActor({ ...this.knowledgeActor.source, connectionId: null, modelId: null })
+    }
+
     if (!skipChatCheck) {
       if (actor.source.chatId) {
         const chat = chatStore.getChatById(actor.source.chatId)

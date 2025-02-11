@@ -18,7 +18,7 @@ const ToastCenter = () => {
     if (hovering || _.isEmpty(toasts)) return
 
     const timeout = setTimeout(() => {
-      toastStore.clearToasts()
+      // toastStore.clearToasts()
     }, 3000)
 
     return () => clearTimeout(timeout)

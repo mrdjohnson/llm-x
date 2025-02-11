@@ -138,6 +138,8 @@ export const ChatSettingsSection = ({ onBackClicked }: { onBackClicked: () => vo
 
                 <ChatModelPopover chat={chat} />
 
+                {/* add embedding model selector here */}
+
                 <div className="flex flex-col">
                   {chat.actors.map(actor => (
                     <ChatModelPopover key={actor.id} chat={chat} actor={actor} />
