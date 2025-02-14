@@ -7,23 +7,23 @@ export const chatToDateLabel = (chat: ChatViewModel) => {
 
   const today = moment().startOf('day')
 
-  if (sentTime.isAfter(today)) {
+  if (sentTime.isSame(today, 'day')) {
     return 'Today'
   }
 
-  if (sentTime.isAfter(today.subtract(1, 'days'))) {
+  if (sentTime.isSame(today.clone().subtract(1, 'days'), 'day')) {
     return 'Yesterday'
   }
 
-  const thisWeek = moment().startOf('week')
+  const thisWeek = today.startOf('week')
 
-  if (sentTime.isAfter(thisWeek)) {
+  if (sentTime.isSame(thisWeek, 'week')) {
     return 'This Week'
   }
 
-  const thisMonth = moment().startOf('month')
+  const recentMonths = today.startOf('month').subtract(2, 'months')
 
-  if (sentTime.isAfter(thisMonth.subtract(2, 'months'))) {
+  if (sentTime.isAfter(recentMonths)) {
     // January February ...
     return sentTime.format('MMMM')
   }
