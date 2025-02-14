@@ -16,7 +16,7 @@ import { messageTable } from '~/core/message/MessageTable'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { actorStore } from '~/core/actor/ActorStore'
 import { ActorViewModel } from '~/core/actor/ActorViewModel'
-import { ActorModel } from '../actor/ActorModel'
+import { ActorModel } from '~/core/actor/ActorModel'
 
 export class ChatViewModel {
   messageViewModelCache = new EntityCache<MessageModel, MessageViewModel>({
