@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-restricted-imports */
+/// <reference types="vitest/config" />
 
 import { defineConfig, PluginOption } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -14,6 +15,7 @@ import { firefoxPlugins } from './environments/firefox/firefox.vite'
 const replaceOptions = { __DATE__: new Date().toISOString(), __RELOAD_SW__: 'false' }
 
 const isDev = process.env.NODE_ENV === 'development'
+const isTest = process.env.NODE_ENV === 'test'
 
 const TARGET = process.env.TARGET || 'pwa'
 const TARGET_IS_PWA = TARGET === 'pwa'
@@ -50,7 +52,7 @@ export default defineConfig({
   ],
   esbuild: {
     // https://github.com/vitejs/vite/discussions/7920#discussioncomment-2709119
-    drop: isDev ? [] : ['console', 'debugger'],
+    drop: isDev || isTest ? [] : ['console', 'debugger'],
     logLevel: 'silent',
   },
   build: {
@@ -70,5 +72,14 @@ export default defineConfig({
     strictPort: true,
     host: true,
     cors: true,
+  },
+  test: {
+    testTimeout: 500,
+    hookTimeout: 500,
+    setupFiles: ['@vitest/web-worker', 'vitest-localstorage-mock', '/src/tests/setupTests.ts'],
+    mockReset: true,
+    environment: 'jsdom',
+    globals: true,
+    include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)']
   },
 })
