@@ -109,7 +109,7 @@ describe('ConnectionViewModel', () => {
       const openAiModels = OpenAiModelFactory.buildList(3)
 
       const connectionModel = await ConnectionModelFactory.create({
-        type:'OpenAi',
+        type: 'OpenAi',
         host: 'http://openAi-host:4444/v1',
       })
 

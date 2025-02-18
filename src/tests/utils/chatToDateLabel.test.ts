@@ -1,14 +1,13 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import { generateMock } from '@anatine/zod-mock'
 import moment, { Moment } from 'moment'
 
-import { ChatModel } from '~/core/chat/ChatModel'
+import { ChatModelFactory } from '~/core/chat/ChatModel.factory'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 
 import { chatToDateLabel } from '~/utils/chatToDateLabel'
 
 const createChatModel = (lastMessageTime: Moment) => {
-  const chat = { ...generateMock(ChatModel), lastMessageTimestamp: lastMessageTime.valueOf() }
+  const chat = ChatModelFactory.build({ lastMessageTimestamp: lastMessageTime.valueOf() })
   return new ChatViewModel(chat)
 }
 
