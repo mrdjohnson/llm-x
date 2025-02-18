@@ -22,6 +22,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:watch": "concurrently 'vitest' 'vite build --watch'",
+    "check-deps": "npx depcruise src --include-only \"^src\" --output-type err",
     "check-circular-deps": "npx madge --circular --extensions ts .",
     "view-bundles": "vite-bundle-visualizer",
     "view-deps": "npx depcruise src --include-only \"^src\" --output-type dot \"$@\" | dot -T svg > dependency-graph.svg && open dependency-graph.svg"

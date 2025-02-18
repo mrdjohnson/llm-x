@@ -1,5 +1,8 @@
 /** @type {import('dependency-cruiser').IConfiguration} */
 module.exports = {
+  options: {
+    exclude: { path: '^src/tests' },
+  },
   forbidden: [
     {
       name: 'core-not-to-non-core-utils',
