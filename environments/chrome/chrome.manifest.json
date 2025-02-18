@@ -6,6 +6,7 @@
   "side_panel": {
     "default_path": "index.html"
   },
+  "description": "LLM-X! An app for people to talk to Ollama, LM Studio, Automatic 1111, Gemini nano and more!",
   "permissions": ["sidePanel", "declarativeNetRequest"],
   "host_permissions": [
     "http://*:11434/*",
