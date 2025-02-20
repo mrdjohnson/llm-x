@@ -519,7 +519,7 @@ const OmniBar = () => {
       name: 'New chat',
       keywords: 'empty goto go to new chat create',
       section: 'Actions',
-      shortcut: ['Meta+Shift+O'],
+      shortcut: ['$mod+Shift+O'],
       perform: () => chatStore.createChat(),
     }),
   ])
