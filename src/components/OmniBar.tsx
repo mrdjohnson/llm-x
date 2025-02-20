@@ -57,8 +57,6 @@ export function RenderResults() {
           )
         }
 
-        if (item.name === 'Hidden') return <div className="hidden" />
-
         const selected = isSelected(item)
 
         return (
@@ -508,13 +506,6 @@ const OmniBar = () => {
   useDeleteActions()
 
   useRegisterActions([
-    createAction({
-      name: 'Hidden',
-      // shortcut: ['$mod+k'],
-      priority: Priority.LOW,
-      perform: () => navigate('/search'),
-    }),
-
     createAction({
       name: 'New chat',
       keywords: 'empty goto go to new chat create',
