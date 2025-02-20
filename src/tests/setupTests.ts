@@ -16,17 +16,17 @@ beforeAll(() => {
 })
 
 beforeEach(async () => {
-  // make sure the system setting exists
-  await settingTable.create({}, 'setting')
-})
-
-afterEach(async () => {
   // delete all data
   await localforage.dropInstance({ name: 'llm-x' })
 
   //   clear the cache on each table
   DATABASE_TABLES.forEach(table => table.cache.clear())
 
+  // make sure the system setting exists
+  await settingTable.create({}, 'setting')
+})
+
+afterEach(async () => {
   server.resetHandlers()
 })
 
