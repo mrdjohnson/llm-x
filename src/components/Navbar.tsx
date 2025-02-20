@@ -1,5 +1,4 @@
-import { useKBar } from 'kbar'
-import { Input } from "@heroui/react"
+import { Input } from '@heroui/react'
 import { observer } from 'mobx-react-lite'
 import { NavLink } from 'react-router-dom'
 
@@ -22,8 +21,6 @@ import { settingStore } from '~/core/setting/SettingStore'
 import { chatStore } from '~/core/chat/ChatStore'
 
 const Navbar = observer(() => {
-  const { query } = useKBar()
-
   return (
     <div className="navbar mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 bg-base-300 p-1 md:mb-0 md:flex-col md:p-0">
       <div className="ml-2 hidden items-center pr-2 md:flex md:text-xl">
@@ -91,14 +88,14 @@ const Navbar = observer(() => {
           placement="bottom"
           showArrow={false}
           className="-mt-2 ml-auto"
-          title="Command Bar"
+          title="Search"
         >
-          <button
+          <NavLink
+            to="search"
             className="btn btn-square btn-ghost btn-md hidden !bg-transparent text-base-content/60 hover:text-base-content md:flex"
-            onClick={query.toggle}
           >
             <Search />
-          </button>
+          </NavLink>
         </KeyboardTooltip>
 
         <KeyboardTooltip

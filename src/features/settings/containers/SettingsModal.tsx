@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import useMedia from 'use-media'
-import { Modal, ModalContent, ModalBody, Select, SelectItem } from "@heroui/react"
+import { Modal, ModalContent, ModalBody, Select, SelectItem } from '@heroui/react'
 import { NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 
@@ -20,12 +20,15 @@ import {
   settingRoutesByName,
 } from '~/features/settings/settingRoutes'
 
+import SettingSearchBar from '~/features/settings/SettingSearchBar'
+
 const SettingsSidePanel = observer(
   ({ onSectionClick }: { onSectionClick?: (panelName: SettingPanelOptionsType) => void }) => {
     return _.map(
       settingRoutesByName,
-      ({ mobileOnly, label }: SettingPanelType, panelName: SettingPanelOptionsType) => {
+      ({ mobileOnly, label, hidden }: SettingPanelType, panelName: SettingPanelOptionsType) => {
         if (mobileOnly || !label) return <div key={panelName} />
+        if (hidden) return null
 
         return (
           <NavLink
@@ -35,6 +38,7 @@ const SettingsSidePanel = observer(
               twMerge('btn w-full justify-start', isActive && 'btn-neutral')
             }
             onClick={() => onSectionClick?.(panelName)}
+            role="link"
           >
             {label}
           </NavLink>
@@ -55,6 +59,12 @@ const MobileSettingsSidePanel = observer(() => {
     navigate(path)
   }
 
+  const routes = useMemo(() => {
+    return _.omitBy(settingRoutesByName, { hidden: true })
+  }, [])
+
+  if (selectedPanel === '/search') return null
+
   return (
     <Select
       className="w-full min-w-[20ch] rounded-md border border-base-content/30 bg-transparent"
@@ -68,7 +78,7 @@ const MobileSettingsSidePanel = observer(() => {
       label="Section"
       onChange={selection => goToSection(selection.target.value)}
     >
-      {_.map(settingRoutesByName, ({ label }: SettingPanelType, panelName) => (
+      {_.map(routes, ({ label }: SettingPanelType, panelName) => (
         <SelectItem
           key={'/' + panelName}
           value={'/' + panelName}
@@ -95,6 +105,7 @@ const SettingsModal = observer(() => {
   const isMobile = useMedia('(max-width: 768px)')
 
   const isOpen = pathname !== '/'
+  const isSearching = pathname === '/search'
 
   const shouldShowBackButton = pathname !== '/initial' && isMobile
 
@@ -141,30 +152,27 @@ const SettingsModal = observer(() => {
     >
       <DaisyUiThemeProvider>
         <ModalContent className="bg-base-100">
-          <div className="navbar flex h-auto min-h-0 max-w-full text-base-content">
-            <div className="ml-auto justify-end">
-              <button
-                className={twMerge(
-                  'btn btn-circle btn-ghost btn-sm !text-lg opacity-70',
-                  // hack to hide the button but keep spacing
-                  !shouldShowBackButton && 'pointer-events-none !opacity-0',
-                )}
-                onClick={() => navigate(-1)}
-              >
-                <Back />
-              </button>
-            </div>
+          <div className="navbar flex h-auto min-h-0 max-w-full gap-1 text-base-content">
+            {shouldShowBackButton && (
+              <div className="ml-auto justify-end md:hidden">
+                <button
+                  className="btn btn-circle btn-ghost btn-sm !text-lg opacity-70"
+                  onClick={() => navigate(-1)}
+                >
+                  <Back />
+                </button>
+              </div>
+            )}
 
-            <div className="w-full flex-1 justify-center font-semibold md:text-xl">
-              Settings
-              {/* {subtitle && `: ${subtitle}`} */}
-            </div>
+            <SettingSearchBar />
 
-            <div className="ml-auto justify-end">
-              <NavButton to="/" className="btn btn-circle btn-ghost btn-sm opacity-70 md:text-lg">
-                ✕
-              </NavButton>
-            </div>
+            {!isSearching && (
+              <div className="ml-auto justify-end">
+                <NavButton to="/" className="btn btn-circle btn-ghost btn-sm opacity-70 md:text-lg">
+                  ✕
+                </NavButton>
+              </div>
+            )}
           </div>
 
           <ModalBody className="p-0">

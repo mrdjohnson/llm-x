@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
   KBarPortal,
-  KBarPositioner,
-  KBarAnimator,
   KBarSearch,
   KBarResults,
   useMatches,
@@ -24,8 +22,6 @@ import { chatStore } from '~/core/chat/ChatStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
 import { messageTable } from '~/core/message/MessageTable'
-
-import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -49,13 +45,13 @@ const isSelected = ({ parent, id }: ActionImpl) => {
   return false
 }
 
-function RenderResults() {
+export function RenderResults() {
   const { results } = useMatches()
 
   return (
     <KBarResults
       items={results}
-      maxHeight={500}
+      maxHeight={1200}
       onRender={({ item, active }) => {
         if (typeof item === 'string') {
           return <div className="label-text p-2 font-semibold text-base-content/40">{item}</div>
@@ -66,6 +62,8 @@ function RenderResults() {
             <div className="label-text p-2 font-semibold text-base-content/40">{item.subtitle}</div>
           )
         }
+
+        if (item.name === 'Hidden') return <div className="hidden" />
 
         const selected = isSelected(item)
 
@@ -534,6 +532,13 @@ const OmniBar = () => {
     }),
 
     createAction({
+      name: 'Hidden',
+      shortcut: ['$mod+k'],
+      priority: Priority.LOW,
+      perform: () => navigate('/search'),
+    }),
+
+    createAction({
       name: 'New chat',
       keywords: 'empty goto go to new chat create',
       section: 'Actions',
@@ -542,17 +547,12 @@ const OmniBar = () => {
     }),
   ])
 
+  // this is just an empty placeholder until the hidden search action triggers
   return (
     <KBarPortal>
-      <DaisyUiThemeProvider>
-        <KBarPositioner className="container z-50 mx-auto">
-          <KBarAnimator className="inline-table w-full transform-none overflow-hidden rounded-lg border-2 border-base-content/30 bg-base-100 p-2 shadow-xl md:mx-2 md:max-w-[750px]">
-            <KBarSearch className=" input w-full rounded-none border-0 border-b border-base-content/30 px-4 pb-2 text-base-content focus:outline-none" />
-
-            <RenderResults />
-          </KBarAnimator>
-        </KBarPositioner>
-      </DaisyUiThemeProvider>
+      <div className="hidden">
+        <KBarSearch />
+      </div>
     </KBarPortal>
   )
 }

@@ -15,6 +15,7 @@ import NewConnectionPanel from '~/features/settings/panels/connections/NewConnec
 import { ChatForm } from '~/features/settings/panels/chat/ChatForm'
 import ChatPanel from '~/features/settings/panels/chat/ChatPanel'
 import { ActorForm } from '~/features/settings/panels/actor/ActorForm'
+import { RenderResults } from '~/components/OmniBar'
 
 export type SettingPanelOptionsType =
   | 'general'
@@ -23,6 +24,7 @@ export type SettingPanelOptionsType =
   | 'personas'
   | 'models'
   | 'chats'
+  | 'search'
 
 export type SettingPanelType = {
   label: string
@@ -30,11 +32,13 @@ export type SettingPanelType = {
   mobileOnly?: boolean
   Component: FunctionComponent
   children?: ReactNode
+  hidden?: boolean
 }
 
 export const settingRoutesByName: Record<SettingPanelOptionsType, SettingPanelType> = {
-  initial: { label: 'Chats', Component: MobileSplashPanel, mobileOnly: true },
+  initial: { label: 'Home', Component: MobileSplashPanel, mobileOnly: true },
   general: { label: 'General', Component: GeneralPanel },
+  search: { label: 'Search', Component: RenderResults, hidden: true },
   connection: {
     label: 'How To Connect',
     Component: HelpPanel,
