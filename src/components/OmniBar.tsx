@@ -1,20 +1,14 @@
 import { useEffect, useState } from 'react'
-import {
-  KBarPortal,
-  KBarSearch,
-  KBarResults,
-  useMatches,
-  Priority,
-  useRegisterActions,
-  createAction,
-  useKBar,
-} from 'kbar'
+import { KBarResults, useMatches, Priority, useRegisterActions, createAction, useKBar } from 'kbar'
 import type { Action, ActionImpl } from 'kbar'
 import { autorun } from 'mobx'
 import _ from 'lodash'
 import { useNavigate } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 import localForage from 'localforage'
+
+// @ts-expect-error tiny keys does not export ts well right now https://github.com/jamiebuilds/tinykeys/issues/191
+import { tinykeys } from 'tinykeys'
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { personaStore } from '~/core/persona/PersonaStore'
@@ -523,17 +517,8 @@ const OmniBar = () => {
     }),
 
     createAction({
-      name: 'Open settings',
-      keywords: 'settings open',
-      section: 'Actions',
-      shortcut: ['/'],
-      priority: Priority.LOW,
-      perform: () => navigate('/general'),
-    }),
-
-    createAction({
       name: 'Hidden',
-      shortcut: ['$mod+k'],
+      // shortcut: ['$mod+k'],
       priority: Priority.LOW,
       perform: () => navigate('/search'),
     }),
@@ -547,14 +532,19 @@ const OmniBar = () => {
     }),
   ])
 
-  // this is just an empty placeholder until the hidden search action triggers
-  return (
-    <KBarPortal>
-      <div className="hidden">
-        <KBarSearch />
-      </div>
-    </KBarPortal>
-  )
+  useEffect(() => {
+    // manually handle keybindings since kbar has some kind of bug around re-opening
+    return tinykeys(window, {
+      '$mod+k': () => {
+        navigate('/search')
+      },
+      '$mod+/': () => {
+        navigate('/initial')
+      },
+    })
+  }, [])
+
+  return null
 }
 
 export default OmniBar

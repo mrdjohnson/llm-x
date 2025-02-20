@@ -13456,6 +13456,7 @@ __metadata:
     remark-math: "npm:^6.0.0"
     tailwind-merge: "npm:^2.5.4"
     tailwindcss: "npm:^3.4.17"
+    tinykeys: "npm:^3.0.0"
     typescript: "npm:^5.2.2"
     use-media: "npm:^1.5.0"
     vite: "npm:^6.0.1"
@@ -18027,6 +18028,13 @@ __metadata:
     fdir: "npm:^6.4.2"
     picomatch: "npm:^4.0.2"
   checksum: 10c0/ce946135d39b8c0e394e488ad59f4092e8c4ecd675ef1bcd4585c47de1b325e61ec6adfbfbe20c3c2bfa6fd674c5b06de2a2e65c433f752ae170aff11793e5ef
+  languageName: node
+  linkType: hard
+
+"tinykeys@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "tinykeys@npm:3.0.0"
+  checksum: 10c0/75eef480b3008cb1085da37ea1d33b162adb2237e1f6af4360679a7af4b8b75638c6f46b8d019745aae982e84d6ff24ac476299c1680e578859d87584d3e583c
   languageName: node
   linkType: hard
 
