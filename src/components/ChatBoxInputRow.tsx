@@ -81,13 +81,15 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
     }
   }
 
+  const notShowingHomePage = pathname !== '/'
   const noModelSelected = !connectionStore.selectedModelName && _.isEmpty(chat.actors)
   const inputDisabled =
-    incomingMessageStore.isGettingData || noModelSelected || !!lightboxStore.lightboxMessage
+    incomingMessageStore.isGettingData ||
+    noModelSelected ||
+    !!lightboxStore.lightboxMessage ||
+    notShowingHomePage
 
   const sendingDisabled = incomingMessageStore.isGettingData || !!lightboxStore.lightboxMessage
-
-  const showingHomePage = pathname === '/'
 
   useEffect(() => {
     if (!textareaRef.current) return
@@ -98,12 +100,12 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
   useEffect(() => {
     if (inputDisabled) {
       textareaRef.current?.blur()
-    } else if (showingHomePage) {
+    } else {
       setTimeout(() => {
         textareaRef.current?.focus({ preventScroll: true })
       }, 300)
     }
-  }, [inputDisabled, chat, messageToEdit, showingHomePage])
+  }, [inputDisabled, chat, messageToEdit])
 
   return (
     <div
