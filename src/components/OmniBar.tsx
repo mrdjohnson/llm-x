@@ -160,7 +160,7 @@ const useRegisterModelActions = () => {
         id: 'refresh_all_models',
         name: 'Refresh all models',
         keywords: 'refresh',
-        priority: Priority.LOW,
+        priority: Priority.HIGH,
         parent: 'refresh_models',
         perform: () => connectionStore.refreshModels(),
       })
@@ -508,14 +508,6 @@ const OmniBar = () => {
   useDeleteActions()
 
   useRegisterActions([
-    createAction({
-      name: 'Refresh models',
-      keywords: 'refresh',
-      section: 'Actions',
-      priority: Priority.LOW,
-      perform: () => connectionStore.refreshModels(),
-    }),
-
     createAction({
       name: 'Hidden',
       // shortcut: ['$mod+k'],
