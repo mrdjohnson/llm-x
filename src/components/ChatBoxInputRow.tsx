@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { observer } from 'mobx-react-lite'
 import TextareaAutosize from 'react-textarea-autosize'
 import { twMerge } from 'tailwind-merge'
+import { useLocation } from 'react-router'
 
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
@@ -24,6 +25,7 @@ type ChatBoxInputRowProps = PropsWithChildren<{
 }>
 
 const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowProps) => {
+  const { pathname } = useLocation()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const [messageContent, setMessageContent] = useState('')
@@ -85,6 +87,8 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
 
   const sendingDisabled = incomingMessageStore.isGettingData || !!lightboxStore.lightboxMessage
 
+  const showingHomePage = pathname === '/'
+
   useEffect(() => {
     if (!textareaRef.current) return
 
@@ -94,12 +98,12 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
   useEffect(() => {
     if (inputDisabled) {
       textareaRef.current?.blur()
-    } else {
+    } else if (showingHomePage) {
       setTimeout(() => {
         textareaRef.current?.focus({ preventScroll: true })
       }, 300)
     }
-  }, [inputDisabled, chat, messageToEdit])
+  }, [inputDisabled, chat, messageToEdit, showingHomePage])
 
   return (
     <div
