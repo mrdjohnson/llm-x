@@ -21,7 +21,7 @@ export const MessageModel = z.object({
   botName: z.string().nullish(),
   modelType: z.string().optional(),
   content: z.string().optional().default(''),
-  extras: MessageExtrasModel.optional(),
+  extras: MessageExtrasModel.nullish(),
   imageUrls: z.array(z.string()).optional().default([]),
   selectedVariationId: z.string().optional(),
 

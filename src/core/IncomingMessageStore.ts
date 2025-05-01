@@ -99,6 +99,7 @@ export class IncomingMessageStore {
     await messageToEdit.update({
       botName: incomingMessage.actor.modelName,
       modelType: incomingMessage.actor.connection?.type,
+      extras: null,
     })
 
     console.log(prompt)
@@ -148,6 +149,7 @@ export class IncomingMessageStore {
     await incomingMessage.update({
       botName: incomingMessage.actor.modelName,
       modelType: incomingMessage.actor.connection?.type,
+      extras: null,
     })
 
     await this.handleIncomingMessage(chat, incomingMessage, async () => {
