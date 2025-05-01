@@ -129,7 +129,13 @@ export class IncomingMessageStore {
 
     const connection = incomingMessage.actor.connection
 
-    if (!connection) throw 'Unknown server'
+    if (!connection) {
+      this.handleIncomingMessage(chat, incomingMessage, () => {
+        throw new Error('Unknown server')
+      })
+
+      return
+    }
 
     await rewriteChromeUrl(connection.source.host)
 
