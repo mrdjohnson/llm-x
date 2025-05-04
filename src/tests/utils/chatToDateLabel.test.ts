@@ -73,7 +73,7 @@ describe('chatToDateLabel', () => {
     const endOfWeek = moment().endOf('week')
 
     // skip today and yesterday
-    const dayOfWeek = endOfWeek.subtract(2, 'days')
+    const dayOfWeek = endOfWeek.subtract(3, 'days')
 
     while (!dayOfWeek.isBefore(startOfWeek, 'day')) {
       const chat = createChatModel(dayOfWeek)
