@@ -142,7 +142,7 @@ const SettingsModal = observer(() => {
       onClose={() => navigate('/')}
       size={isMobile ? 'full' : undefined}
       classNames={{
-        base: twMerge(!isMobile && '!w-full max-w-full'),
+        base: twMerge(!isMobile && '!w-full max-w-[1200px]'),
         body: 'px-2 text-base-content overflow-hidden',
         backdrop:
           'bg-gradient-to-t from-base-200 from-25% to-base-200/20 backdrop-opacity-20 !cursor-pointer',
