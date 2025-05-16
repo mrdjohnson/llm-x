@@ -54,7 +54,7 @@ export class PreviewImageHandler {
         this.previewImages.push({ url, isNew: true })
       }
     } catch (e) {
-      toastStore.addToast('Unable to read image, check the console for error information', 'error')
+      toastStore.addToast('Unable to read image', 'error', e)
 
       console.error(e)
     }

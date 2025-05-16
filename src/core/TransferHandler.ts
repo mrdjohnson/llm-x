@@ -58,7 +58,7 @@ export class TransferHandler {
           connectionStore.refreshModels()
         }
       } catch (e) {
-        toastStore.addToast('Unable to read file, check the console for error information', 'error')
+        toastStore.addToast('Unable to read file', 'error', e)
         console.error(e)
       }
     }

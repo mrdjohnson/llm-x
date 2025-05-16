@@ -92,10 +92,7 @@ class OllamaStore {
       progress.status = 'error'
 
       if (!isUpdate) {
-        toastStore.addToast(
-          `Something went wrong with pulling ${model} check the logs for more details`,
-          'error',
-        )
+        toastStore.addToast(`Something went wrong with pulling ${model}`, 'error', e)
       }
 
       // todo, these will never show on production

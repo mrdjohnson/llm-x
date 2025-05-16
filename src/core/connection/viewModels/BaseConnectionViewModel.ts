@@ -127,6 +127,7 @@ abstract class BaseConnectionViewModel<
         toastStore.addToast(
           `${status}: Failed to fetch ${this.type} models for ${this.label}; host: ${host}`,
           'error',
+          e,
         )
       }
 
