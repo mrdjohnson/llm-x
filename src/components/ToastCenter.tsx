@@ -37,10 +37,18 @@ const ToastCenter = observer(() => {
     >
       {toasts.map(toast => (
         <div
-          className={`alert alert-${toast.type} relative mx-auto max-w-4xl rounded-md border border-base-content/30 px-4 text-xl font-bold`}
+          className={`alert alert-${toast.type} relative mx-auto flex max-w-4xl flex-col rounded-md border border-base-content/30 px-4`}
           key={toast.id}
         >
-          <span className="cursor-default whitespace-pre-wrap break-words">{toast.message}</span>
+          <span className="w-full cursor-default whitespace-pre-wrap break-words text-xl font-bold">
+            {toast.message}
+          </span>
+
+          {toast.body && (
+            <span className="text-md! w-full cursor-default justify-self-end whitespace-pre-wrap break-words text-base-content/60">
+              {toast.body}
+            </span>
+          )}
 
           <div
             className="btn btn-xs absolute right-1 top-1 text-sm font-bold opacity-50"
