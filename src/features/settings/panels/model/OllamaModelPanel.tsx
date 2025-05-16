@@ -2,11 +2,10 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
+import { ShowResponse } from 'ollama/browser'
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { OllamaLanguageModel } from '~/core/connection/types'
-
-import { CorrectShowResponse } from '~/core/OllamaStore'
 
 import { NavButtonDiv } from '~/components/NavButton'
 import SelectionPanelTable from '~/components/SelectionTablePanel'
@@ -177,7 +176,7 @@ export const OllamaModelSettings = observer(() => {
 
   const selectedModelName = model.modelName
 
-  const [modelData, setModelData] = useState<CorrectShowResponse | undefined>()
+  const [modelData, setModelData] = useState<ShowResponse | undefined>()
 
   useEffect(() => {
     if (!selectedModelName) return

@@ -1,9 +1,9 @@
 import { Factory } from 'fishery'
 import { generateMock } from '@anatine/zod-mock'
 import { z } from 'zod'
+import { ModelResponse } from 'ollama/browser'
 
 import { IA1111Model, IGeminiModel, IOllamaModel, IOpenAiModel } from '~/core/connection/types'
-import { ModelResponse } from 'ollama/browser'
 import { toOllamaModel } from '~/core/transformers/toOllamaModel'
 
 const OllamaModel = z.object({
@@ -19,6 +19,9 @@ const OllamaModel = z.object({
     parameter_size: z.string(),
     quantization_level: z.string(),
   }),
+  size_vram: z.number(),
+  expires_at: z.date(),
+  model: z.string(),
 })
 
 export const OllamaModelFactory = Factory.define<ModelResponse, null, IOllamaModel>(

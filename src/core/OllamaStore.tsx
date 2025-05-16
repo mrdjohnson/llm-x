@@ -1,13 +1,9 @@
-import { ModelDetails, Ollama, ShowResponse } from 'ollama/browser'
+import { Ollama } from 'ollama/browser'
 import { makeAutoObservable } from 'mobx'
 
 import { toastStore } from '~/core/ToastStore'
 import { progressStore } from '~/core/ProgressStore'
 import OllamaConnectionViewModel from '~/core/connection/viewModels/OllamaConnectionViewModel'
-
-export type CorrectShowResponse = Pick<ShowResponse, 'license' | 'modelfile' | 'template'> & {
-  details: ModelDetails
-}
 
 class OllamaStore {
   constructor(private connection: OllamaConnectionViewModel) {
@@ -19,8 +15,7 @@ class OllamaStore {
   }
 
   show(modelName: string) {
-    // @ts-expect-error library is typed incorrectly; https://github.com/ollama/ollama-js/issues/74
-    return this.ollama.show({ model: modelName }) as Promise<CorrectShowResponse>
+    return this.ollama.show({ model: modelName })
   }
 
   delete(modelName: string) {
