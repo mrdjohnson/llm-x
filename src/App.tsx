@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react'
+import { Notifications } from '@mantine/notifications'
 
 import Dropzone from '~/containers/Dropzone'
 
@@ -24,6 +25,8 @@ const App = () => {
 
   return (
     <Dropzone>
+      <Notifications />
+
       <div className="drawer drawer-end mx-auto flex !h-dvh !max-h-dvh flex-col place-self-center text-base-content">
         <div className="md:hidden">
           <Suspense fallback={null}>

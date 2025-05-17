@@ -4,12 +4,16 @@ import ReactDOM from 'react-dom/client'
 import { KBarProvider } from 'kbar'
 import { HeroUIProvider } from '@heroui/react'
 import { MemoryRouter } from 'react-router-dom'
+import { MantineProvider } from '@mantine/core'
+import { ModalsProvider } from '@mantine/modals'
 
 import App from '~/App'
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 
 import '~/index.css'
 import StartupSpinner from '~/icons/StartupSpinner'
+import '@mantine/core/styles.css'
+import '@mantine/notifications/styles.css'
 
 const errorPage = (
   <div className="flex h-screen w-screen items-center justify-center bg-base-100">
@@ -28,15 +32,19 @@ initDb().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <MemoryRouter initialEntries={['/']}>
-        <HeroUIProvider>
-          <KBarProvider>
-            <Suspense fallback={errorPage}>
-              <DaisyUiThemeProvider>
-                <App />
-              </DaisyUiThemeProvider>
-            </Suspense>
-          </KBarProvider>
-        </HeroUIProvider>
+        <MantineProvider>
+          <ModalsProvider>
+            <HeroUIProvider>
+              <KBarProvider>
+                <Suspense fallback={errorPage}>
+                  <DaisyUiThemeProvider>
+                    <App />
+                  </DaisyUiThemeProvider>
+                </Suspense>
+              </KBarProvider>
+            </HeroUIProvider>
+          </ModalsProvider>
+        </MantineProvider>
       </MemoryRouter>
     </React.StrictMode>,
   )
