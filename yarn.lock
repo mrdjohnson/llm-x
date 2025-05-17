@@ -1617,6 +1617,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cfworker/json-schema@npm:^4.0.2":
+  version: 4.1.1
+  resolution: "@cfworker/json-schema@npm:4.1.1"
+  checksum: 10c0/b5253486d346b7de6feec9c73954f612b11019dacb9023d710a5666df2f5fc145dd88b6b913c88726c6d97e2e258a515fa2cab177f58b18da6bac3738cbc4739
+  languageName: node
+  linkType: hard
+
 "@csstools/color-helpers@npm:^5.0.1":
   version: 5.0.1
   resolution: "@csstools/color-helpers@npm:5.0.1"
@@ -4127,31 +4134,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/community@npm:^0.3.17":
-  version: 0.3.17
-  resolution: "@langchain/community@npm:0.3.17"
+"@langchain/community@npm:^0.3.43":
+  version: 0.3.43
+  resolution: "@langchain/community@npm:0.3.43"
   dependencies:
-    "@langchain/openai": "npm:>=0.2.0 <0.4.0"
+    "@langchain/openai": "npm:>=0.2.0 <0.6.0"
     binary-extensions: "npm:^2.2.0"
     expr-eval: "npm:^2.0.2"
     flat: "npm:^5.0.2"
     js-yaml: "npm:^4.1.0"
     langchain: "npm:>=0.2.3 <0.3.0 || >=0.3.4 <0.4.0"
-    langsmith: "npm:^0.2.8"
+    langsmith: "npm:^0.3.29"
     uuid: "npm:^10.0.0"
     zod: "npm:^3.22.3"
     zod-to-json-schema: "npm:^3.22.5"
   peerDependencies:
     "@arcjet/redact": ^v1.0.0-alpha.23
     "@aws-crypto/sha256-js": ^5.0.0
-    "@aws-sdk/client-bedrock-agent-runtime": ^3.583.0
-    "@aws-sdk/client-bedrock-runtime": ^3.422.0
-    "@aws-sdk/client-dynamodb": ^3.310.0
-    "@aws-sdk/client-kendra": ^3.352.0
-    "@aws-sdk/client-lambda": ^3.310.0
-    "@aws-sdk/client-s3": ^3.310.0
-    "@aws-sdk/client-sagemaker-runtime": ^3.310.0
-    "@aws-sdk/client-sfn": ^3.310.0
+    "@aws-sdk/client-bedrock-agent-runtime": ^3.749.0
+    "@aws-sdk/client-bedrock-runtime": ^3.749.0
+    "@aws-sdk/client-dynamodb": ^3.749.0
+    "@aws-sdk/client-kendra": ^3.749.0
+    "@aws-sdk/client-lambda": ^3.749.0
+    "@aws-sdk/client-s3": ^3.749.0
+    "@aws-sdk/client-sagemaker-runtime": ^3.749.0
+    "@aws-sdk/client-sfn": ^3.749.0
     "@aws-sdk/credential-provider-node": ^3.388.0
     "@azure/search-documents": ^12.0.0
     "@azure/storage-blob": ^12.15.0
@@ -4170,6 +4177,7 @@ __metadata:
     "@google-cloud/storage": ^6.10.1 || ^7.7.0
     "@gradientai/nodejs-sdk": ^1.2.0
     "@huggingface/inference": ^2.6.4
+    "@huggingface/transformers": ^3.2.3
     "@ibm-cloud/watsonx-ai": "*"
     "@lancedb/lancedb": ^0.12.0
     "@langchain/core": ">=0.2.21 <0.4.0"
@@ -4199,14 +4207,14 @@ __metadata:
     "@upstash/ratelimit": ^1.1.3 || ^2.0.3
     "@upstash/redis": ^1.20.6
     "@upstash/vector": ^1.1.1
-    "@vercel/kv": ^0.2.3
-    "@vercel/postgres": ^0.5.0
+    "@vercel/kv": "*"
+    "@vercel/postgres": "*"
     "@writerai/writer-sdk": ^0.40.2
     "@xata.io/client": ^0.28.0
-    "@xenova/transformers": ^2.17.2
     "@zilliz/milvus2-sdk-node": ">=2.3.5"
     apify-client: ^2.7.1
     assemblyai: ^4.6.0
+    azion: ^1.11.1
     better-sqlite3: ">=9.4.0 <12.0.0"
     cassandra-driver: ^4.7.2
     cborg: ^4.1.1
@@ -4223,7 +4231,7 @@ __metadata:
     dria: ^0.0.3
     duck-duck-scrape: ^2.2.5
     epub2: ^3.0.1
-    faiss-node: ^0.5.1
+    fast-xml-parser: "*"
     firebase-admin: ^11.9.0 || ^12.0.0
     google-auth-library: "*"
     googleapis: "*"
@@ -4240,6 +4248,8 @@ __metadata:
     lodash: ^4.17.21
     lunary: ^0.7.10
     mammoth: ^1.6.0
+    mariadb: ^3.4.0
+    mem0ai: ^2.1.8
     mongodb: ">=5.2.0"
     mysql2: ^3.9.8
     neo4j-driver: "*"
@@ -4255,7 +4265,7 @@ __metadata:
     puppeteer: "*"
     pyodide: ">=0.24.1 <0.27.0"
     redis: "*"
-    replicate: ^0.29.4
+    replicate: "*"
     sonix-speech-recognition: ^2.1.1
     srt-parser-2: ^1.2.3
     typeorm: ^0.3.20
@@ -4264,9 +4274,9 @@ __metadata:
     voy-search: 0.6.2
     weaviate-ts-client: "*"
     web-auth-library: ^1.0.3
+    word-extractor: "*"
     ws: ^8.14.2
-    youtube-transcript: ^1.0.6
-    youtubei.js: ^9.1.0
+    youtubei.js: "*"
   peerDependenciesMeta:
     "@arcjet/redact":
       optional: true
@@ -4289,6 +4299,8 @@ __metadata:
     "@aws-sdk/client-sfn":
       optional: true
     "@aws-sdk/credential-provider-node":
+      optional: true
+    "@aws-sdk/dsql-signer":
       optional: true
     "@azure/search-documents":
       optional: true
@@ -4321,6 +4333,8 @@ __metadata:
     "@gradientai/nodejs-sdk":
       optional: true
     "@huggingface/inference":
+      optional: true
+    "@huggingface/transformers":
       optional: true
     "@lancedb/lancedb":
       optional: true
@@ -4384,13 +4398,13 @@ __metadata:
       optional: true
     "@xata.io/client":
       optional: true
-    "@xenova/transformers":
-      optional: true
     "@zilliz/milvus2-sdk-node":
       optional: true
     apify-client:
       optional: true
     assemblyai:
+      optional: true
+    azion:
       optional: true
     better-sqlite3:
       optional: true
@@ -4424,7 +4438,7 @@ __metadata:
       optional: true
     epub2:
       optional: true
-    faiss-node:
+    fast-xml-parser:
       optional: true
     firebase-admin:
       optional: true
@@ -4455,6 +4469,10 @@ __metadata:
     lunary:
       optional: true
     mammoth:
+      optional: true
+    mariadb:
+      optional: true
+    mem0ai:
       optional: true
     mongodb:
       optional: true
@@ -4502,48 +4520,51 @@ __metadata:
       optional: true
     web-auth-library:
       optional: true
-    ws:
+    word-extractor:
       optional: true
-    youtube-transcript:
+    ws:
       optional: true
     youtubei.js:
       optional: true
-  checksum: 10c0/cc240ca938e39c75248224484c9b5aeb6be9619758c9ffa174f3100ea63b5aa7397a39ac92c14e13a682156001b91483c09d602623c710d436dea17ad5faf78d
+  checksum: 10c0/6e54ea64603669014969e0264a5f46038f61bb10d8d2f7733e19144ca1998d12c82a7a3370d9ab99554820bbb3a10950b15e17f1986ad9088d574a10b1b124e7
   languageName: node
   linkType: hard
 
-"@langchain/core@npm:^0.3.20":
-  version: 0.3.20
-  resolution: "@langchain/core@npm:0.3.20"
+"@langchain/core@npm:^0.3.56":
+  version: 0.3.56
+  resolution: "@langchain/core@npm:0.3.56"
   dependencies:
+    "@cfworker/json-schema": "npm:^4.0.2"
     ansi-styles: "npm:^5.0.0"
     camelcase: "npm:6"
     decamelize: "npm:1.2.0"
     js-tiktoken: "npm:^1.0.12"
-    langsmith: "npm:^0.2.8"
+    langsmith: "npm:^0.3.29"
     mustache: "npm:^4.2.0"
     p-queue: "npm:^6.6.2"
     p-retry: "npm:4"
     uuid: "npm:^10.0.0"
     zod: "npm:^3.22.4"
     zod-to-json-schema: "npm:^3.22.3"
-  checksum: 10c0/ead14c64d4c663251f52c3ebb28f35e86e93bdabd5374de3977f557195b54456c5e1b3ace4b392061dc9ee8763f6f634416eb527289b880640d42025b2d09e45
+  checksum: 10c0/6155ccd3d8fdd0074de4b158634e36bfecfbaa9a51e669c29b6f8d0e3d8b4088ff755e4c351b542b4ad6f5658475437b921fc47c100d8693c787a8c3d61f878d
   languageName: node
   linkType: hard
 
-"@langchain/ollama@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "@langchain/ollama@npm:0.1.2"
+"@langchain/ollama@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@langchain/ollama@npm:0.2.0"
   dependencies:
-    ollama: "npm:^0.5.9"
+    ollama: "npm:^0.5.12"
     uuid: "npm:^10.0.0"
+    zod: "npm:^3.24.1"
+    zod-to-json-schema: "npm:^3.24.1"
   peerDependencies:
     "@langchain/core": ">=0.2.21 <0.4.0"
-  checksum: 10c0/15bffb3f3033ffe6f49c3807307be5a1245af1287d96d983fc8bc2743018369875a45d4917bfa8b17fea2b89d58eef7a1c56818ed336520707a81269439a5adc
+  checksum: 10c0/1d8782587e1a3b767b0263d237f4ee121276276b4f205718cb78d38311e984febda79dfb6b8f1cf54b843d1d9d6d028b85d6cb873b78379027949fb4285d511a
   languageName: node
   linkType: hard
 
-"@langchain/openai@npm:>=0.1.0 <0.4.0, @langchain/openai@npm:>=0.2.0 <0.4.0, @langchain/openai@npm:^0.3.14":
+"@langchain/openai@npm:>=0.1.0 <0.4.0":
   version: 0.3.14
   resolution: "@langchain/openai@npm:0.3.14"
   dependencies:
@@ -4554,6 +4575,20 @@ __metadata:
   peerDependencies:
     "@langchain/core": ">=0.2.26 <0.4.0"
   checksum: 10c0/03cdd457d83b0efee1a780e78b0804a2c27a85a10d57d6182f7abdd2b90bc672e0ad5b94c7b127e63e624de96e1b4472ae95a3423cc8d2f5436198e546ad6e9b
+  languageName: node
+  linkType: hard
+
+"@langchain/openai@npm:>=0.1.0 <0.6.0, @langchain/openai@npm:>=0.2.0 <0.6.0, @langchain/openai@npm:^0.5.10":
+  version: 0.5.10
+  resolution: "@langchain/openai@npm:0.5.10"
+  dependencies:
+    js-tiktoken: "npm:^1.0.12"
+    openai: "npm:^4.96.0"
+    zod: "npm:^3.22.4"
+    zod-to-json-schema: "npm:^3.22.3"
+  peerDependencies:
+    "@langchain/core": ">=0.3.48 <0.4.0"
+  checksum: 10c0/6a77de362f72c3088b9ec3f31e50a511b4ea0e66d534107a87df5723a18391d964e64bb8f00f77dc282aadaa5b87970d129f735af5e8b7afccc04a05b360e56c
   languageName: node
   linkType: hard
 
@@ -9404,6 +9439,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"console-table-printer@npm:^2.12.1":
+  version: 2.12.1
+  resolution: "console-table-printer@npm:2.12.1"
+  dependencies:
+    simple-wcswidth: "npm:^1.0.1"
+  checksum: 10c0/8f28e9c0ae5df77f5d60da3da002ecd95ebe1812b0b9e0a6d2795c81b5121b39774f32506bccf68830a838ca4d8fbb2ab8824e729dba2c5e30cdeb9df4dd5f2b
+  languageName: node
+  linkType: hard
+
 "convert-source-map@npm:^2.0.0":
   version: 2.0.0
   resolution: "convert-source-map@npm:2.0.0"
@@ -13156,7 +13200,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"langchain@npm:>=0.2.3 <0.3.0 || >=0.3.4 <0.4.0, langchain@npm:^0.3.6":
+"langchain@npm:>=0.2.3 <0.3.0 || >=0.3.4 <0.4.0":
   version: 0.3.6
   resolution: "langchain@npm:0.3.6"
   dependencies:
@@ -13218,7 +13262,81 @@ __metadata:
   languageName: node
   linkType: hard
 
-"langsmith@npm:^0.2.0, langsmith@npm:^0.2.8":
+"langchain@npm:^0.3.26":
+  version: 0.3.26
+  resolution: "langchain@npm:0.3.26"
+  dependencies:
+    "@langchain/openai": "npm:>=0.1.0 <0.6.0"
+    "@langchain/textsplitters": "npm:>=0.0.0 <0.2.0"
+    js-tiktoken: "npm:^1.0.12"
+    js-yaml: "npm:^4.1.0"
+    jsonpointer: "npm:^5.0.1"
+    langsmith: "npm:^0.3.29"
+    openapi-types: "npm:^12.1.3"
+    p-retry: "npm:4"
+    uuid: "npm:^10.0.0"
+    yaml: "npm:^2.2.1"
+    zod: "npm:^3.22.4"
+    zod-to-json-schema: "npm:^3.22.3"
+  peerDependencies:
+    "@langchain/anthropic": "*"
+    "@langchain/aws": "*"
+    "@langchain/cerebras": "*"
+    "@langchain/cohere": "*"
+    "@langchain/core": ">=0.2.21 <0.4.0"
+    "@langchain/deepseek": "*"
+    "@langchain/google-genai": "*"
+    "@langchain/google-vertexai": "*"
+    "@langchain/google-vertexai-web": "*"
+    "@langchain/groq": "*"
+    "@langchain/mistralai": "*"
+    "@langchain/ollama": "*"
+    "@langchain/xai": "*"
+    axios: "*"
+    cheerio: "*"
+    handlebars: ^4.7.8
+    peggy: ^3.0.2
+    typeorm: "*"
+  peerDependenciesMeta:
+    "@langchain/anthropic":
+      optional: true
+    "@langchain/aws":
+      optional: true
+    "@langchain/cerebras":
+      optional: true
+    "@langchain/cohere":
+      optional: true
+    "@langchain/deepseek":
+      optional: true
+    "@langchain/google-genai":
+      optional: true
+    "@langchain/google-vertexai":
+      optional: true
+    "@langchain/google-vertexai-web":
+      optional: true
+    "@langchain/groq":
+      optional: true
+    "@langchain/mistralai":
+      optional: true
+    "@langchain/ollama":
+      optional: true
+    "@langchain/xai":
+      optional: true
+    axios:
+      optional: true
+    cheerio:
+      optional: true
+    handlebars:
+      optional: true
+    peggy:
+      optional: true
+    typeorm:
+      optional: true
+  checksum: 10c0/8f61bb99d041bc47bd1cd456844ba020025f87c86c2a09a9efd49dc6640a121e5a08d16d577c82418069f829ed294b0952686a2a9212f726aa4a013ac722ff46
+  languageName: node
+  linkType: hard
+
+"langsmith@npm:^0.2.0":
   version: 0.2.8
   resolution: "langsmith@npm:0.2.8"
   dependencies:
@@ -13234,6 +13352,26 @@ __metadata:
     openai:
       optional: true
   checksum: 10c0/d8b4365aedfaa824e99ec34a2f5bf6f7150a766cd59ca64d35f602c983dd34df953ee7851b1340a2a4662c581f0a9b37e3cbbf99e2afdd1a47a066020b026b07
+  languageName: node
+  linkType: hard
+
+"langsmith@npm:^0.3.29":
+  version: 0.3.29
+  resolution: "langsmith@npm:0.3.29"
+  dependencies:
+    "@types/uuid": "npm:^10.0.0"
+    chalk: "npm:^4.1.2"
+    console-table-printer: "npm:^2.12.1"
+    p-queue: "npm:^6.6.2"
+    p-retry: "npm:4"
+    semver: "npm:^7.6.3"
+    uuid: "npm:^10.0.0"
+  peerDependencies:
+    openai: "*"
+  peerDependenciesMeta:
+    openai:
+      optional: true
+  checksum: 10c0/b2555d1375889d7be0b8032fee2b7ea39722241c12850f9c39ae815a354419cf8b30a51a5707da2273fcc20fb5fbf526e8ac0f71562edc6e09b6cf41ccf21421
   languageName: node
   linkType: hard
 
@@ -13380,10 +13518,10 @@ __metadata:
     "@anatine/zod-mock": "npm:^3.13.5"
     "@faker-js/faker": "npm:^8.4.1"
     "@heroui/react": "npm:2.6.14"
-    "@langchain/community": "npm:^0.3.17"
-    "@langchain/core": "npm:^0.3.20"
-    "@langchain/ollama": "npm:^0.1.2"
-    "@langchain/openai": "npm:^0.3.14"
+    "@langchain/community": "npm:^0.3.43"
+    "@langchain/core": "npm:^0.3.56"
+    "@langchain/ollama": "npm:^0.2.0"
+    "@langchain/openai": "npm:^0.5.10"
     "@paralleldrive/cuid2": "npm:^2.2.2"
     "@playwright/test": "npm:^1.42.1"
     "@rollup/plugin-replace": "npm:^5.0.5"
@@ -13428,7 +13566,7 @@ __metadata:
     husky: "npm:^9.1.7"
     jsdom: "npm:^26.0.0"
     kbar: "npm:^0.1.0-beta.45"
-    langchain: "npm:^0.3.6"
+    langchain: "npm:^0.3.26"
     lint-staged: "npm:>=10"
     localforage: "npm:^1.10.0"
     lodash: "npm:^4.17.21"
@@ -15076,21 +15214,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ollama@npm:^0.5.15":
+"ollama@npm:^0.5.12, ollama@npm:^0.5.15":
   version: 0.5.15
   resolution: "ollama@npm:0.5.15"
   dependencies:
     whatwg-fetch: "npm:^3.6.20"
   checksum: 10c0/2591d67c69614abf6353654a22edb492464d817908975a09c61551f211f6d22357b026614710a43687b917a9dcc8792f0446eae97535d43540c17870008c5537
-  languageName: node
-  linkType: hard
-
-"ollama@npm:^0.5.9":
-  version: 0.5.10
-  resolution: "ollama@npm:0.5.10"
-  dependencies:
-    whatwg-fetch: "npm:^3.6.20"
-  checksum: 10c0/424b92ef640fb562c590bd8bf394c0cdab3eb93a1b70a58bcb98090957375e05130f41d94578124c0fc79b68448db351e3439e4dc3582ccdb7ae13343951c527
   languageName: node
   linkType: hard
 
@@ -15151,6 +15280,31 @@ __metadata:
   bin:
     openai: bin/cli
   checksum: 10c0/3278781a3c21de66adadeb26e21051f43c0105e8e2541d6fab1264c72f70d451f545fd4b9f714b416ed2624dce0d799652ffc5fc423adf94ed3620c8b156d5e9
+  languageName: node
+  linkType: hard
+
+"openai@npm:^4.96.0":
+  version: 4.100.0
+  resolution: "openai@npm:4.100.0"
+  dependencies:
+    "@types/node": "npm:^18.11.18"
+    "@types/node-fetch": "npm:^2.6.4"
+    abort-controller: "npm:^3.0.0"
+    agentkeepalive: "npm:^4.2.1"
+    form-data-encoder: "npm:1.7.2"
+    formdata-node: "npm:^4.3.2"
+    node-fetch: "npm:^2.6.7"
+  peerDependencies:
+    ws: ^8.18.0
+    zod: ^3.23.8
+  peerDependenciesMeta:
+    ws:
+      optional: true
+    zod:
+      optional: true
+  bin:
+    openai: bin/cli
+  checksum: 10c0/c938460659496c6fbf15c3f71ea4819cc64756721f162cd788311cadf6ce6a780a62ca0050cc74218a9e66f58010941717a27260ad9777dfb02e228047061430
   languageName: node
   linkType: hard
 
@@ -17245,6 +17399,13 @@ __metadata:
   dependencies:
     is-arrayish: "npm:^0.3.1"
   checksum: 10c0/df5e4662a8c750bdba69af4e8263c5d96fe4cd0f9fe4bdfa3cbdeb45d2e869dff640beaaeb1ef0e99db4d8d2ec92f85508c269f50c972174851bc1ae5bd64308
+  languageName: node
+  linkType: hard
+
+"simple-wcswidth@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "simple-wcswidth@npm:1.0.1"
+  checksum: 10c0/2befead4c97134424aa3fba593a81daa9934fd61b9e4c65374b57ac5eecc2f2be1984b017bbdbc919923e19b77f2fcbdb94434789b9643fa8c3fde3a2a6a4b6f
   languageName: node
   linkType: hard
 
@@ -19870,6 +20031,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"zod-to-json-schema@npm:^3.24.1":
+  version: 3.24.5
+  resolution: "zod-to-json-schema@npm:3.24.5"
+  peerDependencies:
+    zod: ^3.24.1
+  checksum: 10c0/0745b94ba53e652d39f262641cdeb2f75d24339fb6076a38ce55bcf53d82dfaea63adf524ebc5f658681005401687f8e9551c4feca7c4c882e123e66091dfb90
+  languageName: node
+  linkType: hard
+
 "zod@npm:^3.22.3, zod@npm:^3.22.4":
   version: 3.22.4
   resolution: "zod@npm:3.22.4"
@@ -19881,6 +20051,13 @@ __metadata:
   version: 3.23.8
   resolution: "zod@npm:3.23.8"
   checksum: 10c0/8f14c87d6b1b53c944c25ce7a28616896319d95bc46a9660fe441adc0ed0a81253b02b5abdaeffedbeb23bdd25a0bf1c29d2c12dd919aef6447652dd295e3e69
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.24.1":
+  version: 3.24.4
+  resolution: "zod@npm:3.24.4"
+  checksum: 10c0/ab3112f017562180a41a0f83d870b333677f7d6b77f106696c56894567051b91154714a088149d8387a4f50806a2520efcb666f108cd384a35c236a191186d91
   languageName: node
   linkType: hard
 
