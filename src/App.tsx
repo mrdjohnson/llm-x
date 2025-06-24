@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react'
 import { Notifications } from '@mantine/notifications'
+import { AppShell } from '@mantine/core'
 
 import Dropzone from '~/containers/Dropzone'
 
@@ -25,9 +26,9 @@ const App = () => {
 
   return (
     <Dropzone>
-      <Notifications />
+      <AppShell className="drawer drawer-end mx-auto flex max-h-svh flex-col place-self-center overflow-scroll text-base-content">
+        <Notifications />
 
-      <div className="drawer drawer-end mx-auto flex !h-dvh !max-h-dvh flex-col place-self-center text-base-content">
         <div className="md:hidden">
           <Suspense fallback={null}>
             <LazyNavbar />
@@ -59,7 +60,7 @@ const App = () => {
         </section>
 
         <LazyProgresses />
-      </div>
+      </AppShell>
     </Dropzone>
   )
 }
