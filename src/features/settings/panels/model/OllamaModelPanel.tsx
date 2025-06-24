@@ -104,7 +104,7 @@ const OllamaModelPanelTable = observer(({ connection }: PanelTableProps) => {
 
         <td className="w-fit">
           <NavButtonDiv
-            to={'ollama/' + model.modelName}
+            to={'ollama/' + encodeURIComponent(model.modelName)}
             className="align-center flex opacity-30 transition-opacity duration-200 ease-in-out hover:opacity-100"
           >
             <Edit />
