@@ -28,21 +28,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 21
-          cache: 'npm'
+          node-version: '21'
+          cache: 'yarn'
 
-      - name: Run install
-        uses: borales/actions-yarn@v5
-        with:
-          cmd: install
+      - name: Install dependencies
+        run: yarn install
 
-      - name: Build production bundle
-        uses: borales/actions-yarn@v5
-        with:
-          cmd: build
+      - name: Build
+        run: yarn build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
