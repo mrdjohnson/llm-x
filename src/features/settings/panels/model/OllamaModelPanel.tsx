@@ -194,6 +194,12 @@ export const OllamaModelSettings = observer(() => {
     ollamaStore.pull(selectedModelName)
   }
 
+  const deleteModel = async () => {
+    navigate(-1)
+
+    return ollamaStore.delete(selectedModelName)
+  }
+
   return (
     <Drawer label={modelName!}>
       <div className="flex h-full w-full flex-col p-2">
@@ -254,10 +260,7 @@ export const OllamaModelSettings = observer(() => {
             <DownloadTray />
           </button>
 
-          <button
-            onClick={() => ollamaStore.delete(selectedModelName)}
-            className="btn btn-ghost btn-sm self-end text-error"
-          >
+          <button onClick={deleteModel} className="btn btn-ghost btn-sm self-end text-error">
             <Delete className="h-5 w-5" />
           </button>
         </div>
