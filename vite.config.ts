@@ -7,6 +7,7 @@ import replace from '@rollup/plugin-replace'
 import removeConsole from 'vite-plugin-remove-console'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { comlink } from 'vite-plugin-comlink'
+import observerPlugin from 'mobx-react-observer/babel-plugin'
 
 import { pwaPlugins } from './environments/pwa/pwa.vite'
 import { chromePlugins } from './environments/chrome/chrome.vite'
@@ -43,7 +44,11 @@ export default defineConfig({
   },
   plugins: [
     comlink(),
-    react(),
+    react({
+      babel: {
+        plugins: [observerPlugin()],
+      },
+    }),
     targetPlugins,
     // @ts-expect-error this was part of the original setup, it works but probably needs to be updated
     replace(replaceOptions),
@@ -80,6 +85,6 @@ export default defineConfig({
     mockReset: true,
     environment: 'jsdom',
     globals: true,
-    include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)']
+    include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
   },
 })
