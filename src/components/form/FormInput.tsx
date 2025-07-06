@@ -1,10 +1,9 @@
-import { Input, InputProps } from "@heroui/react"
-import { forwardRef } from 'react'
+import { Input, InputProps } from '@heroui/react'
 import { twMerge } from 'tailwind-merge'
 
 type FormInputProps = Omit<InputProps, 'isInvalid'>
 
-const FormInput = forwardRef((inputProps: FormInputProps) => {
+const FormInput = (inputProps: FormInputProps) => {
   const isDisabled = inputProps.disabled || inputProps.isDisabled
   const isInvalid = !isDisabled && !!inputProps.errorMessage
 
@@ -29,6 +28,6 @@ const FormInput = forwardRef((inputProps: FormInputProps) => {
       />
     </div>
   )
-})
+}
 
 export default FormInput

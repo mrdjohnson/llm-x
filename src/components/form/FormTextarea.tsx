@@ -1,11 +1,10 @@
-import { Textarea } from "@heroui/react"
-import { forwardRef } from 'react'
+import { Textarea } from '@heroui/react'
 import { twMerge } from 'tailwind-merge'
 
 // Weird typescript issue where it did not recognize the full typing of TextAreaProps
 type FormTextareaProps = Omit<Parameters<typeof Textarea>[0], 'isInvalid'>
 
-const FormTextarea = forwardRef((textareaProps: FormTextareaProps) => {
+const FormTextarea = (textareaProps: FormTextareaProps) => {
   const isDisabled = textareaProps.disabled || textareaProps.isDisabled
   const isInvalid = !isDisabled && !!textareaProps.errorMessage
 
@@ -28,6 +27,6 @@ const FormTextarea = forwardRef((textareaProps: FormTextareaProps) => {
       />
     </div>
   )
-})
+}
 
 export default FormTextarea
