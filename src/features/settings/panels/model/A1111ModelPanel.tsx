@@ -1,5 +1,3 @@
-import { observer } from 'mobx-react-lite'
-
 import { A1111LanguageModel } from '~/core/connection/types'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
@@ -8,7 +6,7 @@ import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnec
 import A1111ConnectionViewModel from '~/core/connection/viewModels/A1111ConnectionViewModel'
 import { settingStore } from '~/core/setting/SettingStore'
 
-const A1111ModelPanel = observer(({ connection }: { connection: A1111ConnectionViewModel }) => {
+const A1111ModelPanel = ({ connection }: { connection: A1111ConnectionViewModel }) => {
   const selectedModelId = settingStore.setting?.selectedModelId
 
   const renderRow = (model: A1111LanguageModel, isMobile: boolean) =>
@@ -43,6 +41,6 @@ const A1111ModelPanel = observer(({ connection }: { connection: A1111ConnectionV
       filterInputPlaceholder="Filter by title or name..."
     />
   )
-})
+}
 
 export default A1111ModelPanel

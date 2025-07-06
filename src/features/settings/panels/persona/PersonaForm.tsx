@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -13,7 +12,7 @@ import { PersonaModel } from '~/core/persona/PersonaModel'
 import { personaTable } from '~/core/persona/PersonaTable'
 import { personaStore } from '~/core/persona/PersonaStore'
 
-export const PersonaForm = observer(() => {
+export const PersonaForm = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -103,11 +102,15 @@ export const PersonaForm = observer(() => {
             Reset
           </button>
 
-          <button className="btn btn-primary outline-none md:btn-sm" type="submit" disabled={!isDirty}>
+          <button
+            className="btn btn-primary outline-none md:btn-sm"
+            type="submit"
+            disabled={!isDirty}
+          >
             Save
           </button>
         </div>
       </form>
     </Drawer>
   )
-})
+}

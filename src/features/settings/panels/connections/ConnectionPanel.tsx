@@ -1,10 +1,9 @@
-import { observer } from 'mobx-react-lite'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useMemo, useRef } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import _ from 'lodash'
 import useMedia from 'use-media'
-import { ScrollShadow } from "@heroui/react"
+import { ScrollShadow } from '@heroui/react'
 
 import HostInput from '~/components/HostInput'
 import EnabledCheckbox from '~/components/EnabledCheckbox'
@@ -23,7 +22,7 @@ import ConnectionDataParameterSection from '~/features/settings/panels/connectio
 
 export type ConnectionFormDataType = ConnectionModel
 
-const ConnectionPanel = observer(() => {
+const ConnectionPanel = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -233,6 +232,6 @@ const ConnectionPanel = observer(() => {
       </div>
     </Drawer>
   )
-})
+}
 
 export default ConnectionPanel

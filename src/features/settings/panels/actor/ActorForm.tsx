@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { observer } from 'mobx-react-lite'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import _ from 'lodash'
@@ -13,7 +12,7 @@ import Delete from '~/icons/Delete'
 import { ActorModel } from '~/core/actor/ActorModel'
 import { actorStore } from '~/core/actor/ActorStore'
 
-export const ActorForm = observer(() => {
+export const ActorForm = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -111,6 +110,6 @@ export const ActorForm = observer(() => {
       </FormProvider>
     </Drawer>
   )
-})
+}
 
 export default ActorForm

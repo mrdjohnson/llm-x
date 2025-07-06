@@ -1,5 +1,3 @@
-import { observer } from 'mobx-react-lite'
-
 import { GeminiLanguageModel } from '~/core/connection/types'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
@@ -8,7 +6,7 @@ import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnec
 import GeminiConnectionViewModel from '~/core/connection/viewModels/GeminiConnectionViewModel'
 import { settingStore } from '~/core/setting/SettingStore'
 
-const GeminiModelPanel = observer(({ connection }: { connection: GeminiConnectionViewModel }) => {
+const GeminiModelPanel = ({ connection }: { connection: GeminiConnectionViewModel }) => {
   const selectedModelId = settingStore.setting?.selectedModelId
 
   const renderRow = (model: GeminiLanguageModel, isMobile: boolean) =>
@@ -38,6 +36,6 @@ const GeminiModelPanel = observer(({ connection }: { connection: GeminiConnectio
       filterInputPlaceholder="Filter by title or name..."
     />
   )
-})
+}
 
 export default GeminiModelPanel

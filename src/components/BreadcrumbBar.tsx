@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { observer } from 'mobx-react-lite'
-import { Breadcrumbs, BreadcrumbItem } from "@heroui/react"
+import { Breadcrumbs, BreadcrumbItem } from '@heroui/react'
 import _ from 'lodash'
 
 export type BreadcrumbType = {
@@ -13,7 +12,7 @@ type BreadcrumbBarProps = {
 }
 
 // Gets a list of crumbs and paths and determines the selected one (might be overkill and maybe I should just use the last index)
-const BreadcrumbBar = observer(({ breadcrumbs }: BreadcrumbBarProps) => {
+const BreadcrumbBar = ({ breadcrumbs }: BreadcrumbBarProps) => {
   const navigate = useNavigate()
 
   return (
@@ -34,6 +33,6 @@ const BreadcrumbBar = observer(({ breadcrumbs }: BreadcrumbBarProps) => {
       ))}
     </Breadcrumbs>
   )
-})
+}
 
 export default BreadcrumbBar

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { observer } from 'mobx-react-lite'
 import Lightbox, { Slide } from 'yet-another-react-lightbox'
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails'
 import Download from 'yet-another-react-lightbox/plugins/download'
@@ -14,7 +13,7 @@ import 'yet-another-react-lightbox/styles.css'
 import 'yet-another-react-lightbox/plugins/thumbnails.css'
 import 'yet-another-react-lightbox/plugins/captions.css'
 
-const LazyLightbox = observer(() => {
+const LazyLightbox = () => {
   const [slides, setSlides] = useState<Array<Slide & { baseId: string }>>([])
 
   const { lightboxSlides, imageUrlIndex } = lightboxStore
@@ -70,6 +69,6 @@ const LazyLightbox = observer(() => {
       open
     />
   )
-})
+}
 
 export default LazyLightbox

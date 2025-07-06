@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
 import { type MouseEvent } from 'react'
 
@@ -11,7 +10,7 @@ import Edit from '~/icons/Edit'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { chatStore } from '~/core/chat/ChatStore'
 
-export const ChatPanel = observer(() => {
+export const ChatPanel = () => {
   const { selectedChat, chats } = chatStore
   const navigate = useNavigate()
 
@@ -62,6 +61,6 @@ export const ChatPanel = observer(() => {
       }}
     />
   )
-})
+}
 
 export default ChatPanel

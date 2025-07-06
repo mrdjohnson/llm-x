@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
-import { observer } from 'mobx-react-lite'
 import { Controller, useForm } from 'react-hook-form'
 
 import Check from '~/icons/Check'
@@ -19,7 +18,7 @@ import { chatTable } from '~/core/chat/ChatTable'
 import { CURRENT_DB_TIMESTAMP_MILLISECONDS } from '~/core/setting/SettingModel'
 import ChatModelPopover from '~/components/chat/ChatModelPopover'
 
-export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked: () => void }) => {
+export const ChatSettingsSection = ({ onBackClicked }: { onBackClicked: () => void }) => {
   const {
     handleSubmit,
     reset,
@@ -204,4 +203,4 @@ export const ChatSettingsSection = observer(({ onBackClicked }: { onBackClicked:
       </dialog>
     </>
   )
-})
+}

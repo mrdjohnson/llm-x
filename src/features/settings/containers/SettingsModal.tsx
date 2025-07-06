@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import useMedia from 'use-media'
 import { Modal, ModalContent, ModalBody, Select, SelectItem } from '@heroui/react'
@@ -22,33 +21,35 @@ import {
 
 import SettingSearchBar from '~/features/settings/SettingSearchBar'
 
-const SettingsSidePanel = observer(
-  ({ onSectionClick }: { onSectionClick?: (panelName: SettingPanelOptionsType) => void }) => {
-    return _.map(
-      settingRoutesByName,
-      ({ mobileOnly, label, hidden }: SettingPanelType, panelName: SettingPanelOptionsType) => {
-        if (mobileOnly || !label) return <div key={panelName} />
-        if (hidden) return null
+const SettingsSidePanel = ({
+  onSectionClick,
+}: {
+  onSectionClick?: (panelName: SettingPanelOptionsType) => void
+}) => {
+  return _.map(
+    settingRoutesByName,
+    ({ mobileOnly, label, hidden }: SettingPanelType, panelName: SettingPanelOptionsType) => {
+      if (mobileOnly || !label) return <div key={panelName} />
+      if (hidden) return null
 
-        return (
-          <NavLink
-            to={panelName}
-            key={panelName}
-            className={({ isActive }) =>
-              twMerge('btn w-full justify-start', isActive && 'btn-neutral')
-            }
-            onClick={() => onSectionClick?.(panelName)}
-            role="link"
-          >
-            {label}
-          </NavLink>
-        )
-      },
-    )
-  },
-)
+      return (
+        <NavLink
+          to={panelName}
+          key={panelName}
+          className={({ isActive }) =>
+            twMerge('btn w-full justify-start', isActive && 'btn-neutral')
+          }
+          onClick={() => onSectionClick?.(panelName)}
+          role="link"
+        >
+          {label}
+        </NavLink>
+      )
+    },
+  )
+}
 
-const MobileSettingsSidePanel = observer(() => {
+const MobileSettingsSidePanel = () => {
   const navigate = useNavigate()
   const { pathname: selectedPanel } = useLocation()
 
@@ -84,7 +85,7 @@ const MobileSettingsSidePanel = observer(() => {
           value={'/' + panelName}
           className={twMerge(
             'w-full !min-w-[13ch] text-base-content',
-            panelName === selectedPanel && ' text-primary',
+            panelName === selectedPanel && 'text-primary',
           )}
           classNames={{
             description: ' text',
@@ -95,9 +96,9 @@ const MobileSettingsSidePanel = observer(() => {
       ))}
     </Select>
   )
-})
+}
 
-const SettingsModal = observer(() => {
+const SettingsModal = () => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
@@ -182,7 +183,7 @@ const SettingsModal = observer(() => {
                   className="w-full md:w-[200px] md:min-w-[200px] md:max-w-[200px]"
                   role="complementary"
                 >
-                  <div className="flex w-full flex-col gap-2 rounded-md bg-base-200 md:h-full md:p-2 ">
+                  <div className="flex w-full flex-col gap-2 rounded-md bg-base-200 md:h-full md:p-2">
                     {isMobile ? <MobileSettingsSidePanel /> : <SettingsSidePanel />}
 
                     <a
@@ -221,6 +222,6 @@ const SettingsModal = observer(() => {
       </DaisyUiThemeProvider>
     </Modal>
   )
-})
+}
 
 export default SettingsModal

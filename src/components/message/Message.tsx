@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react'
 import type { PropsWithChildren } from 'react'
-import { observer } from 'mobx-react-lite'
 
 import Stop from '~/icons/Stop'
 import CancelEdit from '~/icons/CancelEdit'
@@ -20,7 +19,7 @@ type CustomMessageProps = {
   messageVariant: MessageViewModel
 }
 
-export const IncomingMessage = observer(({ message, messageVariant }: CustomMessageProps) => {
+export const IncomingMessage = ({ message, messageVariant }: CustomMessageProps) => {
   // show an empty loading box when we are getting a message from the server
   // checking for content also tells the observer to re-render
   if (messageVariant?.content === undefined) return null
@@ -37,9 +36,9 @@ export const IncomingMessage = observer(({ message, messageVariant }: CustomMess
       <Loading />
     </Message>
   )
-})
+}
 
-export const MessageToEdit = observer(({ message, messageVariant }: CustomMessageProps) => {
+export const MessageToEdit = ({ message, messageVariant }: CustomMessageProps) => {
   const chat = chatStore.selectedChat!
 
   return (
@@ -56,7 +55,7 @@ export const MessageToEdit = observer(({ message, messageVariant }: CustomMessag
       <Loading />
     </Message>
   )
-})
+}
 
 export type MessageProps = PropsWithChildren<{
   message: MessageViewModel
@@ -73,10 +72,10 @@ export type MessageProps = PropsWithChildren<{
   variationIndex?: number
 }>
 
-export const Message = observer((props: MessageProps) => {
+export const Message = (props: MessageProps) => {
   return (
     <Suspense fallback={null}>
       <LazyMessage {...props} />
     </Suspense>
   )
-})
+}

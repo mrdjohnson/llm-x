@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react'
-import { observer } from 'mobx-react-lite'
 import useMedia from 'use-media'
 import { twMerge } from 'tailwind-merge'
 
@@ -10,14 +9,14 @@ import { ChatListSection } from '~/components/chat/ChatListSection'
 import { settingStore } from '~/core/setting/SettingStore'
 
 import MediaEject from '~/icons/MediaEject'
-import { Divider } from "@heroui/react"
+import { Divider } from '@heroui/react'
 
 export type AccordionSectionProps = {
   isOpen: boolean
   onSectionClicked: () => void
 }
 
-export const SideBar = observer(() => {
+export const SideBar = () => {
   const [openSectionType, setOpenSectionType] = useState<'chatList' | 'chat'>('chatList')
 
   const isMobile = useMedia('(max-width: 768px)')
@@ -53,7 +52,7 @@ export const SideBar = observer(() => {
       <div
         className={twMerge(
           'flex h-full flex-1 flex-col flex-nowrap gap-2 self-stretch bg-base-300 p-2 transition-opacity duration-300 ease-in-out',
-          isSidebarOpen || isMobile ? ' opacity-100' : ' pointer-events-none -z-10 opacity-0',
+          isSidebarOpen || isMobile ? 'opacity-100' : 'pointer-events-none -z-10 opacity-0',
         )}
       >
         <div className="hidden md:block">
@@ -81,6 +80,6 @@ export const SideBar = observer(() => {
       </button>
     </nav>
   )
-})
+}
 
 export default SideBar

@@ -2,11 +2,10 @@
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import useMedia from 'use-media'
 import { useEffect } from 'react'
-import { observer } from 'mobx-react-lite'
 
 const hour_1 = 60 * 60 * 1000
 
-const LazyPwaReloadPrompt = observer(() => {
+const LazyPwaReloadPrompt = () => {
   // automagically replaced through vite.config.ts
   const reloadSW = '__RELOAD_SW__'
 
@@ -52,6 +51,6 @@ const LazyPwaReloadPrompt = observer(() => {
   }, [needRefresh])
 
   return null
-})
+}
 
 export default LazyPwaReloadPrompt

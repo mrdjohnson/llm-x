@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import { twMerge } from 'tailwind-merge'
 
@@ -26,7 +25,7 @@ const xWords = [
   'X',
 ]
 
-const FunTitle = observer(({ className }: { className?: string }) => {
+const FunTitle = ({ className }: { className?: string }) => {
   const funTitle = settingStore.funTitle ?? 'X'
 
   const titleSections = useMemo<[string, string, string]>(() => {
@@ -63,6 +62,6 @@ const FunTitle = observer(({ className }: { className?: string }) => {
       </button>
     </span>
   )
-})
+}
 
 export default FunTitle

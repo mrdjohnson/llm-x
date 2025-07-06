@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react'
-import { observer } from 'mobx-react-lite'
-import { ScrollShadow, Tab, Tabs } from "@heroui/react"
+import { ScrollShadow, Tab, Tabs } from '@heroui/react'
 import _ from 'lodash'
 import { twMerge } from 'tailwind-merge'
 
 import AppGeneralPanel from '~/features/settings/panels/general/AppGeneralPanel'
 
-const GeneralModelPanel = observer(() => {
+const GeneralModelPanel = () => {
   const [selectedTabId, setSelectedTabId] = useState<string>('App')
 
   const selectedPanel = useMemo(() => {
@@ -51,6 +50,6 @@ const GeneralModelPanel = observer(() => {
       )}
     </div>
   )
-})
+}
 
 export default GeneralModelPanel

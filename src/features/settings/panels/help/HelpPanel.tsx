@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import _ from 'lodash'
-import { ScrollShadow } from "@heroui/react"
-import { observer } from 'mobx-react-lite'
+import { ScrollShadow } from '@heroui/react'
 import { useParams } from 'react-router-dom'
 import Markdown from 'react-markdown'
 
@@ -37,7 +36,7 @@ const CodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
   )
 }
 
-export const ConnectionHelpPanel = observer(() => {
+export const ConnectionHelpPanel = () => {
   const { id } = useParams<{ id: ConnectionTypes }>()
 
   const markdown = useMemo(() => {
@@ -72,7 +71,7 @@ export const ConnectionHelpPanel = observer(() => {
             className="prose-spacing prose flex w-full flex-wrap text-wrap break-words pl-2 prose-p:w-full"
             components={{
               h3: props => <h3 className="-ml-2 [&>*]:text-lg [&>*]:font-bold" {...props} />,
-              a: props => <a target="__blank" className="link mx-0 !text-primary " {...props} />,
+              a: props => <a target="__blank" className="link mx-0 !text-primary" {...props} />,
               code: CodeBlock,
             }}
           >
@@ -84,9 +83,9 @@ export const ConnectionHelpPanel = observer(() => {
       </div>
     </Drawer>
   )
-})
+}
 
-const HelpPanel = observer(() => {
+const HelpPanel = () => {
   const helpItems = _.values(connectionViewModelByType).map(connection =>
     connection().getSnapshot(),
   )
@@ -114,6 +113,6 @@ const HelpPanel = observer(() => {
       hasLargeItems
     />
   )
-})
+}
 
 export default HelpPanel

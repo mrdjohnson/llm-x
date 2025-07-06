@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react'
-import { observer } from 'mobx-react-lite'
 
 import Dropzone from '~/containers/Dropzone'
 
@@ -25,7 +24,7 @@ const DelayedPwaReloadPrompt = () => {
   )
 }
 
-const App = observer(() => {
+const App = () => {
   if (!settingStore.setting) {
     throw new Error('waiting for app to load')
   }
@@ -69,6 +68,6 @@ const App = observer(() => {
       </div>
     </Dropzone>
   )
-})
+}
 
 export default App

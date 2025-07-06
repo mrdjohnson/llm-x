@@ -1,11 +1,10 @@
 import _ from 'lodash'
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
-import { observer } from 'mobx-react-lite'
 
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
 import { chatStore } from '~/core/chat/ChatStore'
 
-const ScrollableChatFeed = observer((props: React.HtmlHTMLAttributes<HTMLDivElement>) => {
+const ScrollableChatFeed = (props: React.HtmlHTMLAttributes<HTMLDivElement>) => {
   const chat = chatStore.selectedChat!
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -34,6 +33,6 @@ const ScrollableChatFeed = observer((props: React.HtmlHTMLAttributes<HTMLDivElem
   }, [chat])
 
   return <div ref={containerRef} {...props} />
-})
+}
 
 export default ScrollableChatFeed

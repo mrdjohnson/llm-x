@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,7 +7,7 @@ import { connectionStore } from '~/core/connection/ConnectionStore'
 
 import Drawer from '~/containers/Drawer'
 
-const NewConnectionPanel = observer(() => {
+const NewConnectionPanel = () => {
   const navigate = useNavigate()
 
   const addConnection = async (type: ConnectionTypes) => {
@@ -41,6 +40,6 @@ const NewConnectionPanel = observer(() => {
       </div>
     </Drawer>
   )
-})
+}
 
 export default NewConnectionPanel

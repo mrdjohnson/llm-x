@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
-import { observer } from 'mobx-react-lite'
 import { twMerge } from 'tailwind-merge'
 import useMedia from 'use-media'
 
 import { toastStore } from '~/core/ToastStore'
 import { settingStore } from '~/core/setting/SettingStore'
 
-const ToastCenter = observer(() => {
+const ToastCenter = () => {
   const [hovering, setHovering] = useState(false)
   const isMobile = useMedia('(max-width: 768px)')
 
@@ -60,6 +59,6 @@ const ToastCenter = observer(() => {
       ))}
     </div>
   )
-})
+}
 
 export default ToastCenter

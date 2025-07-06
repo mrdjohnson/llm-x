@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import { useNavigate } from 'react-router'
 import { Input } from '@heroui/react'
@@ -11,7 +10,7 @@ import ChevronDown from '~/icons/ChevronDown'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { chatStore } from '~/core/chat/ChatStore'
 
-const ModelSelector = observer(() => {
+const ModelSelector = () => {
   const navigate = useNavigate()
 
   const isMobile = useMedia('(max-width: 768px)')
@@ -106,11 +105,11 @@ const ModelSelector = observer(() => {
           innerWrapper: twMerge('!cursor-pointer', isMobile && 'h-fit'),
         }}
         endContent={
-          <ChevronDown className="-rotate-90 place-self-center !stroke-[3px]  text-base-content/45" />
+          <ChevronDown className="-rotate-90 place-self-center !stroke-[3px] text-base-content/45" />
         }
       />
     </button>
   )
-})
+}
 
 export default ModelSelector

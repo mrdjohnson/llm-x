@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import Question from '~/icons/Question'
@@ -15,7 +14,7 @@ type HostInputProps = {
   isEnabled: boolean
 }
 
-const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
+const HostInput = ({ connection, isEnabled }: HostInputProps) => {
   const { host } = connection.source
 
   const {
@@ -82,6 +81,6 @@ const HostInput = observer(({ connection, isEnabled }: HostInputProps) => {
       }}
     />
   )
-})
+}
 
 export default HostInput

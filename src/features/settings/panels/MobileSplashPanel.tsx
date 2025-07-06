@@ -1,10 +1,8 @@
-import { observer } from 'mobx-react-lite'
-
 import Github from '~/icons/Github'
 
 import { SideBar } from '~/containers/SideBar'
 
-const MobileSplashPanel = observer(() => {
+const MobileSplashPanel = () => {
   return (
     <div className="flex h-full min-h-7 w-full flex-col justify-stretch gap-2">
       <div className="flex w-full flex-row gap-2">
@@ -23,6 +21,6 @@ const MobileSplashPanel = observer(() => {
       </div>
     </div>
   )
-})
+}
 
 export default MobileSplashPanel

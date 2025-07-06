@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 import { useParams } from 'react-router-dom'
 
@@ -15,7 +14,7 @@ import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import Edit from '~/icons/Edit'
 
-export const ConnectionModelPanel = observer(() => {
+export const ConnectionModelPanel = () => {
   const { id } = useParams()
 
   const connection = connectionStore.getConnectionById(id)!
@@ -31,9 +30,9 @@ export const ConnectionModelPanel = observer(() => {
       </div>
     </Drawer>
   )
-})
+}
 
-const ModelPanel = observer(() => {
+const ModelPanel = () => {
   const { selectedConnection, connections } = connectionStore
 
   const connectionToSectionItem = (
@@ -74,6 +73,6 @@ const ModelPanel = observer(() => {
       )}
     />
   )
-})
+}
 
 export default ModelPanel

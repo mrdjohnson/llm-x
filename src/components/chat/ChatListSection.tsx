@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import { Fragment } from 'react'
 import _ from 'lodash'
 import { twMerge } from 'tailwind-merge'
@@ -12,7 +11,7 @@ import Create from '~/icons/Create'
 import { chatStore } from '~/core/chat/ChatStore'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 
-export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: () => void }) => {
+export const ChatListSection = ({ onChatSelected }: { onChatSelected: () => void }) => {
   const { dateLabelToChatPairs } = chatStore
 
   const handleChatSelected = async (chat: ChatViewModel) => {
@@ -41,7 +40,7 @@ export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: (
         </AttachmentWrapper>
       </div>
 
-      <div className=" flex w-full flex-1 flex-col overflow-y-scroll text-base-content">
+      <div className="flex w-full flex-1 flex-col overflow-y-scroll text-base-content">
         <div className="no-scrollbar relative flex h-full w-full flex-1 flex-col gap-2 overflow-y-auto overflow-x-clip rounded-md">
           {_.map(dateLabelToChatPairs, ([dateLabel, chats]) => (
             <Fragment key={dateLabel}>
@@ -72,4 +71,4 @@ export const ChatListSection = observer(({ onChatSelected }: { onChatSelected: (
       </div>
     </div>
   )
-})
+}

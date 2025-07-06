@@ -1,5 +1,4 @@
 import { Input } from '@heroui/react'
-import { observer } from 'mobx-react-lite'
 import { NavLink } from 'react-router-dom'
 
 import ModelSelector from '~/components/ModelSelector'
@@ -20,7 +19,7 @@ import { personaStore } from '~/core/persona/PersonaStore'
 import { settingStore } from '~/core/setting/SettingStore'
 import { chatStore } from '~/core/chat/ChatStore'
 
-const Navbar = observer(() => {
+const Navbar = () => {
   return (
     <div className="navbar mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 bg-base-300 p-1 md:mb-0 md:flex-col md:p-0">
       <div className="ml-2 hidden items-center pr-2 md:flex md:text-xl">
@@ -61,7 +60,7 @@ const Navbar = observer(() => {
             innerWrapper: '!cursor-pointer',
           }}
           endContent={
-            <ChevronDown className="-rotate-90 place-self-center !stroke-[3px]  text-base-content/45" />
+            <ChevronDown className="-rotate-90 place-self-center !stroke-[3px] text-base-content/45" />
           }
         />
       </NavButton>
@@ -123,6 +122,6 @@ const Navbar = observer(() => {
       </div>
     </div>
   )
-})
+}
 
 export default Navbar

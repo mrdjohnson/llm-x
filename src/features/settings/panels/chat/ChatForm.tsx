@@ -1,5 +1,4 @@
 import { chatStore } from '~/core/chat/ChatStore'
-import { observer } from 'mobx-react-lite'
 import { Controller, useForm } from 'react-hook-form'
 import { useEffect, type MouseEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -18,7 +17,7 @@ import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { actorStore } from '~/core/actor/ActorStore'
 import { ActorViewModel } from '~/core/actor/ActorViewModel'
 
-const ChatActorSection = observer(({ chat }: { chat: ChatViewModel }) => {
+const ChatActorSection = ({ chat }: { chat: ChatViewModel }) => {
   const actors = chat.actors
   const navigate = useNavigate()
 
@@ -28,7 +27,7 @@ const ChatActorSection = observer(({ chat }: { chat: ChatViewModel }) => {
     let label
 
     if (actor.connection) {
-      subLabels.push(actor.connection.label + (actor.isUsingDefaults? ' (default)' : ''))
+      subLabels.push(actor.connection.label + (actor.isUsingDefaults ? ' (default)' : ''))
     }
 
     if (actor.source.name) {
@@ -91,9 +90,9 @@ const ChatActorSection = observer(({ chat }: { chat: ChatViewModel }) => {
       isSubSection
     />
   )
-})
+}
 
-export const ChatForm = observer(() => {
+export const ChatForm = () => {
   const navigate = useNavigate()
 
   const chat = chatStore.selectedChat!
@@ -188,4 +187,4 @@ export const ChatForm = observer(() => {
       </form>
     </Drawer>
   )
-})
+}

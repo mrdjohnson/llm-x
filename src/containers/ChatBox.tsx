@@ -1,5 +1,4 @@
 import { MouseEvent, useEffect } from 'react'
-import { observer } from 'mobx-react-lite'
 import _ from 'lodash'
 
 import { chatStore } from '~/core/chat/ChatStore'
@@ -16,7 +15,7 @@ import { lightboxStore } from '~/features/lightbox/LightboxStore'
 import { ChatBoxMessage } from '~/components/message/ChatBoxMessage'
 import ScrollableChatFeed from '~/containers/ScrollableChatFeed'
 
-const ChatBox = observer(() => {
+const ChatBox = () => {
   const chat = chatStore.selectedChat
 
   useEffect(() => {
@@ -99,7 +98,7 @@ const ChatBox = observer(() => {
         {isGettingData && (
           <button
             type="button"
-            className="btn btn-ghost btn-md my-1  h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] text-error/50 hover:scale-110 hover:text-error"
+            className="btn btn-ghost btn-md my-1 h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] text-error/50 hover:scale-110 hover:text-error"
             onClick={handleMessageStopped}
           >
             <Stop />
@@ -108,6 +107,6 @@ const ChatBox = observer(() => {
       </ChatBoxInputRow>
     </div>
   )
-})
+}
 
 export default ChatBox

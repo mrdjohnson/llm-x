@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
 import { type MouseEvent } from 'react'
 
@@ -20,7 +19,7 @@ const EMPTY_PERSONA: PersonaModel = {
   description: '',
 }
 
-export const PersonaPanel = observer(() => {
+export const PersonaPanel = () => {
   const { selectedPersona, personas } = personaStore
   const navigate = useNavigate()
 
@@ -83,6 +82,6 @@ export const PersonaPanel = observer(() => {
       hasLargeItems
     />
   )
-})
+}
 
 export default PersonaPanel

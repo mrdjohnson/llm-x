@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -27,7 +26,7 @@ type PanelTableProps = {
   connection: OllamaConnectionViewModel
 }
 
-const OllamaModelPanelTable = observer(({ connection }: PanelTableProps) => {
+const OllamaModelPanelTable = ({ connection }: PanelTableProps) => {
   const navigate = useNavigate()
 
   const selectedModelId = settingStore.setting?.selectedModelId
@@ -159,9 +158,9 @@ const OllamaModelPanelTable = observer(({ connection }: PanelTableProps) => {
       </div>
     </SelectionPanelTable>
   )
-})
+}
 
-export const OllamaModelSettings = observer(() => {
+export const OllamaModelSettings = () => {
   const { modelName, id } = useParams()
   const navigate = useNavigate()
 
@@ -267,14 +266,14 @@ export const OllamaModelSettings = observer(() => {
       </div>
     </Drawer>
   )
-})
+}
 
-const OllamaModelPanel = observer(({ connection }: { connection: OllamaConnectionViewModel }) => {
+const OllamaModelPanel = ({ connection }: { connection: OllamaConnectionViewModel }) => {
   return (
     <div className="relative flex h-full w-full flex-col">
       <OllamaModelPanelTable connection={connection} />
     </div>
   )
-})
+}
 
 export default OllamaModelPanel

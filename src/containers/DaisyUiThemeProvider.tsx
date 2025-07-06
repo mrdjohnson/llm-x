@@ -1,10 +1,9 @@
 import { useEffect, useMemo, type PropsWithChildren } from 'react'
-import { observer } from 'mobx-react-lite'
 import useMedia from 'use-media'
 
 import { settingStore } from '~/core/setting/SettingStore'
 
-const DaisyUiThemeProvider = observer(({ children }: PropsWithChildren) => {
+const DaisyUiThemeProvider = ({ children }: PropsWithChildren) => {
   const selectedTheme = settingStore.setting.theme
   const prefersDarkMode = useMedia('(prefers-color-scheme: dark)')
 
@@ -23,6 +22,6 @@ const DaisyUiThemeProvider = observer(({ children }: PropsWithChildren) => {
       {children}
     </div>
   )
-})
+}
 
 export default DaisyUiThemeProvider

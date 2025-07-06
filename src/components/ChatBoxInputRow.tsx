@@ -1,6 +1,5 @@
 import { useRef, PropsWithChildren, useEffect, useState, KeyboardEvent } from 'react'
 import _ from 'lodash'
-import { observer } from 'mobx-react-lite'
 import TextareaAutosize from 'react-textarea-autosize'
 import { twMerge } from 'tailwind-merge'
 import { useLocation } from 'react-router'
@@ -24,7 +23,7 @@ type ChatBoxInputRowProps = PropsWithChildren<{
   onSend: (message: string, imageUrls?: string[]) => void
 }>
 
-const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowProps) => {
+const ChatBoxInputRow = ({ chat, onSend, children }: ChatBoxInputRowProps) => {
   const { pathname } = useLocation()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -166,7 +165,7 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
         <form className="flex flex-row" onSubmit={onFormSubmit}>
           <AttachmentWrapper className="mr-2 flex !h-fit content-end items-end self-end">
             <button
-              className="btn btn-ghost btn-md my-1  h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] text-base-content/40 hover:text-primary"
+              className="btn btn-ghost btn-md my-1 h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] text-base-content/40 hover:text-primary"
               type="button"
               disabled={sendingDisabled}
             >
@@ -175,7 +174,7 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
           </AttachmentWrapper>
 
           <TextareaAutosize
-            className="no-scrollbar textarea m-0 max-h-60 min-h-0 w-full resize-none rounded-none border-0 bg-transparent p-0 text-base focus:outline-none "
+            className="no-scrollbar textarea m-0 max-h-60 min-h-0 w-full resize-none rounded-none border-0 bg-transparent p-0 text-base focus:outline-none"
             placeholder="Enter Prompt..."
             ref={textareaRef}
             value={messageContent}
@@ -187,10 +186,10 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
             autoFocus
           />
 
-          <span className=" flex !h-fit flex-row content-end items-end gap-1 self-end">
+          <span className="flex !h-fit flex-row content-end items-end gap-1 self-end">
             {chat.isEditingMessage && (
               <button
-                className="btn btn-ghost btn-md my-1  h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] text-error/50 hover:scale-110 hover:text-error"
+                className="btn btn-ghost btn-md my-1 h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] text-error/50 hover:scale-110 hover:text-error"
                 type="button"
                 onClick={() => chat.setMessageToEdit(undefined)}
                 title="Cancel edit"
@@ -201,7 +200,7 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
 
             {children || (
               <button
-                className="btn btn-ghost btn-md my-1  h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] hover:scale-110 hover:text-primary"
+                className="btn btn-ghost btn-md my-1 h-fit min-h-0 rounded-md !bg-transparent px-[2.5px] hover:scale-110 hover:text-primary"
                 disabled={inputDisabled || _.isEmpty(messageContent)}
                 title="Send"
               >
@@ -237,6 +236,6 @@ const ChatBoxInputRow = observer(({ chat, onSend, children }: ChatBoxInputRowPro
         )} */}
     </div>
   )
-})
+}
 
 export default ChatBoxInputRow

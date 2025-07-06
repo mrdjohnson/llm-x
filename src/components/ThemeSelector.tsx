@@ -1,9 +1,8 @@
 import _ from 'lodash'
-import { observer } from 'mobx-react-lite'
 import { twMerge } from 'tailwind-merge'
 
 import { settingStore } from '~/core/setting/SettingStore'
-import { Select, SelectItem } from "@heroui/react"
+import { Select, SelectItem } from '@heroui/react'
 
 const themes = {
   _system: 'System theme',
@@ -12,7 +11,7 @@ const themes = {
   garden: 'Light',
 }
 
-const ThemeSelector = observer(() => {
+const ThemeSelector = () => {
   const selectedTheme = settingStore.setting.theme
 
   return (
@@ -49,6 +48,6 @@ const ThemeSelector = observer(() => {
       </Select>
     </div>
   )
-})
+}
 
 export default ThemeSelector

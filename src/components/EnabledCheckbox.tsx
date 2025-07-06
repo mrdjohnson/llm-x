@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import { Control, Controller } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 
@@ -10,7 +9,7 @@ type EnabledCheckboxProps = {
   control: Control<ConnectionModel>
 }
 
-const EnabledCheckbox = observer(({ control, connection }: EnabledCheckboxProps) => {
+const EnabledCheckbox = ({ control, connection }: EnabledCheckboxProps) => {
   const { enabled } = connection.source
 
   return (
@@ -48,6 +47,6 @@ const EnabledCheckbox = observer(({ control, connection }: EnabledCheckboxProps)
       defaultValue={enabled}
     />
   )
-})
+}
 
 export default EnabledCheckbox

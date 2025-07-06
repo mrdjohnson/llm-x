@@ -1,5 +1,3 @@
-import { observer } from 'mobx-react-lite'
-
 import { OpenAiLanguageModel } from '~/core/connection/types'
 
 import SelectionPanelTable from '~/components/SelectionTablePanel'
@@ -8,7 +6,7 @@ import NotConnectedPanelSection from '~/features/settings/panels/model/NotConnec
 import OpenAiConnectionViewModel from '~/core/connection/viewModels/OpenAiConnectionViewModel'
 import { settingStore } from '~/core/setting/SettingStore'
 
-const OpenAiModelPanel = observer(({ connection }: { connection: OpenAiConnectionViewModel }) => {
+const OpenAiModelPanel = ({ connection }: { connection: OpenAiConnectionViewModel }) => {
   const selectedModelId = settingStore.setting?.selectedModelId
 
   const renderRow = (model: OpenAiLanguageModel, isMobile: boolean) =>
@@ -55,6 +53,6 @@ const OpenAiModelPanel = observer(({ connection }: { connection: OpenAiConnectio
       filterInputPlaceholder="Filter by id or owned by..."
     />
   )
-})
+}
 
 export default OpenAiModelPanel

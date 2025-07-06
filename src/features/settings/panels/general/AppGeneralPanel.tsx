@@ -1,8 +1,7 @@
 import _ from 'lodash'
-import { observer } from 'mobx-react-lite'
 import { useEffect, useMemo, useState } from 'react'
 import { useSpeech, useVoices } from 'react-text-to-speech'
-import { Select, SelectItem, Switch } from "@heroui/react"
+import { Select, SelectItem, Switch } from '@heroui/react'
 import { useForm } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 
@@ -82,7 +81,7 @@ const DownloadSelector = () => {
   )
 }
 
-const SpeechSelector = observer(() => {
+const SpeechSelector = () => {
   const { voices } = useVoices()
 
   const {
@@ -174,7 +173,7 @@ const SpeechSelector = observer(() => {
             <button
               className={twMerge(
                 'h-fit w-fit opacity-30 hover:scale-110 hover:opacity-100',
-                speechStatus === 'started' && ' animate-pulse opacity-100',
+                speechStatus === 'started' && 'animate-pulse opacity-100',
               )}
               onClick={speechStatus === 'started' ? pause : start}
               type="button"
@@ -280,9 +279,9 @@ const SpeechSelector = observer(() => {
       </div>
     </form>
   )
-})
+}
 
-const AppGeneralPanel = observer(() => {
+const AppGeneralPanel = () => {
   return (
     <div className="flex w-full flex-col gap-4">
       <ThemeSelector />
@@ -292,6 +291,6 @@ const AppGeneralPanel = observer(() => {
       <SpeechSelector />
     </div>
   )
-})
+}
 
 export default AppGeneralPanel
