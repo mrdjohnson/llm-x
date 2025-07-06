@@ -19,13 +19,13 @@ const direction = _.sample([
 const PromptButton = ({ title, link }: PromptButtonProps) => (
   <div
     className={twMerge(
-      'group m-[2px] rounded-full from-primary/30 to-secondary/60 p-[1px] hover:m-[0px] hover:p-[3px]',
+      'group m-[2px] rounded-full from-primary/30 to-secondary/60 p-[1px] transition-all duration-200 hover:m-[0px] hover:p-[3px]',
       direction,
     )}
   >
     <NavButton
       to={link}
-      className="btn btn-ghost rounded-full bg-base-100 text-base-content/60 group-hover:!bg-base-100 group-hover:text-base-content"
+      className="btn btn-ghost rounded-full bg-base-100 text-base-content/60 transition-all duration-200 group-hover:!bg-base-100 group-hover:text-base-content"
     >
       <p className="first-letter:text-semibold">{title}</p>
     </NavButton>
