@@ -16,6 +16,7 @@ import { chatStore } from '~/core/chat/ChatStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
 import { messageTable } from '~/core/message/MessageTable'
+import { humanizeShortcut } from '~/utils/humanizeShortcut'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -71,7 +72,13 @@ export function RenderResults() {
               {item.ancestors[0] && `   ${item.ancestors[0].name} > `}
             </span>
 
-            <span className="font-semibold">{item.name}</span>
+            <div className="flex flex-row gap-3">
+              <span className="font-semibold">{item.name}</span>
+
+              {item.shortcut && (
+                <span className="text-base-content/80">{humanizeShortcut(item.shortcut[0])}</span>
+              )}
+            </div>
 
             {item.subtitle && (
               <>
