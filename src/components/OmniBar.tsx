@@ -498,7 +498,8 @@ const useDeleteActions = () => {
 const OmniBar = () => {
   const navigate = useNavigate()
 
-  const toggleSidebar = () => settingStore.update({ isSidebarOpen: !settingStore.setting.isSidebarOpen })
+  const toggleSidebar = () =>
+    settingStore.update({ isSidebarOpen: !settingStore.setting.isSidebarOpen })
 
   useRegisterThemeActions()
   useRegisterModelActions()

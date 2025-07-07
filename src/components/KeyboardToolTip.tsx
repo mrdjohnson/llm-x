@@ -1,12 +1,10 @@
-import { TooltipProps, Kbd } from "@heroui/react"
+import { TooltipProps, Kbd } from '@heroui/react'
 import ToolTip from '~/components/Tooltip'
 
 const isMac = () =>
-  typeof window !== "undefined" &&
-  (
-    navigator.userAgentData?.platform === 'macOS'
-    || /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent)
-  )
+  typeof window !== 'undefined' &&
+  ((navigator as any).userAgentData?.platform === 'macOS' ||
+    /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent))
 
 const cmdKey = isMac() ? 'command' : 'ctrl'
 
