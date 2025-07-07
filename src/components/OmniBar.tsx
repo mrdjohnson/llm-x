@@ -548,6 +548,10 @@ const OmniBar = () => {
         event.preventDefault()
         chatStore.createChat()
       },
+      '$mod+j': (event: Event) => {
+        event.preventDefault()
+        focusStore.focusChatInput()
+      },
     })
   }, [])
 
