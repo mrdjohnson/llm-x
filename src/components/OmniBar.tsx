@@ -521,7 +521,7 @@ const OmniBar = () => {
       keywords: 'toggle side bar sidebar',
       section: 'Actions',
       shortcut: ['$mod+m'],
-      perform: () => settingStore.update({ isSidebarOpen: !settingStore.setting.isSidebarOpen }),
+      perform: () => settingStore.toggleSideBar(),
     }),
   ])
 

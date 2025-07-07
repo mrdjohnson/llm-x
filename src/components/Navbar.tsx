@@ -25,9 +25,7 @@ const Navbar = () => {
       <div className="ml-2 hidden items-center pr-2 md:flex md:text-xl">
         <button
           className="absolute left-2 text-base-content/30 transition-colors duration-100 ease-in-out hover:text-base-content/80"
-          onClick={() =>
-            settingStore.update({ isSidebarOpen: !settingStore.setting.isSidebarOpen })
-          }
+          onClick={() => settingStore.toggleSideBar()}
         >
           <ShrinkHorizontal />
         </button>

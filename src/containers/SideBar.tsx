@@ -74,7 +74,7 @@ export const SideBar = () => {
           'group absolute -right-8 top-[45%] z-20 opacity-30 transition-all duration-300 ease-in-out hover:opacity-100 group-hover/sidebar:opacity-100',
           isSidebarOpen && '-right-4',
         )}
-        onClick={() => settingStore.update({ isSidebarOpen: !isSidebarOpen })}
+        onClick={() => settingStore.toggleSideBar()}
       >
         <MediaEject className={twMerge('h-8 w-8 rotate-90', isSidebarOpen && '-rotate-90')} />
       </button>
