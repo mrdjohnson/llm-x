@@ -67,8 +67,7 @@ const Navbar = () => {
 
       <div className="flex w-fit flex-row gap-2 md:w-full md:justify-evenly">
         <KeyboardTooltip
-          command="O"
-          shift
+          command="$mod+Shift+O"
           placement="bottom"
           showArrow={false}
           className="-mt-2"
@@ -83,7 +82,7 @@ const Navbar = () => {
         </KeyboardTooltip>
 
         <KeyboardTooltip
-          command="K"
+          command="$mod+K"
           placement="bottom"
           showArrow={false}
           className="-mt-2 ml-auto"
@@ -98,7 +97,7 @@ const Navbar = () => {
         </KeyboardTooltip>
 
         <KeyboardTooltip
-          command="/"
+          command="$mod+/"
           placement="bottom"
           showArrow={false}
           className="-mt-2"

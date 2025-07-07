@@ -1,23 +1,20 @@
-import { TooltipProps, Kbd } from "@heroui/react"
+import { TooltipProps, Kbd } from '@heroui/react'
 
 import ToolTip from '~/components/Tooltip'
+import { humanizeShortcut } from '~/utils/humanizeShortcut'
 
 const KeyboardTooltip = ({
   command,
-  shift,
   title,
   ...rest
-}: Omit<TooltipProps, 'label'> & { command: string; shift?: boolean; title: string }) => (
+}: Omit<TooltipProps, 'label'> & { command: string; title: string }) => (
   <ToolTip
     label={
       <span>
         {title}
 
-        <Kbd
-          keys={shift ? ['command', 'shift'] : ['command']}
-          className="ml-2 border-none bg-transparent text-base-content shadow-none"
-        >
-          {command}
+        <Kbd className="ml-2 border-none bg-transparent text-base-content shadow-none">
+          {humanizeShortcut(command)}
         </Kbd>
       </span>
     }
