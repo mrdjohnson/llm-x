@@ -505,7 +505,6 @@ const OmniBar = () => {
       name: 'New chat',
       keywords: 'empty goto go to new chat create',
       section: 'Actions',
-      shortcut: ['$mod+Shift+O'],
       perform: () => chatStore.createChat(),
     }),
 
@@ -545,6 +544,10 @@ const OmniBar = () => {
       '$mod+j': (event: Event) => {
         event.preventDefault()
         focusStore.focusChatInput()
+      },
+      '$mod+Shift+O': (event: Event) => {
+        event.preventDefault()
+        chatStore.createChat()
       },
     })
   }, [])
