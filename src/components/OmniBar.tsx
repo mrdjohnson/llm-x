@@ -17,6 +17,7 @@ import { connectionStore } from '~/core/connection/ConnectionStore'
 import { focusStore } from '~/core/FocusStore'
 
 import { messageTable } from '~/core/message/MessageTable'
+import themes from 'daisyui/src/theming/themes'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -88,6 +89,27 @@ export function RenderResults() {
 }
 
 const useRegisterThemeActions = () => {
+  const themeNames = Object.keys(themes)
+
+  const themeActions = themeNames.map(theme => ({
+    id: theme,
+    name: theme.charAt(0).toUpperCase() + theme.slice(1),
+    keywords: `${theme} theme`,
+    section: 'Theme',
+    perform: async () => settingStore.update({ theme }),
+    parent: 'theme',
+  }))
+
+  // Optionally add a "System" theme
+  themeActions.push({
+    id: '_system',
+    name: 'System',
+    keywords: 'system theme',
+    section: 'Theme',
+    perform: async () => settingStore.update({ theme: '_system' }),
+    parent: 'theme',
+  })
+
   useRegisterActions([
     {
       id: 'theme',
@@ -95,38 +117,7 @@ const useRegisterThemeActions = () => {
       keywords: 'interface color dark light',
       section: 'Preferences',
     },
-    {
-      id: 'dark',
-      name: 'Dark',
-      keywords: 'dark theme',
-      section: 'Theme',
-      perform: async () => settingStore.update({ theme: 'dark' }),
-      parent: 'theme',
-    },
-    {
-      id: 'dracula',
-      name: 'Dracula',
-      keywords: 'dracula theme',
-      section: 'Theme',
-      perform: async () => settingStore.update({ theme: 'dracula' }),
-      parent: 'theme',
-    },
-    {
-      id: '_system',
-      name: 'System',
-      keywords: 'system theme',
-      section: 'Theme',
-      perform: async () => settingStore.update({ theme: '_system' }),
-      parent: 'theme',
-    },
-    {
-      id: 'garden',
-      name: 'Light',
-      keywords: 'light garden theme',
-      section: 'Theme',
-      perform: async () => settingStore.update({ theme: 'garden' }),
-      parent: 'theme',
-    },
+    ...themeActions,
   ])
 }
 
