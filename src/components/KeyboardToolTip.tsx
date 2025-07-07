@@ -1,6 +1,14 @@
 import { TooltipProps, Kbd } from "@heroui/react"
-
 import ToolTip from '~/components/Tooltip'
+
+const isMac = () =>
+  typeof window !== "undefined" &&
+  (
+    navigator.userAgentData?.platform === 'macOS'
+    || /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent)
+  )
+
+const cmdKey = isMac() ? 'command' : 'ctrl'
 
 const KeyboardTooltip = ({
   command,
@@ -14,7 +22,7 @@ const KeyboardTooltip = ({
         {title}
 
         <Kbd
-          keys={shift ? ['command', 'shift'] : ['command']}
+          keys={shift ? [cmdKey, 'shift'] : [cmdKey]}
           className="ml-2 border-none bg-transparent text-base-content shadow-none"
         >
           {command}
