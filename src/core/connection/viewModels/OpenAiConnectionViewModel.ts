@@ -78,7 +78,7 @@ class OpenAiConnectionViewModel extends BaseConnectionViewModel<IOpenAiModel> {
   override modelFilter(model: OpenAiLanguageModel, filterText: string) {
     return (
       model.modelName.toLowerCase().includes(filterText.toLowerCase()) ||
-      model.ownedBy.toLowerCase().includes(filterText.toLowerCase())
+      model.ownedBy?.toLowerCase().includes(filterText.toLowerCase())
     )
   }
 }
