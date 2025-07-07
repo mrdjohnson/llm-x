@@ -14,6 +14,7 @@ import { settingStore } from '~/core/setting/SettingStore'
 import { personaStore } from '~/core/persona/PersonaStore'
 import { chatStore } from '~/core/chat/ChatStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
+import { focusStore } from '~/core/FocusStore'
 
 import { messageTable } from '~/core/message/MessageTable'
 
@@ -549,6 +550,10 @@ const OmniBar = () => {
       },
       '$mod+m': () => {
         toggleSidebar()
+      },
+      '$mod+j': (event: Event) => {
+        event.preventDefault()
+        focusStore.focusChatInput()
       },
     })
   }, [])
