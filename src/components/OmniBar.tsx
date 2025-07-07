@@ -521,13 +521,14 @@ const OmniBar = () => {
     return tinykeys(window, {
       '$mod+k': (event: Event) => {
         event.preventDefault()
-
         navigate('/search')
       },
-      '$mod+/': () => {
+      '$mod+/': (event: Event) => {
+        event.preventDefault()
         navigate('/initial')
       },
-      '$mod+.': () => {
+      '$mod+.': (event: Event) => {
+        event.preventDefault()
         const selectedConnectionId = connectionStore.selectedConnection?.id
         if (selectedConnectionId) {
           navigate(`/models/${selectedConnectionId}`)
@@ -535,10 +536,12 @@ const OmniBar = () => {
           navigate('/models')
         }
       },
-      '$mod+;': () => {
+      '$mod+;': (event: Event) => {
+        event.preventDefault()
         navigate('/personas')
       },
-      '$mod+m': () => {
+      '$mod+m': (event: Event) => {
+        event.preventDefault()
         toggleSidebar()
       },
       '$mod+j': (event: Event) => {
