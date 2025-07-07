@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { chatStore } from '~/core/chat/ChatStore'
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
 import { actorStore } from '~/core/actor/ActorStore'
+import { settingStore } from '~/core/setting/SettingStore'
 
 import ChatBoxInputRow from '~/components/ChatBoxInputRow'
 import ChatBoxPrompt from '~/components/ChatBoxPrompt'
@@ -14,6 +15,7 @@ import Stop from '~/icons/Stop'
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 import { ChatBoxMessage } from '~/components/message/ChatBoxMessage'
 import ScrollableChatFeed from '~/containers/ScrollableChatFeed'
+import ModelAndPersonaDisplay from '~/components/ModelAndPersonaDisplay'
 
 const ChatBox = () => {
   const chat = chatStore.selectedChat
@@ -71,6 +73,7 @@ const ChatBox = () => {
   const isEditingMessage = !!chat.messageToEdit
   const variationIdToEdit = chat.variationToEdit?.id
   const lightboxMessageId = lightboxStore.lightboxMessage?.id
+  const isSidebarOpen = settingStore.setting.isSidebarOpen
 
   return (
     <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-hidden rounded-md">
@@ -105,6 +108,8 @@ const ChatBox = () => {
           </button>
         )}
       </ChatBoxInputRow>
+
+      {!isSidebarOpen && <ModelAndPersonaDisplay />}
     </div>
   )
 }
