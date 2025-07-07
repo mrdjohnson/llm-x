@@ -195,7 +195,6 @@ const useRegisterModelActions = () => {
         keywords: 'model modal open select',
         section: 'Actions',
         priority: Priority.LOW,
-        shortcut: ['$mod+.'],
         perform: () => navigate('/models'),
       })
 
@@ -227,7 +226,6 @@ const useRegisterPersonaActions = () => {
           keywords: 'persona open select',
           section: 'Actions',
           priority: Priority.LOW,
-          shortcut: ['$mod+Shift+.'],
           perform: () => navigate('personas'),
         },
       ]
@@ -500,6 +498,8 @@ const useDeleteActions = () => {
 const OmniBar = () => {
   const navigate = useNavigate()
 
+  const toggleSidebar = () => settingStore.update({ isSidebarOpen: !settingStore.setting.isSidebarOpen })
+
   useRegisterThemeActions()
   useRegisterModelActions()
   useRegisterPersonaActions()
@@ -520,8 +520,7 @@ const OmniBar = () => {
       name: 'Toggle Sidebar',
       keywords: 'toggle side bar sidebar',
       section: 'Actions',
-      shortcut: ['$mod+m'],
-      perform: () => settingStore.update({ isSidebarOpen: !settingStore.setting.isSidebarOpen }),
+      perform: () => toggleSidebar(),
     }),
   ])
 
@@ -535,6 +534,20 @@ const OmniBar = () => {
       },
       '$mod+/': () => {
         navigate('/initial')
+      },
+      '$mod+.': () => {
+        const selectedConnectionId = connectionStore.selectedConnection?.id
+        if (selectedConnectionId) {
+          navigate(`/models/${selectedConnectionId}`)
+        } else {
+          navigate('/models')
+        }
+      },
+      '$mod+;': () => {
+        navigate('/personas')
+      },
+      '$mod+m': () => {
+        toggleSidebar()
       },
     })
   }, [])
