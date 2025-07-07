@@ -195,6 +195,7 @@ const useRegisterModelActions = () => {
         keywords: 'model modal open select',
         section: 'Actions',
         priority: Priority.LOW,
+        shortcut: ['$mod+.'],
         perform: () => navigate('/models'),
       })
 
@@ -226,6 +227,7 @@ const useRegisterPersonaActions = () => {
           keywords: 'persona open select',
           section: 'Actions',
           priority: Priority.LOW,
+          shortcut: ['$mod+Shift+.'],
           perform: () => navigate('personas'),
         },
       ]
@@ -512,6 +514,14 @@ const OmniBar = () => {
       section: 'Actions',
       shortcut: ['$mod+Shift+O'],
       perform: () => chatStore.createChat(),
+    }),
+
+    createAction({
+      name: 'Toggle Sidebar',
+      keywords: 'toggle side bar sidebar',
+      section: 'Actions',
+      shortcut: ['$mod+m'],
+      perform: () => settingStore.update({ isSidebarOpen: !settingStore.setting.isSidebarOpen }),
     }),
   ])
 
