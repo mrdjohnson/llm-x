@@ -23,12 +23,20 @@ const Navbar = () => {
   return (
     <div className="navbar mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 bg-base-300 p-1 md:mb-0 md:flex-col md:p-0">
       <div className="ml-2 hidden items-center pr-2 md:flex md:text-xl">
-        <button
-          className="absolute left-2 text-base-content/30 transition-colors duration-100 ease-in-out hover:text-base-content/80"
-          onClick={() => settingStore.toggleSideBar()}
+        <KeyboardTooltip
+          command="$mod+M"
+          placement="bottom"
+          showArrow={false}
+          className="-mt-2"
+          title="Toggle Sidebar"
         >
-          <ShrinkHorizontal />
-        </button>
+          <button
+            className="absolute left-2 text-base-content/30 transition-colors duration-100 ease-in-out hover:text-base-content/80"
+            onClick={() => settingStore.toggleSideBar()}
+          >
+            <ShrinkHorizontal />
+          </button>
+        </KeyboardTooltip>
 
         <FunTitle className="md:text-xl" />
       </div>

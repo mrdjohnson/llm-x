@@ -11,6 +11,8 @@ import { settingStore } from '~/core/setting/SettingStore'
 import MediaEject from '~/icons/MediaEject'
 import { Divider } from '@heroui/react'
 
+import KeyboardTooltip from '~/components/KeyboardToolTip'
+
 export type AccordionSectionProps = {
   isOpen: boolean
   onSectionClicked: () => void
@@ -69,15 +71,23 @@ export const SideBar = () => {
       </div>
 
       {/* hide sidebar button */}
-      <button
-        className={twMerge(
-          'group absolute -right-8 top-[45%] z-20 opacity-30 transition-all duration-300 ease-in-out hover:opacity-100 group-hover/sidebar:opacity-100',
-          isSidebarOpen && '-right-4',
-        )}
-        onClick={() => settingStore.toggleSideBar()}
+      <KeyboardTooltip
+        command="$mod+M"
+        placement="bottom"
+        showArrow={false}
+        className="-mt-2"
+        title="Toggle Sidebar"
       >
-        <MediaEject className={twMerge('h-8 w-8 rotate-90', isSidebarOpen && '-rotate-90')} />
-      </button>
+        <button
+          className={twMerge(
+            'group absolute -right-8 top-[45%] z-20 opacity-30 transition-all duration-300 ease-in-out hover:opacity-100 group-hover/sidebar:opacity-100',
+            isSidebarOpen && '-right-4',
+          )}
+          onClick={() => settingStore.toggleSideBar()}
+        >
+          <MediaEject className={twMerge('h-8 w-8 rotate-90', isSidebarOpen && '-rotate-90')} />
+        </button>
+      </KeyboardTooltip>
     </nav>
   )
 }
