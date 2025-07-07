@@ -528,7 +528,9 @@ const OmniBar = () => {
   useEffect(() => {
     // manually handle keybindings since kbar has some kind of bug around re-opening
     return tinykeys(window, {
-      '$mod+k': () => {
+      '$mod+k': (event: Event) => {
+        event.preventDefault()
+
         navigate('/search')
       },
       '$mod+/': () => {
