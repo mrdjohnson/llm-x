@@ -195,7 +195,6 @@ const useRegisterModelActions = () => {
         keywords: 'model modal open select',
         section: 'Actions',
         priority: Priority.LOW,
-        shortcut: ['$mod+.'],
         perform: () => navigate('/models'),
       })
 
@@ -227,7 +226,6 @@ const useRegisterPersonaActions = () => {
           keywords: 'persona open select',
           section: 'Actions',
           priority: Priority.LOW,
-          shortcut: ['$mod+Shift+.'],
           perform: () => navigate('personas'),
         },
       ]
@@ -512,7 +510,6 @@ const OmniBar = () => {
       name: 'New chat',
       keywords: 'empty goto go to new chat create',
       section: 'Actions',
-      shortcut: ['$mod+Shift+O'],
       perform: () => chatStore.createChat(),
     }),
 
@@ -530,11 +527,32 @@ const OmniBar = () => {
     return tinykeys(window, {
       '$mod+k': (event: Event) => {
         event.preventDefault()
-
         navigate('/search')
       },
-      '$mod+/': () => {
+      '$mod+/': (event: Event) => {
+        event.preventDefault()
         navigate('/initial')
+      },
+      '$mod+.': (event: Event) => {
+        event.preventDefault()
+        const selectedConnectionId = connectionStore.selectedConnection?.id
+        if (selectedConnectionId) {
+          navigate(`/models/${selectedConnectionId}`)
+        } else {
+          navigate('/models')
+        }
+      },
+      '$mod+;': (event: Event) => {
+        event.preventDefault()
+        navigate('/personas')
+      },
+      '$mod+m': (event: Event) => {
+        event.preventDefault()
+        settingStore.toggleSideBar()
+      },
+      '$mod+Shift+O': (event: Event) => {
+        event.preventDefault()
+        chatStore.createChat()
       },
     })
   }, [])
