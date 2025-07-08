@@ -19,7 +19,7 @@ import MessageFooter from '~/components/message/MessageFooter'
 import CachedImage from '~/components/CachedImage'
 import CustomMathBlock from '~/components/message/CustomMathBlock'
 import { voiceStore } from '~/core/voice/VoiceStore'
-import { ScrollShadow } from '@heroui/scroll-shadow'
+import { ScrollShadow } from '@heroui/react'
 
 const CustomCodeBlock = React.lazy(() => import('~/components/message/CustomCodeBlock'))
 
