@@ -8,6 +8,7 @@ import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { incomingMessageStore } from '~/core/IncomingMessageStore'
 import { TransferHandler } from '~/core/TransferHandler'
+import { focusStore } from '~/core/FocusStore'
 
 import AttachmentWrapper from '~/components/AttachmentWrapper'
 import CachedImage from '~/components/CachedImage'
@@ -105,6 +106,14 @@ const ChatBoxInputRow = ({ chat, onSend, children }: ChatBoxInputRowProps) => {
       }, 300)
     }
   }, [inputDisabled, chat, messageToEdit])
+
+  // Handle focus requests from focusStore
+  useEffect(() => {
+    if (focusStore.shouldFocusChatInput && textareaRef.current && !inputDisabled) {
+      textareaRef.current.focus({ preventScroll: true })
+      focusStore.clearFocusRequest()
+    }
+  }, [focusStore.shouldFocusChatInput, inputDisabled])
 
   return (
     <div

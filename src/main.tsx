@@ -2,17 +2,24 @@ import { initDb } from '~/core/db'
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { KBarProvider } from 'kbar'
-import { HeroUIProvider } from "@heroui/react"
+import { HeroUIProvider } from '@heroui/react'
 import { MemoryRouter } from 'react-router-dom'
 
 import App from '~/App'
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 
 import '~/index.css'
+import StartupSpinner from './icons/StartupSpinner'
 
 const errorPage = (
-  <div className="flex h-screen w-screen place-content-center bg-slate-700 text-3xl text-black">
-    Waiting for app to load, hard refresh may be needed
+  <div className="flex h-screen w-screen items-center justify-center bg-base-100">
+    <div className="flex flex-col items-center">
+      <StartupSpinner />
+      <span className="text-3xl text-white">Starting LLM X</span>
+      <span className="mt-2 text-base text-gray-300">
+        Try a hard refresh if this takes too long
+      </span>
+    </div>
   </div>
 )
 
