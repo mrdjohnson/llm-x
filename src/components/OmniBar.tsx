@@ -14,8 +14,10 @@ import { settingStore } from '~/core/setting/SettingStore'
 import { personaStore } from '~/core/persona/PersonaStore'
 import { chatStore } from '~/core/chat/ChatStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
+import { focusStore } from '~/core/FocusStore'
 
 import { messageTable } from '~/core/message/MessageTable'
+import { humanizeShortcut } from '~/utils/humanizeShortcut'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -71,7 +73,16 @@ export function RenderResults() {
               {item.ancestors[0] && `   ${item.ancestors[0].name} > `}
             </span>
 
-            <span className="font-semibold">{item.name}</span>
+            <div className="flex flex-row gap-3">
+              <span className="font-semibold">{item.name}</span>
+
+              {/* we're going to ignore the shortcut option and use icon to the view instead */}
+              {item.icon && (
+                <span className="badge my-auto border border-base-content/80 text-center text-base-content/80">
+                  {humanizeShortcut(item.icon as string)}
+                </span>
+              )}
+            </div>
 
             {item.subtitle && (
               <>
@@ -195,7 +206,7 @@ const useRegisterModelActions = () => {
         keywords: 'model modal open select',
         section: 'Actions',
         priority: Priority.LOW,
-        shortcut: ['$mod+.'],
+        icon: '$mod+.',
         perform: () => navigate('/models'),
       })
 
@@ -227,7 +238,7 @@ const useRegisterPersonaActions = () => {
           keywords: 'persona open select',
           section: 'Actions',
           priority: Priority.LOW,
-          shortcut: ['$mod+Shift+.'],
+          icon: '$mod+;',
           perform: () => navigate('personas'),
         },
       ]
@@ -512,7 +523,7 @@ const OmniBar = () => {
       name: 'New chat',
       keywords: 'empty goto go to new chat create',
       section: 'Actions',
-      shortcut: ['$mod+Shift+O'],
+      icon: '$mod+Shift+O',
       perform: () => chatStore.createChat(),
     }),
 
@@ -521,6 +532,7 @@ const OmniBar = () => {
       keywords: 'toggle side bar sidebar',
       section: 'Actions',
       shortcut: ['$mod+m'],
+      icon: '$mod+m',
       perform: () => settingStore.toggleSideBar(),
     }),
   ])
@@ -530,11 +542,36 @@ const OmniBar = () => {
     return tinykeys(window, {
       '$mod+k': (event: Event) => {
         event.preventDefault()
-
         navigate('/search')
       },
-      '$mod+/': () => {
+      '$mod+/': (event: Event) => {
+        event.preventDefault()
         navigate('/initial')
+      },
+      '$mod+.': (event: Event) => {
+        event.preventDefault()
+        const selectedConnectionId = connectionStore.selectedConnection?.id
+        if (selectedConnectionId) {
+          navigate(`/models/${selectedConnectionId}`)
+        } else {
+          navigate('/models')
+        }
+      },
+      '$mod+;': (event: Event) => {
+        event.preventDefault()
+        navigate('/personas')
+      },
+      '$mod+m': (event: Event) => {
+        event.preventDefault()
+        settingStore.toggleSideBar()
+      },
+      '$mod+Shift+O': (event: Event) => {
+        event.preventDefault()
+        chatStore.createChat()
+      },
+      '$mod+j': (event: Event) => {
+        event.preventDefault()
+        focusStore.focusChatInput()
       },
     })
   }, [])
