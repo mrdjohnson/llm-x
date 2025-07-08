@@ -535,7 +535,7 @@ const OmniBar = () => {
       },
       '$mod+b': (event: Event) => {
         event.preventDefault()
-        settingStore.toggleSideBar
+        settingStore.toggleSideBar()
       },
       '$mod+j': (event: Event) => {
         event.preventDefault()
