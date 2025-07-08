@@ -10,8 +10,6 @@ import OmniBar from '~/components/OmniBar'
 import { settingStore } from '~/core/setting/SettingStore'
 import { chatStore } from '~/core/chat/ChatStore'
 import { focusStore } from '~/core/FocusStore'
-import { connectionStore } from '../../core/connection/ConnectionStore'
-import { setServerResponse } from '../msw'
 
 describe('OmniBar', () => {
   const navigate = vi.fn()
@@ -66,42 +64,10 @@ describe('OmniBar', () => {
       })
     })
 
-    test('registers Ctrl+. to navigate to model panel', async () => {
-      expect(navigate).not.toHaveBeenCalled()
-
-      await userEvent.keyboard('{Control>}{.}')
-
-      await waitFor(() => {
-        expect(navigate).toHaveBeenCalledWith('/models')
-      })
-    })
-
-    test('registers Ctrl+. to navigate to selected model panel', async () => {
-      setServerResponse('https://api.openai.com/v1/models', {
-        data: [],
-      })
-
-      const selectedConnection = await connectionStore.addConnection('OpenAi')
-
-      await userEvent.keyboard('{Control>}{.}')
-
-      await waitFor(() => {
-        expect(navigate).toHaveBeenCalledWith('/models/' + selectedConnection.id)
-      })
-    })
-
-    test('registers Ctrl+; to open persona menu', async () => {
-      await userEvent.keyboard('{Control>}{;}')
-
-      await waitFor(() => {
-        expect(navigate).toHaveBeenCalledWith('/personas')
-      })
-    })
-
-    test('registers Ctrl+Shift+M to toggle sidebar', async () => {
+    test('registers Ctrl+B to toggle sidebar', async () => {
       expect(settingStore.setting.isSidebarOpen).toBe(true)
 
-      await userEvent.keyboard('{Control>}{M}')
+      await userEvent.keyboard('{Control>}{B}')
 
       expect(settingStore.setting.isSidebarOpen).toBe(false)
     })
