@@ -17,6 +17,7 @@ import { connectionStore } from '~/core/connection/ConnectionStore'
 import { focusStore } from '~/core/FocusStore'
 
 import { messageTable } from '~/core/message/MessageTable'
+import { humanizeShortcut } from '~/utils/humanizeShortcut'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -72,7 +73,16 @@ export function RenderResults() {
               {item.ancestors[0] && `   ${item.ancestors[0].name} > `}
             </span>
 
-            <span className="font-semibold">{item.name}</span>
+            <div className="flex flex-row gap-3">
+              <span className="font-semibold">{item.name}</span>
+
+              {/* we're going to ignore the shortcut option and use icon to the view instead */}
+              {item.icon && (
+                <span className="badge my-auto border border-base-content/80 text-center text-base-content/80">
+                  {humanizeShortcut(item.icon as string)}
+                </span>
+              )}
+            </div>
 
             {item.subtitle && (
               <>
@@ -196,6 +206,7 @@ const useRegisterModelActions = () => {
         keywords: 'model modal open select',
         section: 'Actions',
         priority: Priority.LOW,
+        icon: '$mod+.',
         perform: () => navigate('/models'),
       })
 
@@ -227,6 +238,7 @@ const useRegisterPersonaActions = () => {
           keywords: 'persona open select',
           section: 'Actions',
           priority: Priority.LOW,
+          icon: '$mod+;',
           perform: () => navigate('personas'),
         },
       ]
@@ -511,6 +523,7 @@ const OmniBar = () => {
       name: 'New chat',
       keywords: 'empty goto go to new chat create',
       section: 'Actions',
+      icon: '$mod+Shift+O',
       perform: () => chatStore.createChat(),
     }),
 
@@ -519,6 +532,7 @@ const OmniBar = () => {
       keywords: 'toggle side bar sidebar',
       section: 'Actions',
       shortcut: ['$mod+m'],
+      icon: '$mod+m',
       perform: () => settingStore.toggleSideBar(),
     }),
   ])
