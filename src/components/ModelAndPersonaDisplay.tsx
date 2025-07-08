@@ -1,16 +1,36 @@
+import { useNavigate } from 'react-router'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { personaStore } from '~/core/persona/PersonaStore'
 
 const ModelAndPersonaDisplay = () => {
-  const { selectedModelLabel, isAnyServerConnected } = connectionStore
+  const navigate = useNavigate()
+  const { selectedModelLabel, selectedConnection, isAnyServerConnected } = connectionStore
   const persona = personaStore.selectedPersona?.name
 
+  const handleModelClick = () => {
+    if (!selectedConnection) {
+      navigate('/models')
+    } else {
+      navigate('/models/' + selectedConnection.id)
+    }
+  }
+
+  const handlePersonaClick = () => {
+    navigate('/personas')
+  }
+
   return (
-    <div className="my-2 flex space-x-2">
+    <div className="flex space-x-2">
       {isAnyServerConnected && (
-        <div className="badge gap-2 bg-base-300">Model: {selectedModelLabel}</div>
+        <div className="badge cursor-pointer gap-2 bg-base-300" onClick={handleModelClick}>
+          Model: {selectedModelLabel}
+        </div>
       )}
-      {persona && <div className="badge gap-2 bg-base-300">Persona: {persona}</div>}
+      {persona && (
+        <div className="badge cursor-pointer gap-2 bg-base-300" onClick={handlePersonaClick}>
+          Persona: {persona}
+        </div>
+      )}
     </div>
   )
 }
