@@ -561,7 +561,7 @@ const OmniBar = () => {
         event.preventDefault()
         navigate('/personas')
       },
-      '$mod+m': (event: Event) => {
+      '$mod+b': (event: Event) => {
         event.preventDefault()
         settingStore.toggleSideBar()
       },

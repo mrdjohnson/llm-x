@@ -98,10 +98,10 @@ describe('OmniBar', () => {
       })
     })
 
-    test('registers Ctrl+Shift+M to toggle sidebar', async () => {
+    test('registers Ctrl+B to toggle sidebar', async () => {
       expect(settingStore.setting.isSidebarOpen).toBe(true)
 
-      await userEvent.keyboard('{Control>}{M}')
+      await userEvent.keyboard('{Control>}{B}')
 
       expect(settingStore.setting.isSidebarOpen).toBe(false)
     })
