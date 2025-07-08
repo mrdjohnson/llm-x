@@ -499,9 +499,6 @@ const useDeleteActions = () => {
 const OmniBar = () => {
   const navigate = useNavigate()
 
-  const toggleSidebar = () =>
-    settingStore.update({ isSidebarOpen: !settingStore.setting.isSidebarOpen })
-
   useRegisterThemeActions()
   useRegisterModelActions()
   useRegisterPersonaActions()
@@ -538,7 +535,7 @@ const OmniBar = () => {
       },
       '$mod+b': (event: Event) => {
         event.preventDefault()
-        toggleSidebar()
+        settingStore.toggleSideBar
       },
       '$mod+j': (event: Event) => {
         event.preventDefault()
@@ -547,10 +544,6 @@ const OmniBar = () => {
       '$mod+Shift+O': (event: Event) => {
         event.preventDefault()
         chatStore.createChat()
-      },
-      '$mod+j': (event: Event) => {
-        event.preventDefault()
-        focusStore.focusChatInput()
       },
     })
   }, [])
