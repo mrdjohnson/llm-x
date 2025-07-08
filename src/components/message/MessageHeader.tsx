@@ -26,8 +26,6 @@ const MessageHeader = ({
 
   const hasVariations = !isVariationGroupView && !_.isEmpty(variations)
 
-  if (!botName && !isVariationGroupView && !hasVariations) return null
-
   return (
     <div
       className={twMerge(
@@ -68,6 +66,7 @@ const MessageHeader = ({
       )}
 
       {botName && <span className="opacity-30">{botName}</span>}
+      {!fromBot && <span className="opacity-30">You</span>}
     </div>
   )
 }

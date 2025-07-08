@@ -54,7 +54,7 @@ const LazyMessage = ({
   const containerRef = useRef<HTMLDivElement>(null)
 
   const WrappedContent = useMemo(() => {
-    return (
+    const markdownContent = (
       <Markdown
         remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkMath]}
         rehypePlugins={[[rehypeKatex, { output: 'mathml' }]]}
@@ -67,7 +67,23 @@ const LazyMessage = ({
         {content.replace(/\n/g, '  \n')}
       </Markdown>
     )
-  }, [content])
+
+    if (!fromBot) {
+      return (
+        <div
+          className="max-h-[200px] overflow-y-scroll"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(156, 163, 175, 0.5) transparent',
+          }}
+        >
+          {markdownContent}
+        </div>
+      )
+    }
+
+    return markdownContent
+  }, [content, fromBot])
 
   const {
     Text: Content,
