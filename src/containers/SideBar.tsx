@@ -53,7 +53,7 @@ export const SideBar = () => {
     <nav className={twMerge('group/sidebar relative h-full', width)}>
       <div
         className={twMerge(
-          'flex h-full flex-1 flex-col flex-nowrap gap-2 self-stretch bg-base-300 p-2 transition-opacity duration-300 ease-in-out',
+          'flex h-full flex-1 flex-col flex-nowrap gap-2 self-stretch bg-base-300 p-2 transition-opacity duration-150 ease-in-out',
           isSidebarOpen || isMobile ? 'opacity-100' : 'pointer-events-none -z-10 opacity-0',
         )}
       >
