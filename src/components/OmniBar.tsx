@@ -521,7 +521,7 @@ const OmniBar = () => {
       name: 'Toggle Sidebar',
       keywords: 'toggle side bar sidebar',
       section: 'Actions',
-      perform: () => toggleSidebar(),
+      perform: () => settingStore.toggleSideBar(),
     }),
   ])
 
@@ -549,7 +549,7 @@ const OmniBar = () => {
         event.preventDefault()
         navigate('/personas')
       },
-      '$mod+m': (event: Event) => {
+      '$mod+b': (event: Event) => {
         event.preventDefault()
         toggleSidebar()
       },

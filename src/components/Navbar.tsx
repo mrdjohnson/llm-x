@@ -23,8 +23,14 @@ const Navbar = () => {
   return (
     <div className="navbar mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 bg-base-300 p-1 md:mb-0 md:flex-col md:p-0">
       <div className="ml-2 hidden items-center pr-2 md:flex md:text-xl">
+        <button
+          className="absolute left-2 text-base-content/30 transition-colors duration-100 ease-in-out hover:text-base-content/80"
+          onClick={() => settingStore.toggleSideBar()}
+        >
+          <ShrinkHorizontal />
+        </button>
         <KeyboardTooltip
-          command="M"
+          command="$mod+b"
           placement="bottom"
           showArrow={false}
           className="-mt-2"
@@ -75,8 +81,7 @@ const Navbar = () => {
 
       <div className="flex w-fit flex-row gap-2 md:w-full md:justify-evenly">
         <KeyboardTooltip
-          command="O"
-          shift
+          command="$mod+Shift+O"
           placement="bottom"
           showArrow={false}
           className="-mt-2"
@@ -91,7 +96,7 @@ const Navbar = () => {
         </KeyboardTooltip>
 
         <KeyboardTooltip
-          command="K"
+          command="$mod+K"
           placement="bottom"
           showArrow={false}
           className="-mt-2 ml-auto"
@@ -106,7 +111,7 @@ const Navbar = () => {
         </KeyboardTooltip>
 
         <KeyboardTooltip
-          command="/"
+          command="$mod+/"
           placement="bottom"
           showArrow={false}
           className="-mt-2"

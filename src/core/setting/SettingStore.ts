@@ -18,6 +18,10 @@ class SettingStore {
     this.funTitle = title
   }
 
+  toggleSideBar() {
+    return this.update({ isSidebarOpen: !this.setting.isSidebarOpen })
+  }
+
   async update(patch: Partial<SettingModel>) {
     return await settingTable.put(patch)
   }
