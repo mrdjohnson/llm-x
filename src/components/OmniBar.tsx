@@ -536,19 +536,6 @@ const OmniBar = () => {
         event.preventDefault()
         navigate('/initial')
       },
-      '$mod+.': (event: Event) => {
-        event.preventDefault()
-        const selectedConnectionId = connectionStore.selectedConnection?.id
-        if (selectedConnectionId) {
-          navigate(`/models/${selectedConnectionId}`)
-        } else {
-          navigate('/models')
-        }
-      },
-      '$mod+;': (event: Event) => {
-        event.preventDefault()
-        navigate('/personas')
-      },
       '$mod+b': (event: Event) => {
         event.preventDefault()
         toggleSidebar()
