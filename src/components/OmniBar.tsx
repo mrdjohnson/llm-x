@@ -16,7 +16,7 @@ import { chatStore } from '~/core/chat/ChatStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 
 import { messageTable } from '~/core/message/MessageTable'
-import themes from 'daisyui/src/theming/themes'
+import { getThemeKeys, getThemeDisplayNames } from '~/utils/themeConfig'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -88,26 +88,17 @@ export function RenderResults() {
 }
 
 const useRegisterThemeActions = () => {
-  const themeNames = Object.keys(themes)
+  const themeKeys = getThemeKeys()
+  const themeDisplayNames = getThemeDisplayNames()
 
-  const themeActions = themeNames.map(theme => ({
+  const themeActions = themeKeys.map(theme => ({
     id: theme,
-    name: theme.charAt(0).toUpperCase() + theme.slice(1),
+    name: themeDisplayNames[theme],
     keywords: `${theme} theme`,
     section: 'Theme',
     perform: async () => settingStore.update({ theme }),
     parent: 'theme',
   }))
-
-  // Optionally add a "System" theme
-  themeActions.push({
-    id: '_system',
-    name: 'System',
-    keywords: 'system theme',
-    section: 'Theme',
-    perform: async () => settingStore.update({ theme: '_system' }),
-    parent: 'theme',
-  })
 
   useRegisterActions([
     {

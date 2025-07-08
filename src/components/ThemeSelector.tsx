@@ -3,16 +3,9 @@ import { twMerge } from 'tailwind-merge'
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { Select, SelectItem } from '@heroui/react'
+import { getThemeDisplayNames } from '~/utils/themeConfig'
 
-import allThemes from 'daisyui/src/theming/themes'
-
-const themes = {
-  _system: 'System theme',
-  ...Object.keys(allThemes).reduce<Record<string, string>>((acc, key) => {
-    acc[key] = key.charAt(0).toUpperCase() + key.slice(1)
-    return acc
-  }, {}),
-}
+const themes = getThemeDisplayNames()
 
 const ThemeSelector = () => {
   const selectedTheme = settingStore.setting.theme

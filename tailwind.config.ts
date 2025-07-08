@@ -1,28 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 
 import { heroui } from '@heroui/react'
-import themes from 'daisyui/src/theming/themes'
+import { getEnabledDaisyThemes, colors } from './src/utils/themeConfig'
 
-const errorColor = 'oklch(51% 0.17 22.1)'
-
-const allThemes = Object.entries(themes).map(([name, theme]) => {
-  if (name === 'garden') {
-    return {
-      [name]: {
-        ...theme,
-        primary: 'oklch(62.45% 0.1947 3.83636)',
-        error: errorColor,
-      },
-    }
-  }
-
-  return {
-    [name]: {
-      ...theme,
-      error: errorColor,
-    },
-  }
-})
+const allThemes = Object.entries(getEnabledDaisyThemes()).map(([name, theme]) => ({
+  [name]: theme,
+}))
 
 module.exports = {
   content: ['src/**/*.{js,ts,jsx,tsx}', './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}'],
@@ -37,12 +20,12 @@ module.exports = {
       themes: {
         light: {
           colors: {
-            danger: errorColor,
+            danger: colors.error,
           },
         },
         dark: {
           colors: {
-            danger: errorColor,
+            danger: colors.error,
           },
         },
       },

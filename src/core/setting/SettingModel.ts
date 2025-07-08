@@ -1,11 +1,11 @@
 import z from 'zod'
 import moment from 'moment'
-import allThemes from 'daisyui/src/theming/themes'
+import { getThemeKeys } from '~/utils/themeConfig'
 
 export const CURRENT_DB_TIMESTAMP = moment('Oct 28 24', 'MMM DD YY')
 export const CURRENT_DB_TIMESTAMP_MILLISECONDS = CURRENT_DB_TIMESTAMP.valueOf()
 
-const themeKeys = ['_system', ...Object.keys(allThemes)] as const
+const themeKeys = getThemeKeys() as [string, ...string[]]
 const ThemeOptions = z.enum(themeKeys)
 
 export const SettingModel = z.object({
