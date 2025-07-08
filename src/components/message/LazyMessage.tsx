@@ -19,6 +19,7 @@ import MessageFooter from '~/components/message/MessageFooter'
 import CachedImage from '~/components/CachedImage'
 import CustomMathBlock from '~/components/message/CustomMathBlock'
 import { voiceStore } from '~/core/voice/VoiceStore'
+import { ScrollShadow } from '@heroui/scroll-shadow'
 
 const CustomCodeBlock = React.lazy(() => import('~/components/message/CustomCodeBlock'))
 
@@ -54,7 +55,7 @@ const LazyMessage = ({
   const containerRef = useRef<HTMLDivElement>(null)
 
   const WrappedContent = useMemo(() => {
-    const markdownContent = (
+    return (
       <Markdown
         remarkPlugins={[[remarkGfm, { singleTilde: false }], remarkMath]}
         rehypePlugins={[[rehypeKatex, { output: 'mathml' }]]}
@@ -67,23 +68,7 @@ const LazyMessage = ({
         {content.replace(/\n/g, '  \n')}
       </Markdown>
     )
-
-    if (!fromBot) {
-      return (
-        <div
-          className="max-h-[200px] overflow-y-scroll"
-          style={{
-            scrollbarWidth: 'thin',
-            scrollbarColor: 'rgba(156, 163, 175, 0.5) transparent',
-          }}
-        >
-          {markdownContent}
-        </div>
-      )
-    }
-
-    return markdownContent
-  }, [content, fromBot])
+  }, [content])
 
   const {
     Text: Content,
@@ -164,15 +149,16 @@ const LazyMessage = ({
         <div className="join join-vertical relative min-h-10 border border-base-content/20">
           {children}
 
-          <div
+          <ScrollShadow
             className={twMerge(
               'w-full rounded-md p-2',
               children && 'min-w-16',
               error && 'join-item border-b-0',
+              !fromBot && 'max-h-[200px]',
             )}
           >
             <Content />
-          </div>
+          </ScrollShadow>
 
           {error && (
             <div
