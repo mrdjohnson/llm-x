@@ -1,12 +1,15 @@
 import z from 'zod'
 import moment from 'moment'
-import allThemes from 'daisyui/src/theming/themes'
 
 export const CURRENT_DB_TIMESTAMP = moment('Oct 28 24', 'MMM DD YY')
 export const CURRENT_DB_TIMESTAMP_MILLISECONDS = CURRENT_DB_TIMESTAMP.valueOf()
 
-const themeKeys = ['_system', ...Object.keys(allThemes)] as const
-const ThemeOptions = z.enum(themeKeys)
+const ThemeOptions = z.union([
+  z.literal('_system'),
+  z.literal('dark'),
+  z.literal('dracula'),
+  z.literal('garden'),
+])
 
 export const SettingModel = z.object({
   // setting row will only have one field
