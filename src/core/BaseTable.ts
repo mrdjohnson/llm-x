@@ -95,7 +95,13 @@ export abstract class BaseTable<
 
     if (!entity) return undefined
 
-    return this.cache.put(this.schema.parse(entity), false)
+    const result = this.schema.safeParse(entity)
+
+    if (result.success) {
+      return this.cache.put(result.data, false)
+    } else {
+      return undefined
+    }
   }
 
   async findByIds(ids: string[]): Promise<Output[]> {
