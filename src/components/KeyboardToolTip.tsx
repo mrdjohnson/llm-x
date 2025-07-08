@@ -1,4 +1,4 @@
-import { TooltipProps, Kbd } from '@heroui/react'
+import { TooltipProps } from '@heroui/react'
 
 import ToolTip from '~/components/Tooltip'
 import { humanizeShortcut } from '~/utils/humanizeShortcut'
@@ -13,9 +13,9 @@ const KeyboardTooltip = ({
       <span>
         {title}
 
-        <Kbd className="ml-2 border-none bg-transparent text-base-content shadow-none">
+        <span className="badge ml-2 border border-base-content/80 bg-transparent py-2 font-normal text-base-content/80">
           {humanizeShortcut(command)}
-        </Kbd>
+        </span>
       </span>
     }
     {...rest}
