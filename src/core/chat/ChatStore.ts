@@ -77,19 +77,21 @@ class ChatStore {
     return chatViewModel
   }
 
-  async destroyChat(chat: ChatViewModel) {
+  async destroyChat(chat: ChatViewModel, createNew: boolean = true) {
     let nextSelectedChat: ChatModel | undefined = undefined
 
-    if (this.selectedChat?.id === chat.id) {
-      nextSelectedChat = _.without(chatStore.orderedChats, chat)[0]?.source
-    }
+    if (createNew) {
+      if (this.selectedChat?.id === chat.id) {
+        nextSelectedChat = _.without(chatStore.orderedChats, chat)[0]?.source
+      }
 
-    // if we deleted the selected chat, and there was nothing to replace it
-    if (!nextSelectedChat) {
-      nextSelectedChat = await chatTable.create({})
-    }
+      // if we deleted the selected chat, and there was nothing to replace it
+      if (!nextSelectedChat) {
+        nextSelectedChat = await chatTable.create({})
+      }
 
-    await settingTable.put({ selectedChatId: nextSelectedChat?.id })
+      await settingTable.put({ selectedChatId: nextSelectedChat?.id })
+    }
 
     this.chatCache.remove(chat.id)
 
@@ -106,8 +108,11 @@ class ChatStore {
     const chats = [...this.chats]
 
     for (const chat of chats) {
-      await this.destroyChat(chat)
+      await this.destroyChat(chat, false)
     }
+
+    const newChat = await chatTable.create({})
+    await settingTable.put({ selectedChatId: newChat.id })
   }
 
   async selectChat(chat: ChatViewModel) {

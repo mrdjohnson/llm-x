@@ -63,7 +63,9 @@ export const ChatSettingsSection = ({ onBackClicked }: { onBackClicked: () => vo
   }
 
   useEffect(() => {
-    reset({ name: chat.name || 'new chat' })
+    if (chat) {
+      reset({ name: chat.name || 'new chat' })
+    }
   }, [chat])
 
   useEffect(() => {
