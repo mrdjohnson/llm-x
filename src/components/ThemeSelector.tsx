@@ -3,13 +3,9 @@ import { twMerge } from 'tailwind-merge'
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { Select, SelectItem } from '@heroui/react'
+import { getThemeDisplayNames } from '~/utils/themeConfig'
 
-const themes = {
-  _system: 'System theme',
-  dark: 'Dark',
-  dracula: 'Dracula',
-  garden: 'Light',
-}
+const themes = getThemeDisplayNames()
 
 const ThemeSelector = () => {
   const selectedTheme = settingStore.setting.theme
