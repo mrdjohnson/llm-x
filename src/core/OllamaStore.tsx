@@ -30,8 +30,8 @@ class OllamaStore {
     let failedTotal = 0
 
     const totalProgress = progressStore.create({
-      label: `0% (0/${models.length})`,
-      subLabel: 'Updating all models',
+      value: 0,
+      label: 'Updating all models',
     })
 
     for (let index = 1; index <= models.length; index++) {
@@ -41,12 +41,12 @@ class OllamaStore {
 
       const totalPercent = Math.round((index / models.length) * 100)
 
-      totalProgress.update({ label: `${totalPercent}% (${index}/${models.length})` })
+      totalProgress.update({ value: totalPercent, label: `(${index}/${models.length})` })
 
       if (progress.status === 'error') {
         failedTotal += 1
 
-        totalProgress.update({ extra: `${failedTotal} failed to update` })
+        totalProgress.update({ subLabel: `${failedTotal} failed to update` })
       }
 
       progressStore.delete(progress)
@@ -66,8 +66,8 @@ class OllamaStore {
 
   async pull(model: string, { isUpdate }: { isUpdate?: boolean } = {}) {
     const progress = progressStore.create({
-      label: '0%',
-      subLabel: model,
+      value: 0,
+      label: model,
     })
 
     try {
@@ -79,14 +79,14 @@ class OllamaStore {
         if (part.completed && part.total) {
           percent = Math.round((part.completed / part.total) * 100)
 
-          progress.update({ label: percent + '%' })
+          progress.update({ value: percent })
         }
 
         if (percent === 100) {
           progress.update({ status: 'complete' })
         }
 
-        progress.update({ extra: part.status || '' })
+        progress.update({ subLabel: part.status || '' })
       }
     } catch (e) {
       progress.status = 'error'
@@ -105,7 +105,7 @@ class OllamaStore {
           toastStore.addToast(`Completed download of ${model}`, 'success')
         }
 
-        progress.update({ label: '', extra: 'Finished' })
+        progress.update({ label: '', subLabel: 'Finished' })
       }
 
       if (!isUpdate) {

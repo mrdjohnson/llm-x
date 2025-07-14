@@ -1,27 +1,29 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, observable } from 'mobx'
 import _ from 'lodash'
 
-export type ProgressType = {
-  label: string
+export type ProgressInputType = {
+  value: number // 0-100
+  label?: string
+  subLabel?: string
+}
+
+export type ProgressType = ProgressInputType & {
   id: string
-  subLabel: string
-  extra?: string
   status: 'incomplete' | 'complete' | 'error'
   update: (params: Partial<ProgressType>) => void
 }
 
 class ProgressStore {
-  progresses: ProgressType[] = []
+  progresses = observable.array<ProgressType>()
 
   constructor() {
     makeAutoObservable(this)
   }
 
-  create({ label, subLabel }: { label: string; subLabel: string }): ProgressType {
+  create(progressInput: ProgressInputType): ProgressType {
     const progress: ProgressType = makeAutoObservable({
-      id: _.uniqueId('ollama-pull-progress-'),
-      label,
-      subLabel,
+      id: _.uniqueId('progress-'),
+      ...progressInput,
       status: 'incomplete',
 
       update(params: Partial<ProgressType>) {
@@ -35,7 +37,7 @@ class ProgressStore {
   }
 
   private _delete(progress: ProgressType) {
-    this.progresses = _.without(this.progresses, progress)
+    this.progresses.remove(progress)
   }
 
   // shouldDelay: should wait 5 seconds

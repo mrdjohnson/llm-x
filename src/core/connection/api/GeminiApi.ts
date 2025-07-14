@@ -65,7 +65,7 @@ export class GeminiApi extends BaseApi {
     let progress: ProgressType | undefined = undefined
 
     if (available === 'after-download') {
-      progress = progressStore.create({ label: '', subLabel: 'Gemini downloading' })
+      progress = progressStore.create({ value: 0, label: 'Gemini downloading' })
     }
 
     const model = await window.ai.languageModel.create({
@@ -79,7 +79,7 @@ export class GeminiApi extends BaseApi {
           const loaded = _.toNumber(_.get(e, 'loaded'))
           const total = _.toNumber(_.get(e, 'total'))
 
-          progress.update({ subLabel: `${loaded} of ${total} bytes.` })
+          progress.update({ value: loaded / total, subLabel: `${loaded} of ${total} bytes.` })
 
           if (loaded === total) {
             progressStore.delete(progress, { shouldDelay: true })

@@ -20,10 +20,10 @@ const Progresses = () => {
           key={progress.id}
         >
           <span className="absolute inset-0 flex items-center justify-center">
-            <div className="relative font-semibold text-primary-content mix-blend-hard-light">
-              {progress.subLabel}: {progress.label}
+            <div className="text-primary-content relative font-semibold mix-blend-hard-light">
+              {progress.label}: {progress.value}%
               <div className="absolute inset-y-0 left-[100%] ml-2 line-clamp-1 w-screen">
-                {progress.extra}
+                {progress.subLabel}
               </div>
             </div>
           </span>
@@ -33,7 +33,7 @@ const Progresses = () => {
               'block h-4 rounded-full text-center',
               colorCodedProgress[progress.status],
             )}
-            style={{ width: progress.label }}
+            style={{ width: progress.value + '%' }}
           />
         </span>
       ))}
