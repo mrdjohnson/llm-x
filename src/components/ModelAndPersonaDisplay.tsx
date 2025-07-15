@@ -17,7 +17,8 @@ const ModelAndPersonaDisplay = () => {
   const selectedPersonaName = personaStore.selectedPersona?.name
 
   const modelButtonLabel = useMemo(() => {
-    if (!selectedChat?.actors) return
+    if (!selectedChat?.actors[0]) return
+
     const [firstActor, ...otherActors] = selectedChat.actors
 
     if (otherActors.length > 0) {
