@@ -11,13 +11,13 @@ import { personaStore } from '~/core/persona/PersonaStore'
 const ModelAndPersonaDisplay = () => {
   const navigate = useNavigate()
 
-  const { selectedConnection } = connectionStore
+  const { selectedConnection, selectedModelLabel } = connectionStore
   const { selectedChat } = chatStore
 
   const selectedPersonaName = personaStore.selectedPersona?.name
 
   const modelButtonLabel = useMemo(() => {
-    if (!selectedChat?.actors[0]) return
+    if (!selectedChat?.actors[0]) return selectedModelLabel
 
     const [firstActor, ...otherActors] = selectedChat.actors
 
@@ -42,28 +42,20 @@ const ModelAndPersonaDisplay = () => {
 
   return (
     <div className="mt-1 flex space-x-2">
-      {selectedChat && (
-        <Button
-          variant="light"
-          size="sm"
-          className="text-base-content/60"
-          onPress={handleModelClick}
-        >
-          Model: {modelButtonLabel}
-          <ChevronDown className="size-3" />
-        </Button>
-      )}
+      <Button variant="light" size="sm" className="text-base-content/60" onPress={handleModelClick}>
+        {modelButtonLabel ? `Model: ${modelButtonLabel}` : 'No models selected'}
+        <ChevronDown className="size-3" />
+      </Button>
 
-      {selectedPersonaName && (
-        <Button
-          variant="light"
-          size="sm"
-          className="text-base-content/60"
-          onPress={handlePersonaClick}
-        >
-          Persona: {selectedPersonaName} <ChevronDown className="size-3" />
-        </Button>
-      )}
+      <Button
+        variant="light"
+        size="sm"
+        className="text-base-content/60"
+        onPress={handlePersonaClick}
+      >
+        {selectedPersonaName ? `Persona: ${selectedPersonaName}` : 'No personas selected'}
+        <ChevronDown className="size-3" />
+      </Button>
     </div>
   )
 }
