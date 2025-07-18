@@ -1,20 +1,18 @@
 import { describe, expect, test } from 'vitest'
-import { server, setServerResponse } from '~/tests/msw'
+import { server } from '~/tests/msw'
 import { http, HttpResponse } from 'msw'
 import _ from 'lodash'
 
 import { ConnectionModelFactory } from '~/core/connection/ConnectionModel.factory'
-import { OllamaModelFactory, OpenAiModelFactory } from '~/core/LanguageModel.factory'
+import { LanguageModelFactory } from '~/core/LanguageModel.factory'
 
 describe('ConnectionViewModel', () => {
   describe('OllamaConnectionViewModel', () => {
     test('is empty when nothing returns', async () => {
-      const connectionModel = await ConnectionModelFactory.create({
+      const connectionModel = await ConnectionModelFactory.withOptions({ models: [] }).create({
         type: 'Ollama',
         host: 'http://ollama-host:4444',
       })
-
-      setServerResponse('http://ollama-host:4444/api/tags', { models: [] })
 
       const emptyModels = await connectionModel.fetchLmModels()
 
@@ -23,16 +21,16 @@ describe('ConnectionViewModel', () => {
     })
 
     test('has models when models are returned', async () => {
-      const ollamaModels = OllamaModelFactory.buildList(3)
+      const ollamaModels = LanguageModelFactory.ollama().buildList(3)
 
-      const connectionModel = await ConnectionModelFactory.create({
+      const connectionModel = await ConnectionModelFactory.withOptions({
+        models: ollamaModels,
+      }).create({
         type: 'Ollama',
         host: 'http://ollama-host:4444',
       })
 
-      setServerResponse('http://ollama-host:4444/api/tags', { models: ollamaModels })
-
-      const models = _.toArray(await connectionModel.fetchLmModels())
+      const models = _.toArray(connectionModel.models)
       const modelNames = _.map(models, 'modelName')
 
       expect(models.length).toBe(3)
@@ -63,14 +61,12 @@ describe('ConnectionViewModel', () => {
     })
 
     test('clears models after fetch fails', async () => {
-      const ollamaModels = OllamaModelFactory.buildList(3)
-
-      const connectionModel = await ConnectionModelFactory.create({
+      const connectionModel = await ConnectionModelFactory.withOptions({
+        modelCount: 3,
+      }).create({
         type: 'Ollama',
         host: 'http://ollama-host:4444',
       })
-
-      setServerResponse('http://ollama-host:4444/api/tags', { models: ollamaModels })
 
       let models = _.toArray(await connectionModel.fetchLmModels())
 
@@ -92,12 +88,10 @@ describe('ConnectionViewModel', () => {
 
   describe('OpenAiConnectionViewModel', () => {
     test('is empty when nothing returns', async () => {
-      const connectionModel = await ConnectionModelFactory.create({
+      const connectionModel = await ConnectionModelFactory.withOptions({ models: [] }).create({
         type: 'OpenAi',
         host: 'http://openAi-host:4444/v1',
       })
-
-      setServerResponse('http://openAi-host:4444/v1/models', { data: [] })
 
       const emptyModels = await connectionModel.fetchLmModels()
 
@@ -106,14 +100,14 @@ describe('ConnectionViewModel', () => {
     })
 
     test('has models when models are returned', async () => {
-      const openAiModels = OpenAiModelFactory.buildList(3)
+      const openAiModels = LanguageModelFactory.openAi().buildList(3)
 
-      const connectionModel = await ConnectionModelFactory.create({
+      const connectionModel = await ConnectionModelFactory.withOptions({
+        models: openAiModels,
+      }).create({
         type: 'OpenAi',
         host: 'http://openAi-host:4444/v1',
       })
-
-      setServerResponse('http://openAi-host:4444/v1/models', { data: openAiModels })
 
       const models = _.toArray(await connectionModel.fetchLmModels())
       const modelNames = _.map(models, 'modelName')
@@ -146,14 +140,12 @@ describe('ConnectionViewModel', () => {
     })
 
     test('clears models after fetch fails', async () => {
-      const openAiModels = OpenAiModelFactory.buildList(3)
-
-      const connectionModel = await ConnectionModelFactory.create({
+      const connectionModel = await ConnectionModelFactory.withOptions({
+        modelCount: 3,
+      }).create({
         type: 'OpenAi',
         host: 'http://openAi-host:4444/v1',
       })
-
-      setServerResponse('http://openAi-host:4444/v1/models', { data: openAiModels })
 
       let models = _.toArray(await connectionModel.fetchLmModels())
 
