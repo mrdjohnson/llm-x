@@ -1,10 +1,15 @@
 import { Factory } from 'fishery'
 import { generateMock } from '@anatine/zod-mock'
 import { z } from 'zod'
-import { ModelResponse } from 'ollama/browser'
+import { ModelResponse } from 'ollama'
 
-import { IA1111Model, IGeminiModel, IOllamaModel, IOpenAiModel } from '~/core/connection/types'
-import { toOllamaModel } from '~/core/transformers/toOllamaModel'
+import {
+  BaseModelTypes,
+  ConnectionTypes,
+  IA1111Model,
+  IGeminiModel,
+  IOpenAiModel,
+} from '~/core/connection/types'
 
 const OllamaModel = z.object({
   name: z.string(),
@@ -24,21 +29,10 @@ const OllamaModel = z.object({
   model: z.string(),
 })
 
-export const OllamaModelFactory = Factory.define<ModelResponse, null, IOllamaModel>(
-  ({ onCreate }) => {
-    onCreate(response => toOllamaModel(response))
-    return generateMock(OllamaModel)
-  },
-)
-
 const A1111Model = z.object({
   title: z.string(),
   modelName: z.string(),
   type: z.literal('A1111'),
-})
-
-export const A1111ModelFactory = Factory.define<IA1111Model>(() => {
-  return generateMock(A1111Model)
 })
 
 const OpenAiModel = z.object({
@@ -48,14 +42,79 @@ const OpenAiModel = z.object({
   ownedBy: z.string(),
 })
 
-export const OpenAiModelFactory = Factory.define<IOpenAiModel>(() => {
-  return generateMock(OpenAiModel)
-})
-
 const GeminiModel = z.object({
   name: z.string().default('Gemini nano mock'),
 })
 
-export const GeminiModelFactory = Factory.define<IGeminiModel>(() => {
-  return generateMock(GeminiModel)
-})
+type LanguageModelOptions = {
+  modelParams?: Partial<BaseModelTypes>
+  modelType?: ConnectionTypes
+}
+
+class LanguageModelFactoryClass extends Factory<BaseModelTypes, { type: ConnectionTypes }> {
+  withOptions({ modelParams, modelType }: LanguageModelOptions = {}) {
+    return this.params(modelParams || {}).transient({ type: modelType })
+  }
+
+  ollama() {
+    return this.transient({ type: 'Ollama' })
+  }
+
+  buildOllama() {
+    return this.ollama().build() as ModelResponse
+  }
+
+  a1111() {
+    return this.transient({ type: 'A1111' })
+  }
+
+  buildA1111() {
+    return this.a1111().build() as IA1111Model
+  }
+
+  gemini() {
+    return this.transient({ type: 'Gemini' })
+  }
+
+  buildGemini() {
+    return this.gemini().build() as IGeminiModel
+  }
+
+  lms() {
+    return this.transient({ type: 'LMS' })
+  }
+
+  buildLms() {
+    return this.lms().build() as IOpenAiModel
+  }
+
+  openAi() {
+    return this.transient({ type: 'OpenAi' })
+  }
+
+  buildOpenAi() {
+    return this.openAi().build() as IOpenAiModel
+  }
+}
+
+export const LanguageModelFactory = LanguageModelFactoryClass.define(
+  ({ transientParams: { type = 'Ollama' } }) => {
+    switch (type) {
+      case 'Ollama':
+        return generateMock(OllamaModel)
+
+      case 'A1111':
+        return generateMock(A1111Model)
+
+      case 'Gemini':
+        return generateMock(GeminiModel)
+
+      case 'LMS':
+      case 'OpenAi':
+        return generateMock(OpenAiModel)
+
+      case undefined:
+        throw new Error('unsupported model type')
+    }
+  },
+)
