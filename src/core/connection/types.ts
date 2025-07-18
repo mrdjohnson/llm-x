@@ -1,3 +1,5 @@
+import { type ModelResponse } from 'ollama/browser'
+
 import { toOllamaModel } from '~/core/transformers/toOllamaModel'
 import { LanguageModelType } from '~/core/LanguageModel'
 import { ConnectionModel } from '~/core/connection/ConnectionModel'
@@ -31,5 +33,7 @@ export type LanguageModelTypes =
   | GeminiLanguageModel
 
 export type ConnectionTypes = ConnectionModel['type']
+
+export type BaseModelTypes = ModelResponse | IA1111Model | IOpenAiModel | IGeminiModel
 
 export type { BaseLanguageModel } from '~/core/LanguageModel'

@@ -1,17 +1,16 @@
 import { describe, expect, test } from 'vitest'
-import {
-  A1111ModelFactory,
-  GeminiModelFactory,
-  OllamaModelFactory,
-  OpenAiModelFactory,
-} from '~/core/LanguageModel.factory'
+import { LanguageModelFactory } from '~/core/LanguageModel.factory'
 import LanguageModel from '~/core/LanguageModel'
+import { toOllamaModel } from '~/core/transformers/toOllamaModel'
 
 describe('LanguageModel', () => {
   test('should correctly format an ollama model', async () => {
-    const ollamaModelResponse = await OllamaModelFactory.create()
+    const ollamaModelResponse = LanguageModelFactory.buildOllama()
 
-    const ollamaModel = LanguageModel.fromIOllamaModel(ollamaModelResponse, 'ollama-connectionId')
+    const ollamaModel = LanguageModel.fromIOllamaModel(
+      toOllamaModel(ollamaModelResponse),
+      'ollama-connectionId',
+    )
 
     expect(ollamaModel.type).toBe('Ollama')
     expect(ollamaModel.id).toBe('ollama-connectionId:' + ollamaModelResponse.name)
@@ -22,7 +21,7 @@ describe('LanguageModel', () => {
   })
 
   test('should correctly format an openai model', async () => {
-    const openAiModelResponse = OpenAiModelFactory.build()
+    const openAiModelResponse = LanguageModelFactory.buildOpenAi()
 
     const ollamaModel = LanguageModel.fromIOpenAiModel(openAiModelResponse, 'openai-connectionId')
 
@@ -35,7 +34,7 @@ describe('LanguageModel', () => {
   })
 
   test('should correctly format an gemini model', async () => {
-    const geminiModelResponse = GeminiModelFactory.build()
+    const geminiModelResponse = LanguageModelFactory.buildGemini()
 
     const ollamaModel = LanguageModel.fromIGeminiModel(geminiModelResponse, 'gemini-connectionId')
 
@@ -48,7 +47,7 @@ describe('LanguageModel', () => {
   })
 
   test('should correctly format an a1111 model', async () => {
-    const a1111ModelResponse = A1111ModelFactory.build()
+    const a1111ModelResponse = LanguageModelFactory.buildA1111()
 
     const ollamaModel = LanguageModel.fromIA1111Model(a1111ModelResponse, 'a1111-connectionId')
 
