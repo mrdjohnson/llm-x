@@ -8,11 +8,11 @@ import * as router from 'react-router'
 
 import ModelSelector from '~/components/ModelSelector'
 import { setServerResponse } from '~/tests/msw'
-import { OllamaModelFactory } from '~/core/LanguageModel.factory'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 import { LanguageModelTypes } from '~/core/connection/types'
 import { ChatModelFactory } from '~/core/chat/ChatModel.factory'
+import { ConnectionModelFactory } from '~/core/connection/ConnectionModel.factory'
 
 describe('ModelSelector', () => {
   const matchMediaMock = new MatchMediaMock()
@@ -72,13 +72,9 @@ describe('ModelSelector', () => {
       let selectedModel: LanguageModelTypes
 
       beforeEach(async () => {
-        setServerResponse('http://localhost:11434/api/tags', {
-          models: OllamaModelFactory.buildList(3),
-        })
-
-        selectedConnection = await connectionStore.addConnection('Ollama')
-
-        await selectedConnection.fetchLmModels()
+        selectedConnection = await ConnectionModelFactory.withOptions({
+          modelCount: 3,
+        }).create({ type: 'Ollama' })
 
         expect(selectedConnection.models.length).toBe(3)
 
@@ -128,7 +124,7 @@ describe('ModelSelector', () => {
       })
 
       test('displays actor length when actors are present', async () => {
-        await ChatModelFactory.create({}, { transient: { actorCount: 4 } })
+        await ChatModelFactory.withOptions({ actorCount: 4 }).create()
 
         const { container } = render(
           <MemoryRouter initialEntries={['/']}>
@@ -140,7 +136,7 @@ describe('ModelSelector', () => {
       })
 
       test('displays singular actor when only one actor present', async () => {
-        await ChatModelFactory.create({}, { transient: { actorCount: 1 } })
+        await ChatModelFactory.withOptions({ actorCount: 1 }).create()
 
         const { container } = render(
           <MemoryRouter initialEntries={['/']}>
@@ -203,7 +199,7 @@ describe('ModelSelector', () => {
       test('navigates to selected initial page on mobile', async () => {
         matchMediaMock.useMediaQuery('(max-width: 768px)')
 
-        await ChatModelFactory.create({}, { transient: { actorCount: 2 } })
+        await ChatModelFactory.withOptions({ actorCount: 2 }).create()
 
         render(
           <MemoryRouter initialEntries={['/']}>
@@ -223,7 +219,7 @@ describe('ModelSelector', () => {
       })
 
       test('navigates to selected chat', async () => {
-        const selectedChat = await ChatModelFactory.create({}, { transient: { actorCount: 2 } })
+        const selectedChat = await ChatModelFactory.withOptions({ actorCount: 2 }).create()
 
         render(
           <MemoryRouter initialEntries={['/']}>
