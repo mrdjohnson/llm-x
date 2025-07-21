@@ -111,7 +111,7 @@ export abstract class BaseTable<
   }
 
   async put(entity: Output, { skipCache = false }: { skipCache?: boolean } = {}) {
-    console.log('data: ', entity, this.getModel().safeParse(entity).data)
+    // console.log('data: ', entity, this.getModel().safeParse(entity).data)
     await this.database.setItem(entity.id, this.getModel().safeParse(entity).data)
 
     if (skipCache) {
