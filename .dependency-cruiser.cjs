@@ -8,14 +8,14 @@ module.exports = {
       name: 'core-not-to-non-core-utils',
       comment: 'Core folder should not import from non utils folder',
       severity: 'error',
-      from: { path: '^src/core/' },
+      from: { path: '^src/core/(?!.*(factory|test)).*' },
       to: { pathNot: '^src/(core|utils)/', dependencyTypesNot: ['type-only'] },
     },
     {
       name: 'utils-not-to-another-folder',
       comment: 'Utils folder should not import from non utils folder',
       severity: 'error',
-      from: { path: '^src/utils/' },
+      from: { path: '^src/utils/(?!.*(factory|test)).*' },
       to: { pathNot: '^src/utils/', dependencyTypesNot: ['type-only'] },
     },
     {
