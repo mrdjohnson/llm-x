@@ -1,4 +1,4 @@
-import { beforeEach, afterEach, beforeAll, afterAll } from 'vitest'
+import { beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
 import localforage from 'localforage'
 
 import '@testing-library/jest-dom'
@@ -31,3 +31,15 @@ afterEach(async () => {
 })
 
 afterAll(() => server.close())
+
+vi.mock('~/utils/CachedStorage.ts', () => {
+  return {
+    default: {
+      put: vi.fn().mockResolvedValue(undefined),
+      putResponse: vi.fn().mockResolvedValue(undefined),
+      get: vi.fn().mockResolvedValue(undefined),
+      delete: vi.fn().mockResolvedValue(undefined),
+      move: vi.fn().mockResolvedValue(undefined),
+    },
+  }
+})
