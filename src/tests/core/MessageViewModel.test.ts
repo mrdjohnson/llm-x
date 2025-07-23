@@ -60,25 +60,24 @@ describe('MessageViewModel', () => {
   test('isBlank returns false for non-empty content or image urls', async () => {
     expect(viewModel.isBlank()).toBe(true)
 
+    // if there is content
     viewModel.updateContent('anything')
-
     // fast forward time
     await vi.runAllTimersAsync()
 
     expect(viewModel.isBlank()).toBe(false)
 
+    // if there are images
     await resetViewModel()
-
     await viewModel.addImages(['example image'])
 
     expect(viewModel.isBlank()).toBe(false)
 
-    // TODO: fix isBlank for error messages
-    // await resetViewModel()
+    // if there are errors
+    await resetViewModel()
+    await viewModel.setError(new Error('anything'))
 
-    // await viewModel.setError(new Error('anything'))
-
-    // expect(viewModel.isBlank()).toBe(false)
+    expect(viewModel.isBlank()).toBe(false)
   })
 
   test('setError updates extras with error', async () => {

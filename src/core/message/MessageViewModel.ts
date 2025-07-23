@@ -77,7 +77,7 @@ export class MessageViewModel {
   isBlank() {
     if (!this.source) return true
 
-    return _.isEmpty(this.content || this.source.imageUrls || this.source.extras?.error)
+    return _.isEmpty(this.content || this.source.imageUrls[0] || this.source.extras?.error)
   }
 
   updateContent(content: string) {
