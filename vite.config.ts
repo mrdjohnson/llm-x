@@ -13,6 +13,8 @@ import { pwaPlugins } from './environments/pwa/pwa.vite'
 import { chromePlugins } from './environments/chrome/chrome.vite'
 import { firefoxPlugins } from './environments/firefox/firefox.vite'
 
+const COVERAGE_PERCENTAGE = 50
+
 const replaceOptions = { __DATE__: new Date().toISOString(), __RELOAD_SW__: 'false' }
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -86,5 +88,19 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
+
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      include: ['src/core/**'],
+      exclude: ['node_modules', 'dist'],
+      all: true,
+      thresholds: {
+        lines: COVERAGE_PERCENTAGE,
+        functions: COVERAGE_PERCENTAGE,
+        branches: COVERAGE_PERCENTAGE,
+        statements: COVERAGE_PERCENTAGE,
+      },
+    },
   },
 })

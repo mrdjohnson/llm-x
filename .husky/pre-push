@@ -1,2 +1,12 @@
 yarn check-deps
-yarn test run
+
+echo "Running tests and coverage check..."
+
+yarn coverage
+
+if [ $? -ne 0 ]; then
+  echo "❌ Coverage check failed."
+  exit 1
+fi
+
+echo "✅ Tests and Coverage check passed."
