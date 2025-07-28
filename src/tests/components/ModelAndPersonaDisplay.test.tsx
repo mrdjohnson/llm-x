@@ -1,13 +1,24 @@
-import { describe, expect, test } from 'vitest'
+import { afterAll, afterEach, describe, expect, test } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import _ from 'lodash'
+import MatchMediaMock from 'vitest-matchmedia-mock'
 
 import ModelAndPersonaDisplay from '~/components/ModelAndPersonaDisplay'
 import { ChatModelFactory } from '~/core/chat/ChatModel.factory'
 import { ActorModelFactory } from '~/core/actor/ActorModel.factory'
 
 describe('ModelAndPersonaDisplay', () => {
+  const matchMediaMock = new MatchMediaMock()
+
+  afterEach(() => {
+    matchMediaMock.clear()
+  })
+
+  afterAll(() => {
+    matchMediaMock.destroy()
+  })
+
   const expectModelButtonTextToEqual = async (text: string) => {
     const buttons = await screen.findAllByRole('button')
 
@@ -21,16 +32,28 @@ describe('ModelAndPersonaDisplay', () => {
   }
 
   test('shows empty buttons when nothing is selected', async () => {
-    render(
+    const { container } = render(
       <MemoryRouter initialEntries={['/']}>
         <ModelAndPersonaDisplay />
       </MemoryRouter>,
     )
 
-    console.log(screen.debug())
+    expect(container).not.toBeEmptyDOMElement()
 
     await expectModelButtonTextToEqual('No models selected')
     await expectPersonasButtonTextToEqual('No personas selected')
+  })
+
+  test('shows nothing when mobile screen', async () => {
+    matchMediaMock.useMediaQuery('(max-width: 768px)')
+
+    const { container } = render(
+      <MemoryRouter initialEntries={['/']}>
+        <ModelAndPersonaDisplay />
+      </MemoryRouter>,
+    )
+
+    expect(container).toBeEmptyDOMElement()
   })
 
   describe('chat actors', () => {

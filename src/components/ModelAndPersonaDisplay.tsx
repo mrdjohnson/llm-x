@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router'
 import { useMemo } from 'react'
 import { Button } from '@heroui/react'
+import useMedia from 'use-media'
 
 import ChevronDown from '~/icons/ChevronDown'
 
@@ -10,6 +11,8 @@ import { personaStore } from '~/core/persona/PersonaStore'
 
 const ModelAndPersonaDisplay = () => {
   const navigate = useNavigate()
+
+  const isMobile = useMedia('(max-width: 768px)')
 
   const { selectedConnection, selectedModelLabel } = connectionStore
   const { selectedChat } = chatStore
@@ -39,6 +42,8 @@ const ModelAndPersonaDisplay = () => {
   const handlePersonaClick = () => {
     navigate('/personas')
   }
+
+  if (isMobile) return null
 
   return (
     <div className="mt-1 flex space-x-2">

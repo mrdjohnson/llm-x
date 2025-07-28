@@ -3,12 +3,13 @@ import _ from 'lodash'
 import { useNavigate } from 'react-router'
 import { Input } from '@heroui/react'
 import useMedia from 'use-media'
-import { twMerge } from 'tailwind-merge'
 
 import ChevronDown from '~/icons/ChevronDown'
 
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { chatStore } from '~/core/chat/ChatStore'
+
+const NO_SERVERS_CONNECTED = 'No Servers connected'
 
 const ModelSelector = () => {
   const navigate = useNavigate()
@@ -23,12 +24,12 @@ const ModelSelector = () => {
   const hasActorOverrides = !_.isEmpty(actors)
 
   const label = useMemo(() => {
-    if (noServer) {
-      return 'No Servers connected'
-    }
-
     if (isMobile) {
       return undefined
+    }
+
+    if (noServer) {
+      return NO_SERVERS_CONNECTED
     }
 
     if (hasActorOverrides) {
@@ -56,6 +57,10 @@ const ModelSelector = () => {
   ])
 
   const modelValue = useMemo(() => {
+    if (noServer) {
+      return isMobile ? NO_SERVERS_CONNECTED : ''
+    }
+
     if (actors[0]) {
       const value = actors[0]?.modelLabel
 
@@ -67,7 +72,7 @@ const ModelSelector = () => {
     }
 
     return selectedModelLabel
-  }, [selectedModelLabel, actors[0]?.modelLabel, actors.length])
+  }, [selectedModelLabel, actors[0]?.modelLabel, actors.length, noServer, isMobile])
 
   const handleClick = () => {
     if (hasActorOverrides) {
@@ -93,16 +98,13 @@ const ModelSelector = () => {
         label={label}
         variant="bordered"
         value={modelValue}
-        size={isMobile || !selectedModelLabel ? 'sm' : undefined}
+        size={isMobile ? 'sm' : 'md'}
         className="pointer-events-none w-full !cursor-pointer bg-transparent"
         classNames={{
-          inputWrapper: twMerge(
-            'btn !cursor-pointer border-none p-2 pr-1 !min-h-0 rounded-md',
-            isMobile && 'h-fit',
-          ),
+          inputWrapper: 'btn !cursor-pointer border-none p-2 pr-1 !min-h-0 rounded-md md:h-12',
           input: '!cursor-pointer',
           label: '!cursor-pointer mr-2',
-          innerWrapper: twMerge('!cursor-pointer', isMobile && 'h-fit'),
+          innerWrapper: '!cursor-pointer',
         }}
         endContent={
           <ChevronDown className="-rotate-90 place-self-center !stroke-[3px] text-base-content/45" />

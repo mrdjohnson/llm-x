@@ -47,6 +47,22 @@ describe('ModelSelector', () => {
       expectLabelToEqualContent(container, 'No Servers connected')
     })
 
+    test('shows no servers when none are connected on mobile', async () => {
+      matchMediaMock.useMediaQuery('(max-width: 768px)')
+
+      // add a connection, but its not active
+      await connectionStore.addConnection('OpenAi')
+
+      const { container } = render(
+        <MemoryRouter initialEntries={['/']}>
+          <ModelSelector />
+        </MemoryRouter>,
+      )
+
+      expectLabelToEqualContent(container, undefined)
+      expectInputToHaveValue(container, 'No Servers connected')
+    })
+
     test('shows servers when connected with no models', async () => {
       setServerResponse('https://api.openai.com/v1/models', {
         data: [],
@@ -108,7 +124,7 @@ describe('ModelSelector', () => {
         expectInputToHaveValue(container, selectedModel.label)
       })
 
-      test('is empty on mobile', async () => {
+      test('is empty on mobile with server', async () => {
         matchMediaMock.useMediaQuery('(max-width: 768px)')
 
         await connectionStore.setSelectedModel(selectedModel.id, selectedConnection.id)
@@ -120,7 +136,7 @@ describe('ModelSelector', () => {
           </MemoryRouter>,
         )
 
-        expectLabelToEqualContent(container, undefined)
+        expectInputToHaveValue(container, selectedModel.label)
       })
 
       test('displays actor length when actors are present', async () => {
