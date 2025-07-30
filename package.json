@@ -10,6 +10,7 @@
     "chrome:dev": "cross-env TARGET=chrome vite --force",
     "chrome:dev:watch": "cross-env TARGET=chrome vite build --watch --mode development",
     "chrome:build": "rm -rf environments/chrome/dist; cross-env TARGET=chrome SW=true vite build",
+    "prepare:chrome": "yarn tsx scripts/prepare-chrome.mts",
     "firefox:dev": "cross-env TARGET=firefox vite --force",
     "firefox:dev:watch": "cross-env TARGET=firefox vite build --watch --mode development",
     "firefox:build": "cross-env TARGET=firefox SW=true vite build",
@@ -116,11 +117,13 @@
     "husky": "^9.1.7",
     "jsdom": "^26.0.0",
     "lint-staged": ">=10",
+    "load-json-file": "^7.0.1",
     "msw": "^2.7.0",
     "playwright": "^1.42.1",
     "postcss": "^8.4.34",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
+    "tsx": "^4.20.3",
     "typescript": "^5.2.2",
     "vite": "^6.0.1",
     "vite-bundle-visualizer": "^1.2.1",
@@ -132,7 +135,8 @@
     "vitest": "^3.0.5",
     "vitest-localstorage-mock": "^0.1.2",
     "vitest-matchmedia-mock": "^2.0.1",
-    "webextension-polyfill": "^0.12.0"
+    "webextension-polyfill": "^0.12.0",
+    "zip-a-folder": "^3.1.9"
   },
   "engines": {
     "node": ">=21.0.0",

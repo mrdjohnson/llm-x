@@ -13,6 +13,7 @@ dev-dist
 dist-ssr
 *.local
 coverage
+builds
 
 # https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 .yarn/*
