@@ -47,7 +47,7 @@
     "framer-motion": "^12.12.1",
     "gh-pages": "^6.1.1",
     "highlight.js": "^11.9.0",
-    "kbar": "^0.1.0-beta.45",
+    "kbar": "patch:kbar@npm%3A0.1.0-beta.45#~/.yarn/patches/kbar-npm-0.1.0-beta.45-790a9a69bc.patch",
     "langchain": "^0.3.26",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",

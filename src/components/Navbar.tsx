@@ -20,7 +20,7 @@ const Navbar = () => {
     <div className="navbar mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 bg-base-300 p-1 md:mb-0 md:flex-col md:p-0">
       <div className="ml-2 hidden items-center pr-2 md:flex md:text-xl">
         <KeyboardTooltip
-          command="$mod+M"
+          command="$mod+B"
           placement="bottom"
           showArrow={false}
           className="-mt-2"

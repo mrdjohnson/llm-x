@@ -13804,7 +13804,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kbar@npm:^0.1.0-beta.45":
+"kbar@npm:0.1.0-beta.45":
   version: 0.1.0-beta.45
   resolution: "kbar@npm:0.1.0-beta.45"
   dependencies:
@@ -13817,6 +13817,22 @@ __metadata:
     react: ^16.0.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
   checksum: 10c0/5d40e9d45df3ca3364e774f30c59a9f429edae40c6853dc0392ae3a1497725f20af1d95f8abb9b6d1f1e6608eb5cda49b7818e10e0cd853b5b3512ad7b6046bc
+  languageName: node
+  linkType: hard
+
+"kbar@patch:kbar@npm%3A0.1.0-beta.45#~/.yarn/patches/kbar-npm-0.1.0-beta.45-790a9a69bc.patch":
+  version: 0.1.0-beta.45
+  resolution: "kbar@patch:kbar@npm%3A0.1.0-beta.45#~/.yarn/patches/kbar-npm-0.1.0-beta.45-790a9a69bc.patch::version=0.1.0-beta.45&hash=208092"
+  dependencies:
+    "@radix-ui/react-portal": "npm:^1.0.1"
+    fast-equals: "npm:^2.0.3"
+    fuse.js: "npm:^6.6.2"
+    react-virtual: "npm:^2.8.2"
+    tiny-invariant: "npm:^1.2.0"
+  peerDependencies:
+    react: ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/8fbe22b2b2709dec953d0d284f4f82d142667fe03fed032072e34a7e653c23f23cb71b37113537d1de01eb1c9ac89b34ca805ea4e4ecfa3b86df8bc19e7e18a0
   languageName: node
   linkType: hard
 
@@ -14210,7 +14226,7 @@ __metadata:
     highlight.js: "npm:^11.9.0"
     husky: "npm:^9.1.7"
     jsdom: "npm:^26.0.0"
-    kbar: "npm:^0.1.0-beta.45"
+    kbar: "patch:kbar@npm%3A0.1.0-beta.45#~/.yarn/patches/kbar-npm-0.1.0-beta.45-790a9a69bc.patch"
     langchain: "npm:^0.3.26"
     lint-staged: "npm:>=10"
     load-json-file: "npm:^7.0.1"
