@@ -136,6 +136,22 @@ const useRegisterThemeActions = () => {
       perform: async () => settingStore.update({ theme: 'garden' }),
       parent: 'theme',
     },
+    {
+      id: 'synthwave',
+      name: 'Synthwave',
+      keywords: 'synthwave theme',
+      section: 'Theme',
+      perform: async () => settingStore.update({ theme: 'synthwave' }),
+      parent: 'theme',
+    },
+    {
+      id: 'nord',
+      name: 'Nord',
+      keywords: 'nord theme',
+      section: 'Theme',
+      perform: async () => settingStore.update({ theme: 'nord' }),
+      parent: 'theme',
+    },
   ])
 }
 

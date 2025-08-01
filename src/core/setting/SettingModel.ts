@@ -9,6 +9,8 @@ const ThemeOptions = z.union([
   z.literal('dark'),
   z.literal('dracula'),
   z.literal('garden'),
+  z.literal('synthwave'),
+  z.literal('nord'),
 ])
 
 export const SettingModel = z.object({

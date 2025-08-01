@@ -9,6 +9,8 @@ const themes = {
   dark: 'Dark',
   dracula: 'Dracula',
   garden: 'Light',
+  synthwave: 'Synthwave',
+  nord: 'Nord',
 }
 
 const ThemeSelector = () => {
