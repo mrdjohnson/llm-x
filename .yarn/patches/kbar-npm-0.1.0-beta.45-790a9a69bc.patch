@@ -1,0 +1,40 @@
+diff --git a/package.json b/package.json
+index 8daff083dc62116753e63c72239cd8db56c72416..8da57a1360f32de17fb01eeaa5c364f9a921491f 100644
+--- a/package.json
++++ b/package.json
+@@ -61,6 +61,7 @@
+     "fast-equals": "^2.0.3",
+     "fuse.js": "^6.6.2",
+     "react-virtual": "^2.8.2",
++    "tinykeys": "3.0.0",
+     "tiny-invariant": "^1.2.0"
+   },
+   "peerDependencies": {
+diff --git a/src/InternalEvents.tsx b/src/InternalEvents.tsx
+index 652ce9bbed3a5d74c243f09470401f691ff6db21..765e6548c89cf4393db373711534020ab7640c30 100644
+--- a/src/InternalEvents.tsx
++++ b/src/InternalEvents.tsx
+@@ -1,6 +1,6 @@
+ import * as React from "react";
+ import { ActionImpl } from "./action";
+-import tinykeys from "./tinykeys";
++import { tinykeys } from "tinykeys";
+ import { VisualState } from "./types";
+ import { useKBar } from "./useKBar";
+ import { getScrollbarWidth, shouldRejectKeystrokes } from "./utils";
+diff --git a/tsconfig.json b/tsconfig.json
+index 3b5dc12eac3e8a2a75c19261c8c32d313d08cc27..462b92b5ef9a5969fb98c77d8bbd019bbbdd412c 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -2,9 +2,9 @@
+   "compilerOptions": {
+     "jsx": "react",
+     "declaration": true,
+-    "target": "es5",
++    "target": "esnext",
+     "lib": [
+-      "es5",
++      "ESNext",
+       "DOM"
+     ],
+     "strict": true,
