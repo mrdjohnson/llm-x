@@ -1,15 +1,12 @@
 import z from 'zod'
 import moment from 'moment'
+import { getThemeKeys } from '~/utils/themeConfig'
 
 export const CURRENT_DB_TIMESTAMP = moment('Oct 28 24', 'MMM DD YY')
 export const CURRENT_DB_TIMESTAMP_MILLISECONDS = CURRENT_DB_TIMESTAMP.valueOf()
 
-const ThemeOptions = z.union([
-  z.literal('_system'),
-  z.literal('dark'),
-  z.literal('dracula'),
-  z.literal('garden'),
-])
+const themeKeys = getThemeKeys() as [string, ...string[]]
+const ThemeOptions = z.enum(themeKeys)
 
 export const SettingModel = z.object({
   // setting row will only have one field

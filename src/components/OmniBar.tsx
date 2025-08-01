@@ -18,6 +18,7 @@ import { focusStore } from '~/core/FocusStore'
 
 import { messageTable } from '~/core/message/MessageTable'
 import { humanizeShortcut } from '~/utils/humanizeShortcut'
+import { getThemeKeys, getThemeDisplayNames } from '~/utils/themeConfig'
 
 const isSelected = ({ parent, id }: ActionImpl) => {
   if (parent === 'theme') {
@@ -97,6 +98,18 @@ export function RenderResults() {
 }
 
 const useRegisterThemeActions = () => {
+  const themeKeys = getThemeKeys()
+  const themeDisplayNames = getThemeDisplayNames()
+
+  const themeActions = themeKeys.map(theme => ({
+    id: theme,
+    name: themeDisplayNames[theme],
+    keywords: `${theme} theme`,
+    section: 'Theme',
+    perform: async () => settingStore.update({ theme }),
+    parent: 'theme',
+  }))
+
   useRegisterActions([
     {
       id: 'theme',
@@ -104,38 +117,7 @@ const useRegisterThemeActions = () => {
       keywords: 'interface color dark light',
       section: 'Preferences',
     },
-    {
-      id: 'dark',
-      name: 'Dark',
-      keywords: 'dark theme',
-      section: 'Theme',
-      perform: async () => settingStore.update({ theme: 'dark' }),
-      parent: 'theme',
-    },
-    {
-      id: 'dracula',
-      name: 'Dracula',
-      keywords: 'dracula theme',
-      section: 'Theme',
-      perform: async () => settingStore.update({ theme: 'dracula' }),
-      parent: 'theme',
-    },
-    {
-      id: '_system',
-      name: 'System',
-      keywords: 'system theme',
-      section: 'Theme',
-      perform: async () => settingStore.update({ theme: '_system' }),
-      parent: 'theme',
-    },
-    {
-      id: 'garden',
-      name: 'Light',
-      keywords: 'light garden theme',
-      section: 'Theme',
-      perform: async () => settingStore.update({ theme: 'garden' }),
-      parent: 'theme',
-    },
+    ...themeActions,
   ])
 }
 
