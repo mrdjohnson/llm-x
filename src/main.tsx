@@ -32,7 +32,7 @@ initDb().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <MemoryRouter initialEntries={['/']}>
-        <MantineProvider>
+        <MantineProvider defaultColorScheme="dark">
           <ModalsProvider>
             <HeroUIProvider>
               <KBarProvider>

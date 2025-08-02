@@ -8,7 +8,6 @@ import { settingStore } from '~/core/setting/SettingStore'
 
 import ChatBoxInputRow from '~/components/ChatBoxInputRow'
 import ChatBoxPrompt from '~/components/ChatBoxPrompt'
-import ToastCenter from '~/components/ToastCenter'
 
 import Stop from '~/icons/Stop'
 
@@ -94,8 +93,6 @@ const ChatBox = () => {
           <ChatBoxPrompt />
         )}
       </ScrollableChatFeed>
-
-      <ToastCenter />
 
       <ChatBoxInputRow chat={chat} onSend={handleMessageToSend}>
         {isGettingData && (

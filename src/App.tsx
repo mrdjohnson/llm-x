@@ -26,9 +26,9 @@ const App = () => {
 
   return (
     <Dropzone>
-      <AppShell className="drawer drawer-end mx-auto flex max-h-svh flex-col place-self-center overflow-scroll text-base-content">
-        <Notifications />
+      <Notifications limit={10} />
 
+      <div className="drawer drawer-end mx-auto flex !h-dvh !max-h-dvh flex-col place-self-center text-base-content">
         <div className="md:hidden">
           <Suspense fallback={null}>
             <LazyNavbar />
@@ -60,7 +60,7 @@ const App = () => {
         </section>
 
         <LazyProgresses />
-      </AppShell>
+      </div>
     </Dropzone>
   )
 }
