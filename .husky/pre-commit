@@ -1,2 +1,2 @@
-npx tsc
+yarn lint
 npx lint-staged

@@ -9,7 +9,7 @@ import App from '~/App'
 import DaisyUiThemeProvider from '~/containers/DaisyUiThemeProvider'
 
 import '~/index.css'
-import StartupSpinner from './icons/StartupSpinner'
+import StartupSpinner from '~/icons/StartupSpinner'
 
 const errorPage = (
   <div className="flex h-screen w-screen items-center justify-center bg-base-100">

@@ -24,7 +24,10 @@ module.exports = {
     'import/no-unresolved': 'error',
     'import/no-relative-packages': 'error',
     'import/no-self-import': 'error',
-    'import/newline-after-import': ['error', { count: 1, exactCount: true, considerComments: true }],
+    'import/newline-after-import': [
+      'error',
+      { count: 1, exactCount: true, considerComments: true },
+    ],
     'import/no-duplicates': 'error',
 
     'no-restricted-imports': 'off',
@@ -45,15 +48,15 @@ module.exports = {
     ],
 
     // https://stackoverflow.com/a/64067915
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
       {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_"
-      }
-    ]
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
   },
 
   settings: {
@@ -61,7 +64,11 @@ module.exports = {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
     'import/resolver': {
-      typescript: {},
+      typescript: {
+        // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+        alwaysTryTypes: true,
+        project: './tsconfig.json',
+      },
     },
   },
 }

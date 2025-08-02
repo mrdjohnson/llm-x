@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 import { heroui } from '@heroui/react'
-import themes, { synthwave } from 'daisyui/src/theming/themes'
+import themes from 'daisyui/src/theming/themes'
 
 const errorColor = 'oklch(51% 0.17 22.1)'
 

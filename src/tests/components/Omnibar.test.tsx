@@ -10,8 +10,8 @@ import OmniBar from '~/components/OmniBar'
 import { settingStore } from '~/core/setting/SettingStore'
 import { chatStore } from '~/core/chat/ChatStore'
 import { focusStore } from '~/core/FocusStore'
-import { connectionStore } from '../../core/connection/ConnectionStore'
-import { setServerResponse } from '../msw'
+import { connectionStore } from '~/core/connection/ConnectionStore'
+import { setServerResponse } from '~/tests/msw'
 
 describe('OmniBar', () => {
   const navigate = vi.fn()

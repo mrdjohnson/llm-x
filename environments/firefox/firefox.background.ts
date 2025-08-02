@@ -8,6 +8,6 @@ browser.runtime.onInstalled.addListener(() => {
   console.log('Installed!')
 })
 
-browser.windows.getCurrent({ populate: true }).then((windowInfo) => {
-  let myWindowId = windowInfo.id;
-});
+// browser.windows.getCurrent({ populate: true }).then((windowInfo) => {
+//   let myWindowId = windowInfo.id;
+// });
