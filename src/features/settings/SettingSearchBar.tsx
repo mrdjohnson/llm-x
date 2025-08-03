@@ -1,8 +1,9 @@
 import { useRef, useState, useEffect, KeyboardEventHandler, useMemo } from 'react'
-import { Input } from '@heroui/react'
+
 import { ActionImpl, useKBar, VisualState } from 'kbar'
 import { useLocation, useNavigate } from 'react-router'
 import { twMerge } from 'tailwind-merge'
+import { Input } from '@mantine/core'
 
 const SettingSearchBar = () => {
   const { pathname } = useLocation()
@@ -55,7 +56,7 @@ const SettingSearchBar = () => {
     if (isAnimatingOut) {
       navigate('/')
     } else {
-      // let kbar know we opened it manually 
+      // let kbar know we opened it manually
       query.setVisualState(VisualState.showing)
     }
   }, [isAnimatingOut, isSearching])
@@ -79,16 +80,15 @@ const SettingSearchBar = () => {
       data-testid="searchButton"
     >
       <Input
-        className="rounded-full bg-base-100 px-1 placeholder:text-center"
+        className="rounded-full px-1"
         classNames={{
-          inputWrapper: 'bg-base-100 !border-base-content/30 disabled:cursor-pointer',
-          base: '!px-0',
+          wrapper: '!border-base-content/30 disabled:cursor-pointer w-full border',
           input: twMerge(
-            'placeholder:text-center focus:placeholder:text-left',
+            'placeholder:text-center focus:placeholder:text-left placeholder:text-base-content! text-base-content',
             !isSearching && 'pointer-events-none',
           ),
         }}
-        endContent={
+        rightSection={
           isSearching && (
             <button
               className="bg-transparent text-base-content/30 hover:text-base-content/70"
