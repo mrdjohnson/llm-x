@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import { Breadcrumbs, BreadcrumbItem } from '@heroui/react'
 import _ from 'lodash'
+import { Anchor, Breadcrumbs } from '@mantine/core'
 
 export type BreadcrumbType = {
   label: string
@@ -16,20 +16,16 @@ const BreadcrumbBar = ({ breadcrumbs }: BreadcrumbBarProps) => {
   const navigate = useNavigate()
 
   return (
-    <Breadcrumbs className="mt-2 place-self-center rounded-lg bg-base-content/10 p-2">
+    <Breadcrumbs className="mt-2 place-self-center rounded-lg bg-black/10 p-2">
       {breadcrumbs.map((breadcrumb, index) => (
-        <BreadcrumbItem
-          className={
-            index === breadcrumbs.length - 1
-              ? ' [&>*]:!text-primary'
-              : 'underline decoration-base-content/70 [&>*]:!text-base-content/70'
-          }
-          isCurrent={index === breadcrumbs.length - 1}
+        <Anchor
+          className="underline-offset-2"
+          underline={index === breadcrumbs.length - 1 ? 'never' : 'always'}
           key={breadcrumb.label}
           onClick={() => navigate(breadcrumb.path)}
         >
           {breadcrumb.label}
-        </BreadcrumbItem>
+        </Anchor>
       ))}
     </Breadcrumbs>
   )
