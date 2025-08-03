@@ -59,6 +59,7 @@
     "moment": "^2.30.1",
     "mst-persist": "^0.1.4",
     "ollama": "^0.5.17",
+    "postcss-preset-mantine": "^1.18.0",
     "react": "^19.0.0",
     "react-device-frameset": "^1.3.4",
     "react-dom": "^19.0.0",
