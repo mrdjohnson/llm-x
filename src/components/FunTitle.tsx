@@ -52,7 +52,8 @@ const FunTitle = ({ className }: { className?: string }) => {
         <span
           className={twMerge(
             className,
-            'mx-0 bg-gradient-to-b from-primary to-secondary to-70% bg-clip-text font-semibold text-transparent transition-all duration-700 ease-in-out hover:text-primary',
+            FunTitle.direction,
+            'mx-0 from-primary to-secondary to-70% bg-clip-text font-semibold text-transparent transition-all duration-700 ease-in-out hover:text-primary',
           )}
         >
           {titleSections[1]}
@@ -63,5 +64,13 @@ const FunTitle = ({ className }: { className?: string }) => {
     </span>
   )
 }
+
+FunTitle.direction = _.sample([
+  'bg-gradient-to-br',
+  'bg-gradient-to-tr',
+
+  'bg-gradient-to-bl',
+  'bg-gradient-to-tl',
+])
 
 export default FunTitle

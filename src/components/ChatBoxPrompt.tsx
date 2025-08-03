@@ -8,19 +8,11 @@ import { NavButton } from '~/components/NavButton'
 
 type PromptButtonProps = { title: string; link?: To }
 
-const direction = _.sample([
-  'bg-gradient-to-br',
-  'bg-gradient-to-tr',
-
-  'bg-gradient-to-bl',
-  'bg-gradient-to-tl',
-])
-
 const PromptButton = ({ title, link }: PromptButtonProps) => (
   <div
     className={twMerge(
       'group m-[2px] rounded-full from-primary/30 to-secondary/60 p-[1px] transition-all duration-200 hover:m-[0px] hover:p-[3px]',
-      direction,
+      FunTitle.direction,
     )}
   >
     <NavButton
