@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { ScrollShadow } from '@heroui/react'
 import { useParams } from 'react-router-dom'
 import Markdown from 'react-markdown'
+import { Anchor, Button, ButtonGroupSection, Text } from '@mantine/core'
 
 import CopyButton from '~/components/CopyButton'
 import SettingSection, { SettingSectionItem } from '~/containers/SettingSection'
@@ -26,13 +27,13 @@ const CodeBlock = (props: React.HTMLAttributes<HTMLElement>) => {
   }, [children])
 
   return (
-    <span className="my-4 inline-flex w-fit flex-row flex-wrap gap-2">
-      <CopyButton className="btn swap btn-sm" text={code} />
+    <Button.Group>
+      <CopyButton variant="default" text={code} />
 
-      <span className="prose">
-        <code>{code}</code>
-      </span>
-    </span>
+      <ButtonGroupSection variant="default" className="select-all">
+        {code}
+      </ButtonGroupSection>
+    </Button.Group>
   )
 }
 
@@ -68,10 +69,12 @@ export const ConnectionHelpPanel = () => {
           )}
 
           <Markdown
-            className="prose-spacing prose flex w-full flex-wrap text-wrap break-words pl-2 prose-p:w-full"
+            className="prose-spacing prose ml-2 flex w-full flex-wrap text-wrap break-words prose-p:w-full"
             components={{
-              h3: props => <h3 className="-ml-2 [&>*]:text-lg [&>*]:font-bold" {...props} />,
-              a: props => <a target="__blank" className="link mx-0 !text-primary" {...props} />,
+              h3: props => <Text size="lg" fw={500} {...props} />,
+              a: props => (
+                <Anchor target="__blank" className="underline-offset-2" c="blue" {...props} />
+              ),
               code: CodeBlock,
             }}
           >
