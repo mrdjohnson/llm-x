@@ -100,6 +100,7 @@ export class PreviewImageHandler {
   async destroyImage(previewImage: PreviewImage) {
     await CachedStorage.delete(previewImage.url)
 
+    // @ts-expect-error lodash types are not working with mobx right now
     _.remove(this.previewImages, previewImage)
   }
 

@@ -19,6 +19,7 @@ class ToastStore {
     if (this.toasts.length === 10) {
       const lastToast = _.last(this.toasts)
 
+      // @ts-expect-error lodash types are not working with mobx right now
       _.remove(this.toasts, lastToast)
     }
 
@@ -31,6 +32,7 @@ class ToastStore {
   }
 
   removeToast(toast: Toast) {
+    // @ts-expect-error lodash types are not working with mobx right now
     _.remove(this.toasts, toast)
   }
 
