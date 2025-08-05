@@ -1,21 +1,21 @@
-import { TooltipProps } from '@heroui/react'
+import { Badge } from '@mantine/core'
 
-import ToolTip from '~/components/Tooltip'
+import ToolTip, { type ToolTipProps } from '~/components/Tooltip'
 import { humanizeShortcut } from '~/utils/humanizeShortcut'
 
 const KeyboardTooltip = ({
   command,
   title,
   ...rest
-}: Omit<TooltipProps, 'label'> & { command: string; title: string }) => (
+}: Omit<ToolTipProps, 'label'> & { command: string; title: string }) => (
   <ToolTip
     label={
-      <span>
+      <span className="font-semibold">
         {title}
 
-        <span className="badge ml-2 border border-base-content/80 bg-transparent py-2 font-normal text-base-content/80">
+        <Badge variant="outline" className="p-2! ml-2">
           {humanizeShortcut(command)}
-        </span>
+        </Badge>
       </span>
     }
     {...rest}

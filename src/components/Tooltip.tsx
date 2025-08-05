@@ -1,14 +1,15 @@
 import type { PropsWithChildren, ReactNode } from 'react'
-import { Tooltip as NextUiTooltip, TooltipProps as NextUiTooltipProps } from "@heroui/react"
-import { twMerge } from 'tailwind-merge'
 
-type ToolTipProps = PropsWithChildren<{
-  label: ReactNode
-  className?: string
-  placement?: NextUiTooltipProps['placement']
-  delay?: number
-  showArrow?: boolean
-}>
+import { Tooltip as MantineTooltip, type TooltipProps as MantineTooltipProps } from '@mantine/core'
+
+export type ToolTipProps = MantineTooltipProps &
+  PropsWithChildren<{
+    label: ReactNode
+    className?: string
+    placement?: MantineTooltipProps['position']
+    delay?: number
+    showArrow?: boolean
+  }>
 
 const ToolTip = ({
   label,
@@ -17,23 +18,20 @@ const ToolTip = ({
   className = '',
   delay,
   showArrow = true,
+  ...props
 }: ToolTipProps) => {
   return (
-    <NextUiTooltip
-      content={label}
-      className={twMerge(
-        '-translate-y-[0.5px] rounded-full border border-base-content/10 bg-base-200 p-2 font-semibold text-base-content/80 shadow-none',
-        className,
-      )}
-      classNames={{
-        base: 'before:bg-base-200 before:shadow-none before:border before:border-base-content/10 before:z-10  before:border-t-0 before:border-l-0 ',
-      }}
-      placement={placement}
-      delay={delay}
-      showArrow={showArrow}
+    <MantineTooltip
+      label={label}
+      className={className}
+      position={placement}
+      openDelay={delay}
+      closeDelay={delay}
+      withArrow={showArrow}
+      {...props}
     >
       {children}
-    </NextUiTooltip>
+    </MantineTooltip>
   )
 }
 
