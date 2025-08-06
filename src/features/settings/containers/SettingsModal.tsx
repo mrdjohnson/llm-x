@@ -152,9 +152,10 @@ const SettingsModal = () => {
     <Modal
       opened={isOpen}
       onClose={() => navigate('/')}
-      size={'100%'}
-      className="w-full max-w-[1200px]"
+      size="100%"
       classNames={{
+        root: 'max-w-[800px] w-full',
+        content: '!max-w-[1200px] w-full mx-auto',
         body: 'px-2 text-base-content overflow-hidden rounded-md',
         overlay:
           'bg-gradient-to-t from-base-200 from-25% to-base-200/20 backdrop-opacity-20 !cursor-pointer',

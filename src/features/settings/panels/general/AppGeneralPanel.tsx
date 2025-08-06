@@ -1,13 +1,22 @@
 import _ from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { useSpeech, useVoices } from 'react-text-to-speech'
-import { Select, SelectItem, Switch } from '@heroui/react'
+import {
+  Card,
+  Text,
+  SegmentedControl,
+  Group,
+  Button,
+  Typography,
+  TextInput,
+  Switch,
+  Select,
+} from '@mantine/core'
 import { useForm } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 
 import ThemeSelector from '~/components/ThemeSelector'
 import AttachmentWrapper from '~/components/AttachmentWrapper'
-import FormInput from '~/components/form/FormInput'
 
 import DocumentArrowDown from '~/icons/DocumentArrowDown'
 import DocumentArrowUp from '~/icons/DocumentArrowUp'
@@ -43,41 +52,47 @@ const DownloadSelector = () => {
   }
 
   return (
-    <div className="mt-2 flex flex-col justify-center">
-      <span className="label w-fit gap-2"> Import / Export </span>
+    <Card className="mt-2 flex flex-col justify-center" withBorder radius="md" p="sm">
+      <Typography>
+        <h4> Import / Export </h4>
+      </Typography>
 
-      <label className="label w-fit gap-2 p-0">
-        <span className="label-text">Include any images in download? (increases file size):</span>
+      <Group>
+        <Text>Include any images in download? (increases file size):</Text>
 
         <div className="join">
-          {[true, false].map(isEnabled => (
-            <button
-              className={twMerge(
-                'btn join-item btn-sm mr-0 bg-base-100',
-                includeImages === isEnabled &&
-                  'btn-active cursor-default bg-base-300 underline underline-offset-2',
-              )}
-              onClick={() => setIncludeImages(isEnabled)}
-              key={isEnabled ? 0 : 1}
-            >
-              {isEnabled ? 'Yes' : 'No'}
-            </button>
-          ))}
+          <SegmentedControl
+            radius="lg"
+            value={includeImages ? 'yes' : 'no'}
+            onChange={value => setIncludeImages(value === 'yes')}
+            data={[
+              { label: 'Yes', value: 'yes' },
+              { label: 'No', value: 'no' },
+            ]}
+            size="xs"
+          />
         </div>
-      </label>
+      </Group>
 
-      <div className="flex flex-row gap-2">
-        <AttachmentWrapper accept=".json">
-          <button className="btn btn-neutral" title="Import All">
-            Import <DocumentArrowUp />
-          </button>
-        </AttachmentWrapper>
+      <Card.Section className="flex flex-row gap-2 p-2">
+        <Group justify="space-evenly">
+          <AttachmentWrapper accept=".json">
+            <Button variant="light" title="Import All" rightSection={<DocumentArrowUp />}>
+              Import
+            </Button>
+          </AttachmentWrapper>
 
-        <button className="btn btn-neutral" title="Export All" onClick={exportAll}>
-          Export <DocumentArrowDown />
-        </button>
-      </div>
-    </div>
+          <Button
+            variant="light"
+            title="Export All"
+            onClick={exportAll}
+            rightSection={<DocumentArrowDown />}
+          >
+            Export
+          </Button>
+        </Group>
+      </Card.Section>
+    </Card>
   )
 }
 
@@ -90,6 +105,7 @@ const SpeechSelector = () => {
     reset,
     watch,
     register,
+    resetField,
     formState: { isDirty },
   } = useForm<VoiceModel>()
 
@@ -104,16 +120,36 @@ const SpeechSelector = () => {
     reset(nextVoice)
   })
 
+  const setLanguage = (nextLanguage: string | null) => {
+    const oldLanguage = voice?.language || ''
+    nextLanguage ||= ''
+
+    resetField('language')
+    setValue('language', nextLanguage, { shouldDirty: oldLanguage !== nextLanguage })
+  }
+
+  const setVoiceUri = (nextVoiceUri: string | null) => {
+    const oldVoiceUri = voice?.voiceUri || ''
+    nextVoiceUri ||= ''
+
+    resetField('voiceUri')
+    setValue('voiceUri', nextVoiceUri, { shouldDirty: oldVoiceUri !== nextVoiceUri })
+  }
+
   const clearValues = () => {
-    setValue('language', '', { shouldDirty: voice?.language !== '' })
-    setValue('voiceUri', '', { shouldDirty: voice?.voiceUri !== '' })
+    setLanguage(null)
+    setVoiceUri(null)
   }
 
   const selectedLanguage = watch('language') || ''
   const selectedVoiceUri = watch('voiceUri') || ''
 
   const localVoices = useMemo(() => {
-    return _.filter(voices, { localService: true })
+    return _.filter(voices, { localService: true }).map(voice => ({
+      value: voice.voiceURI,
+      label: voice.name,
+      lang: voice.lang,
+    }))
   }, [voices])
 
   const filteredVoices = useMemo(() => {
@@ -147,138 +183,110 @@ const SpeechSelector = () => {
   })
 
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className="flex flex-col gap-3 rounded-md border border-base-content/30 p-2"
-    >
-      <span className="pb-2">Text to speech:</span>
+    <Card withBorder radius="md">
+      <Typography>
+        <h4>Text to speech</h4>
+      </Typography>
+      <form onSubmit={handleFormSubmit} className="flex flex-col gap-3 pt-2">
+        <TextInput
+          label="Sample Input"
+          size="md"
+          value={exampleText}
+          onChange={e => setExampleText(e.target.value)}
+          rightSection={
+            <div className="flex h-full items-center gap-2">
+              <button
+                className={twMerge(
+                  'block text-error opacity-30 hover:scale-110 hover:opacity-100',
+                  speechStatus === 'stopped' && 'hidden',
+                )}
+                onClick={stop}
+                type="button"
+              >
+                <Stop />
+              </button>
 
-      <FormInput
-        label="Sample Input"
-        className="items-center"
-        value={exampleText}
-        onChange={e => setExampleText(e.target.value)}
-        endContent={
-          <div className="flex h-full items-center gap-2">
-            <button
-              className={twMerge(
-                'block text-error opacity-30 hover:scale-110 hover:opacity-100',
-                speechStatus === 'stopped' && 'hidden',
-              )}
-              onClick={stop}
-              type="button"
-            >
-              <Stop />
-            </button>
+              <button
+                className={twMerge(
+                  'h-fit w-fit opacity-30 hover:scale-110 hover:opacity-100',
+                  speechStatus === 'started' && 'animate-pulse opacity-100',
+                )}
+                onClick={speechStatus === 'started' ? pause : start}
+                type="button"
+              >
+                <PlayPause />
+              </button>
+            </div>
+          }
+        />
 
-            <button
-              className={twMerge(
-                'h-fit w-fit opacity-30 hover:scale-110 hover:opacity-100',
-                speechStatus === 'started' && 'animate-pulse opacity-100',
-              )}
-              onClick={speechStatus === 'started' ? pause : start}
+        <Select
+          label="Language"
+          size="md"
+          data={languages}
+          value={selectedLanguage || null}
+          {...register('language')}
+          onChange={setLanguage}
+          searchable
+          allowDeselect
+          clearable
+        />
+
+        <Select
+          label="Voice"
+          size="md"
+          data={filteredVoices}
+          value={selectedVoiceUri || null}
+          {...register('voiceUri')}
+          onChange={setVoiceUri}
+          searchable
+          allowDeselect
+          clearable
+        />
+
+        <Group>
+          <Switch
+            label="Auto play voice (for testing)"
+            checked={autoPlayVoice}
+            onChange={() => setAutoPlayVoice(!autoPlayVoice)}
+            withThumbIndicator
+            size="md"
+          />
+
+          <div className="ml-auto flex w-fit flex-row gap-2">
+            <Button
               type="button"
+              variant="default"
+              className="btn btn-outline md:btn-ghost md:btn-sm md:mx-4"
+              onClick={clearValues}
+              disabled={!isDirty && _.isEmpty(selectedLanguage || selectedVoiceUri)}
             >
-              <PlayPause />
-            </button>
+              Clear
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              color="red"
+              className="btn btn-outline md:btn-ghost md:btn-sm md:mx-4"
+              onClick={() => reset()}
+              disabled={!isDirty}
+            >
+              Reset
+            </Button>
+
+            <Button
+              type="submit"
+              className="btn btn-primary md:btn-sm"
+              onClick={handleFormSubmit}
+              disabled={!isDirty}
+            >
+              Save
+            </Button>
           </div>
-        }
-      />
-
-      <Select
-        className="w-full min-w-[20ch] rounded-md border border-base-content/30 bg-transparent"
-        size="sm"
-        classNames={{
-          value: '!text-base-content min-w-[20ch]',
-          trigger: 'bg-base-100 hover:!bg-base-200 rounded-md',
-          popoverContent: 'text-base-content bg-base-100',
-        }}
-        selectedKeys={[selectedLanguage]}
-        label="Language"
-        {...register('language')}
-      >
-        {[''].concat(languages).map(language => (
-          <SelectItem
-            key={language}
-            value={language}
-            className="w-full !min-w-[13ch] text-base-content"
-            classNames={{
-              description: ' text',
-            }}
-          >
-            {language}
-          </SelectItem>
-        ))}
-      </Select>
-
-      <Select
-        className="w-full min-w-[20ch] rounded-md border border-base-content/30 bg-transparent"
-        size="sm"
-        classNames={{
-          value: '!text-base-content min-w-[20ch]',
-          trigger: 'bg-base-100 hover:!bg-base-200 rounded-md',
-          popoverContent: 'text-base-content bg-base-100',
-        }}
-        selectedKeys={[selectedVoiceUri]}
-        label="Voice"
-        {...register('voiceUri')}
-      >
-        {filteredVoices.map(({ voiceURI, name }) => (
-          <SelectItem
-            key={voiceURI}
-            value={voiceURI}
-            className="w-full !min-w-[13ch] text-base-content"
-            classNames={{
-              description: ' text',
-            }}
-          >
-            {name}
-          </SelectItem>
-        ))}
-      </Select>
-
-      <div className="flex flex-row">
-        <Switch
-          isSelected={autoPlayVoice}
-          onChange={() => setAutoPlayVoice(!autoPlayVoice)}
-          size="sm"
-        >
-          <span className="text-base-content">Auto play voice (for testing)</span>
-        </Switch>
-
-        <div className="ml-auto flex w-fit flex-row gap-2">
-          <button
-            type="button"
-            className="btn btn-outline md:btn-ghost md:btn-sm md:mx-4"
-            onClick={clearValues}
-            disabled={!isDirty && _.isEmpty(selectedLanguage || selectedVoiceUri)}
-          >
-            Clear
-          </button>
-
-          <button
-            type="button"
-            className="btn btn-outline md:btn-ghost md:btn-sm md:mx-4"
-            onClick={() => {
-              console.log('resetting')
-              return reset()
-            }}
-            disabled={!isDirty}
-          >
-            Reset
-          </button>
-
-          <button
-            type="submit"
-            className="btn btn-primary md:btn-sm"
-            onClick={handleFormSubmit}
-            disabled={!isDirty}
-          >
-            Save
-          </button>
-        </div>
-      </div>
-    </form>
+        </Group>
+      </form>
+    </Card>
   )
 }
 
