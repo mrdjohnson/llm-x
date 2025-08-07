@@ -6,7 +6,8 @@ import Lightbox from '~/features/lightbox/components/Lightbox'
 
 import { settingStore } from '~/core/setting/SettingStore'
 
-const PwaReloadPrompt = React.lazy(() => import('~/components/LazyPwaReloadPrompt'))
+import usePwaReloader from '~/utils/hooks/useReloader.platform'
+
 const LazySettingsModal = React.lazy(() => import('~/features/settings/containers/SettingsModal'))
 const LazyOmnibar = React.lazy(() => import('~/components/OmniBar'))
 const LazySidebar = React.lazy(() => import('~/containers/SideBar'))
@@ -14,20 +15,12 @@ const LazyNavbar = React.lazy(() => import('~/components/Navbar'))
 const LazyChatBox = React.lazy(() => import('~/containers/ChatBox'))
 const LazyProgresses = React.lazy(() => import('~/features/progress/components/Progresses'))
 
-const DelayedPwaReloadPrompt = () => {
-  if (__PLATFORM__ !== 'pwa') return null
-
-  return (
-    <Suspense fallback={null}>
-      <PwaReloadPrompt />
-    </Suspense>
-  )
-}
-
 const App = () => {
   if (!settingStore.setting) {
     throw new Error('waiting for app to load')
   }
+
+  usePwaReloader()
 
   return (
     <Dropzone>
@@ -43,8 +36,6 @@ const App = () => {
         </Suspense>
 
         <Lightbox />
-
-        <DelayedPwaReloadPrompt />
 
         <Suspense fallback={null}>
           <LazyOmnibar />

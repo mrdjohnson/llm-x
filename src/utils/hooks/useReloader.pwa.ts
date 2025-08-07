@@ -1,18 +1,12 @@
 // eslint-disable-next-line import/no-unresolved
 import { useRegisterSW } from 'virtual:pwa-register/react'
-import useMedia from 'use-media'
 import { useEffect } from 'react'
 
 const hour_1 = 60 * 60 * 1000
 
-const LazyPwaReloadPrompt = () => {
+const usePwaReloader = () => {
   // automagically replaced through vite.config.ts
   const reloadSW = '__RELOAD_SW__'
-
-  //   this means we're in app mode
-  const isStandalone = useMedia('(display-mode: standalone)')
-
-  console.log('isStandalone', isStandalone)
 
   const {
     needRefresh: [needRefresh],
@@ -42,8 +36,6 @@ const LazyPwaReloadPrompt = () => {
   })
 
   useEffect(() => {
-    // settingStore.setPwaNeedsUpdate(needRefresh, updateServiceWorker)
-
     // do not ask for prompt, immediately update for now
     if (needRefresh) {
       updateServiceWorker()
@@ -53,4 +45,4 @@ const LazyPwaReloadPrompt = () => {
   return null
 }
 
-export default LazyPwaReloadPrompt
+export default usePwaReloader
