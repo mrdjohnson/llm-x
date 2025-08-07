@@ -15,7 +15,7 @@ const LazyChatBox = React.lazy(() => import('~/containers/ChatBox'))
 const LazyProgresses = React.lazy(() => import('~/features/progress/components/Progresses'))
 
 const DelayedPwaReloadPrompt = () => {
-  if (__TARGET__ !== 'pwa') return null
+  if (__PLATFORM__ !== 'pwa') return null
 
   return (
     <Suspense fallback={null}>

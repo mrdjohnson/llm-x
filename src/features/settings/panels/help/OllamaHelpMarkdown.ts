@@ -1,5 +1,5 @@
 const ORIGIN =
-  __TARGET__ === 'chrome'
+  __PLATFORM__ === 'chrome'
     ? 'chrome-extension://iodcdhcpahifeligoegcmcdibdkffclk'
     : 'https://mrdjohnson.github.io'
 

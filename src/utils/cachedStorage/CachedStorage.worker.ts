@@ -7,7 +7,7 @@ const getCache = () => {
 }
 
 export const put = async (path: string, data: string) => {
-  if (__TARGET__ === 'chrome') {
+  if (__PLATFORM__ === 'chrome') {
     return imageDb.setItem(path, data)
   }
 
@@ -25,7 +25,7 @@ export const putResponse = async (path: string, response: Response) => {
 export const get = async (path: string): Promise<string | undefined> => {
   console.log('getting: ', path)
 
-  if (__TARGET__ === 'chrome') {
+  if (__PLATFORM__ === 'chrome') {
     return (await imageDb.getItem<string>(path)) || undefined
   }
 
@@ -36,7 +36,7 @@ export const get = async (path: string): Promise<string | undefined> => {
 }
 
 export const destroy = async (path: string) => {
-  if (__TARGET__ === 'chrome') {
+  if (__PLATFORM__ === 'chrome') {
     return imageDb.removeItem(path)
   }
 

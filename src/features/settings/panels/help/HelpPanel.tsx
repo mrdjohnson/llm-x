@@ -51,7 +51,7 @@ export const ConnectionHelpPanel = () => {
     <Drawer label={connectionModelLabelByType[id!]}>
       <div className="flex-1 overflow-y-hidden px-2 pt-2">
         <ScrollShadow className="h-full max-h-full pb-7">
-          {__TARGET__ === 'chrome' && (
+          {__PLATFORM__ === 'chrome' && (
             <>
               <h3 className="text-wrap pb-3 text-lg font-bold">
                 NOTE: Connections should be automatic!

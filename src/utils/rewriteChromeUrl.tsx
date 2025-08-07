@@ -1,7 +1,7 @@
 // learned from page-assist and ollama-ui
 
 export const rewriteChromeUrl = async (host?: string) => {
-  if (__TARGET__ !== 'chrome' || !host) return
+  if (__PLATFORM__ !== 'chrome' || !host) return
 
   if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id) {
     const url = new URL(host)
@@ -36,7 +36,7 @@ export const rewriteChromeUrl = async (host?: string) => {
       addRules: rules,
     })
 
-    if(url.hostname === 'localhost') {
+    if (url.hostname === 'localhost') {
       await rewriteChromeUrl(`${url.protocol}//127.0.0.1`)
     }
   }

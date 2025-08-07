@@ -20,17 +20,17 @@ const replaceOptions = { __DATE__: new Date().toISOString(), __RELOAD_SW__: 'fal
 const isDev = process.env.NODE_ENV === 'development'
 const isTest = process.env.NODE_ENV === 'test'
 
-const TARGET = process.env.TARGET || 'pwa'
-const TARGET_IS_PWA = TARGET === 'pwa'
+const PLATFORM = process.env.PLATFORM || 'pwa'
+const PLATFORM_IS_PWA = PLATFORM === 'pwa'
 
-let targetPlugins: PluginOption[] = []
+let platformPlugins: PluginOption[] = []
 
-if (TARGET === 'pwa') {
-  targetPlugins = pwaPlugins
-} else if (TARGET === 'chrome') {
-  targetPlugins = chromePlugins()
-} else if (TARGET === 'firefox') {
-  targetPlugins = firefoxPlugins()
+if (PLATFORM === 'pwa') {
+  platformPlugins = pwaPlugins
+} else if (PLATFORM === 'chrome') {
+  platformPlugins = chromePlugins()
+} else if (PLATFORM === 'firefox') {
+  platformPlugins = firefoxPlugins()
 }
 
 const reload = process.env.RELOAD_SW === 'true'
@@ -42,7 +42,7 @@ if (reload) {
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
-    __TARGET__: JSON.stringify(TARGET),
+    __PLATFORM__: JSON.stringify(PLATFORM),
   },
   plugins: [
     comlink(),
@@ -51,7 +51,7 @@ export default defineConfig({
         plugins: [observerPlugin()],
       },
     }),
-    targetPlugins,
+    platformPlugins,
     // @ts-expect-error this was part of the original setup, it works but probably needs to be updated
     replace(replaceOptions),
     removeConsole(),
@@ -63,11 +63,11 @@ export default defineConfig({
     logLevel: 'silent',
   },
   build: {
-    outDir: TARGET_IS_PWA ? './dist' : `./environments/${TARGET}/dist`,
+    outDir: PLATFORM_IS_PWA ? './dist' : `./environments/${PLATFORM}/dist`,
     emptyOutDir: true,
-    rollupOptions: { external: TARGET_IS_PWA ? undefined : ['virtual:pwa-register/react'] },
+    rollupOptions: { external: PLATFORM_IS_PWA ? undefined : ['virtual:pwa-register/react'] },
   },
-  base: TARGET_IS_PWA ? '/llm-x/' : undefined,
+  base: PLATFORM_IS_PWA ? '/llm-x/' : undefined,
   worker: {
     rollupOptions: {
       logLevel: 'silent',
