@@ -105,7 +105,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 - Navigate to `chrome://extensions/`
 - Load unpacked (developer mode option) from path: `llm-x/extensions/chrome/dist`
 
-## Goals / Features
+# Goals / Features
 
 - [x] **COMPLETELY PRIVATE; WORKS COMPLETELY OFFLINE**
 - [x] **Ollama integration!**
@@ -129,7 +129,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 - [x] Import / Export chat(s)
 - [x] **Continuous Deployment!** Merging to the master branch triggers a new github page build/deploy automatically
 
-## Screenshots:
+# Screenshots:
 
 | Showing Chrome extension mode with Google's on-device Gemini Nano                                                                |
 | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -170,6 +170,8 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 | Another logo response                                                                                           |
 | --------------------------------------------------------------------------------------------------------------- |
 | ![Logo 2 screenshot](https://raw.githubusercontent.com/mrdjohnson/llm-X/main/screenshots/Screenshot-logo-1.png) |
+
+# Misc
 
 **_What is this?_**
 ChatGPT style UI for the niche group of folks who run [Ollama](https://ollama.com/) (think of this like an offline chat gpt server) locally. Supports sending and receiving images and text!
@@ -216,7 +218,7 @@ I couldn't help but bee cool 😎
 
 [Perplexity.ai](https://www.perplexity.ai/) Perplexity has some amazing UI advancements in the LLM UI space and I have been very interested in getting to that point. Hopefully this starter project lets me get closer to doing something similar!
 
-## Getting started with local development
+# Getting started with local development
 
 (please note the minimum engine requirements in the package json)
 
@@ -224,7 +226,16 @@ Clone the project, and run `yarn` in the root directory
 
 `yarn dev` starts a local instance and opens up a browser tab under https:// (for PWA reasons)
 
-## MISC
+# ⭐ Contribution Guide
+
+Thanks to typescript, prettier, and biome. LLM-X should be ready for all contributors!
+
+## Notes:
+
+- [Easy Platform Splitting ⭐⭐](docs/platform-code-splitting.md)
+- [Debugging blank screen](docs/debugging.md)
+
+## Learnings
 
 - LangChain.js was attempted while spiking on this app but unfortunately it was not set up correctly for stopping incoming streams, I hope this gets fixed later in the future OR if possible a custom LLM Agent can be utilized in order to use LangChain
 

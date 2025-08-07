@@ -13,6 +13,8 @@ import { pwaPlugins } from './environments/pwa/pwa.vite'
 import { chromePlugins } from './environments/chrome/chrome.vite'
 import { firefoxPlugins } from './environments/firefox/firefox.vite'
 
+import platformResolver from './lib/vite-plugin-platform-resolver/plugin'
+
 const COVERAGE_PERCENTAGE = 50
 
 const replaceOptions = { __DATE__: new Date().toISOString(), __RELOAD_SW__: 'false' }
@@ -56,6 +58,7 @@ export default defineConfig({
     replace(replaceOptions),
     removeConsole(),
     tsconfigPaths(),
+    platformResolver(PLATFORM), // must happen after tsconfigPaths
   ],
   esbuild: {
     // https://github.com/vitejs/vite/discussions/7920#discussioncomment-2709119
