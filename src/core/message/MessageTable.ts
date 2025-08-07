@@ -1,6 +1,6 @@
 import { BaseTable } from '~/core/BaseTable'
 import { MessageModel } from '~/core/message/MessageModel'
-import CachedStorage from '~/utils/CachedStorage'
+import CachedStorage from '~/utils/CachedStorage.platform'
 
 import { exportMessage, importMessage } from '~/core/message/messageTransfer'
 

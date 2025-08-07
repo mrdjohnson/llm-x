@@ -2,7 +2,7 @@ import { createId } from '@paralleldrive/cuid2'
 import _ from 'lodash'
 
 import base64EncodeImage from '~/utils/base64EncodeImage'
-import CachedStorage from '~/utils/CachedStorage'
+import CachedStorage from '~/utils/CachedStorage.platform'
 
 const createImageUrl = (messageId: string) => {
   return `/llm-x/message/${messageId}/${createId()}.png`

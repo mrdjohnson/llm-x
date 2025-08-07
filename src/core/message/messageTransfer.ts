@@ -5,7 +5,7 @@ import { MessageModel } from '~/core/message/MessageModel'
 import { messageTable } from '~/core/message/MessageTable'
 
 import { addImageToCachedStorage } from '~/utils/addImageToCachedStorage'
-import CachedStorage from '~/utils/CachedStorage'
+import CachedStorage from '~/utils/CachedStorage.platform'
 
 const BaseExportedMessage = MessageModel.extend({
   images: z.array(z.string()),

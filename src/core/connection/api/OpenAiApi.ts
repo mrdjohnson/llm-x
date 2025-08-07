@@ -10,7 +10,7 @@ import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { StringOutputParser } from '@langchain/core/output_parsers'
 import _ from 'lodash'
 
-import CachedStorage from '~/utils/CachedStorage'
+import CachedStorage from '~/utils/CachedStorage.platform'
 import BaseApi from '~/core/connection/api/BaseApi'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { personaStore } from '~/core/persona/PersonaStore'

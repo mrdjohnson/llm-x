@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { observable } from 'mobx'
 
-import CachedStorage from '~/utils/CachedStorage'
+import CachedStorage from '~/utils/CachedStorage.platform'
 import { toastStore } from '~/core/ToastStore'
 import { addImageToCachedStorage, moveCachedImageToMessage } from '~/utils/addImageToCachedStorage'
 import { MessageViewModel } from '~/core/message/MessageViewModel'

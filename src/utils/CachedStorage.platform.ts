@@ -1,7 +1,6 @@
-const cachedImageWorker = new ComlinkWorker<typeof import('./cachedStorage/CachedStorage.worker.ts')>(
-  new URL('./cachedStorage/CachedStorage.worker.ts', import.meta.url),
-  {},
-)
+const cachedImageWorker = new ComlinkWorker<
+  typeof import('./cachedStorage/CachedStorage.worker.ts')
+>(new URL('./cachedStorage/CachedStorage.worker.ts', import.meta.url), {})
 class CachedStorage {
   static async put(path: string, data: string) {
     return cachedImageWorker.put(path, data)

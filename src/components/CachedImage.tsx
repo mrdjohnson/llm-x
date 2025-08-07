@@ -1,6 +1,6 @@
 import { ImgHTMLAttributes, useEffect, useState } from 'react'
 
-import CachedStorage from '~/utils/CachedStorage'
+import CachedStorage from '~/utils/CachedStorage.platform'
 
 const CachedImage = ({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>) => {
   const [imageData, setImageData] = useState<string | undefined>(undefined)

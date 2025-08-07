@@ -7,7 +7,7 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom'
 import _ from 'lodash'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
-import CachedStorage from '~/utils/CachedStorage'
+import CachedStorage from '~/utils/CachedStorage.platform'
 
 import 'yet-another-react-lightbox/styles.css'
 import 'yet-another-react-lightbox/plugins/thumbnails.css'

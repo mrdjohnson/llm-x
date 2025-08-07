@@ -32,7 +32,7 @@ afterEach(async () => {
 
 afterAll(() => server.close())
 
-vi.mock('~/utils/CachedStorage.ts', () => {
+vi.mock('~/utils/CachedStorage.platform.ts', () => {
   return {
     default: {
       put: vi.fn().mockResolvedValue(undefined),
