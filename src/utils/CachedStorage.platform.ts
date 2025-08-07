@@ -6,10 +6,6 @@ class CachedStorage {
     return cachedImageWorker.put(path, data)
   }
 
-  static async putResponse(path: string, response: Response) {
-    return cachedImageWorker.putResponse(path, response)
-  }
-
   static async get(path: string) {
     return cachedImageWorker.get(path)
   }
