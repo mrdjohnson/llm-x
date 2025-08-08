@@ -25,7 +25,10 @@
 
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "~environments/*": ["./environments/*"],
+      "~lib/*": ["./lib/*"],
+      "~public/*": ["./public/*"]
     }
   },
   "include": ["src"],

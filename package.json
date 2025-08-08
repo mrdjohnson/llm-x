@@ -1,9 +1,9 @@
 {
   "name": "llm-x",
+  "productName": "LLM X",
   "description": "LLM-X! An app for people to talk to Ollama, LM Studio, Automatic 1111, Gemini nano and more!",
-  "private": true,
   "version": "1.0.0",
-  "type": "module",
+  "main": "./environments/electron/dist/main/index.js",
   "scripts": {
     "dev": "cross-env DEBUG=vite-plugin-pwa SW_DEV=true vite --force",
     "build": "SW=true vite build",
@@ -11,6 +11,15 @@
     "chrome:dev:watch": "cross-env PLATFORM=chrome vite build --watch --mode development",
     "chrome:build": "rm -rf environments/chrome/dist; cross-env PLATFORM=chrome SW=true vite build",
     "prepare:chrome": "yarn tsx scripts/prepare-chrome.mts",
+    "electron:start": "cross-env PLATFORM=electron electron-vite preview",
+    "electron:dev": "cross-env PLATFORM=electron electron-vite dev",
+    "electron:build": "rm -rf environments/electron/dist; cross-env PLATFORM=electron electron-vite build",
+    "electron:postinstall": "cross-env PLATFORM=electron electron-builder install-app-deps",
+    "electron:build:unpack": "cross-env PLATFORM=electron yarn build && electron-builder --dir",
+    "electron:build:win": "cross-env PLATFORM=electron yarn build && electron-builder --win",
+    "electron:build:mac": "cross-env PLATFORM=electron electron-vite build && electron-builder --mac",
+    "electron:build:linux": "cross-env PLATFORM=electron electron-vite build && electron-builder --linux",
+    "prepare:electron": "cross-env PLATFORM=electron electron-vite build && electron-builder --linux --mac --win",
     "build_dev": "lint; SW=true vite build",
     "lint": "tsc; eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -32,6 +41,8 @@
     ]
   },
   "dependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/utils": "^4.0.0",
     "@heroui/react": "2.6.14",
     "@langchain/community": "^0.3.50",
     "@langchain/core": "^0.3.68",
@@ -41,6 +52,7 @@
     "axios": "^1.6.8",
     "camelcase-keys": "^9.1.3",
     "comlink": "^4.4.1",
+    "electron-updater": "^6.3.9",
     "framer-motion": "^12.12.1",
     "gh-pages": "^6.1.1",
     "highlight.js": "^11.9.0",
@@ -76,6 +88,9 @@
   },
   "devDependencies": {
     "@anatine/zod-mock": "^3.13.5",
+    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
+    "@electron-toolkit/eslint-config-ts": "^3.0.0",
+    "@electron-toolkit/tsconfig": "^1.0.1",
     "@faker-js/faker": "^8.4.1",
     "@playwright/test": "^1.42.1",
     "@rollup/plugin-replace": "^5.0.5",
@@ -104,6 +119,9 @@
     "daisyui": "^4.12.23",
     "dependency-cruiser": "^16.6.0",
     "dot": "^1.1.3",
+    "electron": "^37.2.3",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^4.0.0",
     "eslint": "^8.57.0",
     "eslint-config-react": "^1.1.7",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -139,5 +157,22 @@
     "node": ">=21.0.0",
     "yarn": ">=4.0.0"
   },
-  "packageManager": "yarn@4.1.1"
+  "packageManager": "yarn@4.1.1",
+  "build": {
+    "appId": "com.llm-x",
+    "productName": "llm-x",
+    "artifactName": "llm-x-${arch}.${ext}",
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "directories": {
+      "output": "builds/${os}"
+    }
+  }
 }
