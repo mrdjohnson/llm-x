@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router'
 import { useMemo } from 'react'
-import { Button } from '@heroui/react'
+import { Button } from '@mantine/core'
 import useMedia from 'use-media'
 
 import ChevronDown from '~/icons/ChevronDown'
@@ -47,19 +47,24 @@ const ModelAndPersonaDisplay = () => {
 
   return (
     <div className="mt-1 flex space-x-2">
-      <Button variant="light" size="sm" className="text-base-content/60" onPress={handleModelClick}>
+      <Button
+        variant="subtle"
+        size="xs"
+        className="text-base-content/60"
+        onClick={handleModelClick}
+        rightSection={<ChevronDown className="size-3" />}
+      >
         {modelButtonLabel ? `Model: ${modelButtonLabel}` : 'No models selected'}
-        <ChevronDown className="size-3" />
       </Button>
 
       <Button
-        variant="light"
-        size="sm"
+        variant="subtle"
+        size="xs"
         className="text-base-content/60"
-        onPress={handlePersonaClick}
+        onClick={handlePersonaClick}
+        rightSection={<ChevronDown className="size-3" />}
       >
         {selectedPersonaName ? `Persona: ${selectedPersonaName}` : 'No personas selected'}
-        <ChevronDown className="size-3" />
       </Button>
     </div>
   )
