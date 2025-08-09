@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import useMedia from 'use-media'
 import { twMerge } from 'tailwind-merge'
+import { Divider } from '@mantine/core'
 
 import Navbar from '~/components/Navbar'
 import { ChatSettingsSection } from '~/components/chat/ChatSettingsSection'
@@ -9,7 +10,6 @@ import { ChatListSection } from '~/components/chat/ChatListSection'
 import { settingStore } from '~/core/setting/SettingStore'
 
 import MediaEject from '~/icons/MediaEject'
-import { Divider } from '@heroui/react'
 
 import KeyboardTooltip from '~/components/KeyboardToolTip'
 
