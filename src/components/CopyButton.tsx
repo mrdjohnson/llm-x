@@ -25,7 +25,7 @@ const CopyButton = ({ text, className = '', getText, ...props }: CopyButtonProps
   }
 
   return (
-    <Button className={className} onClick={handleClick} {...props}>
+    <Button className={className} onClick={handleClick} variant="transparent" size="compact-xs" {...props}>
       <span className={twMerge('swap', copied && 'swap-active')}>
         <Copy className="swap-off" />
         <CopySuccess className="swap-on" />
