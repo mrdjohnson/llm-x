@@ -128,6 +128,7 @@ const SpeechSelector = () => {
 
   useEffect(() => {
     reset({
+      id: voice?.id,
       language: voice?.language || '',
       voiceUri: voice?.voiceUri || '',
     })
