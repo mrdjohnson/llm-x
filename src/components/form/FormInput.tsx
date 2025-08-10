@@ -1,28 +1,34 @@
-import { Input, InputProps } from '@heroui/react'
+import { TextInput, TextInputProps } from '@mantine/core'
+import { RefObject } from 'react'
+import { RefCallBack } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 
-type FormInputProps = Omit<InputProps, 'isInvalid'>
+type FormInputProps = Omit<TextInputProps, 'isInvalid' | 'classNames' | 'size'> & {
+  ref?: RefObject<HTMLInputElement | null> | RefCallBack
+}
 
 const FormInput = (inputProps: FormInputProps) => {
-  const isDisabled = inputProps.disabled || inputProps.isDisabled
-  const isInvalid = !isDisabled && !!inputProps.errorMessage
+  const isDisabled = inputProps.disabled
+  const isInvalid = !isDisabled && !!inputProps.error
+  const hasLabel = !!inputProps.label
+  const hasValue = !!inputProps.value
 
   return (
-    <div className={twMerge('w-full', isInvalid && '*:!text-error')}>
-      <Input
+    <div className="w-full">
+      <TextInput
         type="text"
-        variant="bordered"
-        isInvalid={isInvalid}
-        isDisabled={isDisabled}
+        variant="default"
+        color={isInvalid ? 'red' : undefined}
+        disabled={isDisabled}
+        size="md"
+        className={twMerge(inputProps.className, '!w-full')}
         classNames={{
-          label: isInvalid ? '!text-error' : '!text-base-content/45',
-          inputWrapper: twMerge(
-            '!bg-base-transparent border rounded-md border-base-content/30',
-            isInvalid && '!border-error',
-            isDisabled && 'opacity-30 hover:!border-base-content/30',
-            inputProps.variant === 'underlined' && 'border-0 border-b-1',
+          input: twMerge('w-full', hasLabel && hasValue && '!h-12 !pt-4'),
+          label: twMerge(
+            '!text-left absolute left-2 ',
+            hasValue && 'absolute left-2 z-10 !text-sm opacity-80',
           ),
-          input: twMerge(inputProps.variant === 'underlined' && '!text-base-content'),
+          root: 'relative',
         }}
         {...inputProps}
       />

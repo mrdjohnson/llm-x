@@ -41,7 +41,7 @@ const HostInput = ({ connection, isEnabled }: HostInputProps) => {
           disabled={!isEnabled}
           placeholder={host}
           type="url"
-          errorMessage={errors.host?.message}
+          error={errors.host?.message}
           description={
             <span className="flex flex-col gap-2 align-baseline text-sm md:flex-row">
               <span className="flex align-baseline">
@@ -57,7 +57,7 @@ const HostInput = ({ connection, isEnabled }: HostInputProps) => {
               <span className="text-right text-sm md:ml-auto md:pl-2">{modelsFoundLabel}</span>
             </span>
           }
-          endContent={
+          rightSection={
             isEnabled && (
               <button
                 className="btn btn-ghost btn-sm px-2"

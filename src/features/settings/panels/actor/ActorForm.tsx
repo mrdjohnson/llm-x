@@ -62,7 +62,7 @@ export const ActorForm = () => {
               <FormInput
                 label="Actor name"
                 placeholder={actor.source.name}
-                errorMessage={errors.name?.message}
+                error={errors.name?.message}
                 {...field}
               />
             )}

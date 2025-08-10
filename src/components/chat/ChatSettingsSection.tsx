@@ -113,8 +113,8 @@ export const ChatSettingsSection = ({ onBackClicked }: { onBackClicked: () => vo
                     <FormInput
                       id={chat.id + ''}
                       label="Name"
-                      errorMessage={errors.name?.message}
-                      endContent={
+                      error={errors.name?.message}
+                      rightSection={
                         isDirty && (
                           <button
                             className="btn btn-ghost btn-sm px-2"

@@ -101,7 +101,7 @@ const ConnectionPanel = () => {
                     label="Connection display name"
                     disabled={!isEnabled}
                     placeholder={connection.label}
-                    errorMessage={errors.label?.message}
+                    error={errors.label?.message}
                     description={
                       !connection.hostLabel && (
                         <span className="flex align-baseline">

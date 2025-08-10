@@ -75,7 +75,7 @@ const ChatModelPopoverContent = ({
       <FormInput
         placeholder="Filter models by name..."
         variant="underlined"
-        startContent={
+        leftSection={
           <button
             onClick={onClose}
             className="hidden text-base-content/30 hover:text-base-content/60 md:block"
@@ -83,7 +83,7 @@ const ChatModelPopoverContent = ({
             <Back />
           </button>
         }
-        endContent={
+        rightSection={
           <button
             className="hidden pr-1 text-base-content/30 hover:text-base-content/60 disabled:hidden md:block"
             disabled={_.isEmpty(filterText)}
@@ -92,8 +92,6 @@ const ChatModelPopoverContent = ({
             ✕
           </button>
         }
-        size="sm"
-        className="w-full py-2"
         value={filterText}
         onChange={e => setFilterText(e.target.value)}
         autoFocus

@@ -123,10 +123,8 @@ const SelectionPanelTable = <SelectorType extends { id: string }>({
         <label className="flex w-full flex-row gap-2">
           <FormInput
             type="text"
-            className="text-base-content/80"
             placeholder={filterInputPlaceholder}
             onChange={e => handleFilterChanged(e.target.value)}
-            size={isMobile ? 'lg' : undefined}
             value={filterText}
             ref={inputRef}
             autoFocus

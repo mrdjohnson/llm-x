@@ -54,7 +54,7 @@ export const PersonaForm = () => {
           render={({ field }) => (
             <FormInput
               label="Name"
-              errorMessage={errors.name?.message}
+              error={errors.name?.message}
               placeholder="Store Manager"
               {...field}
             />

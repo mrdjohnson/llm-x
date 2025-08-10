@@ -112,8 +112,8 @@ export const ParameterForm = () => {
             <FormInput
               label="Field Name"
               defaultValue={parameter.field}
-              errorMessage={errors.parameters?.[index]?.field?.message}
-              isRequired
+              error={errors.parameters?.[index]?.field?.message}
+              withAsterisk
               {...field}
             />
           )}
@@ -131,7 +131,7 @@ export const ParameterForm = () => {
               <FormInput
                 label="Value"
                 defaultValue={parameter.value}
-                errorMessage={errors.parameters?.[index]?.value?.message}
+                error={errors.parameters?.[index]?.value?.message}
                 {...field}
               />
             )}
@@ -148,7 +148,7 @@ export const ParameterForm = () => {
               <FormInput
                 label="Default Value"
                 defaultValue={parameter.defaultValue}
-                errorMessage={errors.parameters?.[index]?.defaultValue?.message}
+                error={errors.parameters?.[index]?.defaultValue?.message}
                 {...field}
               />
             )}
