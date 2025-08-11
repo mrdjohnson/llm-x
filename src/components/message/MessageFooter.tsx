@@ -1,10 +1,10 @@
 import _ from 'lodash'
 import { SpeechStatus } from 'react-text-to-speech/types'
 import { useMemo } from 'react'
-import { Badge, ScrollShadow } from '@heroui/react'
+import { ScrollShadow } from '@heroui/react'
+import { HoverCard } from '@mantine/core'
 import { twMerge } from 'tailwind-merge'
 
-import ToolTip from '~/components/Tooltip'
 import CopyButton from '~/components/CopyButton'
 
 import Delete from '~/icons/Delete'
@@ -35,22 +35,15 @@ type MessageFooterProps = {
 
 const DetailsToolTip = ({ details }: { details: string }) => {
   return (
-    <div className="flex flex-col gap-1 overflow-scroll pt-1">
-      <Badge
-        content={
-          <CopyButton
-            className="text-base-content/30 hover:scale-125 hover:text-base-content"
-            text={details}
-          />
-        }
-        classNames={{
-          badge: 'bg-transparent border-none',
-        }}
-      >
-        <ScrollShadow className="w-fit max-w-[80vw]" orientation="horizontal">
-          <pre className="text-sm">{details}</pre>
-        </ScrollShadow>
-      </Badge>
+    <div className="flex flex-col gap-1 overflow-scroll">
+      <CopyButton
+        className="place-self-end text-base-content/30 hover:scale-125 hover:text-base-content"
+        text={details}
+      />
+
+      <ScrollShadow className="w-fit max-w-[80vw]" orientation="horizontal">
+        <pre className="text-sm">{details}</pre>
+      </ScrollShadow>
     </div>
   )
 }
@@ -140,16 +133,17 @@ const MessageFooter = ({
       {extraButtons}
 
       {details && (
-        <ToolTip
-          label={<DetailsToolTip details={details} />}
-          className="rounded-md"
-          delay={400}
-          placement="bottom-start"
-        >
-          <label className="flex cursor-context-menu items-center text-base-content/30 hover:text-base-content">
-            <Warning />
-          </label>
-        </ToolTip>
+        <HoverCard openDelay={400} closeDelay={400} position="bottom-start">
+          <HoverCard.Target>
+            <label className="flex cursor-context-menu items-center text-base-content/30 hover:text-base-content">
+              <Warning />
+            </label>
+          </HoverCard.Target>
+
+          <HoverCard.Dropdown className="rounded-md">
+            <DetailsToolTip details={details} />
+          </HoverCard.Dropdown>
+        </HoverCard>
       )}
 
       <div
