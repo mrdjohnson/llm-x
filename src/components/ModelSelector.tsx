@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import _ from 'lodash'
 import { useNavigate } from 'react-router'
-import { Input } from '@heroui/react'
 import useMedia from 'use-media'
 
 import ChevronDown from '~/icons/ChevronDown'
+import FormInput from '~/components/form/FormInput'
 
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { chatStore } from '~/core/chat/ChatStore'
@@ -93,20 +93,13 @@ const ModelSelector = () => {
       onClick={handleClick}
       className="w-full !cursor-pointer rounded-md border-2 border-base-content/20 hover:!border-base-content/30 hover:bg-base-100 disabled:opacity-20"
     >
-      <Input
-        isReadOnly
+      <FormInput
+        readOnly
         label={label}
         variant="bordered"
         value={modelValue}
-        size={isMobile ? 'sm' : 'md'}
-        className="pointer-events-none w-full !cursor-pointer bg-transparent"
-        classNames={{
-          inputWrapper: 'btn !cursor-pointer border-none p-2 pr-1 !min-h-0 rounded-md md:h-12',
-          input: '!cursor-pointer',
-          label: '!cursor-pointer mr-2',
-          innerWrapper: '!cursor-pointer',
-        }}
-        endContent={
+        className="pointer-events-none"
+        rightSection={
           <ChevronDown className="-rotate-90 place-self-center !stroke-[3px] text-base-content/45" />
         }
       />
