@@ -2,9 +2,10 @@ import { KeyboardEventHandler, MouseEventHandler } from 'react'
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import _ from 'lodash'
 import { Controller, useFieldArray, Control, useFormState, useWatch } from 'react-hook-form'
-import { Checkbox, Select, SelectItem } from "@heroui/react"
+import { Checkbox, Group, MultiSelect } from '@mantine/core'
 
 import Delete from '~/icons/Delete'
+import Question from '~/icons/Question'
 
 import { ConnectionParameterModel } from '~/core/connection/ConnectionModel'
 
@@ -163,20 +164,26 @@ export const ParameterForm = () => {
 
         <div className="flex justify-center gap-3">
           <Controller
-            render={({ field }) => (
-              <Checkbox
-                className="flex flex-row"
-                classNames={{ label: 'flex flex-row justify-center align-middle' }}
-                onChange={field.onChange}
-                size="sm"
-              >
-                <div className="flex flex-row justify-center align-middle text-base-content">
-                  <ToolTip label="Check this if this value is not supposed to be a string">
-                    <span>Convert to JSON?</span>
-                  </ToolTip>
-                </div>
-              </Checkbox>
-            )}
+            render={({ field: { value: checked, ...field } }) => {
+              return (
+                <ToolTip
+                  label="Check this if this value is not supposed to be a string"
+                  refProp="rootRef"
+                >
+                  <Checkbox
+                    label={
+                      <Group>
+                        Convert to JSON?
+                        <Question />
+                      </Group>
+                    }
+                    checked={checked}
+                    {...field}
+                    size="sm"
+                  />
+                </ToolTip>
+              )
+            }}
             control={control}
             name={`parameters.${index}.isJson`}
             defaultValue={parameter.isJson || false}
@@ -207,35 +214,15 @@ export const ParameterForm = () => {
 
         <Controller
           render={({ field }) => (
-            <Select
-              className="w-full min-w-[20ch] rounded-md border border-base-content/30 bg-transparent"
-              selectionMode="multiple"
-              size="sm"
-              classNames={{
-                value: '!text-base-content min-w-[20ch]',
-                trigger: 'bg-base-100 hover:!bg-base-200 rounded-md',
-                popoverContent: 'text-base-content bg-base-100',
-              }}
-              defaultSelectedKeys={field.value}
-              onSelectionChange={selection => field.onChange(_.toArray(selection))}
+            <MultiSelect
+              data={parameterOptions.map(({ key: parameterType, label }) => ({
+                value: parameterType,
+                label,
+              }))}
+              size="md"
               label="Classification"
               {...field}
-              onChange={undefined}
-            >
-              {parameterOptions.map(({ key: parameterType, label }) => (
-                <SelectItem
-                  key={parameterType}
-                  value={parameterType}
-                  description={label}
-                  className="w-full !min-w-[13ch] text-base-content"
-                  classNames={{
-                    description: ' text',
-                  }}
-                >
-                  {parameterType}
-                </SelectItem>
-              ))}
-            </Select>
+            />
           )}
           control={control}
           name={`parameters.${index}.types`}
