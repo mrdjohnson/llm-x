@@ -1,5 +1,5 @@
 import { useMemo, useState, ReactNode, MouseEventHandler, type MouseEvent } from 'react'
-import { ScrollShadow } from '@heroui/react'
+import { ScrollShadow } from '@heroui/scroll-shadow'
 import _ from 'lodash'
 import { twMerge } from 'tailwind-merge'
 

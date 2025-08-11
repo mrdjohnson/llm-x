@@ -7,7 +7,7 @@ import { type PropsWithChildren } from 'react'
 import _ from 'lodash'
 import { useSpeech } from 'react-text-to-speech'
 import { twMerge } from 'tailwind-merge'
-import { ScrollShadow } from '@heroui/react'
+import { ScrollShadow } from '@heroui/scroll-shadow'
 
 import ChevronDown from '~/icons/ChevronDown'
 

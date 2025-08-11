@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { SpeechStatus } from 'react-text-to-speech/types'
 import { useMemo } from 'react'
-import { ScrollShadow } from '@heroui/react'
+import { ScrollShadow } from '@heroui/scroll-shadow'
 import { HoverCard } from '@mantine/core'
 import { twMerge } from 'tailwind-merge'
 

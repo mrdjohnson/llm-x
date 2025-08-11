@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import _ from 'lodash'
-import { ScrollShadow } from '@heroui/react'
+import { ScrollShadow } from '@heroui/scroll-shadow'
 import { useParams } from 'react-router-dom'
 import Markdown from 'react-markdown'
 import { Anchor, Button, ButtonGroupSection, Text } from '@mantine/core'

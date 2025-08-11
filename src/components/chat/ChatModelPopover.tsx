@@ -1,4 +1,4 @@
-import { ScrollShadow } from '@heroui/react'
+import { ScrollShadow } from '@heroui/scroll-shadow'
 import { Button, Combobox, Group, Modal, Popover, useCombobox } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { twMerge } from 'tailwind-merge'

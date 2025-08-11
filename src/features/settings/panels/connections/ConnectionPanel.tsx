@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import _ from 'lodash'
 import useMedia from 'use-media'
-import { ScrollShadow } from '@heroui/react'
+import { ScrollShadow } from '@heroui/scroll-shadow'
 
 import HostInput from '~/components/HostInput'
 import EnabledCheckbox from '~/components/EnabledCheckbox'

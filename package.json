@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@heroui/react": "2.6.14",
+    "@heroui/scroll-shadow": "^2.3.16",
     "@langchain/community": "^0.3.50",
     "@langchain/core": "^0.3.68",
     "@langchain/ollama": "^0.2.3",

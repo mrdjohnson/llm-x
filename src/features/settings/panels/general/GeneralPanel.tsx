@@ -1,4 +1,4 @@
-import { ScrollShadow } from '@heroui/react'
+import { ScrollShadow } from '@heroui/scroll-shadow'
 import _ from 'lodash'
 
 import AppGeneralPanel from '~/features/settings/panels/general/AppGeneralPanel'

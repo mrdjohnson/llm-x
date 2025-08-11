@@ -2516,6 +2516,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@heroui/react-rsc-utils@npm:2.1.9":
+  version: 2.1.9
+  resolution: "@heroui/react-rsc-utils@npm:2.1.9"
+  peerDependencies:
+    react: ">=18 || >=19.0.0-rc.0"
+  checksum: 10c0/b3b400c4ae701a89d9bd7301d41f49861eb2cf891dd1b6ce5f9b31260197beb9ac947fa434ec26d91d4214f88e1c049c84a0d50846530081de0dd81a01cfdcb2
+  languageName: node
+  linkType: hard
+
+"@heroui/react-utils@npm:2.1.12":
+  version: 2.1.12
+  resolution: "@heroui/react-utils@npm:2.1.12"
+  dependencies:
+    "@heroui/react-rsc-utils": "npm:2.1.9"
+    "@heroui/shared-utils": "npm:2.1.10"
+  peerDependencies:
+    react: ">=18 || >=19.0.0-rc.0"
+  checksum: 10c0/4f07dda2eaef3f37d48c11d9ffe3c3415a50ce311c57a41bc2aa49a484d2e2c5314c557553b146976a9f01ca6a32c7a4d4d24fdafd9fd357c8adeb8f04f609d9
+  languageName: node
+  linkType: hard
+
 "@heroui/react-utils@npm:2.1.4":
   version: 2.1.4
   resolution: "@heroui/react-utils@npm:2.1.4"
@@ -2621,6 +2642,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@heroui/scroll-shadow@npm:^2.3.16":
+  version: 2.3.16
+  resolution: "@heroui/scroll-shadow@npm:2.3.16"
+  dependencies:
+    "@heroui/react-utils": "npm:2.1.12"
+    "@heroui/shared-utils": "npm:2.1.10"
+    "@heroui/use-data-scroll-overflow": "npm:2.2.11"
+  peerDependencies:
+    "@heroui/system": ">=2.4.18"
+    "@heroui/theme": ">=2.4.17"
+    react: ">=18 || >=19.0.0-rc.0"
+    react-dom: ">=18 || >=19.0.0-rc.0"
+  checksum: 10c0/ba2e48d9c04be58ca75a2f40602313c74de4569daa885b222aeb20520fcba46b7304e118e9a367501eb0cf0a4aa64cd852ae77291ccbd0631e8c3a0e22b5e7a6
+  languageName: node
+  linkType: hard
+
 "@heroui/select@npm:2.4.10":
   version: 2.4.10
   resolution: "@heroui/select@npm:2.4.10"
@@ -2660,6 +2697,13 @@ __metadata:
   peerDependencies:
     react: ">=18 || >=19.0.0-rc.0"
   checksum: 10c0/d40ebe22bd717ae0055d50ebe184eb413fa77ec5be3409b0858e1add16d48d63f8d25a7c4593d14640dc7b5ad6413462b39620d33a4f750bebbcb4756c23828d
+  languageName: node
+  linkType: hard
+
+"@heroui/shared-utils@npm:2.1.10":
+  version: 2.1.10
+  resolution: "@heroui/shared-utils@npm:2.1.10"
+  checksum: 10c0/d8a1d27ea9fb18c7ae828f3b52b0fef2b19ebd2b2f3506f356a2359270d7420bd9b5d04daadf502759d7d8050f8c6a7e3294470ba59ea89af5f7a53d3e6a5c9a
   languageName: node
   linkType: hard
 
@@ -3022,6 +3066,17 @@ __metadata:
   peerDependencies:
     react: ">=18 || >=19.0.0-rc.0"
   checksum: 10c0/c6fc1642e330129d9c0e2fe5137171bca1d2cadbcf822e559b3ee77e269a0afe4786f81859b672dfd2f526a87400770f47824a1a3d8ab6e60fae68dff3106e80
+  languageName: node
+  linkType: hard
+
+"@heroui/use-data-scroll-overflow@npm:2.2.11":
+  version: 2.2.11
+  resolution: "@heroui/use-data-scroll-overflow@npm:2.2.11"
+  dependencies:
+    "@heroui/shared-utils": "npm:2.1.10"
+  peerDependencies:
+    react: ">=18 || >=19.0.0-rc.0"
+  checksum: 10c0/ef060aef99fda153f24c44958c20ec94884ed27bcba78b3136bd4c163a105f3290f3aaa2b0758881230f1aeb7c72f39eda87d67331da943af47042c691c44a75
   languageName: node
   linkType: hard
 
@@ -12608,6 +12663,7 @@ __metadata:
     "@anatine/zod-mock": "npm:^3.13.5"
     "@faker-js/faker": "npm:^8.4.1"
     "@heroui/react": "npm:2.6.14"
+    "@heroui/scroll-shadow": "npm:^2.3.16"
     "@langchain/community": "npm:^0.3.50"
     "@langchain/core": "npm:^0.3.68"
     "@langchain/ollama": "npm:^0.2.3"
