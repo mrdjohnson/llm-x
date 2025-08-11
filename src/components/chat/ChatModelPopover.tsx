@@ -1,17 +1,6 @@
-import {
-  Popover,
-  PopoverTrigger,
-  Input,
-  PopoverContent,
-  Listbox,
-  ListboxSection,
-  ListboxItem,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  useDisclosure,
-} from '@heroui/react'
+import { ScrollShadow } from '@heroui/react'
+import { Button, Combobox, Group, Modal, Popover, useCombobox } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 import { twMerge } from 'tailwind-merge'
 import useMedia from 'use-media'
 import { useState, type MouseEvent } from 'react'
@@ -21,7 +10,6 @@ import FormInput from '~/components/form/FormInput'
 import Back from '~/icons/Back'
 import ChevronDown from '~/icons/ChevronDown'
 import Delete from '~/icons/Delete'
-import Check from '~/icons/Check'
 
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 import { connectionStore } from '~/core/connection/ConnectionStore'
@@ -39,6 +27,8 @@ const ChatModelPopoverContent = ({
   actor,
   onClose,
 }: ChatModelPopoverProps & { onClose: () => void }) => {
+  const combobox = useCombobox()
+
   const [filterText, setFilterText] = useState('')
 
   const createActor = async (connectionId?: string | null, modelId?: string | null) => {
@@ -49,25 +39,6 @@ const ChatModelPopoverContent = ({
     }
 
     onClose()
-  }
-
-  const dynamicModelOptions = []
-
-  if (actorStore.systemActor) {
-    dynamicModelOptions.push(
-      <ListboxItem
-        key="system_model"
-        textValue="System current model"
-        onClick={() => createActor(null, null)}
-        className="my-1 line-clamp-1 p-4 text-lg text-base-content/60 md:p-2 md:!text-lg"
-        classNames={{
-          title: 'text-lg md:text-sm line-clamp-1',
-        }}
-        startContent={actor?.isUsingDefaults && <Check />}
-      >
-        {actorStore.systemActor.modelLabel}
-      </ListboxItem>,
-    )
   }
 
   return (
@@ -97,40 +68,37 @@ const ChatModelPopoverContent = ({
         autoFocus
       />
 
-      <Listbox className="w-full overflow-scroll p-0">
-        {/* Listbox wants a list, add default items to the list and then spread the sections */}
-        {[
-          ...dynamicModelOptions,
+      <ScrollShadow className="!max-h-full">
+        <Combobox store={combobox}>
+          <Combobox.Options className="relative max-h-full w-full overflow-scroll">
+            {actorStore.systemActor && (
+              <Combobox.Option
+                key="system_model"
+                value="System current model"
+                onClick={() => createActor(null, null)}
+                active={!actor?.isUsingDefaults}
+              >
+                {actorStore.systemActor.label}
+              </Combobox.Option>
+            )}
 
-          ...connectionStore.getFilteredModelGroups(filterText).map(({ connection, models }) => (
-            <ListboxSection
-              key={connection.id}
-              title={connection.label}
-              classNames={{
-                heading:
-                  'flex w-full sticky top-0 z-20 p-2 bg-base-200 border-b border-base-content/30 text-lg md:!text-sm',
-              }}
-            >
-              {models.map(model => (
-                <ListboxItem
-                  key={model.id}
-                  textValue={model.modelName}
-                  onClick={() => createActor(connection.id, model.id)}
-                  className="my-1 line-clamp-1 p-4 text-lg text-base-content/60 hover:!bg-base-100 hover:!text-base-content/80 md:p-2 md:!text-lg"
-                  classNames={{
-                    title: 'text-lg md:text-sm line-clamp-1',
-                  }}
-                  startContent={
-                    model.id === actor?.model?.id && !actor.isUsingDefaults && <Check />
-                  }
-                >
-                  {model.label}
-                </ListboxItem>
-              ))}
-            </ListboxSection>
-          )),
-        ]}
-      </Listbox>
+            {connectionStore.getFilteredModelGroups(filterText).map(({ connection, models }) => (
+              <Combobox.Group key={connection.id} label={connection.label}>
+                {models.map(model => (
+                  <Combobox.Option
+                    key={model.id}
+                    value={model.modelName}
+                    onClick={() => createActor(connection.id, model.id)}
+                    active={model.id === actor?.model?.id && !actor.isUsingDefaults}
+                  >
+                    {model.label}
+                  </Combobox.Option>
+                ))}
+              </Combobox.Group>
+            ))}
+          </Combobox.Options>
+        </Combobox>
+      </ScrollShadow>
 
       {actor && (
         <div
@@ -155,7 +123,7 @@ const ChatModelPopoverContent = ({
 }
 
 const ChatModelPopover = ({ chat, actor }: ChatModelPopoverProps) => {
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+  const [opened, { open, close }] = useDisclosure()
   const isMobile = useMedia('(max-width: 768px)')
 
   const handleDelete = (e: MouseEvent) => {
@@ -166,11 +134,11 @@ const ChatModelPopover = ({ chat, actor }: ChatModelPopoverProps) => {
   }
 
   const trigger = actor ? (
-    <div className="group my-2 flex flex-row justify-between gap-2" role="button" onClick={onOpen}>
+    <Group className="group w-full !justify-between gap-2" role="button" onClick={open}>
       <div className="flex flex-col">
         <span
           className={twMerge(
-            'link mx-0 line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline text-lg opacity-45 transition-all duration-300 ease-in-out hover:opacity-65 md:text-base',
+            'link mx-0 line-clamp-1 w-full place-content-baseline justify-between break-all align-baseline text-lg opacity-45 transition-all duration-300 ease-in-out group-hover:opacity-65 md:text-base',
             !actor.isConnected && 'opacity-20',
           )}
         >
@@ -188,31 +156,18 @@ const ChatModelPopover = ({ chat, actor }: ChatModelPopoverProps) => {
       >
         <Delete />
       </span>
-    </div>
+    </Group>
   ) : (
-    <button
-      className="group w-full !cursor-pointer rounded-md border-1 border-base-content/20 !bg-transparent hover:!border-base-content/30 hover:bg-base-100"
-      onClick={onOpen}
+    <Button
+      onClick={open}
+      variant="subtle"
+      color="gray"
+      rightSection={
+        <ChevronDown className="place-self-center !stroke-[2px] text-base-content/45" />
+      }
     >
-      <Input
-        isReadOnly
-        label="Add a Model"
-        variant="bordered"
-        size="sm"
-        className="pointer-events-none w-full !cursor-pointer bg-transparent"
-        classNames={{
-          inputWrapper: twMerge(
-            'btn !cursor-pointer border-none p-2 pr-1 !min-h-0 h-fit group-hover:bg-base-300',
-          ),
-          input: '!cursor-pointer',
-          label: '!cursor-pointer mr-2',
-          innerWrapper: twMerge('!cursor-pointer h-fit'),
-        }}
-        endContent={
-          <ChevronDown className="place-self-center !stroke-[2px] text-base-content/45" />
-        }
-      />
-    </button>
+      Add a Model
+    </Button>
   )
 
   if (isMobile) {
@@ -220,16 +175,17 @@ const ChatModelPopover = ({ chat, actor }: ChatModelPopoverProps) => {
       <>
         {trigger}
 
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="full" className="bg-base-200">
-          <ModalContent className="!max-w-screen !w-screen">
-            <ModalHeader className="flex flex-col gap-1 pb-0 pt-2 text-base-content/60">
-              Add a Model
-            </ModalHeader>
-
-            <ModalBody className="overflow-scroll px-2 pt-0 text-lg">
-              <ChatModelPopoverContent chat={chat} onClose={onClose} actor={actor} />
-            </ModalBody>
-          </ModalContent>
+        <Modal
+          opened={opened}
+          onClose={close}
+          title="Add a Model"
+          fullScreen
+          classNames={{
+            body: '!max-h-fit overflow-hidden flex flex-col !h-full',
+            content: '!flex flex-col h-full max-h-full',
+          }}
+        >
+          <ChatModelPopoverContent chat={chat} onClose={close} actor={actor} />
         </Modal>
       </>
     )
@@ -237,19 +193,17 @@ const ChatModelPopover = ({ chat, actor }: ChatModelPopoverProps) => {
 
   return (
     <Popover
-      placement="bottom"
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      showArrow
-      offset={10}
-      triggerType="listbox"
-      className="before:!bg-base-content/60 before:shadow-none"
+      position="right-start"
+      opened={opened}
+      onChange={nextOpen => (nextOpen ? open() : close())}
+      withArrow
+      arrowSize={15}
     >
-      <PopoverTrigger>{trigger}</PopoverTrigger>
+      <Popover.Target>{trigger}</Popover.Target>
 
-      <PopoverContent className="max-h-96 w-screen max-w-md -overflow-hidden border-2 border-base-content/60 bg-base-200 p-1 pt-0">
-        <ChatModelPopoverContent chat={chat} onClose={onClose} actor={actor} />
-      </PopoverContent>
+      <Popover.Dropdown className="flex !max-h-96 !w-screen max-w-md flex-col">
+        <ChatModelPopoverContent chat={chat} onClose={close} actor={actor} />
+      </Popover.Dropdown>
     </Popover>
   )
 }
