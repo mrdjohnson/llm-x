@@ -3,7 +3,6 @@ import { Controller, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import FormInput from '~/components/form/FormInput'
-import FormTextarea from '~/components/form/FormTextarea'
 
 import Drawer from '~/containers/Drawer'
 import Delete from '~/icons/Delete'
@@ -11,6 +10,7 @@ import Delete from '~/icons/Delete'
 import { PersonaModel } from '~/core/persona/PersonaModel'
 import { personaTable } from '~/core/persona/PersonaTable'
 import { personaStore } from '~/core/persona/PersonaStore'
+import { Textarea } from '@mantine/core'
 
 export const PersonaForm = () => {
   const { id } = useParams()
@@ -68,14 +68,11 @@ export const PersonaForm = () => {
 
         <Controller
           render={({ field }) => (
-            <FormTextarea
+            <Textarea
               rows={3}
               label="System Prompt (Description)"
-              variant="bordered"
-              labelPlacement="inside"
               placeholder="You are a store manager that is eager to help many customers"
-              errorMessage={errors.description?.message}
-              isMultiline
+              error={errors.description?.message}
               {...field}
             />
           )}
