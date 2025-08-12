@@ -1,3 +1,4 @@
+import { LoadingOverlay } from '@mantine/core'
 import { PropsWithChildren } from 'react'
 import { useDropzone } from 'react-dropzone'
 
@@ -17,11 +18,17 @@ const Dropzone = ({ children }: PropsWithChildren) => {
       <input {...getInputProps()} />
 
       {isDragActive && (
-        <div className="absolute bottom-0 left-0 right-0 top-0 z-[999] flex bg-base-content/30">
-          <div className="m-auto h-44 w-44">
-            <DocumentDownload />
-          </div>
-        </div>
+        <LoadingOverlay
+          visible
+          overlayProps={{ blur: 2 }}
+          loaderProps={{
+            children: (
+              <div className="m-auto h-44 w-44">
+                <DocumentDownload />
+              </div>
+            ),
+          }}
+        />
       )}
 
       {children}
