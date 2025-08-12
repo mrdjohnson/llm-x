@@ -2,7 +2,6 @@ import { initDb } from '~/core/db'
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { KBarProvider } from 'kbar'
-import { HeroUIProvider } from '@heroui/react'
 import { MemoryRouter } from 'react-router-dom'
 import { MantineProvider } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals'
@@ -34,7 +33,6 @@ initDb().then(() => {
       <MemoryRouter initialEntries={['/']}>
         <MantineProvider defaultColorScheme="dark">
           <ModalsProvider>
-            <HeroUIProvider>
               <KBarProvider>
                 <Suspense fallback={errorPage}>
                   <DaisyUiThemeProvider>
@@ -42,7 +40,6 @@ initDb().then(() => {
                   </DaisyUiThemeProvider>
                 </Suspense>
               </KBarProvider>
-            </HeroUIProvider>
           </ModalsProvider>
         </MantineProvider>
       </MemoryRouter>
