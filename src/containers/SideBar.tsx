@@ -72,7 +72,7 @@ export const SideBar = () => {
 
       {/* hide sidebar button */}
       <KeyboardTooltip
-        command="$mod+M"
+        command="$mod+B"
         placement="bottom"
         showArrow={false}
         className="-mt-2"
