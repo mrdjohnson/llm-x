@@ -58,7 +58,7 @@ const ModelSelector = () => {
 
   const modelValue = useMemo(() => {
     if (noServer) {
-      return isMobile ? NO_SERVERS_CONNECTED : ''
+      return isMobile ? NO_SERVERS_CONNECTED : undefined
     }
 
     if (actors[0]) {

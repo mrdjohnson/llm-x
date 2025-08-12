@@ -28,7 +28,7 @@ const App = () => {
     <Dropzone>
       <Notifications limit={10} />
 
-      <AppShell.Main className="drawer drawer-end mx-auto flex flex-col place-self-center text-base-content">
+      <div className="mx-auto flex flex-col place-self-center text-base-content">
         <div className="md:hidden">
           <Suspense fallback={null}>
             <LazyNavbar />
@@ -45,22 +45,22 @@ const App = () => {
           <LazyOmnibar />
         </Suspense>
 
-        <section className="drawer-content flex flex-row gap-4 text-xl h-full flex-1">
+        <section className="flex h-full flex-1 flex-row gap-4 text-xl">
           <aside className="hidden md:block" role="complementary">
-            <Suspense fallback={null}>
+            <AppShell.Navbar className="!transition-[width] duration-300 ease-in-out">
               <LazySidebar />
-            </Suspense>
+            </AppShell.Navbar>
           </aside>
 
-          <div className="mx-auto flex max-w-4xl flex-1 overflow-x-hidden overflow-y-hidden rounded-md p-3 pt-0 md:pt-3">
+          <AppShell.Main className="mx-auto flex max-w-4xl md:pt-3">
             <Suspense fallback={null}>
               <LazyChatBox />
             </Suspense>
-          </div>
+          </AppShell.Main>
         </section>
 
         <LazyProgresses />
-      </AppShell.Main>
+      </div>
     </Dropzone>
   )
 }

@@ -75,7 +75,7 @@ const ChatBox = () => {
   const isSidebarOpen = settingStore.setting.isSidebarOpen
 
   return (
-    <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-hidden rounded-md">
+    <div className="flex max-h-full min-h-full w-full min-w-full max-w-full flex-col overflow-x-auto overflow-y-hidden rounded-md py-2">
       <ScrollableChatFeed className="no-scrollbar flex flex-1 flex-col gap-2 overflow-x-hidden">
         {chat.messages.length > 0 ? (
           chat.messages.map(message => (

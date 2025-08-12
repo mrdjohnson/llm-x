@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
-import useMedia from 'use-media'
+import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { Divider } from '@mantine/core'
 
@@ -21,19 +20,9 @@ export type AccordionSectionProps = {
 export const SideBar = () => {
   const [openSectionType, setOpenSectionType] = useState<'chatList' | 'chat'>('chatList')
 
-  const isMobile = useMedia('(max-width: 768px)')
-
   const setting = settingStore.setting
 
   const isSidebarOpen = setting.isSidebarOpen
-
-  const width = useMemo(() => {
-    if (isMobile) {
-      return 'w-full'
-    }
-
-    return 'transition-[width] duration-300 ease-in-out ' + (isSidebarOpen ? ' w-[260px]' : ' w-0')
-  }, [isMobile, isSidebarOpen])
 
   const goToChat = () => {
     setOpenSectionType('chat')
@@ -50,23 +39,22 @@ export const SideBar = () => {
   if (!setting) return <div />
 
   return (
-    <nav className={twMerge('group/sidebar relative h-full', width)}>
-      <div
-        className={twMerge(
-          'flex h-full flex-1 flex-col flex-nowrap gap-2 self-stretch bg-base-300 p-2 transition-opacity duration-150 ease-in-out',
-          isSidebarOpen || isMobile ? 'opacity-100' : 'pointer-events-none -z-10 opacity-0',
-        )}
-      >
+    <nav className="group/sidebar relative size-full">
+      <div className="flex h-full flex-1 flex-col flex-nowrap gap-2 self-stretch bg-base-300 p-2">
         <div className="hidden md:block">
           <Navbar />
         </div>
 
-        <Divider className="bg-base-content/15" />
+        {isSidebarOpen && (
+          <>
+            <Divider />
 
-        {openSectionType === 'chat' && setting.selectedChatId ? (
-          <ChatSettingsSection onBackClicked={goToChatList} />
-        ) : (
-          <ChatListSection onChatSelected={goToChat} />
+            {openSectionType === 'chat' && setting.selectedChatId ? (
+              <ChatSettingsSection onBackClicked={goToChatList} />
+            ) : (
+              <ChatListSection onChatSelected={goToChat} />
+            )}
+          </>
         )}
       </div>
 

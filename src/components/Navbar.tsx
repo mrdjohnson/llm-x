@@ -5,6 +5,8 @@ import PersonaSelector from '~/components/PersonaSelector'
 import ModelRefreshButton from '~/components/ModelRefreshButton'
 import FunTitle from '~/components/FunTitle'
 import KeyboardTooltip from '~/components/KeyboardToolTip'
+import { twMerge } from 'tailwind-merge'
+import { Divider } from '@mantine/core'
 
 import Bars3 from '~/icons/Bars3'
 import Search from '~/icons/Search'
@@ -16,35 +18,50 @@ import { settingStore } from '~/core/setting/SettingStore'
 import { chatStore } from '~/core/chat/ChatStore'
 
 const Navbar = () => {
+  const isSidebarOpen = settingStore.setting.isSidebarOpen
+
   return (
-    <div className="navbar mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 bg-base-300 p-1 md:mb-0 md:flex-col md:p-0">
-      <div className="ml-2 hidden items-center pr-2 md:flex md:text-xl">
-        <KeyboardTooltip
-          command="$mod+B"
-          placement="bottom"
-          showArrow={false}
-          className="-mt-2"
-          title="Toggle Sidebar"
-        >
-          <button
-            className="absolute left-2 text-base-content/30 transition-colors duration-100 ease-in-out hover:text-base-content/80"
-            onClick={() => settingStore.toggleSideBar()}
+    <div className="mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 p-1 md:mb-0 md:flex-col md:p-0">
+      <div className=" hidden items-center md:flex md:text-xl">
+        {isSidebarOpen && (
+          <KeyboardTooltip
+            command="$mod+B"
+            placement="bottom"
+            showArrow={false}
+            className="-mt-2"
+            title="Toggle Sidebar"
           >
-            <ShrinkHorizontal />
-          </button>
-        </KeyboardTooltip>
+            <button
+              className="absolute left-2 text-base-content/30 transition-colors duration-100 ease-in-out hover:text-base-content/80"
+              onClick={() => settingStore.toggleSideBar()}
+            >
+              <ShrinkHorizontal />
+            </button>
+          </KeyboardTooltip>
+        )}
 
-        <FunTitle className="md:text-xl" />
+        <FunTitle className="w-full text-balance text-center md:text-xl" />
       </div>
 
-      <div className="w-full max-w-[600px] flex-row gap-2 md:flex md:flex-1">
-        <ModelSelector />
-        <ModelRefreshButton />
-      </div>
+      {isSidebarOpen ? (
+        <>
+          <div className="w-full max-w-[600px] flex-row gap-2 md:flex md:flex-1">
+            <ModelSelector />
+            <ModelRefreshButton />
+          </div>
 
-      <PersonaSelector />
+          <PersonaSelector />
+        </>
+      ) : (
+        <Divider />
+      )}
 
-      <div className="flex w-fit flex-row gap-2 md:w-full md:justify-evenly">
+      <div
+        className={twMerge(
+          'flex w-fit  gap-2 md:w-full md:justify-evenly',
+          settingStore.setting.isSidebarOpen ? 'flex-row' : 'flex-col',
+        )}
+      >
         <KeyboardTooltip
           command="$mod+Shift+O"
           placement="bottom"
@@ -79,7 +96,7 @@ const Navbar = () => {
           command="$mod+/"
           placement="bottom"
           showArrow={false}
-          className="-mt-2"
+          className="mt-auto"
           title="Settings"
         >
           <NavLink
