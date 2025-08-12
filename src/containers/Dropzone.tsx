@@ -1,4 +1,4 @@
-import { LoadingOverlay } from '@mantine/core'
+import { AppShell, LoadingOverlay } from '@mantine/core'
 import { PropsWithChildren } from 'react'
 import { useDropzone } from 'react-dropzone'
 
@@ -14,7 +14,7 @@ const Dropzone = ({ children }: PropsWithChildren) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, maxFiles: 1 })
 
   return (
-    <div className="grid !h-dvh !max-h-dvh bg-base-100" {...getRootProps()} onClick={undefined}>
+    <AppShell {...getRootProps()} onClick={undefined}>
       <input {...getInputProps()} />
 
       {isDragActive && (
@@ -32,7 +32,7 @@ const Dropzone = ({ children }: PropsWithChildren) => {
       )}
 
       {children}
-    </div>
+    </AppShell>
   )
 }
 
