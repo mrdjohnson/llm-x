@@ -1,104 +1,57 @@
-import { Autocomplete, AutocompleteItem, AutocompleteSection } from '@heroui/react'
-
-import Check from '~/icons/Check'
-import Delete from '~/icons/Delete'
+import { ComboboxItem, ComboboxItemGroup, Select } from '@mantine/core'
 
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { actorStore } from '~/core/actor/ActorStore'
+import { BaseLanguageModel } from '~/core/connection/types'
 
 type ModelAutoCompleteProps = {
   onModelSelected: (connectionId?: string, modelId?: string) => void
   selectedModelId?: string
 }
 
-const ModelAutoComplete = ({ onModelSelected, selectedModelId }: ModelAutoCompleteProps) => {
-  const dynamicModelOptions = []
+type ModelComboboxItem = ComboboxItem & {
+  model?: BaseLanguageModel
+  connectionId?: string
+}
 
-  const model = selectedModelId
-    ? connectionStore.getModelById(selectedModelId)
-    : actorStore.systemActor.model
+const ModelAutoComplete = ({ onModelSelected, selectedModelId }: ModelAutoCompleteProps) => {
+  const systemActor = actorStore.systemActor
 
   const isDefaultSelected = !selectedModelId
 
-  const modelLabel = model?.label + (isDefaultSelected ? ' (default)' : '')
+  const options: Array<ModelComboboxItem | ComboboxItemGroup<ModelComboboxItem>> =
+    connectionStore.activeConnections.map(connection => {
+      return {
+        group: connection.label,
+        items: connection.models.map(model => ({
+          value: model.id,
+          label: model.label,
+          model,
+          connectionId: connection.id,
+        })),
+      }
+    })
 
-  if (model) {
-    dynamicModelOptions.push(
-      <AutocompleteItem
-        key="system"
-        textValue="System current model"
-        className="my-1 line-clamp-1 p-4 text-lg text-base-content/60 md:p-2 md:!text-lg"
-        classNames={{
-          title: 'text-lg md:text-sm line-clamp-1',
-        }}
-        startContent={<Check />}
-        endContent={
-          !isDefaultSelected && (
-            <button
-              className="place-content-center pl-2 text-error opacity-30 hover:!opacity-100"
-              onClick={() => onModelSelected()}
-              title="Remove model from actor"
-            >
-              <Delete className="h-6 w-6 md:w-4" />
-            </button>
-          )
-        }
-      >
-        {modelLabel}
-      </AutocompleteItem>,
-    )
-  }
+  // model stays null to keep as the default model
+  options.unshift({
+    value: systemActor.id,
+    label: systemActor.modelLabel || 'Default model',
+  })
 
   return (
-    <Autocomplete
-      allowsCustomValue
-      classNames={{
-        popoverContent: 'text-base-content bg-base-100 rounded-md',
-        listbox: 'text-base-content',
-      }}
-      inputProps={{
-        classNames: {
-          label: '!text-base-content/45',
-          inputWrapper:
-            '!bg-transparent border rounded-md border-base-content/30 !text-base-content [&_button]:text-base-content/60',
-          input: '!text-base-content',
-        },
-      }}
-      label="Select a Model"
-      scrollShadowProps={{
-        isEnabled: false,
-      }}
-      selectedKey={selectedModelId || null}
-      description="The model will not display if it cannot be found on load"
-      clearButtonProps={{ onClick: () => onModelSelected() }}
-      placeholder={isDefaultSelected ? modelLabel : undefined}
-    >
-      {[
-        ...dynamicModelOptions,
+    <Select
+      searchable
+      data={options}
+      value={selectedModelId || null}
+      onChange={(_value, option) => {
+        const modelOption = option as ModelComboboxItem | null | undefined
 
-        ...connectionStore.activeConnections.map(connection => (
-          <AutocompleteSection
-            key={connection.id}
-            title={connection.label}
-            classNames={{
-              heading:
-                'flex w-full sticky top-0 z-20 py-1.5 px-2 bg-base-100 border-b border-base-content/30',
-            }}
-            showDivider
-          >
-            {connection.models.map(model => (
-              <AutocompleteItem
-                key={model.id}
-                textValue={model.modelName}
-                onClick={() => onModelSelected(connection.id, model.id)}
-              >
-                {model.modelName}
-              </AutocompleteItem>
-            ))}
-          </AutocompleteSection>
-        )),
-      ]}
-    </Autocomplete>
+        onModelSelected(modelOption?.connectionId, modelOption?.model?.id)
+      }}
+      clearable
+      allowDeselect={false}
+      placeholder={isDefaultSelected ? actorStore.systemActor?.modelLabel : undefined}
+    />
   )
 }
 
