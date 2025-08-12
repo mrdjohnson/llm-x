@@ -1,9 +1,8 @@
 import { useMemo } from 'react'
 import _ from 'lodash'
-import { ScrollShadow } from '@heroui/scroll-shadow'
 import { useParams } from 'react-router-dom'
 import Markdown from 'react-markdown'
-import { Anchor, Button, ButtonGroupSection, Text } from '@mantine/core'
+import { Anchor, Button, ButtonGroupSection, ScrollArea, Text } from '@mantine/core'
 
 import CopyButton from '~/components/CopyButton'
 import SettingSection, { SettingSectionItem } from '~/containers/SettingSection'
@@ -51,7 +50,7 @@ export const ConnectionHelpPanel = () => {
   return (
     <Drawer label={connectionModelLabelByType[id!]}>
       <div className="flex-1 overflow-y-hidden px-2 pt-2">
-        <ScrollShadow className="h-full max-h-full pb-7">
+        <ScrollArea className="h-full max-h-full pb-7">
           {__PLATFORM__ === 'chrome' && (
             <>
               <h3 className="text-wrap pb-3 text-lg font-bold">
@@ -82,7 +81,7 @@ export const ConnectionHelpPanel = () => {
           </Markdown>
 
           {/* TODO: add a list of connection cards (based on selected type) at the bottom here for easy transitions back for the user */}
-        </ScrollShadow>
+        </ScrollArea>
       </div>
     </Drawer>
   )

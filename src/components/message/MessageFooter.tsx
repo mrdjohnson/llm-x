@@ -1,8 +1,7 @@
 import _ from 'lodash'
 import { SpeechStatus } from 'react-text-to-speech/types'
 import { useMemo } from 'react'
-import { ScrollShadow } from '@heroui/scroll-shadow'
-import { HoverCard } from '@mantine/core'
+import { HoverCard, ScrollArea } from '@mantine/core'
 import { twMerge } from 'tailwind-merge'
 
 import CopyButton from '~/components/CopyButton'
@@ -41,9 +40,9 @@ const DetailsToolTip = ({ details }: { details: string }) => {
         text={details}
       />
 
-      <ScrollShadow className="w-fit max-w-[80vw]" orientation="horizontal">
+      <ScrollArea className="w-fit max-w-[80vw]">
         <pre className="text-sm">{details}</pre>
-      </ScrollShadow>
+      </ScrollArea>
     </div>
   )
 }

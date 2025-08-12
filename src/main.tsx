@@ -3,7 +3,7 @@ import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { KBarProvider } from 'kbar'
 import { MemoryRouter } from 'react-router-dom'
-import { MantineProvider } from '@mantine/core'
+import { createTheme, MantineProvider } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals'
 
 import App from '~/App'
@@ -26,20 +26,24 @@ const errorPage = (
   </div>
 )
 
+const mantineTheme = createTheme({
+  components: { ScrollArea: { defaultProps: { scrollBarSize: 2, type: 'scroll' } } },
+})
+
 // load the database before anything else
 initDb().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <MemoryRouter initialEntries={['/']}>
-        <MantineProvider defaultColorScheme="dark">
+        <MantineProvider defaultColorScheme="dark" theme={mantineTheme}>
           <ModalsProvider>
-              <KBarProvider>
-                <Suspense fallback={errorPage}>
-                  <DaisyUiThemeProvider>
-                    <App />
-                  </DaisyUiThemeProvider>
-                </Suspense>
-              </KBarProvider>
+            <KBarProvider>
+              <Suspense fallback={errorPage}>
+                <DaisyUiThemeProvider>
+                  <App />
+                </DaisyUiThemeProvider>
+              </Suspense>
+            </KBarProvider>
           </ModalsProvider>
         </MantineProvider>
       </MemoryRouter>

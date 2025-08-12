@@ -7,7 +7,7 @@ import { type PropsWithChildren } from 'react'
 import _ from 'lodash'
 import { useSpeech } from 'react-text-to-speech'
 import { twMerge } from 'tailwind-merge'
-import { ScrollShadow } from '@heroui/scroll-shadow'
+import { ScrollArea } from '@mantine/core'
 
 import ChevronDown from '~/icons/ChevronDown'
 
@@ -149,7 +149,7 @@ const LazyMessage = ({
         <div className="join join-vertical relative min-h-10 border border-base-content/20">
           {children}
 
-          <ScrollShadow
+          <ScrollArea
             className={twMerge(
               'w-full rounded-md p-2',
               children && 'min-w-16',
@@ -158,7 +158,7 @@ const LazyMessage = ({
             )}
           >
             <Content />
-          </ScrollShadow>
+          </ScrollArea>
 
           {error && (
             <div

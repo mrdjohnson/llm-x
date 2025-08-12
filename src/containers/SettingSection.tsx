@@ -1,5 +1,5 @@
 import { useMemo, useState, ReactNode, MouseEventHandler, type MouseEvent } from 'react'
-import { ScrollShadow } from '@heroui/scroll-shadow'
+import { ScrollArea } from '@mantine/core'
 import _ from 'lodash'
 import { twMerge } from 'tailwind-merge'
 
@@ -99,7 +99,7 @@ const SettingSection = <T,>({
       )}
 
       <div className="flex flex-1 flex-row gap-2 overflow-hidden">
-        <ScrollShadow className="flex max-h-full w-full flex-shrink-0">
+        <ScrollArea className="flex max-h-full w-full flex-shrink-0">
           <ul className="menu !flex w-full flex-col flex-nowrap gap-2 rounded-md p-0">
             {filteredItems.map((item, index) => (
               <ListItem
@@ -135,7 +135,7 @@ const SettingSection = <T,>({
               </li>
             )}
           </ul>
-        </ScrollShadow>
+        </ScrollArea>
       </div>
     </div>
   )

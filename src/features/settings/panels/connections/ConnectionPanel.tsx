@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import _ from 'lodash'
 import useMedia from 'use-media'
-import { ScrollShadow } from '@heroui/scroll-shadow'
+import { ScrollArea } from '@mantine/core'
 
 import HostInput from '~/components/HostInput'
 import EnabledCheckbox from '~/components/EnabledCheckbox'
@@ -91,7 +91,7 @@ const ConnectionPanel = () => {
       <div className="flex h-full w-full flex-col overflow-hidden px-2">
         <FormProvider {...methods}>
           <form className="contents" onSubmit={handleFormSubmit} ref={formRef}>
-            <ScrollShadow className="flex h-full max-h-full flex-col gap-2 overflow-scroll ">
+            <ScrollArea className="flex h-full max-h-full flex-col gap-2 overflow-scroll ">
               <EnabledCheckbox connection={connection} control={control} />
 
               <Controller
@@ -131,7 +131,7 @@ const ConnectionPanel = () => {
               <div className="h-full rounded-lg bg-base-100 pt-0">
                 <ConnectionDataParameterSection subControl={control} />
               </div>
-            </ScrollShadow>
+            </ScrollArea>
 
             <div className="mt-auto flex flex-shrink-0 flex-row justify-between gap-3 py-2 md:pb-2">
               {isMobile ? (

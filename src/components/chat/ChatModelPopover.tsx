@@ -1,5 +1,4 @@
-import { ScrollShadow } from '@heroui/scroll-shadow'
-import { Button, Combobox, Group, Modal, Popover, useCombobox } from '@mantine/core'
+import { Button, Combobox, Group, Modal, Popover, ScrollArea, useCombobox } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { twMerge } from 'tailwind-merge'
 import useMedia from 'use-media'
@@ -68,7 +67,7 @@ const ChatModelPopoverContent = ({
         autoFocus
       />
 
-      <ScrollShadow className="!max-h-full">
+      <ScrollArea className="!max-h-full">
         <Combobox store={combobox}>
           <Combobox.Options className="relative max-h-full w-full overflow-scroll">
             {actorStore.systemActor && (
@@ -98,7 +97,7 @@ const ChatModelPopoverContent = ({
             ))}
           </Combobox.Options>
         </Combobox>
-      </ScrollShadow>
+      </ScrollArea>
 
       {actor && (
         <div
