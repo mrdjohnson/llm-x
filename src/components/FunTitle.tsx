@@ -25,8 +25,8 @@ const xWords = [
   'X',
 ]
 
-const FunTitle = ({ className }: { className?: string }) => {
-  const funTitle = settingStore.funTitle ?? 'X'
+const FunTitle = ({ className, allowFun = true }: { className?: string; allowFun?: boolean }) => {
+  const funTitle = allowFun ? settingStore.funTitle ?? 'X' : 'X'
 
   const titleSections = useMemo<[string, string, string]>(() => {
     return funTitle?.split(/([xX])/g) as [string, string, string]
