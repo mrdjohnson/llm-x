@@ -9,8 +9,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "~/outer/*": ["src/outer/*"]
+      "~/*": ["./src/*"]
     }
   },
-  "include": ["vite.config.ts", "environments", "src/outer", "src/vite-env.d.ts", "lib"]
+  "include": ["vite.config.ts", "environments", "src/*/.platform.ts", "src/vite-env.d.ts", "lib"]
 }

@@ -8,13 +8,15 @@ import { Document } from '@langchain/core/documents'
 import { OllamaEmbeddings } from '@langchain/ollama'
 import _ from 'lodash'
 
-import { messenger } from '~/outer/messenger'
+import { messenger } from '~/core/messenger/Messenger.platform'
 import { toastStore } from '~/core/ToastStore'
 import localforage from 'localforage'
 
 class KnowledgeStore {
-  documents: Document[] | undefined
+  documents: Document[] | undefined | null
   vectorStore: MemoryVectorStore | undefined
+
+  documentDB = localforage.createInstance({ name: 'llm-x', storeName: 'documents' })
 
   documentStatus = {
     isLoadingDocuments: false,
@@ -41,6 +43,7 @@ class KnowledgeStore {
 
     this.documents = await textSplitter.createDocuments([readableContent])
 
+
     this.documentStatus.isDocumentsLoaded = true
     this.documentStatus.isLoadingDocuments = false
   }
@@ -57,12 +60,11 @@ class KnowledgeStore {
   }
 
   async createOrGetVectorStore(baseUrl?: string, model?: string) {
-    const documentDB = localforage.createInstance({ name: 'llm-x', storeName: 'documents' })
-    this.documents = await documentDB.getItem(
+    if (this.vectorStore) return this.vectorStore
+
+    this.documents ||= await this.documentDB.getItem(
       'https://developer.chrome.com/docs/extensions/how-to/test/puppeteer',
     )
-
-    if (this.vectorStore) return this.vectorStore
 
     if (!this.documents) return undefined
 

@@ -1,4 +1,4 @@
-import { messenger } from '~/outer/messenger'
+import { messenger } from '~/core/messenger/Messenger.platform'
 
 chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })

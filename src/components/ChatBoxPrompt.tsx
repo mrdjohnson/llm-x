@@ -50,7 +50,7 @@ const ChatBoxPrompt = () => {
               <PromptButton title="Import previous chat" />
             </AttachmentWrapper>
 
-            {__TARGET__ !== 'pwa' && (
+            {__PLATFORM__ !== 'pwa' && (
               // we need a way to determine if this is a sidepanel or if its a main page
               <PromptButton title="Chat with this page" onClick={() => knowledgeStore.createVectorStoreFromPageContent()} />
             )}

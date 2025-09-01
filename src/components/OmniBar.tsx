@@ -552,14 +552,14 @@ const OmniBar = () => {
     }),
 
     // // todo: do not let this into the wild
-    //  createAction({
-    //   name: 'Chat with current page',
-    //   keywords: 'chat with page',
-    //   section: 'Actions',
-    //   shortcut: ['Meta+Shift+W'],
-    //   priority: Priority.LOW,
-    //   perform: () => knowledgeStore.createVectorStoreFromPageContent(),
-    // }),
+     createAction({
+      name: 'Chat with current page',
+      keywords: 'chat with page',
+      section: 'Actions',
+      shortcut: ['$mod+Shift+W'],
+      priority: Priority.LOW,
+      perform: () => knowledgeStore.createVectorStoreFromPageContent(),
+    }),
 
     createAction({
       name: 'Toggle Sidebar',

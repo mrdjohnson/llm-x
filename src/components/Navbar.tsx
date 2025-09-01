@@ -83,36 +83,35 @@ const Navbar = () => {
         </KeyboardTooltip>
 
         <KnowledgePopoverForm>
-            {/* needed for the tooltip to attach to */}
-            <div>
-              <KeyboardTooltip
-                command="W"
-                shift
-                placement="bottom"
-                showArrow={false}
-                className="-mt-2"
-                title="Add knowledge"
+          {/* needed for the tooltip to attach to */}
+          <div>
+            <KeyboardTooltip
+              command="$mod+Shift+W"
+              placement="bottom"
+              showArrow={false}
+              className="-mt-2"
+              title="Add knowledge"
+              onClick={() =>
+                knowledgeStore.createVectorStoreFromUrl(
+                  'https://www.imdb.com/name/nm0000226/bio/?ref_=nm_ov_bio_sm',
+                )
+              }
+            >
+              <button
+                className={twMerge(
+                  'btn btn-square btn-sm !bg-transparent text-base-content opacity-60 md:btn-md hover:opacity-100',
+                  knowledgeStore.documentStatus.isDocumentsLoaded && 'text-primary',
+                )}
                 onClick={() =>
                   knowledgeStore.createVectorStoreFromUrl(
                     'https://www.imdb.com/name/nm0000226/bio/?ref_=nm_ov_bio_sm',
                   )
                 }
               >
-                <button
-                  className={twMerge(
-                    'btn btn-square btn-sm !bg-transparent text-base-content opacity-60 md:btn-md hover:opacity-100',
-                    knowledgeStore.documentStatus.isDocumentsLoaded && 'text-primary',
-                  )}
-                  onClick={() =>
-                    knowledgeStore.createVectorStoreFromUrl(
-                      'https://www.imdb.com/name/nm0000226/bio/?ref_=nm_ov_bio_sm',
-                    )
-                  }
-                >
-                  <Database />
-                </button>
-              </KeyboardTooltip>
-            </div>
+                <Database />
+              </button>
+            </KeyboardTooltip>
+          </div>
         </KnowledgePopoverForm>
 
         <KeyboardTooltip

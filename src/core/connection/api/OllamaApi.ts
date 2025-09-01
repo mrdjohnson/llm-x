@@ -165,10 +165,9 @@ export class OllamaApi extends BaseApi {
     vectorStore: MemoryVectorStore,
     handleChunk: (chunk: string) => void,
   ) {
-    const topK = 2
-    const retriever = vectorStore.asRetriever(topK)
+    const retriever = vectorStore.asRetriever()
 
-    const contextualizeQSystemPrompt2 =
+    const contextualizeQSystemPrompt =
       'Given a chat history and the latest user question ' +
       'which might reference context in the chat history, ' +
       'formulate a standalone question which can be understood ' +
@@ -176,7 +175,7 @@ export class OllamaApi extends BaseApi {
       'just reformulate it if needed and otherwise return it as is.'
 
     const contextualizeQPrompt = ChatPromptTemplate.fromMessages([
-      ['system', contextualizeQSystemPrompt2],
+      ['system', contextualizeQSystemPrompt],
       new MessagesPlaceholder('chat_history'),
       ['human', '{input}'],
     ])
