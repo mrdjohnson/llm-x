@@ -32,7 +32,7 @@ const ChatBoxPrompt = () => {
       <div className="hero-content w-fit text-center">
         <div>
           <h1 className="text-2xl font-bold md:text-4xl">
-            {'Getting started with '}
+            {'__zzGetting started with '}
 
             <FunTitle className="text-2xl font-bold md:text-4xl" />
           </h1>
@@ -52,7 +52,10 @@ const ChatBoxPrompt = () => {
 
             {__PLATFORM__ !== 'pwa' && (
               // we need a way to determine if this is a sidepanel or if its a main page
-              <PromptButton title="Chat with this page" onClick={() => knowledgeStore.createVectorStoreFromPageContent()} />
+              <PromptButton
+                title="Chat with this page"
+                onClick={() => knowledgeStore.createVectorStoreFromPageContent()}
+              />
             )}
           </div>
         </div>

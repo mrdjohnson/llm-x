@@ -12,5 +12,5 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": ["vite.config.ts", "environments", "src/*/.platform.ts", "src/vite-env.d.ts", "lib"]
+  "include": ["vite.config.ts", "environments", "src/**/*.platform.ts", "src/vite-env.d.ts", "lib"]
 }

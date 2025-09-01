@@ -82,37 +82,33 @@ const Navbar = () => {
           </button>
         </KeyboardTooltip>
 
-        <KnowledgePopoverForm>
-          {/* needed for the tooltip to attach to */}
-          <div>
-            <KeyboardTooltip
-              command="$mod+Shift+W"
-              placement="bottom"
-              showArrow={false}
-              className="-mt-2"
-              title="Add knowledge"
-              onClick={() =>
-                knowledgeStore.createVectorStoreFromUrl(
-                  'https://www.imdb.com/name/nm0000226/bio/?ref_=nm_ov_bio_sm',
-                )
-              }
+        {/* <KnowledgePopoverForm> */}
+        {/* needed for the tooltip to attach to */}
+        <div>
+          <KeyboardTooltip
+            command="$mod+Shift+W"
+            placement="bottom"
+            showArrow={false}
+            className="-mt-2"
+            title="Add knowledge"
+            // onClick={() =>
+            //   knowledgeStore.createVectorStoreFromUrl(
+            //     'https://www.imdb.com/name/nm0000226/bio/?ref_=nm_ov_bio_sm',
+            //   )
+            // }
+          >
+            <button
+              className={twMerge(
+                'btn btn-square btn-sm !bg-transparent text-base-content opacity-60 md:btn-md hover:opacity-100',
+                knowledgeStore.documentStatus.isDocumentsLoaded && 'text-primary',
+              )}
+              onClick={() => knowledgeStore.createVectorStoreFromPageContent()}
             >
-              <button
-                className={twMerge(
-                  'btn btn-square btn-sm !bg-transparent text-base-content opacity-60 md:btn-md hover:opacity-100',
-                  knowledgeStore.documentStatus.isDocumentsLoaded && 'text-primary',
-                )}
-                onClick={() =>
-                  knowledgeStore.createVectorStoreFromUrl(
-                    'https://www.imdb.com/name/nm0000226/bio/?ref_=nm_ov_bio_sm',
-                  )
-                }
-              >
-                <Database />
-              </button>
-            </KeyboardTooltip>
-          </div>
-        </KnowledgePopoverForm>
+              <Database />
+            </button>
+          </KeyboardTooltip>
+        </div>
+        {/* </KnowledgePopoverForm> */}
 
         <KeyboardTooltip
           command="$mod+K"

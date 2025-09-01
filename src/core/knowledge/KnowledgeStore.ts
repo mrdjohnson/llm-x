@@ -1,8 +1,9 @@
+import localforage from 'localforage'
 import { makeAutoObservable } from 'mobx'
-import * as cheerio from 'cheerio'
+import * as cheerio from 'cheerio/slim'
 import { MemoryVectorStore } from 'langchain/vectorstores/memory'
 import { CheerioWebBaseLoader } from '@langchain/community/document_loaders/web/cheerio'
-import { convert } from 'html-to-text'
+import { htmlToText } from 'html-to-text'
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
 import { Document } from '@langchain/core/documents'
 import { OllamaEmbeddings } from '@langchain/ollama'
@@ -10,7 +11,6 @@ import _ from 'lodash'
 
 import { messenger } from '~/core/messenger/Messenger.platform'
 import { toastStore } from '~/core/ToastStore'
-import localforage from 'localforage'
 
 class KnowledgeStore {
   documents: Document[] | undefined | null
@@ -34,7 +34,7 @@ class KnowledgeStore {
 
     const mainContent = $('[role="main"]').html() || $('main').html() || $('body').html() || ''
 
-    const readableContent = convert(mainContent)
+    const readableContent = htmlToText(mainContent)
 
     const textSplitter = new RecursiveCharacterTextSplitter({
       chunkSize: 500,
@@ -43,13 +43,18 @@ class KnowledgeStore {
 
     this.documents = await textSplitter.createDocuments([readableContent])
 
-
     this.documentStatus.isDocumentsLoaded = true
     this.documentStatus.isLoadingDocuments = false
   }
 
   async createVectorStoreFromHtml(html: string) {
-    await this.createVectorStoreFromCheerio(cheerio.load(html))
+    await this.createVectorStoreFromCheerio(
+      cheerio.load(html, {
+        xml: {
+          xmlMode: false,
+        },
+      }),
+    )
     await this.createOrGetVectorStore()
   }
 
