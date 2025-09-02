@@ -1,11 +1,10 @@
 import { type defineExtensionMessaging } from '@webext-core/messaging'
 
-export interface ProtocolMap {
-  pageContent(pageContent?: string): void
-  tabChanged(data: { url: string; title: string }): void
+export interface IMessenger {
+  tabChanged(data?: { url: string; title: string }): void
 }
 
-type MessagingType = ReturnType<typeof defineExtensionMessaging<ProtocolMap>>
+type MessagingType = ReturnType<typeof defineExtensionMessaging<IMessenger>>
 export type SendMessageType = MessagingType['sendMessage']
 export type OnMessageType = MessagingType['onMessage']
 

@@ -3,12 +3,12 @@ import { defineExtensionMessaging } from '@webext-core/messaging'
 import {
   BaseMessenger,
   OnMessageType,
-  ProtocolMap,
+  IMessenger,
   SendMessageType,
-} from '~/core/messenger/BaseMessenger'
+} from '~/core/crossPlatform/messenger/BaseMessenger'
 
-class Messenger extends BaseMessenger {
-  messaging = defineExtensionMessaging<ProtocolMap>()
+class ChromeMessenger extends BaseMessenger {
+  messaging = defineExtensionMessaging<IMessenger>()
 
   sendMessage: SendMessageType = (...args) => {
     // @ts-expect-error i'm passing the same requested args
@@ -20,4 +20,4 @@ class Messenger extends BaseMessenger {
   }
 }
 
-export const messenger = new Messenger()
+export const messenger = new ChromeMessenger()

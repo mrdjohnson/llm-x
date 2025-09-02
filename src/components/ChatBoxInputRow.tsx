@@ -20,6 +20,7 @@ import CancelEdit from '~/icons/CancelEdit'
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 import { knowledgeStore } from '../core/knowledge/KnowledgeStore'
 import { Checkbox } from '@heroui/react'
+import { getPlatformBridge } from '../core/crossPlatform/bridge/Bridge.platform'
 
 const Loading = () => (
   <span className="indicator-item loading loading-dots loading-sm indicator-start ml-4 opacity-65" />
@@ -124,6 +125,12 @@ const ChatBoxInputRow = ({ chat, onSend, children }: ChatBoxInputRowProps) => {
 
   useEffect(() => {
     knowledgeStore.listen()
+
+    getPlatformBridge()
+      ?.getTabContent()
+      .then(data => {
+        knowledgeStore.updateTabInfo(data)
+      })
   }, [])
 
   return (
@@ -143,7 +150,7 @@ const ChatBoxInputRow = ({ chat, onSend, children }: ChatBoxInputRowProps) => {
         <Checkbox
           checked={knowledgeStore.isActive}
           onValueChange={() => knowledgeStore.toggleActive()}
-          className="text-base-content"
+          className="text-base-content!"
         >
           {knowledgeStore.displayName}
         </Checkbox>

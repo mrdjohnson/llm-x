@@ -551,14 +551,13 @@ const OmniBar = () => {
       perform: () => chatStore.createChat(),
     }),
 
-    // // todo: do not let this into the wild
-     createAction({
-      name: 'Chat with current page',
+    createAction({
+      name: 'Toggle chatting with current page',
       keywords: 'chat with page',
       section: 'Actions',
       shortcut: ['$mod+Shift+W'],
       priority: Priority.LOW,
-      perform: () => knowledgeStore.createVectorStoreFromPageContent(),
+      perform: () => knowledgeStore.toggleActive(),
     }),
 
     createAction({

@@ -104,7 +104,7 @@ const Navbar = () => {
               )}
               onClick={() => {
                 knowledgeStore.listen()
-                knowledgeStore.createVectorStoreFromPageContent()
+                knowledgeStore.toggleActive()
               }}
             >
               <Database />

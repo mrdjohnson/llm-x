@@ -133,6 +133,7 @@ export class OllamaApi extends BaseApi {
       // verbose: true,
     }).bind({ signal: abortController.signal })
 
+    debugger
     const vectorStore = await knowledgeStore.createOrGetVectorStore(host)
 
     if (vectorStore) {
