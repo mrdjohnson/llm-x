@@ -19,6 +19,9 @@ const COVERAGE_PERCENTAGE = 50
 
 const replaceOptions = { __DATE__: new Date().toISOString(), __RELOAD_SW__: 'false' }
 
+console.log('env: ', import.meta.env)
+
+const isProd = process.env.NODE_ENV === 'production'
 const isDev = process.env.NODE_ENV === 'development'
 const isTest = process.env.NODE_ENV === 'test'
 
@@ -56,7 +59,7 @@ export default defineConfig({
     platformPlugins,
     // @ts-expect-error this was part of the original setup, it works but probably needs to be updated
     replace(replaceOptions),
-    removeConsole(),
+    isProd && removeConsole(),
     tsconfigPaths(),
     platformResolver(PLATFORM), // must happen after tsconfigPaths
   ],

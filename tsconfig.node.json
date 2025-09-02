@@ -1,16 +1,36 @@
 {
   "compilerOptions": {
-    "composite": true,
-    "skipLibCheck": true,
+    "composite": false,
+    "declaration": false,
+
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
+    "skipLibCheck": true,
+    "types": ["vite-plugin-pwa/client", "vite-plugin-pwa/info", "vite-plugin-comlink/client"],
+
+    /* Bundler mode */
     "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "checkJs": true,
     "allowSyntheticDefaultImports": true,
+
+    /* Linting */
     "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
 
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "~/environments/*": ["./environments/*"]
     }
   },
-  "include": ["vite.config.ts", "environments", "src/**/*.platform.ts", "src/vite-env.d.ts", "lib"]
+
+  "include": ["vite.config.ts", "environments", "src", "src/vite-env.d.ts", "lib"],
+  "exclude": ["environments/*/dist/*"]
 }

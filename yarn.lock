@@ -8531,6 +8531,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@webext-core/proxy-service@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "@webext-core/proxy-service@npm:1.2.1"
+  dependencies:
+    get-value: "npm:^3.0.1"
+    webextension-polyfill: "npm:^0.10.0"
+  peerDependencies:
+    "@webext-core/messaging": ">=1.3.1"
+    webextension-polyfill: ">=0.10.0"
+  checksum: 10c0/68c66b626e0167ec502bc86e1e22dd711e466f2644d86a3c686d66c65480cd949b76044c9d702e28a9d6c8bf06a4ead323214971ceca0c8176f01943ec6505d6
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^2.0.0":
   version: 2.0.0
   resolution: "abbrev@npm:2.0.0"
@@ -12251,6 +12264,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"get-value@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "get-value@npm:3.0.1"
+  dependencies:
+    isobject: "npm:^3.0.1"
+  checksum: 10c0/38cca1618ffe9a07a8b105a352c4de27bea36032d4916d21a0636ab5ff3bf1aa3bf200c6875f59f55cd4fb3f5156244dec838fbaf2ba580332d13ac51a25fabd
+  languageName: node
+  linkType: hard
+
 "gh-pages@npm:^6.1.1":
   version: 6.1.1
   resolution: "gh-pages@npm:6.1.1"
@@ -14309,6 +14331,7 @@ __metadata:
     "@vitest/ui": "npm:^1.3.1"
     "@vitest/web-worker": "npm:^3.0.5"
     "@webext-core/messaging": "npm:^2.3.0"
+    "@webext-core/proxy-service": "npm:^1.2.1"
     autoprefixer: "npm:^10.4.18"
     axios: "npm:^1.6.8"
     camelcase-keys: "npm:^9.1.3"
