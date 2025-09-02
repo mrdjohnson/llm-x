@@ -102,7 +102,10 @@ const Navbar = () => {
                 'btn btn-square btn-sm !bg-transparent text-base-content opacity-60 md:btn-md hover:opacity-100',
                 knowledgeStore.documentStatus.isDocumentsLoaded && 'text-primary',
               )}
-              onClick={() => knowledgeStore.createVectorStoreFromPageContent()}
+              onClick={() => {
+                knowledgeStore.listen()
+                knowledgeStore.createVectorStoreFromPageContent()
+              }}
             >
               <Database />
             </button>

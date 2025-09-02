@@ -11,6 +11,28 @@ browser.runtime.onInstalled.addListener(() => {
   console.log('Installed!')
 })
 
+function notifyTabChange(tab: chrome.tabs.Tab) {
+  if (tab.active && tab.url && tab.title) {
+    console.log('Active tab URL:', tab.url)
+
+    messenger.sendMessage('tabChanged', { url: tab.url, title: tab.title })
+  }
+}
+
+// Listen when active tab changes
+chrome.tabs.onActivated.addListener(activeInfo => {
+  chrome.tabs.get(activeInfo.tabId, tab => {
+    if (chrome.runtime.lastError || !tab) return // avoid errors when tab is closed
+
+    notifyTabChange(tab)
+  })
+})
+
+// Listen when the URL of the active tab updates
+chrome.tabs.onUpdated.addListener((_tabId, _changeInfo, tab) => {
+  notifyTabChange(tab)
+})
+
 const getPageContent = async () => {
   const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true })
 
@@ -25,6 +47,7 @@ const getPageContent = async () => {
 
   return content[0]?.result || ' no content'
 }
+
 
 messenger.onMessage('pageContent', async () => {
   let pageContent

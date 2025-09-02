@@ -19,6 +19,7 @@ import CancelEdit from '~/icons/CancelEdit'
 
 import { lightboxStore } from '~/features/lightbox/LightboxStore'
 import { knowledgeStore } from '../core/knowledge/KnowledgeStore'
+import { Checkbox } from '@heroui/react'
 
 const Loading = () => (
   <span className="indicator-item loading loading-dots loading-sm indicator-start ml-4 opacity-65" />
@@ -90,9 +91,7 @@ const ChatBoxInputRow = ({ chat, onSend, children }: ChatBoxInputRowProps) => {
   const noModelSelected = !connectionStore.selectedModelName && _.isEmpty(chat.actors)
   const inputDisabled =
     incomingMessageStore.isGettingData ||
-   
     noModelSelected ||
-   
     !!lightboxStore.lightboxMessage ||
     notShowingHomePage ||
     knowledgeStore.documentStatus.isLoadingDocuments
@@ -123,6 +122,10 @@ const ChatBoxInputRow = ({ chat, onSend, children }: ChatBoxInputRowProps) => {
     }
   }, [focusStore.shouldFocusChatInput, inputDisabled])
 
+  useEffect(() => {
+    knowledgeStore.listen()
+  }, [])
+
   return (
     <div
       className={twMerge(
@@ -135,6 +138,16 @@ const ChatBoxInputRow = ({ chat, onSend, children }: ChatBoxInputRowProps) => {
     >
       {/* todo: figure out where to put this */}
       {knowledgeStore.documentStatus.isLoadingDocuments && <Loading />}
+
+      {knowledgeStore.displayName && (
+        <Checkbox
+          checked={knowledgeStore.isActive}
+          onValueChange={() => knowledgeStore.toggleActive()}
+          className="text-base-content"
+        >
+          {knowledgeStore.displayName}
+        </Checkbox>
+      )}
 
       <div
         className={twMerge(

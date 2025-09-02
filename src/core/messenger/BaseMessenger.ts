@@ -1,13 +1,13 @@
 import { type defineExtensionMessaging } from '@webext-core/messaging'
-import _ from 'lodash'
 
-interface ProtocolMap {
+export interface ProtocolMap {
   pageContent(pageContent?: string): void
+  tabChanged(data: { url: string; title: string }): void
 }
 
 type MessagingType = ReturnType<typeof defineExtensionMessaging<ProtocolMap>>
-export type SendMessageType = (...args: Parameters<MessagingType['sendMessage']>) => void
-export type OnMessageType = (...args: Parameters<MessagingType['onMessage']>) => void
+export type SendMessageType = MessagingType['sendMessage']
+export type OnMessageType = MessagingType['onMessage']
 
 export class BaseMessenger {
   sendMessage: SendMessageType = () => {

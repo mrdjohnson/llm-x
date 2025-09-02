@@ -15,6 +15,8 @@ import { toastStore } from '~/core/ToastStore'
 class KnowledgeStore {
   documents: Document[] | undefined | null
   vectorStore: MemoryVectorStore | undefined
+  currentUrl: string | undefined
+  currentPageTitle: string | undefined
 
   documentDB = localforage.createInstance({ name: 'llm-x', storeName: 'documents' })
 
@@ -23,8 +25,35 @@ class KnowledgeStore {
     isDocumentsLoaded: false,
   }
 
+  isActive = false
+  isListening = false
+
   constructor() {
     makeAutoObservable(this)
+  }
+
+  get displayName() {
+    return this.currentPageTitle || this.currentUrl
+  }
+
+  listen() {
+    if (this.isListening || __PLATFORM__ !== 'chrome') return
+    this.isListening = true
+
+    messenger.onMessage('pageContent', message => {
+      if (message.data) {
+        knowledgeStore.createVectorStoreFromHtml(message.data)
+      } else {
+        knowledgeStore.documentStatus.isLoadingDocuments = false
+      }
+    })
+
+    messenger.onMessage('tabChanged', message => {
+      if (!message.data) return
+
+      knowledgeStore.setCurrentUrl(message.data.url)
+      knowledgeStore.setCurrentPageTitle(message.data.title)
+    })
   }
 
   private async createVectorStoreFromCheerio(api: cheerio.CheerioAPI) {
@@ -65,6 +94,8 @@ class KnowledgeStore {
   }
 
   async createOrGetVectorStore(baseUrl?: string, model?: string) {
+    debugger
+    if (!this.isActive) return undefined
     if (this.vectorStore) return this.vectorStore
 
     this.documents ||= await this.documentDB.getItem(
@@ -91,14 +122,18 @@ class KnowledgeStore {
     // tells the background tab to give us the page content
     messenger.sendMessage('pageContent', undefined)
   }
+
+  setCurrentUrl(url?: string) {
+    this.currentUrl = url
+  }
+
+  setCurrentPageTitle(title?: string) {
+    this.currentPageTitle = title
+  }
+
+  toggleActive() {
+    this.isActive = !this.isActive
+  }
 }
 
 export const knowledgeStore = new KnowledgeStore()
-
-messenger.onMessage('pageContent', message => {
-  if (message.data) {
-    knowledgeStore.createVectorStoreFromHtml(message.data)
-  } else {
-    knowledgeStore.documentStatus.isLoadingDocuments = false
-  }
-})

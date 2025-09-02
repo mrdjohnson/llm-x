@@ -62,13 +62,17 @@ export default defineConfig({
   ],
   esbuild: {
     // https://github.com/vitejs/vite/discussions/7920#discussioncomment-2709119
-    drop: isDev || isTest ? [] : ['console', 'debugger'],
-    logLevel: 'silent',
+    // todo: remove this when done with testing
+    // drop: isDev || isTest ? [] : ['console', 'debugger'],
+    // logLevel: 'silent',
   },
   build: {
     outDir: PLATFORM_IS_PWA ? './dist' : `./environments/${PLATFORM}/dist`,
     emptyOutDir: true,
-    rollupOptions: { external: PLATFORM_IS_PWA ? ['@webext-core/messaging'] : ['virtual:pwa-register/react'] },
+    rollupOptions: {
+      external: PLATFORM_IS_PWA ? ['@webext-core/messaging'] : ['virtual:pwa-register/react'],
+    },
+    minify: isDev || isTest ? false : 'esbuild',
   },
   base: PLATFORM_IS_PWA ? '/llm-x/' : undefined,
   worker: {

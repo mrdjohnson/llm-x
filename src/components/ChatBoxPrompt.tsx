@@ -32,7 +32,7 @@ const ChatBoxPrompt = () => {
       <div className="hero-content w-fit text-center">
         <div>
           <h1 className="text-2xl font-bold md:text-4xl">
-            {'__zzGetting started with '}
+            {'GX__ started with '}
 
             <FunTitle className="text-2xl font-bold md:text-4xl" />
           </h1>
