@@ -32,7 +32,7 @@ const ChatBoxPrompt = () => {
       <div className="hero-content w-fit text-center">
         <div>
           <h1 className="text-2xl font-bold md:text-4xl">
-            {'GX__ started with '}
+            {'G__ started with '}
 
             <FunTitle className="text-2xl font-bold md:text-4xl" />
           </h1>
@@ -54,7 +54,7 @@ const ChatBoxPrompt = () => {
               // we need a way to determine if this is a sidepanel or if its a main page
               <PromptButton
                 title="Chat with this page"
-                onClick={() => knowledgeStore.createVectorStoreFromPageContent()}
+                onClick={() => knowledgeStore.toggleActive()}
               />
             )}
           </div>

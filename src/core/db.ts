@@ -13,6 +13,8 @@ import { personaTable } from '~/core/persona/PersonaTable'
 import { voiceTable } from '~/core/voice/VoiceTable'
 import { settingTable } from '~/core/setting/SettingTable'
 import { actorTable } from '~/core/actor/ActorTable'
+import { resourceTable } from '~/core/resource/ResourceTable'
+import { documentTable } from '~/core/resource/document/DocumentTable'
 
 export const DATABASE_TABLES = [
   messageTable,
@@ -22,6 +24,8 @@ export const DATABASE_TABLES = [
   connectionTable,
   settingTable,
   actorTable,
+  resourceTable,
+  documentTable,
 ]
 
 export const initDb = async () => {

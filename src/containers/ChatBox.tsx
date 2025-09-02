@@ -23,7 +23,7 @@ import { NodeHtmlMarkdown } from 'node-html-markdown'
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
 import localForage from 'localforage'
 import { GithubRepoLoader } from '@langchain/community/document_loaders/web/github'
-import { messenger } from '~/core/messenger/Messenger.platform'
+import { messenger } from '~/core/crossPlatform/messenger/Messenger.platform'
 import { toastStore } from '../core/ToastStore'
 import * as cheerio from 'cheerio'
 
@@ -109,7 +109,7 @@ const ChatBox = () => {
 
     console.log('sending page content')
     toastStore.addToast('sending page content', 'info')
-    messenger.sendMessage('pageContent', 'hello')
+    // messenger.sendMessage('pageContent', 'hello')
 
     return
 
