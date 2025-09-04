@@ -125,7 +125,7 @@ export abstract class BaseTable<
     return this.destroyById(entity.id)
   }
 
-  private async destroyById(id: string) {
+  async destroyById(id: string) {
     this.cache.remove(id)
 
     return this.database.removeItem(id)
