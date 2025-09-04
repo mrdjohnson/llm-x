@@ -14,6 +14,7 @@ import CachedStorage from '~/utils/CachedStorage.platform'
 import BaseApi from '~/core/connection/api/BaseApi'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { personaStore } from '~/core/persona/PersonaStore'
+import { ChatViewModel } from '~/core/chat/ChatViewModel'
 
 const createHumanMessage = async (message: MessageViewModel): Promise<HumanMessage> => {
   if (!_.isEmpty(message.source.imageUrls)) {
@@ -70,7 +71,7 @@ const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: stri
 
 export class OllamaApi extends BaseApi {
   async *generateChat(
-    chatMessages: MessageViewModel[],
+    chat: ChatViewModel,
     incomingMessageVariant: MessageViewModel,
   ): AsyncGenerator<string> {
     const connection = incomingMessageVariant.actor.connection
@@ -85,7 +86,7 @@ export class OllamaApi extends BaseApi {
 
     BaseApi.abortControllerById[incomingMessageVariant.id] = async () => abortController.abort()
 
-    const messages = await getMessages(chatMessages, incomingMessageVariant.rootMessage.id)
+    const messages = await getMessages(chat.messages, incomingMessageVariant.rootMessage.id)
     const parameters = connection.parsedParameters
     await incomingMessageVariant.setExtraDetails({ sentWith: parameters })
 

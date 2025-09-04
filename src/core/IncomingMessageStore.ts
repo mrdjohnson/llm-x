@@ -153,7 +153,7 @@ export class IncomingMessageStore {
     })
 
     await this.handleIncomingMessage(chat, incomingMessage, async () => {
-      for await (const contentChunk of api.generateChat(chat.messages, incomingMessage)) {
+      for await (const contentChunk of api.generateChat(chat, incomingMessage)) {
         incomingMessage.updateContent(contentChunk)
       }
     })

@@ -1,4 +1,5 @@
 import { MessageViewModel } from '~/core/message/MessageViewModel'
+import { ChatViewModel } from '~/core/chat/ChatViewModel'
 
 abstract class BaseApi {
   static abortControllerById: Record<string, () => Promise<void>> = {}
@@ -9,7 +10,7 @@ abstract class BaseApi {
   ): Promise<string[]>
 
   abstract generateChat(
-    chatMessages: MessageViewModel[],
+    chat: ChatViewModel,
     incomingMessage: MessageViewModel,
   ): AsyncGenerator<string>
 

@@ -5,6 +5,7 @@ import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { personaStore } from '~/core/persona/PersonaStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
 import { progressStore, ProgressType } from '~/core/ProgressStore'
+import { ChatViewModel } from '~/core/chat/ChatViewModel'
 
 const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: string) => {
   const messages: AILanguageModelPrompt[] = []
@@ -35,7 +36,7 @@ const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: stri
 // note; this is just a copy of the code used for ollama; may refactor later
 export class GeminiApi extends BaseApi {
   async *generateChat(
-    chatMessages: MessageViewModel[],
+    chat: ChatViewModel,
     incomingMessageVariant: MessageViewModel,
   ): AsyncGenerator<string> {
     const connection = connectionStore.selectedConnection
@@ -60,7 +61,7 @@ export class GeminiApi extends BaseApi {
 
     const topK = _.min([userTopK, maxTopK ?? undefined])
 
-    const messages = await getMessages(chatMessages, incomingMessageVariant.rootMessage.id)
+    const messages = await getMessages(chat.messages, incomingMessageVariant.rootMessage.id)
 
     let progress: ProgressType | undefined = undefined
 
