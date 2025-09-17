@@ -3,11 +3,9 @@ import { TooltipProps } from '@heroui/react'
 import ToolTip from '~/components/Tooltip'
 import { humanizeShortcut } from '~/utils/humanizeShortcut'
 
-const KeyboardTooltip = ({
-  command,
-  title,
-  ...rest
-}: Omit<TooltipProps, 'label'> & { command: string; title: string }) => (
+export type KeyboardTooltipProps = Omit<TooltipProps, 'label'> & { command: string; title: string }
+
+const KeyboardTooltip = ({ command, title, ...rest }: KeyboardTooltipProps) => (
   <ToolTip
     label={
       <span>

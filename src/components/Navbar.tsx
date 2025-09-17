@@ -1,11 +1,13 @@
 import { NavLink } from 'react-router-dom'
+import { useMemo } from 'react'
+import { twMerge } from 'tailwind-merge'
+import { Divider } from '@heroui/react'
 
 import ModelSelector from '~/components/ModelSelector'
 import PersonaSelector from '~/components/PersonaSelector'
 import ModelRefreshButton from '~/components/ModelRefreshButton'
 import FunTitle from '~/components/FunTitle'
-import KeyboardTooltip from '~/components/KeyboardToolTip'
-import { twMerge } from 'tailwind-merge'
+import KeyboardTooltip, { KeyboardTooltipProps } from '~/components/KeyboardToolTip'
 
 import Bars3 from '~/icons/Bars3'
 import Search from '~/icons/Search'
@@ -15,22 +17,27 @@ import Create from '~/icons/Create'
 
 import { settingStore } from '~/core/setting/SettingStore'
 import { chatStore } from '~/core/chat/ChatStore'
-import { Divider } from '@heroui/react'
 
 const Navbar = () => {
   const isSidebarOpen = settingStore.setting.isSidebarOpen
+
+  const navButtonProps: Partial<KeyboardTooltipProps> = useMemo(() => {
+    let props: Partial<KeyboardTooltipProps> = { placement: 'bottom', className: '-mt-2' }
+
+    if (!isSidebarOpen) {
+      props = {
+        placement: 'right',
+      }
+    }
+
+    return { ...props, showArrow: false, delay: 300 }
+  }, [isSidebarOpen])
 
   return (
     <div className="mb-2 flex h-auto min-h-0 flex-row justify-between gap-3 p-1 md:mb-0 md:flex-col md:p-0">
       <div className=" hidden items-center md:flex md:text-xl">
         {isSidebarOpen && (
-          <KeyboardTooltip
-            command="$mod+B"
-            placement="bottom"
-            showArrow={false}
-            className="-mt-2"
-            title="Toggle Sidebar"
-          >
+          <KeyboardTooltip command="$mod+B" {...navButtonProps} title="Toggle Sidebar">
             <button
               className="absolute left-2 text-base-content/30 transition-colors duration-100 ease-in-out hover:text-base-content/80"
               onClick={() => settingStore.toggleSideBar()}
@@ -64,13 +71,7 @@ const Navbar = () => {
             : 'flex-col items-center',
         )}
       >
-        <KeyboardTooltip
-          command="$mod+Shift+O"
-          placement="bottom"
-          showArrow={false}
-          className="-mt-2"
-          title="New Chat"
-        >
+        <KeyboardTooltip command="$mod+Shift+O" {...navButtonProps} title="New Chat">
           <button
             className="group btn btn-square btn-ghost btn-sm !bg-transparent text-base-content/60 md:btn-md hover:text-base-content md:flex"
             onClick={() => chatStore.createChat()}
@@ -79,13 +80,7 @@ const Navbar = () => {
           </button>
         </KeyboardTooltip>
 
-        <KeyboardTooltip
-          command="$mod+K"
-          placement="bottom"
-          showArrow={false}
-          className="-mt-2 ml-auto"
-          title="Search"
-        >
+        <KeyboardTooltip command="$mod+K" {...navButtonProps} title="Search">
           <NavLink
             to="search"
             className="btn btn-square btn-ghost btn-md hidden !bg-transparent text-base-content/60 hover:text-base-content md:flex"
@@ -94,13 +89,7 @@ const Navbar = () => {
           </NavLink>
         </KeyboardTooltip>
 
-        <KeyboardTooltip
-          command="$mod+/"
-          placement="bottom"
-          showArrow={false}
-          className="mt-auto"
-          title="Settings"
-        >
+        <KeyboardTooltip command="$mod+/" {...navButtonProps} title="Settings">
           <NavLink
             to="initial"
             className="btn btn-square btn-ghost btn-sm min-w-0 !bg-transparent text-base-content/60 md:btn-md hover:text-base-content"
