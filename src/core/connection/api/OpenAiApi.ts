@@ -119,12 +119,14 @@ export class OpenAiApi extends BaseApi {
         },
       ],
       // verbose: true,
-    }).bind({ signal: abortController.signal })
+    })
 
     const stream = await ChatPromptTemplate.fromMessages(messages)
       .pipe(chatOpenAi)
       .pipe(new StringOutputParser())
-      .stream({})
+      .stream(undefined, {
+        signal: abortController.signal,
+      })
 
     for await (const chunk of stream) {
       yield chunk

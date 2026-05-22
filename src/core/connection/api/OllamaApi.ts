@@ -111,12 +111,14 @@ export class OllamaApi extends BaseApi {
         },
       ],
       // verbose: true,
-    }).bind({ signal: abortController.signal })
+    })
 
     const stream = await ChatPromptTemplate.fromMessages(messages)
       .pipe(chatOllama)
       .pipe(new StringOutputParser())
-      .stream({})
+      .stream(undefined, {
+        signal: abortController.signal,
+      })
 
     for await (const chunk of stream) {
       yield chunk
