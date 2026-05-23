@@ -15,6 +15,7 @@ import BaseApi from '~/core/connection/api/BaseApi'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { personaStore } from '~/core/persona/PersonaStore'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
+import { GenerateResponse, Ollama } from 'ollama'
 
 const createHumanMessage = async (message: MessageViewModel): Promise<HumanMessage> => {
   if (!_.isEmpty(message.source.imageUrls)) {
@@ -127,8 +128,44 @@ export class OllamaApi extends BaseApi {
     delete BaseApi.abortControllerById[incomingMessageVariant.id]
   }
 
-  generateImages(): Promise<string[]> {
-    throw 'unsupported'
+  async generateImages(
+    prompt: string,
+    incomingMessageVariant: MessageViewModel,
+  ): Promise<string[]> {
+    const connection = incomingMessageVariant.actor.connection
+    const host = connection?.formattedHost
+
+    const actor = incomingMessageVariant.actor
+    const model = actor.modelName
+
+    if (!connection || !host || !model) return []
+
+    const abortController = new AbortController()
+
+    BaseApi.abortControllerById[incomingMessageVariant.id] = async () => abortController.abort()
+
+    const ollama = new Ollama({ host })
+
+    const parameters = connection.parsedParameters
+    await incomingMessageVariant.setExtraDetails({ sentWith: parameters })
+
+    const response = (await ollama.generate({
+      model,
+      stream: false,
+      prompt,
+    })) as GenerateResponse & { image: string }
+
+    console.log(response)
+
+    const image: string | undefined = response.image!
+
+    if (!image) {
+      throw new Error('Ollama API failed to return any generated image')
+    }
+
+    delete BaseApi.abortControllerById[incomingMessageVariant.id]
+
+    return [image]
   }
 }
 
