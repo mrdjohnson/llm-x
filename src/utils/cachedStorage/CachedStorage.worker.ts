@@ -20,7 +20,16 @@ export const get = async (path: string): Promise<string | undefined> => {
   const cache = await getCache()
   const cachedResponse = await cache.match(path)
 
-  return cachedResponse?.url
+  if (!cachedResponse) return undefined
+
+  const blob = await cachedResponse.blob()
+
+  return new Promise<string | undefined>(resolve => {
+    const reader = new FileReader()
+    reader.onloadend = () => resolve(reader.result as string)
+    reader.onerror = () => resolve(undefined)
+    reader.readAsDataURL(blob)
+  })
 }
 
 export const destroy = async (path: string) => {
