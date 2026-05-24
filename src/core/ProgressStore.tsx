@@ -48,6 +48,33 @@ class ProgressStore {
       this._delete(progress)
     }, delay)
   }
+
+  async runList<T>(items: T[], label: string, callback: (item: T) => Promise<void>) {
+    const progress = this.create({ value: 0, label })
+
+    const total = Array.isArray(items) ? items.length : 1
+    let completed = 0
+
+    let failedCount = 0
+
+    for (const item of items) {
+      try {
+        await callback(item)
+      } catch (error) {
+        failedCount++
+      }
+
+      completed++
+      progress.update({
+        value: _.round((completed / total) * 100, 2),
+        subLabel: `${completed} of ${total}`,
+      })
+    }
+
+    this.delete(progress)
+
+    return failedCount
+  }
 }
 
 export const progressStore = new ProgressStore()

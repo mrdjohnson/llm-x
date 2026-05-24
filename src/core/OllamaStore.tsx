@@ -27,32 +27,15 @@ class OllamaStore {
   async updateAll() {
     const models = (await this.ollama.list()).models
 
-    let failedTotal = 0
-
-    const totalProgress = progressStore.create({
-      value: 0,
-      label: 'Updating all models',
-    })
-
-    for (let index = 1; index <= models.length; index++) {
-      const { name } = models[index - 1]
-
-      const progress = await this.pull(name, { isUpdate: true })
-
-      const totalPercent = Math.round((index / models.length) * 100)
-
-      totalProgress.update({ value: totalPercent, label: `(${index}/${models.length})` })
+    const failedTotal = await progressStore.runList(models, 'Updating models', async model => {
+      const progress = await this.pull(model.name, { isUpdate: true })
 
       if (progress.status === 'error') {
-        failedTotal += 1
-
-        totalProgress.update({ subLabel: `${failedTotal} failed to update` })
+        throw new Error(`Failed to update ${model.name}`)
       }
 
       progressStore.delete(progress)
-    }
-
-    progressStore.delete(totalProgress)
+    })
 
     let finishedMessage = `Updated ${models.length - failedTotal}/${models.length} models.`
     if (failedTotal > 0) {
