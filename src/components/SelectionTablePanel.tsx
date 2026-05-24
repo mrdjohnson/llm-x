@@ -5,6 +5,8 @@ import useMedia from 'use-media'
 
 import ChevronDown from '~/icons/ChevronDown'
 import Image from '~/icons/Image'
+import Eye from '~/icons/Eye'
+
 import FormInput from '~/components/form/FormInput'
 
 export type SortType<SelectorType extends { id: string }> = {
@@ -14,6 +16,7 @@ export type SortType<SelectorType extends { id: string }> = {
   tooltip?: string
   hideOnMobile?: true
   isImage?: boolean
+  isEye?: boolean
 }
 
 const EmptySortType = {
@@ -155,7 +158,7 @@ const SelectionPanelTable = <SelectorType extends { id: string }>({
               <tr>
                 {sortTypes.map(sortType => (
                   <th
-                    key={sortType.label}
+                    key={sortType.value as string}
                     className={sortType.hideOnMobile ? 'hidden md:flex' : ''}
                   >
                     <span
@@ -172,7 +175,7 @@ const SelectionPanelTable = <SelectorType extends { id: string }>({
                           sortType.value && 'border-b-[1.5px]',
                         )}
                       >
-                        {sortType.isImage ? <Image /> : sortType.label}
+                        {sortType.isImage ? <Image /> : sortType.isEye ? <Eye /> : sortType.label}
                       </span>
 
                       {makeChevron(sortType)}

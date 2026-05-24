@@ -18,7 +18,8 @@ class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
   modelTableHeaders: SelectionPanelSortType<LanguageModelType<IOllamaModel>>[] = [
     { label: 'Name', value: 'name' },
     { label: 'Params', value: 'paramSize' },
-    { value: 'supportsImages', tooltip: 'Supports Images?', invertOrder: true, isImage: true },
+    { value: 'generatesImages', tooltip: 'Generates Images?', invertOrder: true, isImage: true },
+    { value: 'supportsVision', tooltip: 'Supports Vision?', invertOrder: true, isEye: true },
     { label: 'Size', value: 'size' },
     { label: 'Updated', value: 'modifiedAt', invertOrder: true, hideOnMobile: true },
   ]
@@ -63,9 +64,20 @@ class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
 
     const { models } = await ollama.list()
 
-    return models
-      .map(toOllamaModel)
-      .map(ollamaModel => LanguageModel.fromIOllamaModel(ollamaModel, this.id))
+    const modelNames = models.map(m => m.name)
+
+    // Sync capabilities cache for all models
+    await this.store.syncCapabilities(this.id, modelNames)
+
+    // Get the cached capabilities
+    const capabilitiesMap = this.store.getCapabilities(this.id)
+
+    return models.map(model => {
+      const capabilities = capabilitiesMap[model.name] || []
+      const ollamaModel = toOllamaModel({ ...model, capabilities })
+
+      return LanguageModel.fromIOllamaModel(ollamaModel, this.id)
+    })
   }
 }
 

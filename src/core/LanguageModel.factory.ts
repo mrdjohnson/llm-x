@@ -33,6 +33,7 @@ const A1111Model = z.object({
   title: z.string(),
   modelName: z.string(),
   type: z.literal('A1111'),
+  generatesImages: z.literal(true),
 })
 
 const OpenAiModel = z.object({

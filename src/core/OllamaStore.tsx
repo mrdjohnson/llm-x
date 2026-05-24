@@ -24,6 +24,53 @@ class OllamaStore {
     })
   }
 
+  getCapabilities(connectionId: string): Record<string, string[]> {
+    try {
+      const cached = localStorage.getItem(`ollama_model_capabilities_${connectionId}`)
+      return cached ? JSON.parse(cached) : {}
+    } catch {
+      return {}
+    }
+  }
+
+  private setCapabilities(connectionId: string, capabilities: Record<string, string[]>) {
+    try {
+      localStorage.setItem(
+        `ollama_model_capabilities_${connectionId}`,
+        JSON.stringify(capabilities),
+      )
+    } catch (e) {
+      console.error('Failed to save model capabilities to localStorage', e)
+    }
+  }
+
+  async syncCapabilities(connectionId: string, modelNames: string[], forceRefresh = false) {
+    const cache = this.getCapabilities(connectionId)
+    const modelsToFetch = forceRefresh ? modelNames : modelNames.filter(name => !cache[name])
+
+    if (modelsToFetch.length === 0) {
+      return
+    }
+
+    const failedTotal = await progressStore.runList(
+      modelsToFetch,
+      'Syncing model capabilities',
+      async modelName => {
+        const { capabilities } = await this.show(modelName)
+        cache[modelName] = capabilities || []
+      },
+    )
+
+    this.setCapabilities(connectionId, cache)
+
+    if (failedTotal > 0) {
+      toastStore.addToast(
+        `Failed to fetch capabilities for ${failedTotal}/${modelsToFetch.length} models. See console for details.`,
+        'error',
+      )
+    }
+  }
+
   async updateAll() {
     const models = (await this.ollama.list()).models
 

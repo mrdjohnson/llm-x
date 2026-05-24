@@ -15,6 +15,7 @@ export type BaseLanguageModel = {
   label: string
   modelName: string
   type: ConnectionTypes
+  capabilities?: string[]
 }
 
 export type LanguageModelType<T> = T & BaseLanguageModel
@@ -39,6 +40,7 @@ class LanguageModel {
       type: 'A1111',
       label: model.title,
       modelName: model.modelName,
+      capabilities: ['image', 'vision'],
     })
   }
 

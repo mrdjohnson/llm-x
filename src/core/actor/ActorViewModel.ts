@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { makeAutoObservable, reaction } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 
 import { actorTable } from '~/core/actor/ActorTable'
 import { ActorModel } from '~/core/actor/ActorModel'
@@ -7,18 +7,8 @@ import { connectionStore } from '~/core/connection/ConnectionStore'
 import { actorStore } from '~/core/actor/ActorStore'
 
 export class ActorViewModel {
-  private modelGeneratesImages = false
-
   constructor(public source: ActorModel) {
     makeAutoObservable(this)
-
-    reaction(
-      () => [this.connection?.id, this.model?.id],
-      () => {
-        this.refreshModelImageCapability()
-      },
-      { fireImmediately: true },
-    )
   }
 
   get id() {
@@ -76,13 +66,7 @@ export class ActorViewModel {
   }
 
   get isImageGenerator() {
-    if (this.isUsingDefaults) {
-      const actor = actorStore.systemActor
-
-      return actor.modelGeneratesImages || actor.connection?.type === 'A1111'
-    }
-
-    return this.modelGeneratesImages || this.connection?.type === 'A1111'
+    return this.model?.capabilities?.includes('image') || false
   }
 
   async update(patch: Partial<ActorModel>) {
@@ -92,31 +76,6 @@ export class ActorViewModel {
   async removeConnection(connectionId?: string) {
     if (connectionId === undefined || this.source.connectionId === connectionId) {
       await this.update({ connectionId: null, modelId: null })
-    }
-  }
-
-  private async refreshModelImageCapability() {
-    const connection = this.connection
-    const model = this.model
-    const selectionKey = model?.id
-
-    if (!connection || !model || connection.type !== 'Ollama') {
-      this.modelGeneratesImages = false
-
-      return
-    }
-
-    try {
-      const ollama = connection.store
-      const { capabilities } = await ollama.show(model.modelName)
-
-      if (this.model?.id === selectionKey) {
-        this.modelGeneratesImages = capabilities?.includes('image') ?? false
-      }
-    } catch {
-      if (this.model?.id === selectionKey) {
-        this.modelGeneratesImages = false
-      }
     }
   }
 }

@@ -1,11 +1,11 @@
-import { describe, expect, test, beforeEach, afterEach, vi } from 'vitest'
+import { describe, expect, test, beforeEach, afterEach } from 'vitest'
 
 import { ActorViewModel } from '~/core/actor/ActorViewModel'
 import { actorTable } from '~/core/actor/ActorTable'
 import { actorStore } from '~/core/actor/ActorStore'
 import { ActorModelFactory } from '~/core/actor/ActorModel.factory'
 import { ConnectionModelFactory } from '~/core/connection/ConnectionModel.factory'
-import { setServerResponseForOllamaShow } from '~/tests/helpers/setServerResponseForModels'
+import { setServerResponseForOllamaShowByModelName } from '~/tests/helpers/setServerResponseForModels'
 
 describe('ActorViewModel', () => {
   let actor: ActorViewModel
@@ -65,16 +65,23 @@ describe('ActorViewModel', () => {
       type: 'Ollama',
     })
 
-    setServerResponseForOllamaShow(connection.formattedHost, ['image'])
+    const modelName = connection.models[0].modelName
+
+    // Clear the cache so it will refetch capabilities
+    localStorage.removeItem(`ollama_model_capabilities_${connection.id}`)
+
+    // Set up mock to return image capability for this model
+    setServerResponseForOllamaShowByModelName(connection.formattedHost, modelName)
+
+    // Refetch models to get the capabilities
+    await connection.fetchLmModels()
 
     const imageActor = await ActorModelFactory.create({
       connectionId: connection.id,
       modelId: connection.models[0].id,
     })
 
-    await vi.waitFor(() => {
-      expect(imageActor.isImageGenerator).toBe(true)
-    })
+    expect(imageActor.isImageGenerator).toBe(true)
   })
 
   test('isImageGenerator is false when Ollama model lacks image capability', async () => {
@@ -82,15 +89,13 @@ describe('ActorViewModel', () => {
       type: 'Ollama',
     })
 
-    setServerResponseForOllamaShow(connection.formattedHost, ['completion'])
+    // No need to set up mock or clear cache - it will return empty capabilities by default
 
     const textActor = await ActorModelFactory.create({
       connectionId: connection.id,
       modelId: connection.models[0].id,
     })
 
-    await vi.waitFor(() => {
-      expect(textActor.isImageGenerator).toBe(false)
-    })
+    expect(textActor.isImageGenerator).toBe(false)
   })
 })

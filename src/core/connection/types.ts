@@ -10,6 +10,7 @@ export type IA1111Model = {
   title: string
   modelName: string
   type: 'A1111'
+  generatesImages: true
 }
 
 export type IOllamaModel = ReturnType<typeof toOllamaModel>

@@ -16,6 +16,7 @@ import DownloadTray from '~/icons/DownloadTray'
 import Delete from '~/icons/Delete'
 import Edit from '~/icons/Edit'
 import Image from '~/icons/Image'
+import Eye from '~/icons/Eye'
 
 import Drawer from '~/containers/Drawer'
 
@@ -46,6 +47,12 @@ const OllamaModelPanelTable = ({ connection }: PanelTableProps) => {
     navigate('/')
   }
 
+  const refreshCapabilities = async () => {
+    const modelNames = connection.models.map(m => m.modelName)
+    await ollamaStore.syncCapabilities(connection.id, modelNames, true)
+    await connection.fetchLmModels()
+  }
+
   if (!connection.isConnected) {
     return <NotConnectedPanelSection connection={connection} />
   }
@@ -60,9 +67,14 @@ const OllamaModelPanelTable = ({ connection }: PanelTableProps) => {
             <span className="flex flex-row gap-2 align-middle">
               <span>{model.details.parameter_size}</span>
 
-              {model.supportsImages && (
+              {model.generatesImages && (
                 <span className="mt-[2px]">
                   <Image />
+                </span>
+              )}
+              {model.supportsVision && (
+                <span className="mt-[2px]">
+                  <Eye />
                 </span>
               )}
             </span>
@@ -91,9 +103,19 @@ const OllamaModelPanelTable = ({ connection }: PanelTableProps) => {
         <td>
           <input
             type="checkbox"
-            defaultChecked={model.supportsImages}
+            defaultChecked={model.generatesImages}
             className="checkbox checkbox-xs tooltip tooltip-bottom"
-            data-tip="Supports Images?"
+            data-tip="Generates Images?"
+            onClick={e => e.preventDefault()}
+          />
+        </td>
+
+        <td>
+          <input
+            type="checkbox"
+            defaultChecked={model.supportsVision}
+            className="checkbox checkbox-xs tooltip tooltip-bottom"
+            data-tip="Supports Vision?"
             onClick={e => e.preventDefault()}
           />
         </td>
@@ -155,6 +177,15 @@ const OllamaModelPanelTable = ({ connection }: PanelTableProps) => {
             <DownloadTray />
           </button>
         )}
+
+        <button
+          className="btn btn-neutral btn-sm flex w-fit flex-row gap-2 px-4"
+          onClick={refreshCapabilities}
+          title="Refresh model capabilities cache"
+        >
+          <span className="whitespace-nowrap text-sm">Refresh Capabilities</span>
+          <DownloadTray />
+        </button>
       </div>
     </SelectionPanelTable>
   )
