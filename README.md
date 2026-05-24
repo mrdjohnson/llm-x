@@ -16,6 +16,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 # Recent additions:
 
+- Text to Image generation support via Ollama!
 - Multi-model support! Chats now support multiple models, from any connected server, and can respond with each them at the same time
 - Quick Delete! using the quick search/ kbar panel, it is super easy to delete all app related data
 - Chrome extension support! All the features of the web app, built into the browser
@@ -113,7 +114,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 - [x] **Open AI server integration!**
 - [x] **Gemini Nano integration!**
 - [x] **AUTOMATIC1111 integration!**
-- [x] **Text to Image generation** through AUTOMATIC1111
+- [x] **Text to Image generation** through Ollama and AUTOMATIC1111
 - [x] **Image to Text** using Ollama's multi modal abilities
 - [x] **Code highlighting** with Highlight.js (only handles common languages for now)
 - [x] **Search/Command bar** provides quick access to app features through kbar

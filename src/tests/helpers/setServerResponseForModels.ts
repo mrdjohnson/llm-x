@@ -1,4 +1,6 @@
-import { setServerResponse } from '~/tests/msw'
+import { http, HttpResponse } from 'msw'
+
+import { setServerResponse, server } from '~/tests/msw'
 
 import { ConnectionViewModelTypes } from '~/core/connection/viewModels'
 import { BaseModelTypes } from '~/core/connection/types'
@@ -33,5 +35,25 @@ export const setServerResponseForModels = (
 
   setServerResponse(modelUrl, response)
 
+  if (connection.type === 'Ollama') {
+    setServerResponseForOllamaShow(host, [])
+  }
+
   return host
+}
+
+export const setServerResponseForOllamaShow = (host: string, capabilities: string[]) => {
+  setServerResponse(host + '/api/show', { capabilities })
+}
+
+export const setServerResponseForOllamaShowByModelName = (host: string, imageModelName: string) => {
+  server.use(
+    http.all(host + '/api/show', async ({ request }) => {
+      const { model } = (await request.json()) as { model: string }
+
+      return HttpResponse.json({
+        capabilities: model === imageModelName ? ['image'] : [],
+      })
+    }),
+  )
 }

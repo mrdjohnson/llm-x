@@ -10,3 +10,13 @@ export const setServerResponse = (url: string, body: object) => {
     }),
   )
 }
+
+export const setServerPostResponse = <T>(url: string, response: (body: T) => Promise<object>) => {
+  server.use(
+    http.post(url, async ({ request }) => {
+      const json = (await request.json()) as T
+
+      return HttpResponse.json(await response(json))
+    }),
+  )
+}

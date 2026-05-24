@@ -1,5 +1,7 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import _ from 'lodash'
+
+import { setServerPostResponse } from '~/tests/msw'
 
 import { messageTable } from '~/core/message/MessageTable'
 import { ChatModelFactory } from '~/core/chat/ChatModel.factory'
@@ -62,13 +64,31 @@ describe('ChatViewModel', () => {
 
   test('isImageGenerationMode if all models generate images', async () => {
     const a1111Connection = await ConnectionModelFactory.create({ type: 'A1111' })
-    const ollamaConnection = await ConnectionModelFactory.create({ type: 'Ollama' })
+    const ollamaConnection = await ConnectionModelFactory.withOptions({ modelCount: 2 }).create({
+      type: 'Ollama',
+    })
+
+    const [ollamaImageModel, ollamaTextModel] = ollamaConnection.models
+
+    setServerPostResponse(
+      `${ollamaConnection.formattedHost}/api/show`,
+      async (body: { model: string }) => {
+        return {
+          capabilities: body.model === ollamaImageModel.modelName ? ['image'] : [],
+        }
+      },
+    )
 
     const [imageActor1, imageActor2] = await ActorModelFactory.createList(2, {
       connectionId: a1111Connection.id,
     })
     const [textActor1, textActor2] = await ActorModelFactory.createList(2, {
       connectionId: ollamaConnection.id,
+      modelId: ollamaTextModel.id,
+    })
+    const [ollamaImageActor1, ollamaImageActor2] = await ActorModelFactory.createList(2, {
+      connectionId: ollamaConnection.id,
+      modelId: ollamaImageModel.id,
     })
 
     const expectChatWithActorsToBe = async (
@@ -87,6 +107,16 @@ describe('ChatViewModel', () => {
     await expectChatWithActorsToBe([textActor1, textActor2], false)
 
     await expectChatWithActorsToBe([imageActor1, imageActor2, textActor1], false)
+
+    await vi.waitFor(() => expect(ollamaImageActor1.isImageGenerator).toBe(true))
+
+    await expectChatWithActorsToBe([ollamaImageActor1], true)
+
+    await expectChatWithActorsToBe([ollamaImageActor1, ollamaImageActor2], true)
+
+    await expectChatWithActorsToBe([imageActor1, ollamaImageActor1], true)
+
+    await expectChatWithActorsToBe([ollamaImageActor1, textActor1], false)
 
     // set default actor type
     await connectionStore.setSelectedConnection(ollamaConnection)

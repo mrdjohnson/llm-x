@@ -1,9 +1,11 @@
-import { describe, expect, test, beforeEach, afterEach } from 'vitest'
+import { describe, expect, test, beforeEach, afterEach, vi } from 'vitest'
 
 import { ActorViewModel } from '~/core/actor/ActorViewModel'
 import { actorTable } from '~/core/actor/ActorTable'
 import { actorStore } from '~/core/actor/ActorStore'
 import { ActorModelFactory } from '~/core/actor/ActorModel.factory'
+import { ConnectionModelFactory } from '~/core/connection/ConnectionModel.factory'
+import { setServerResponseForOllamaShow } from '~/tests/helpers/setServerResponseForModels'
 
 describe('ActorViewModel', () => {
   let actor: ActorViewModel
@@ -56,5 +58,39 @@ describe('ActorViewModel', () => {
     const updated = await actorTable.findById(actor.id)
     expect(updated!.connectionId).toBeNull()
     expect(updated!.modelId).toBeNull()
+  })
+
+  test('isImageGenerator is true when Ollama model has image capability', async () => {
+    const connection = await ConnectionModelFactory.withOptions({ modelCount: 1 }).create({
+      type: 'Ollama',
+    })
+
+    setServerResponseForOllamaShow(connection.formattedHost, ['image'])
+
+    const imageActor = await ActorModelFactory.create({
+      connectionId: connection.id,
+      modelId: connection.models[0].id,
+    })
+
+    await vi.waitFor(() => {
+      expect(imageActor.isImageGenerator).toBe(true)
+    })
+  })
+
+  test('isImageGenerator is false when Ollama model lacks image capability', async () => {
+    const connection = await ConnectionModelFactory.withOptions({ modelCount: 1 }).create({
+      type: 'Ollama',
+    })
+
+    setServerResponseForOllamaShow(connection.formattedHost, ['completion'])
+
+    const textActor = await ActorModelFactory.create({
+      connectionId: connection.id,
+      modelId: connection.models[0].id,
+    })
+
+    await vi.waitFor(() => {
+      expect(textActor.isImageGenerator).toBe(false)
+    })
   })
 })
