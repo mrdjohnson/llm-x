@@ -74,6 +74,14 @@ export class ChatViewModel {
     return this.editedMessageHandler.isEditing
   }
 
+  get isImageGenerationMode() {
+    if (_.isEmpty(this.actors)) {
+      return actorStore.systemActor.isImageGenerator
+    }
+
+    return _.every(this.actors, actor => actor.isImageGenerator)
+  }
+
   async setName(name?: string) {
     if (name) {
       await this.update({ name })

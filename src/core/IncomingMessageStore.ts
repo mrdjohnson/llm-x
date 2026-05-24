@@ -142,7 +142,7 @@ export class IncomingMessageStore {
 
     const api: BaseApi = await connection.getApi()
 
-    if (connectionStore.isImageGenerationMode) {
+    if (incomingMessage.actor.isImageGenerator) {
       return this.generateImage(chat, incomingMessage, api)
     }
 

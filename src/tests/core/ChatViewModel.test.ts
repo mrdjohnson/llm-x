@@ -3,6 +3,10 @@ import _ from 'lodash'
 
 import { messageTable } from '~/core/message/MessageTable'
 import { ChatModelFactory } from '~/core/chat/ChatModel.factory'
+import { ActorModelFactory } from '~/core/actor/ActorModel.factory'
+import { ConnectionModelFactory } from '~/core/connection/ConnectionModel.factory'
+import { ActorViewModel } from '~/core/actor/ActorViewModel'
+import { connectionStore } from '~/core/connection/ConnectionStore'
 
 describe('ChatViewModel', () => {
   test('constructs with a ChatModel and exposes properties', async () => {
@@ -54,5 +58,48 @@ describe('ChatViewModel', () => {
     await chat.destroyMessage(secondMessage)
 
     expect(chat.messages).toEqual([firstMessage, thirdMessage])
+  })
+
+  test('isImageGenerationMode if all models generate images', async () => {
+    const a1111Connection = await ConnectionModelFactory.create({ type: 'A1111' })
+    const ollamaConnection = await ConnectionModelFactory.create({ type: 'Ollama' })
+
+    const [imageActor1, imageActor2] = await ActorModelFactory.createList(2, {
+      connectionId: a1111Connection.id,
+    })
+    const [textActor1, textActor2] = await ActorModelFactory.createList(2, {
+      connectionId: ollamaConnection.id,
+    })
+
+    const expectChatWithActorsToBe = async (
+      actors: ActorViewModel[],
+      isImageGenerationMode: boolean,
+    ) => {
+      const chat = await ChatModelFactory.withOptions({ actors, actorCount: 0 }).create()
+
+      expect(chat.isImageGenerationMode).toBe(isImageGenerationMode)
+    }
+
+    await expectChatWithActorsToBe([imageActor1, textActor1], false)
+
+    await expectChatWithActorsToBe([textActor1], false)
+
+    await expectChatWithActorsToBe([textActor1, textActor2], false)
+
+    await expectChatWithActorsToBe([imageActor1, imageActor2, textActor1], false)
+
+    // set default actor type
+    await connectionStore.setSelectedConnection(ollamaConnection)
+
+    await expectChatWithActorsToBe([], false)
+
+    await expectChatWithActorsToBe([imageActor1], true)
+
+    await expectChatWithActorsToBe([imageActor1, imageActor2], true)
+
+    // set default actor type
+    await connectionStore.setSelectedConnection(a1111Connection)
+
+    await expectChatWithActorsToBe([], true)
   })
 })

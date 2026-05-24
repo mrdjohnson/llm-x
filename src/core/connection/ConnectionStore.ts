@@ -191,10 +191,6 @@ class ConnectionStore {
   get isAnyServerConnected() {
     return _.some(this.connections.map(connection => connection.isConnected))
   }
-
-  get isImageGenerationMode() {
-    return this.selectedConnection?.type === 'A1111'
-  }
 }
 
 export const connectionStore = new ConnectionStore()

@@ -65,6 +65,14 @@ export class ActorViewModel {
     return this.modelLabel
   }
 
+  get isImageGenerator() {
+    if (this.isUsingDefaults) {
+      return actorStore.systemActor.connection?.type === 'A1111'
+    }
+
+    return this.connection?.type === 'A1111'
+  }
+
   async update(patch: Partial<ActorModel>) {
     await actorTable.put({ ...this.source, ...patch })
   }

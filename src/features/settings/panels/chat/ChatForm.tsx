@@ -37,6 +37,10 @@ const ChatActorSection = ({ chat }: { chat: ChatViewModel }) => {
       label = modelName
     }
 
+    if (actor.isImageGenerator) {
+      subLabels.push('(Persona disabled)')
+    }
+
     return {
       id: actor.id,
       to: 'actor/' + actor.id,

@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Input } from '@heroui/react'
 import useMedia from 'use-media'
 
-import { connectionStore } from '~/core/connection/ConnectionStore'
+import { chatStore } from '~/core/chat/ChatStore'
 import { personaStore } from '~/core/persona/PersonaStore'
 
 import { NavButton } from '~/components/NavButton'
@@ -20,7 +20,7 @@ const PersonaSelector = () => {
     <NavButton
       tabIndex={0}
       to="/personas"
-      disabled={connectionStore.isImageGenerationMode}
+      disabled={chatStore.selectedChat?.isImageGenerationMode}
       className="w-full max-w-[600px] !cursor-pointer rounded-md border-2 border-base-content/20 hover:!border-base-content/30 hover:bg-base-100 disabled:opacity-20"
     >
       <Input

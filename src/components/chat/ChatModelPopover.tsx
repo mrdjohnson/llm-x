@@ -182,6 +182,8 @@ const ChatModelPopover = ({ chat, actor }: ChatModelPopoverProps) => {
         {connectionStore.activeConnections.length > 1 && (
           <span className="text-sm opacity-30">{actor.connection?.label}</span>
         )}
+
+        {actor.isImageGenerator && <span className="text-sm opacity-30">(Persona Disabled)</span>}
       </div>
 
       <span
