@@ -15,7 +15,7 @@ By default, Ollama only allows requests from local host. To use custom origins (
 1. Option 1:
 
    1. Follow the instructions in the faq: [Ollama
-    FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server) and set the _OLLAMA_ORIGINS_ to be _https://mrdjohnson.github.io_
+    FAQ](https://docs.ollama.com/faq#how-can-i-allow-additional-web-origins-to-access-ollama) and set the _OLLAMA_ORIGINS_ to be _https://mrdjohnson.github.io_
     (this tells ollama that mrdjohnson github projects, like this one,
     are OK to listen to).
 
