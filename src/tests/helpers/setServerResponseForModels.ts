@@ -26,6 +26,7 @@ export const setServerResponseForModels = (
 
     case 'A1111':
       modelUrl = host + '/sdapi/v1/sd-models'
+      response = models
       break
 
     // Gemini

@@ -60,6 +60,38 @@ describe('ActorViewModel', () => {
     expect(updated!.modelId).toBeNull()
   })
 
+  test('isImageGenerator is true when A1111 model', async () => {
+    const connection = await ConnectionModelFactory.withOptions({ modelCount: 2 }).create({
+      type: 'A1111',
+      host: 'http://a1111-host.com',
+    })
+
+    const imageActor = await ActorModelFactory.create({
+      connectionId: connection.id,
+      modelId: connection.models[1].id, // specify the second model
+    })
+
+    // uses the first model by default
+    const imageActor2 = await ActorModelFactory.withOptions({ connection }).create()
+
+    const imageActor3 = await ActorModelFactory.withOptions({
+      connectionParams: { type: 'A1111' },
+    }).create()
+
+    expect(imageActor.isImageGenerator).toBe(true)
+    expect(imageActor.model?.id).toBe(connection.models[1].id)
+
+    expect(imageActor2.isImageGenerator).toBe(true)
+    expect(imageActor2.model?.id).toBe(connection.models[0].id)
+
+    expect(imageActor3.isImageGenerator).toBe(true)
+
+    // expect all to be connected
+    expect(imageActor.isConnected).toBe(true)
+    expect(imageActor2.isConnected).toBe(true)
+    expect(imageActor3.isConnected).toBe(true)
+  })
+
   test('isImageGenerator is true when Ollama model has image capability', async () => {
     const connection = await ConnectionModelFactory.withOptions({ modelCount: 1 }).create({
       type: 'Ollama',
@@ -96,6 +128,13 @@ describe('ActorViewModel', () => {
       modelId: connection.models[0].id,
     })
 
+    const textActor2 = await ActorModelFactory.withOptions({
+      connectionParams: { type: 'Ollama' },
+    }).create()
+
     expect(textActor.isImageGenerator).toBe(false)
+    expect(textActor2.isImageGenerator).toBe(false)
+
+    expect(textActor.connection?.id).not.toBe(textActor2.connection?.id) // different connections
   })
 })

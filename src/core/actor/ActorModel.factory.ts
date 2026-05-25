@@ -21,17 +21,17 @@ export type ActorConnectionOptions = ConnectionFactoryOptions & {
 class ActorModelFactoryClass extends Factory<ActorModel, null, ActorViewModel> {
   // if the connection has models we assign the model to the actor
   withOptions({ connection, connectionParams, ...options }: ActorConnectionOptions) {
-    const { models, modelCount } = options
+    const models = options.models || connection?.models
 
-    if (connection && (_.isEmpty(models) || modelCount === 0)) {
+    if (connection && (_.isEmpty(models) || options.modelCount === 0)) {
       return this.params({ connectionId: connection.id })
     }
 
     // after making the actor, create a connection and update the id
     return this.afterCreate(async actor => {
       connection ||= await ConnectionModelFactory.withOptions(options).create({
-        ...connectionParams,
         type: 'Ollama',
+        ...connectionParams,
       })
 
       const [model] = connection.models
