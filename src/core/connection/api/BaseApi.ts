@@ -5,7 +5,7 @@ abstract class BaseApi {
   static abortControllerById: Record<string, () => Promise<void>> = {}
 
   abstract generateImages(
-    prompt: string,
+    messageToSend: MessageViewModel,
     incomingMessageVariation: MessageViewModel,
   ): Promise<string[]>
 

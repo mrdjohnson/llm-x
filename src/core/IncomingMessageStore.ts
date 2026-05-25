@@ -76,11 +76,13 @@ export class IncomingMessageStore {
       id => id === incomingMessage.rootMessage.id,
     )
 
-    const prompt = _.findLast(
+    const messageToSend = _.findLast(
       chat.messages,
       messageViewModel => messageViewModel.source.fromBot === false,
       incomingIndex,
-    )?.content
+    )
+
+    const prompt = messageToSend?.content
 
     if (!prompt) {
       if (incomingMessage.isBlank()) {
@@ -105,7 +107,7 @@ export class IncomingMessageStore {
     console.log(prompt)
 
     await this.handleIncomingMessage(chat, incomingMessage, async () => {
-      const images = await api.generateImages(prompt, messageToEdit)
+      const images = await api.generateImages(messageToSend, messageToEdit)
 
       await messageToEdit.addImages(images.map(image => 'data:image/png;base64,' + image))
     })
@@ -142,15 +144,15 @@ export class IncomingMessageStore {
 
     const api: BaseApi = await connection.getApi()
 
-    if (incomingMessage.actor.isImageGenerator) {
-      return this.generateImage(chat, incomingMessage, api)
-    }
-
     await incomingMessage.update({
       botName: incomingMessage.actor.modelName,
       modelType: incomingMessage.actor.connection?.type,
       extras: null,
     })
+
+    if (incomingMessage.actor.isImageGenerator) {
+      return this.generateImage(chat, incomingMessage, api)
+    }
 
     await this.handleIncomingMessage(chat, incomingMessage, async () => {
       for await (const contentChunk of api.generateChat(chat, incomingMessage)) {

@@ -129,7 +129,7 @@ export class OllamaApi extends BaseApi {
   }
 
   async generateImages(
-    prompt: string,
+    messageToSend: MessageViewModel,
     incomingMessageVariant: MessageViewModel,
   ): Promise<string[]> {
     const connection = incomingMessageVariant.actor.connection
@@ -152,7 +152,7 @@ export class OllamaApi extends BaseApi {
     const response = (await ollama.generate({
       model,
       stream: false,
-      prompt,
+      prompt: messageToSend.content,
     })) as GenerateResponse & { image: string }
 
     console.log(response)

@@ -2,10 +2,11 @@ import axios from 'axios'
 
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import BaseApi from '~/core/connection/api/BaseApi'
+import CachedStorage from '~/utils/CachedStorage.platform'
 
 class A1111Api extends BaseApi {
   async generateImages(
-    prompt: string,
+    messageToSend: MessageViewModel,
     incomingMessageVariant: MessageViewModel,
   ): Promise<string[]> {
     const connection = incomingMessageVariant.actor.connection
@@ -23,11 +24,26 @@ class A1111Api extends BaseApi {
     const parameters = connection.parsedParameters
     await incomingMessageVariant.setExtraDetails({ sentWith: parameters })
 
+    const hasImageUrls = messageToSend.source.imageUrls.length > 0
+
+    const imagesToSend: { init_images?: string[] } = hasImageUrls ? { init_images: [] } : {}
+
+    for (const cachedImageUrl of messageToSend.source.imageUrls) {
+      const imageData = await CachedStorage.get(cachedImageUrl)
+
+      if (imageData) {
+        imagesToSend.init_images!.push(imageData.substring('data:image/png;base64,'.length))
+      }
+    }
+
+    const endpoint = hasImageUrls ? '/sdapi/v1/img2img' : '/sdapi/v1/txt2img'
+
     const response = await axios.post(
-      host + '/sdapi/v1/txt2img',
+      host + endpoint,
       {
-        prompt,
+        prompt: messageToSend.content,
         hr_checkpoint_name: model,
+        ...imagesToSend,
         ...parameters,
       },
       {
