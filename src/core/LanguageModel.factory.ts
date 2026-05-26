@@ -1,7 +1,7 @@
 import { Factory } from 'fishery'
 import { generateMock } from '@anatine/zod-mock'
 import { z } from 'zod'
-import { ModelResponse } from 'ollama'
+import { ModelResponse } from 'ollama/browser'
 
 import {
   BaseModelTypes,

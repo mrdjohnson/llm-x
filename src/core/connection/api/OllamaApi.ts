@@ -15,7 +15,7 @@ import BaseApi from '~/core/connection/api/BaseApi'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { personaStore } from '~/core/persona/PersonaStore'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
-import { GenerateResponse, Ollama } from 'ollama'
+import { GenerateResponse, Ollama } from 'ollama/browser'
 
 const createHumanMessage = async (message: MessageViewModel): Promise<HumanMessage> => {
   if (!_.isEmpty(message.source.imageUrls)) {
