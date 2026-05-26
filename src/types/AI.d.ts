@@ -1,77 +1,119 @@
-// ai namespace for TypeScript : Mostly generated through chatgpt ironically
+/**
+ * TypeScript definitions for the proposed Web Prompt API.
+ * Based on: https://github.com/webmachinelearning/prompt-api
+ */
 
-// Types
-type AICapabilityAvailability = 'readily' | 'after-download' | 'no'
+declare namespace AI {
+  type Role = 'system' | 'user' | 'assistant'
 
-type AILanguageModelPromptRole = 'system' | 'user' | 'assistant'
+  interface LanguageModelMessage {
+    role: Role
+    content: string | MultiModalContent[]
+    /** * Used to "prefill" an assistant response to guide formatting.
+     * Only valid for the trailing "assistant" message.
+     */
+    prefix?: boolean
+  }
 
-// Interfaces
+  interface MultiModalContent {
+    type: 'text' | 'image' | 'audio'
+    value?: string
+    /** For images/audio, content can be Blob, ImageBitmap, etc. */
+    content?: unknown
+  }
 
-interface AICreateMonitor extends EventTarget {
-  ondownloadprogress: Event
+  interface ExpectedInputOutput {
+    type: 'text' | 'image' | 'audio' | 'tool-call' | 'tool-response'
+    languages?: string[]
+  }
+
+  interface AICreateMonitor extends EventTarget {
+    addEventListener(
+      type: 'downloadprogress',
+      listener: (this: AICreateMonitor, ev: ProgressEvent) => void,
+    ): void
+  }
+
+  interface LanguageModelCreateOptions {
+    signal?: AbortSignal
+    monitor?: (m: AICreateMonitor) => void
+    initialPrompts?: LanguageModelMessage[]
+    expectedInputs?: ExpectedInputOutput[]
+    expectedOutputs?: ExpectedInputOutput[]
+    temperature?: number
+    topK?: number
+    tools?: Tool[]
+  }
+
+  interface Tool {
+    name: string
+    description: string
+    inputSchema: object
+    /** execute takes arguments derived from the inputSchema */
+    execute: (args: unknown) => Promise<string>
+  }
+
+  interface PromptOptions {
+    signal?: AbortSignal
+    responseConstraint?: object | RegExp
+    omitResponseConstraintInput?: boolean
+  }
+
+  /**
+   * To support 'for await...of' as seen in the explainer examples,
+   * we extend the standard ReadableStream.
+   */
+  interface LanguageModelResponseStream extends ReadableStream<string> {
+    [Symbol.asyncIterator](): AsyncIterableIterator<string>
+  }
+
+  type Availability = 'unavailable' | 'downloadable' | 'downloading' | 'available'
+
+  interface LanguageModel extends EventTarget {
+    readonly contextUsage: number
+    readonly contextWindow: number
+    readonly temperature: number
+    readonly topK: number
+
+    prompt(input: string | LanguageModelMessage[], options?: PromptOptions): Promise<string>
+
+    promptStreaming(
+      input: string | LanguageModelMessage[],
+      options?: PromptOptions,
+    ): LanguageModelResponseStream
+
+    append(input: LanguageModelMessage[], options?: { signal?: AbortSignal }): Promise<void>
+
+    clone(options?: { signal?: AbortSignal }): Promise<LanguageModel>
+
+    measureContextUsage(
+      input: string | LanguageModelMessage[],
+      options?: { signal?: AbortSignal },
+    ): Promise<number>
+
+    destroy(): void
+
+    oncontextoverflow: ((this: LanguageModel, ev: Event) => void) | null
+  }
 }
 
-type AICreateMonitorCallback = (monitor: AICreateMonitor) => void
-
-interface AILanguageModelFactory {
-  create(options?: AILanguageModelCreateOptions): Promise<AILanguageModel>
-  capabilities(): Promise<AILanguageModelCapabilities>
-}
-
-interface AILanguageModel extends EventTarget {
-  prompt(input: string, options?: AILanguageModelPromptOptions): Promise<string>
-  promptStreaming(input: string, options?: AILanguageModelPromptOptions): IterableReadableStream
-  countPromptTokens(input: string, options?: AILanguageModelPromptOptions): Promise<number>
-
-  readonly maxTokens: number
-  readonly tokensSoFar: number
-  readonly tokensLeft: number
-  readonly topK: number
-  readonly temperature: number
-
-  clone(): Promise<AILanguageModel>
-  destroy(): void
-}
-
-interface AILanguageModelCapabilities {
-  readonly available: AICapabilityAvailability
-  readonly defaultTopK?: number | null
-  readonly maxTopK?: number | null
-  readonly defaultTemperature?: number | null
-}
-
-// Dictionaries (Converted to TypeScript interfaces)
-
-interface AILanguageModelCreateOptions {
-  signal?: AbortSignal
-  monitor?: AICreateMonitorCallback
-  systemPrompt?: string
-  initialPrompts?: AILanguageModelPrompt[]
-  topK?: number
-  temperature?: number
-}
-
-interface AILanguageModelPrompt {
-  role: AILanguageModelPromptRole
-  content: string
-}
-
-interface AILanguageModelPromptOptions {
-  signal?: AbortSignal
-}
-
-// AI main interface
-
-interface AI {
-  readonly languageModel: AILanguageModelFactory
+interface LanguageModelStatic {
+  create(options?: AI.LanguageModelCreateOptions): Promise<AI.LanguageModel>
+  availability(options?: { expectedInputs?: AI.ExpectedInputOutput[] }): Promise<AI.Availability>
+  params?: () => Promise<{
+    defaultTemperature: number
+    maxTemperature: number
+    defaultTopK: number
+    maxTopK: number
+  } | null>
 }
 
 // Global scope augmentation for Window and Worker
 
 interface Window {
-  readonly ai: AI
+  LanguageModel: LanguageModelStatic
 }
 
 interface WorkerGlobalScope {
-  readonly ai: AI
+  LanguageModel: LanguageModelStatic
 }

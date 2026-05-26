@@ -4,11 +4,11 @@ import BaseApi from '~/core/connection/api/BaseApi'
 import { MessageViewModel } from '~/core/message/MessageViewModel'
 import { personaStore } from '~/core/persona/PersonaStore'
 import { connectionStore } from '~/core/connection/ConnectionStore'
-import { progressStore, ProgressType } from '~/core/ProgressStore'
+import { progressStore } from '~/core/ProgressStore'
 import { ChatViewModel } from '~/core/chat/ChatViewModel'
 
 const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: string) => {
-  const messages: AILanguageModelPrompt[] = []
+  const messages: AI.LanguageModelMessage[] = []
 
   const selectedPersona = personaStore.selectedPersona
 
@@ -35,6 +35,28 @@ const getMessages = async (chatMessages: MessageViewModel[], chatMessageId: stri
 
 // note; this is just a copy of the code used for ollama; may refactor later
 export class GeminiApi extends BaseApi {
+  async downloadGemini(abortController: AbortController) {
+    const progress = progressStore.create({ value: 0, label: 'Gemini downloading' })
+
+    const downloadSession = await window.LanguageModel.create({
+      monitor(m) {
+        m.addEventListener('downloadprogress', e => {
+          console.log('gemini download progress', { loaded: e.loaded, total: e.total })
+          const loaded = _.round(e.loaded * 100, 2)
+
+          progress.update({ value: loaded })
+
+          if (loaded === 100) {
+            progressStore.delete(progress, { shouldDelay: true })
+          }
+        })
+      },
+      signal: abortController.signal,
+    })
+
+    downloadSession.destroy()
+  }
+
   async *generateChat(
     chat: ChatViewModel,
     incomingMessageVariant: MessageViewModel,
@@ -47,10 +69,15 @@ export class GeminiApi extends BaseApi {
     BaseApi.abortControllerById[incomingMessageVariant.id] = async () => abortController.abort()
 
     const parameters = connection.parsedParameters
-    await incomingMessageVariant.setExtraDetails({ sentWith: parameters })
 
-    const { available, defaultTemperature, defaultTopK, maxTopK } =
-      await window.ai.languageModel.capabilities()
+    const availability = await window.LanguageModel.availability()
+
+    if (availability !== 'available') {
+      await this.downloadGemini(abortController)
+    }
+
+    const { defaultTemperature, defaultTopK, maxTopK } =
+      (await window.LanguageModel.params?.()) || {}
 
     const userTopK =
       (connection.parsedParameters['topK'] as number | undefined) ?? defaultTopK ?? undefined
@@ -63,46 +90,26 @@ export class GeminiApi extends BaseApi {
 
     const messages = await getMessages(chat.messages, incomingMessageVariant.rootMessage.id)
 
-    let progress: ProgressType | undefined = undefined
+    const sentWith = { ...parameters, topK, temperature }
 
-    if (available === 'after-download') {
-      progress = progressStore.create({ value: 0, label: 'Gemini downloading' })
+    if (!_.isEmpty(sentWith)) {
+      await incomingMessageVariant.setExtraDetails({ sentWith })
     }
 
-    const model = await window.ai.languageModel.create({
+    const session = await window.LanguageModel.create({
       temperature,
       topK,
       initialPrompts: messages,
-      monitor(m) {
-        m.addEventListener('downloadprogress', e => {
-          if (!progress) return
-
-          const loaded = _.toNumber(_.get(e, 'loaded'))
-          const total = _.toNumber(_.get(e, 'total'))
-
-          progress.update({ value: loaded / total, subLabel: `${loaded} of ${total} bytes.` })
-
-          if (loaded === total) {
-            progressStore.delete(progress, { shouldDelay: true })
-          }
-        })
-      },
       signal: abortController.signal,
     })
 
     if (!abortController.signal.aborted) {
-      const stream = model.promptStreaming('', {
+      const stream = session.promptStreaming('', {
         signal: abortController.signal,
       })
 
-      let previousChunk = ''
       for await (const chunk of stream) {
-        // "chunk" comes in as the entire message, this is a bug on the api side, this fixes it for now until its changed later
-        const newChunk = chunk.startsWith(previousChunk) ? chunk.slice(previousChunk.length) : chunk
-
-        previousChunk = chunk
-
-        yield newChunk
+        yield chunk
       }
     }
 

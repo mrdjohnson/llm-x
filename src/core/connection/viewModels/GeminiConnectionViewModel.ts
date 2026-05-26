@@ -21,10 +21,20 @@ class GeminiConnectionViewModel extends BaseConnectionViewModel<IGeminiModel> {
 
   type = 'Gemini' as const
 
-  sessionModel?: AILanguageModel
-
   readonly hostLabel = undefined
   readonly enabledLabel = 'Text generation through Gemini nano:'
+
+  constructor(
+    public source: ConnectionModel,
+    { autoFetch = true } = {},
+  ) {
+    if ('LanguageModel' in window) {
+      window.Gemini = window.LanguageModel!
+      // delete window['LanguageModel']
+    }
+
+    super(source, { autoFetch })
+  }
 
   static toViewModel(connection: ConnectionModel, { autoFetch = true } = {}) {
     return new this(connection, { autoFetch })
@@ -57,13 +67,15 @@ class GeminiConnectionViewModel extends BaseConnectionViewModel<IGeminiModel> {
     })
 
   async _fetchLmModels(): Promise<GeminiLanguageModel[]> {
-    if (!('ai' in window)) {
-      throw new Error('ai not supported')
+    if (!('LanguageModel' in window)) {
+      throw new Error('Gemini nano not supported')
     }
 
-    const { available } = await window.ai.languageModel.capabilities()
+    const available = await window.LanguageModel.availability()
 
-    if (available !== 'readily') throw new Error('unready yet: ' + available)
+    console.log('Gemini capabilities', { available })
+
+    if (available === 'unavailable') throw new Error('Gemini Unavailable')
 
     return [LanguageModel.fromIGeminiModel({ name: 'Gemini nano' }, this.id)]
   }
