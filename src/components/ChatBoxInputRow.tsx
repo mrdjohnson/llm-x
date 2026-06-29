@@ -53,7 +53,7 @@ const ChatBoxInputRow = ({ chat, onSend, children }: ChatBoxInputRowProps) => {
   const handleKeyDown = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.shiftKey || !textareaRef.current || inputDisabled) return
 
-    if (e.key === 'Enter' && messageContent) {
+    if (e.key === 'Enter' && messageContent && !e.nativeEvent.isComposing) {
       await sendMessage()
 
       textareaRef.current.blur()
