@@ -86,6 +86,24 @@ describe('ConnectionViewModel', () => {
     })
   })
 
+  describe('LlmmanConnectionViewModel', () => {
+    test('defaults to the llmman port and speaks the ollama api', async () => {
+      const ollamaModels = LanguageModelFactory.ollama().buildList(2)
+
+      const connectionModel = await ConnectionModelFactory.withOptions({
+        models: ollamaModels,
+      }).create({ type: 'Llmman' })
+
+      expect(connectionModel.DefaultHost).toBe('http://localhost:17434')
+      expect(connectionModel.formattedHost).toBe('http://localhost:17434')
+
+      const models = _.toArray(connectionModel.models)
+
+      expect(_.map(models, 'modelName')).toEqual(_.map(ollamaModels, 'name'))
+      expect(connectionModel.isConnected).toBe(true)
+    })
+  })
+
   describe('OpenAiConnectionViewModel', () => {
     test('is empty when nothing returns', async () => {
       const connectionModel = await ConnectionModelFactory.withOptions({ models: [] }).create({

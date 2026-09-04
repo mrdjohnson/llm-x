@@ -26,10 +26,10 @@ class OllamaConnectionViewModel extends BaseConnectionViewModel<IOllamaModel> {
 
   primaryHeader = this.modelTableHeaders[0].value
 
-  type = 'Ollama' as const
+  type: 'Ollama' | 'Llmman' = 'Ollama'
 
-  readonly hostLabel = 'Ollama Host:'
-  readonly enabledLabel = 'Text generation through Ollama:'
+  readonly hostLabel: string = 'Ollama Host:'
+  readonly enabledLabel: string = 'Text generation through Ollama:'
 
   get store() {
     return new OllamaStore(this)

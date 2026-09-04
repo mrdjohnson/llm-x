@@ -14,6 +14,7 @@ import { ConnectionTypes } from '~/core/connection/types'
 
 import { LmsHelpMarkdown } from '~/features/settings/panels/help/LmsHelpMarkdown'
 import { OllamaHelpMarkdown } from '~/features/settings/panels/help/OllamaHelpMarkdown'
+import { LlmmanHelpMarkdown } from '~/features/settings/panels/help/LlmmanHelpMarkdown'
 import { A1111HelpMarkdown } from '~/features/settings/panels/help/A1111HelpMarkdown'
 import { GeminiHelpMarkdown } from '~/features/settings/panels/help/GeminiHelpPanel'
 import { OpenAiHelpMarkdown } from '~/features/settings/panels/help/OpenAiHelpPanelMarkdown'
@@ -42,6 +43,7 @@ export const ConnectionHelpPanel = () => {
   const markdown = useMemo(() => {
     if (id === 'LMS') return LmsHelpMarkdown
     if (id === 'Ollama') return OllamaHelpMarkdown
+    if (id === 'Llmman') return LlmmanHelpMarkdown
     if (id === 'A1111') return A1111HelpMarkdown
     if (id === 'Gemini') return GeminiHelpMarkdown
     if (id === 'OpenAi') return OpenAiHelpMarkdown

@@ -197,7 +197,7 @@ export const OllamaModelSettings = () => {
 
   const viewModel = connectionStore.getConnectionById(id)!
 
-  if (viewModel.type !== 'Ollama') {
+  if (viewModel.type !== 'Ollama' && viewModel.type !== 'Llmman') {
     throw new Error('Ollama connection not found')
   }
 

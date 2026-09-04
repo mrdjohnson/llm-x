@@ -15,6 +15,7 @@ export const setServerResponseForModels = (
 
   switch (connection.type) {
     case 'Ollama':
+    case 'Llmman':
       modelUrl = host + '/api/tags'
       response = { models }
       break
@@ -36,7 +37,7 @@ export const setServerResponseForModels = (
 
   setServerResponse(modelUrl, response)
 
-  if (connection.type === 'Ollama') {
+  if (connection.type === 'Ollama' || connection.type === 'Llmman') {
     setServerResponseForOllamaShow(host, [])
   }
 
