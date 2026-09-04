@@ -30,6 +30,8 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 - Ollama: Download and install [Ollama](https://ollama.com/)
   - Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava` (or use the app)
+- llmman: Install [llmman](https://github.com/llmmanorg/llmman) with `curl -fsSL https://raw.githubusercontent.com/llmmanorg/llmman/main/install.sh | sh`
+  - Pull down a model Ex: `llmman pull gemma4` (or use the app)
 - LM Studio: Download and install [LM Studio](https://lmstudio.ai/)
 - AUTOMATIC1111: Git clone [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#installation-and-running) (for image generation)
 - Gemini Nano: Download and install [Chrome Canary](https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0#heading=h.witohboigk0o)
@@ -82,6 +84,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 ### Prerequisites for project source
 
 - Ollama: Run this in your terminal `ollama serve`
+- llmman: Run this in your terminal `llmman serve`
 - LM Studio: Run this in your terminal: `lms server start`
 - A1111: Run this in the a1111 project folder: `./webui.sh --api --listen`
 
@@ -110,6 +113,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 - [x] **COMPLETELY PRIVATE; WORKS COMPLETELY OFFLINE**
 - [x] **Ollama integration!**
+- [x] **llmman integration!** (Ollama API on port 17434)
 - [x] **LM Studio integration!**
 - [x] **Open AI server integration!**
 - [x] **Gemini Nano integration!**

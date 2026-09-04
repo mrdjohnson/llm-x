@@ -25,6 +25,7 @@ export const ConnectionModelPanel = () => {
         {connection.type === 'LMS' && <OpenAiModelPanel connection={connection} />}
         {connection.type === 'A1111' && <A1111ModelPanel connection={connection} />}
         {connection.type === 'Ollama' && <OllamaModelPanel connection={connection} />}
+        {connection.type === 'Llmman' && <OllamaModelPanel connection={connection} />}
         {connection.type === 'OpenAi' && <OpenAiModelPanel connection={connection} />}
         {connection.type === 'Gemini' && <GeminiModelPanel connection={connection} />}
       </div>
