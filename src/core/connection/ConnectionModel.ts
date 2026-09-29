@@ -21,6 +21,7 @@ export const ConnectionModel = z.object({
     z.literal('LMS'),
     z.literal('A1111'),
     z.literal('Ollama'),
+    z.literal('Llmman'),
     z.literal('OpenAi'),
     z.literal('Gemini'),
   ]),

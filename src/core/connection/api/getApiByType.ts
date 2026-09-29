@@ -5,6 +5,7 @@ const _apiByConnectionViewModelType: Record<ConnectionTypes, Promise<{ baseApi: 
   A1111: import('~/core/connection/api/A1111Api'),
   LMS: import('~/core/connection/api/OpenAiApi'),
   Ollama: import('~/core/connection/api/OllamaApi'),
+  Llmman: import('~/core/connection/api/OllamaApi'),
   OpenAi: import('~/core/connection/api/OpenAiApi'),
   Gemini: import('~/core/connection/api/GeminiApi'),
 }

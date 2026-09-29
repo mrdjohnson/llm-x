@@ -10,9 +10,11 @@
   "permissions": ["sidePanel", "declarativeNetRequest"],
   "host_permissions": [
     "http://*:11434/*",
+    "http://*:17434/*",
     "http://*:1234/*",
     "http://*:7860/*",
     "https://*:11434/*",
+    "https://*:17434/*",
     "https://*:1234/*",
     "https://*:7860/*"
   ],

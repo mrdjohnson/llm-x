@@ -102,6 +102,7 @@ export const LanguageModelFactory = LanguageModelFactoryClass.define(
   ({ transientParams: { type = 'Ollama' } }) => {
     switch (type) {
       case 'Ollama':
+      case 'Llmman':
         return generateMock(OllamaModel)
 
       case 'A1111':
