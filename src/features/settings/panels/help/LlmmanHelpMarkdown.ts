@@ -1,5 +1,5 @@
 const LLMMAN_INSTALL_CODE =
-  'curl -fsSL https://raw.githubusercontent.com/llmmanorg/llmman/main/install.sh | sh'
+  'curl -fsSL https://llmmanorg.github.io/install.sh | sh'
 const LLMMAN_SERVE_CODE = 'llmman serve'
 const LLMMAN_PULL_CODE = 'llmman pull gemma4'
 

@@ -30,7 +30,7 @@ LLM X (web app) will not connect to a server that is not secure. This means that
 
 - Ollama: Download and install [Ollama](https://ollama.com/)
   - Pull down a model (or a few) from the [library](https://ollama.com/library) Ex: `ollama pull llava` (or use the app)
-- llmman: Install [llmman](https://github.com/llmmanorg/llmman) with `curl -fsSL https://raw.githubusercontent.com/llmmanorg/llmman/main/install.sh | sh`
+- llmman: Install [llmman](https://github.com/llmmanorg/llmman) with `curl -fsSL https://llmmanorg.github.io/install.sh | sh`
   - Pull down a model Ex: `llmman pull gemma4` (or use the app)
 - LM Studio: Download and install [LM Studio](https://lmstudio.ai/)
 - AUTOMATIC1111: Git clone [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui?tab=readme-ov-file#installation-and-running) (for image generation)
